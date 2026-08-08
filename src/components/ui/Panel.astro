@@ -1,0 +1,67 @@
+---
+import { brand } from '../../brand/config';
+import { color, readableOn } from '../../brand/tokens';
+
+interface Props {
+	/** Palette id for the background. Defaults to the page surface. */
+	bg?: string;
+	/** Palette id for the contents. Defaults to whatever is legible on `bg`. */
+	fg?: string;
+	/** width / height. Use to hold a consistent shape across a row. */
+	ratio?: string;
+	/** Remove the internal padding — for artwork that should bleed. */
+	flush?: boolean;
+	/** Caption under the panel. */
+	caption?: string;
+	/** Small label in the panel's top-left corner. */
+	label?: string;
+	class?: string;
+}
+
+const { bg, fg, ratio, flush = false, caption, label, class: className } = Astro.props;
+
+const background = bg ? color(brand, bg).hex : undefined;
+const foreground = fg ? color(brand, fg).hex : background ? readableOn(background) : undefined;
+
+const style = [
+	background && `background: var(--color-${bg});`,
+	foreground && `color: ${fg ? `var(--color-${fg})` : foreground};`,
+	background && `border-color: color-mix(in srgb, ${foreground} 18%, transparent);`,
+	ratio && `aspect-ratio: ${ratio};`,
+]
+	.filter(Boolean)
+	.join(' ');
+---
+
+<figure class:list={['panel-wrap', className]}>
+	<div class:list={['panel', flush && 'panel--flush']} style={style}>
+		{label && <span class="panel__label">{label}</span>}
+		<slot />
+	</div>
+	{caption && <figcaption class="caption panel__caption"><slot name="caption">{caption}</slot></figcaption>}
+</figure>
+
+<style>
+	.panel-wrap {
+		margin: 0;
+		display: grid;
+		gap: var(--space-xs);
+		align-content: start;
+		min-width: 0;
+	}
+
+	.panel__label {
+		position: absolute;
+		inset-block-start: var(--space-s);
+		inset-inline-start: var(--space-s);
+		font-size: 0.625rem;
+		letter-spacing: 0.09em;
+		text-transform: uppercase;
+		font-weight: 500;
+		opacity: 0.6;
+	}
+
+	.panel__caption {
+		text-wrap: pretty;
+	}
+</style>

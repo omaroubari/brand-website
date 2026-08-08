@@ -1,0 +1,16 @@
+<!--
+  PLACEHOLDER logotype. Replace with the client's wordmark with the type
+  converted to outlines (Type > Create Outlines / Path > Object to Path) so it
+  renders identically everywhere. The <text> below is a stand-in only.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 260">
+  <text
+    x="0"
+    y="196"
+    fill="#000000"
+    font-family="Inter, Helvetica Neue, Helvetica, Arial, sans-serif"
+    font-size="200"
+    font-weight="600"
+    letter-spacing="-10"
+  >Typefool</text>
+</svg>

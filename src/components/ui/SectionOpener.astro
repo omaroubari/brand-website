@@ -1,0 +1,85 @@
+---
+import { brand } from '../../brand/config';
+
+/**
+ * The divider page that opens every section of the printed document: a
+ * full-bleed accent field, the section number stacked over the section title in
+ * the bottom-left, and the colophon in the top-right.
+ */
+interface Props {
+	number?: string;
+	title: string;
+	summary?: string;
+	/** Palette id for the field. Defaults to the brand accent. */
+	bg?: string;
+}
+
+const { number, title, summary, bg = 'accent' } = Astro.props;
+const { meta } = brand;
+---
+
+<header class="opener full-bleed" style={`--opener-bg: var(--color-${bg});`}>
+	<p class="colophon opener__colophon">
+		<span>{meta.name}</span>
+		<span>{meta.documentTitle}</span>
+		<span>Version {meta.version}</span>
+		<span>{meta.year}©</span>
+	</p>
+
+	<div class="opener__type">
+		{brand.numbering && number && <p class="opener__num">{number}</p>}
+		<h1 class="opener__title">{title}</h1>
+	</div>
+
+	{summary && <p class="opener__summary">{summary}</p>}
+</header>
+
+<style>
+	.opener {
+		background: var(--opener-bg);
+		color: var(--on-accent);
+		padding: var(--space-l) var(--page-gutter) var(--space-xl);
+		min-height: min(74vh, 34rem);
+		display: grid;
+		grid-template-rows: auto 1fr auto;
+		gap: var(--space-l);
+	}
+
+	.opener__colophon {
+		color: inherit;
+		opacity: 0.85;
+	}
+
+	.opener__type {
+		align-self: end;
+		/* The number sits directly on top of the title with no gap — they read as
+		   one block of type, as in the printed dividers. */
+		display: grid;
+		gap: 0;
+	}
+
+	/* A notch below Display 1.0: section titles are two or three words, and at
+	   the full display size they wrap past the bottom of the field. */
+	.opener__num,
+	.opener__title {
+		font-family: var(--font-display);
+		font-size: clamp(3rem, 10.5vw, 9.5rem);
+		line-height: 0.88;
+		letter-spacing: var(--type-display-1-0-tracking);
+		font-weight: var(--type-display-1-0-weight);
+		margin: 0;
+	}
+
+	.opener__title {
+		text-wrap: balance;
+	}
+
+	.opener__summary {
+		max-width: 46ch;
+		align-self: end;
+		font-size: var(--type-caption-size);
+		line-height: 1.5;
+		opacity: 0.85;
+		text-wrap: pretty;
+	}
+</style>

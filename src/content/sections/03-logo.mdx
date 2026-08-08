@@ -1,0 +1,157 @@
+---
+title: Logo Usage
+summary: The logotype, the brandmark, and the rules that keep both intact.
+---
+
+import {
+	Block,
+	Panel,
+	Grid,
+	Logo,
+	LogoColorways,
+	LogoScaling,
+	LogoClearspace,
+	LogoMisuse,
+	ConstructionGrid,
+	SpecList,
+	Callout,
+} from '../../components/mdx';
+
+<Block title="Logotype" subtitle="Primary logo">
+<Fragment slot="note">
+
+The primary logo is a logotype: the brand name set in the brand face, spaced and drawn as
+a single piece of artwork. It is the default in every context where there is room for it.
+
+Always place the supplied file. Never re-set the name in the typeface — the logotype
+carries custom spacing that live text will not reproduce.
+
+</Fragment>
+
+<Panel ratio="16 / 9">
+	<Logo mark="logotype" width="66%" />
+</Panel>
+
+</Block>
+
+<Block title="Logotype" subtitle="On black">
+<Fragment slot="note">
+
+On dark surfaces the logotype reverses to white. There is no third version — the artwork
+is identical, only the colour changes.
+
+</Fragment>
+
+<Panel bg="black" ratio="16 / 9">
+	<Logo mark="logotype" on="dark" width="66%" />
+</Panel>
+
+</Block>
+
+<Block title="Brandmark" subtitle="Monogram">
+<Fragment slot="note">
+
+A monogram of the initials, unified into one shape. It stands in for the logotype where
+space is tight or the brand is already established in context: avatars, favicons, app
+icons, stamped and embroidered applications.
+
+</Fragment>
+
+<Grid cols={2}>
+
+<Panel bg="white" ratio="4 / 3">
+	<Logo mark="brandmark" on="light" width="7rem" />
+</Panel>
+
+<Panel bg="black" ratio="4 / 3">
+	<Logo mark="brandmark" on="dark" width="7rem" />
+</Panel>
+
+</Grid>
+
+</Block>
+
+<Block title="Brandmark" subtitle="Grid">
+<Fragment slot="note">
+
+The mark is built on a field grid so its proportions and alignment survive every
+application. Reproduce it from the supplied artwork — never redraw it.
+
+</Fragment>
+
+<ConstructionGrid mark="brandmark" cols={10} rows={11} />
+
+</Block>
+
+<Block title="Logo" subtitle="Safezone">
+<Fragment slot="note">
+
+Clear space is a protective buffer. It keeps the logo legible and stops surrounding
+elements from crowding it, whatever the layout.
+
+</Fragment>
+
+<LogoClearspace mark="logotype" />
+
+</Block>
+
+<Block title="Logo" subtitle="Usage">
+<Fragment slot="note">
+
+Six approved combinations, and no others. The first is primary; reach for the rest only
+when the background forces it.
+
+</Fragment>
+
+<LogoColorways mark="logotype" cols={3} />
+
+</Block>
+
+<Block title="Logotype" subtitle="Scaling">
+<Fragment slot="note">
+
+Proportions never change, whether the logo is on a billboard or a business card. Below the
+minimum, the logotype stops reading — switch to the brandmark rather than shrinking
+further.
+
+<SpecList
+	items={[
+		{ term: 'Min digital', value: '96 px' },
+		{ term: 'Min print', value: '20 mm' },
+		{ term: 'Brandmark', value: '24 px / 8 mm' },
+	]}
+/>
+
+</Fragment>
+
+<LogoScaling mark="logotype" />
+
+</Block>
+
+<Block title="Logo" subtitle="Misusage">
+<Fragment slot="note">
+
+Six ways to break the logo. Each one is a real mistake we have had to correct.
+
+<Callout tone="dont" title="Also never">
+
+Add a drop shadow, outline, gradient or bevel. Place the logo on a busy photograph without
+a solid field behind it. Redraw or trace any part of the artwork.
+
+</Callout>
+
+</Fragment>
+
+<LogoMisuse
+	mark="logotype"
+	items={[
+		{ effect: 'stretch', title: 'Distortion', note: 'Never scale one axis. Hold shift, always.' },
+		{ effect: 'recolor', title: 'Colour', note: 'Only the approved colourways. No exceptions for a campaign.' },
+		{ effect: 'low-contrast', title: 'Contrast', note: 'The mark must clear 4.5:1 against its background.' },
+		{ effect: 'too-small', title: 'Size', note: 'Below the minimum, use the brandmark instead.' },
+		{ effect: 'obstruct', title: 'Obstruction', note: 'Nothing enters the clear space — not type, not imagery.' },
+		{ effect: 'rotate', title: 'Rotation', note: 'The logo sits level. It is never set on an angle.' },
+	]}
+/>
+
+</Block>

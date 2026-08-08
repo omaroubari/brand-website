@@ -1,0 +1,87 @@
+---
+title: Typography
+summary: One family, two weights doing most of the work, and a scale to keep to.
+---
+
+import {
+	Block,
+	TypeSpecimen,
+	FontWeights,
+	Glyphs,
+	TypeScale,
+	Callout,
+} from '../../components/mdx';
+
+<Block title="Typography" subtitle="The face">
+<Fragment slot="note">
+
+The showcased "Aa" demonstrates the clean, modern aesthetic of the brand face,
+highlighting its clarity and versatility across applications.
+
+One family across everything is a deliberate constraint — it forces hierarchy to come from
+size, weight and space rather than from a second typeface.
+
+</Fragment>
+
+<TypeSpecimen font="display" glyph="Aa" />
+
+</Block>
+
+<Block title="Typography" subtitle="Weights">
+<Fragment slot="note">
+
+Two weights do most of the work. **Bold** for headlines and anything that must be seen
+first; **Light** for running text, where it reads as calm rather than thin. The weights in
+between exist for interface work — labels, buttons, table headers.
+
+</Fragment>
+
+<FontWeights font="display" />
+
+</Block>
+
+<Block title="Typography" subtitle="Character set">
+
+<Glyphs font="display" weight={400} />
+
+</Block>
+
+<Block title="Typography" subtitle="Typescale">
+<Fragment slot="note">
+
+The scale runs from large headline sizes down to small body text, keeping readability and
+visual harmony. Headlines use the bold weight to command attention; body text uses the
+light weight for easy reading.
+
+Every step has a job. If a design needs something between two steps, it needs one of the
+two steps.
+
+<Callout tone="note" title="On the web">
+
+Sizes use `clamp()`, so each step scales with the viewport between a floor and a ceiling.
+The print values remain the reference for anything laid out in InDesign.
+
+</Callout>
+
+</Fragment>
+
+<TypeScale />
+
+</Block>
+
+<Block title="Typography" subtitle="Setting rules">
+<Fragment slot="note">
+
+Left-aligned, ragged right. No justification, no centred paragraphs longer than two lines.
+
+Measure between 45 and 75 characters. Headlines get tighter tracking as they get larger;
+body copy is never tracked.
+
+Sentence case everywhere. Uppercase is reserved for small labels, where it is tracked out
+to stay legible.
+
+</Fragment>
+
+<TypeScale only={['Display 2.0', 'Heading 1.0', 'Body 2.0']} print={false} />
+
+</Block>

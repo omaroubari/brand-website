@@ -1,0 +1,174 @@
+---
+title: Layout
+summary: The grids everything is built on, from a business card to a billboard.
+---
+
+import { Block, LayoutGrid, Grid, SpecList } from '../../components/mdx';
+
+<Block title="Web 1/2" subtitle="Grid system">
+<Fragment slot="note">
+
+The desktop site is structured on a grid that arranges content with precision and keeps
+the layout consistent. It aligns elements, maintains design coherence, and makes handover
+between people possible.
+
+Break it deliberately, once per piece, or not at all.
+
+</Fragment>
+
+<LayoutGrid
+	columns={12}
+	gutter="30px"
+	margin="100px"
+	ratio="16 / 9"
+	label="Desktop · 1440 px and up"
+	specs={[
+		{ term: 'Columns', value: '12' },
+		{ term: 'Gutter', value: '30 px' },
+		{ term: 'Margin', value: '100 px' },
+		{ term: 'Max width', value: '1440 px' },
+	]}
+/>
+
+</Block>
+
+<Block title="Web 2/2" subtitle="Grid system">
+<Fragment slot="note">
+
+The mobile grid optimises the same system for smaller screens, keeping content organised
+and navigation consistent.
+
+</Fragment>
+
+<LayoutGrid
+	columns={4}
+	gutter="15px"
+	margin="38px"
+	ratio="9 / 16"
+	label="Mobile · up to 599 px"
+	specs={[
+		{ term: 'Columns', value: '4' },
+		{ term: 'Gutter', value: '15 px' },
+		{ term: 'Margin', value: '38 px' },
+		{ term: 'Header', value: '77 px' },
+	]}
+/>
+
+</Block>
+
+<Block title="Social media" subtitle="Grid system">
+<Fragment slot="note">
+
+Grids guide content placement across posts, so the feed reads as one voice. The safe areas
+are not suggestions — platform chrome will cover anything inside them.
+
+</Fragment>
+
+<Grid cols={2} gap="var(--space-xl)">
+
+<LayoutGrid
+	columns={6}
+	gutter="24px"
+	margin="80px"
+	ratio="1 / 1"
+	label="Square post · 1080 × 1080"
+	specs={[
+		{ term: 'Columns', value: '6' },
+		{ term: 'Safe area', value: '80 px inset' },
+	]}
+/>
+
+<LayoutGrid
+	columns={6}
+	gutter="24px"
+	margin="96px"
+	ratio="9 / 16"
+	label="Story · 1080 × 1920"
+	specs={[
+		{ term: 'Top safe', value: '250 px' },
+		{ term: 'Bottom safe', value: '320 px' },
+	]}
+/>
+
+</Grid>
+
+</Block>
+
+<Block title="Print 1/2" subtitle="Grid system">
+<Fragment slot="note">
+
+Grids ensure contact details, logos and branding elements sit consistently, presenting a
+unified and professional image. They also make updates and customisation quick.
+
+</Fragment>
+
+<Grid cols={2} gap="var(--space-xl)">
+
+<LayoutGrid
+	columns={4}
+	gutter="3mm"
+	margin="10mm"
+	ratio="85 / 55"
+	label="Business card · 85 × 55 mm"
+	specs={[{ term: 'Bleed', value: '3 mm' }]}
+/>
+
+<LayoutGrid
+	columns={6}
+	gutter="5mm"
+	margin="20mm"
+	ratio="210 / 297"
+	label="Letterhead · A4 portrait"
+	specs={[{ term: 'Margin', value: '20 mm' }]}
+/>
+
+</Grid>
+
+</Block>
+
+<Block title="Print 2/2" subtitle="Grid system">
+<Fragment slot="note">
+
+The landscape A4 grid is the cornerstone of document design: a structured framework that
+keeps text, images and other elements consistently placed.
+
+</Fragment>
+
+<LayoutGrid
+	columns={12}
+	gutter="5mm"
+	margin="15mm"
+	ratio="297 / 210"
+	label="Document · A4 landscape"
+	specs={[{ term: 'Margin', value: '15 mm' }]}
+/>
+
+</Block>
+
+<Block title="Presentation" subtitle="Grid system">
+<Fragment slot="note">
+
+Sixteen by nine, twelve columns, the same type scale as everywhere else. One idea per
+slide. If a slide needs a second idea, it needs a second slide.
+
+<SpecList
+	items={[
+		{ term: 'Ratio', value: '16 : 9' },
+		{ term: 'Columns', value: '12' },
+		{ term: 'Margin', value: '60 px' },
+		{ term: 'Title', value: 'Heading 1.0' },
+	]}
+/>
+
+</Fragment>
+
+<LayoutGrid
+	columns={12}
+	gutter="24px"
+	margin="60px"
+	ratio="16 / 9"
+	label="Deck · 16:9"
+	specs={[{ term: 'Columns', value: '12' }]}
+/>
+
+</Block>

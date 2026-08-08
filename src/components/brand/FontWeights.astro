@@ -1,0 +1,62 @@
+---
+import { brand } from '../../brand/config';
+
+interface Props {
+	font?: 'display' | 'text';
+	/** Text rendered at each weight. */
+	sample?: string;
+	class?: string;
+}
+
+const { font = 'display', sample, class: className } = Astro.props;
+const weights = brand.typography.weights;
+---
+
+<ul class:list={['weights', 'escape', className]}>
+	{
+		weights.map((w) => (
+			<li class="weights__row">
+				<span
+					class="weights__sample"
+					style={`font-family: var(--font-${font}); font-weight: ${w.weight};${w.italic ? ' font-style: italic;' : ''}`}
+				>
+					{sample ?? w.name}
+				</span>
+				<span class="mono weights__value">{w.weight}</span>
+			</li>
+		))
+	}
+</ul>
+
+<style>
+	.weights {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: grid;
+	}
+
+	.weights__row {
+		display: flex;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: var(--space-m);
+		padding-block: var(--space-s);
+		border-block-start: var(--rule) solid var(--line);
+	}
+
+	.weights__row:last-child {
+		border-block-end: var(--rule) solid var(--line);
+	}
+
+	.weights__sample {
+		font-size: clamp(1.5rem, 4vw, 2.5rem);
+		line-height: 1.05;
+		letter-spacing: -0.02em;
+	}
+
+	.weights__value {
+		color: var(--muted);
+		flex: none;
+	}
+</style>

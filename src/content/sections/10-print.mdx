@@ -1,0 +1,131 @@
+---
+title: Print
+summary: Stationery, promotional items and signage — the brand as a physical object.
+---
+
+import { Block, Figure, Grid, SpecList, Callout } from '../../components/mdx';
+
+<Block title="Stationary" subtitle="Business cards">
+<Fragment slot="note">
+
+The vibrant accent front, carrying the logotype, catches the eye and leaves a lasting
+impression. The reverse stays white and holds the details.
+
+<SpecList
+	items={[
+		{ term: 'Size', value: '85 × 55 mm' },
+		{ term: 'Stock', value: '400 gsm uncoated' },
+		{ term: 'Finish', value: 'Matt, unlaminated' },
+		{ term: 'Bleed', value: '3 mm' },
+	]}
+/>
+
+</Fragment>
+
+<Grid cols={2}>
+
+<Figure ratio="85 / 55" caption="Front — accent field, logotype centred." />
+<Figure ratio="85 / 55" caption="Back — white, name and contact details." />
+
+</Grid>
+
+</Block>
+
+<Block title="Letterhead" subtitle="& envelopes">
+<Fragment slot="note">
+
+A blend of subtlety and statement. The front stays clean and professional; the back is
+printed in full accent, so correspondence arrives recognisable before it is read.
+
+</Fragment>
+
+<Grid cols={2}>
+
+<Figure ratio="210 / 297" caption="A4 letterhead — front." />
+<Figure ratio="210 / 297" caption="Reverse — full accent flood." />
+
+</Grid>
+
+</Block>
+
+<Block title="Posters" subtitle="& banners">
+<Fragment slot="note">
+
+Not a daily tool, but a potent extension of the communication strategy — posters reach a
+broader audience with a more immersive message.
+
+They are where the type scale is allowed to run to Display 1.0. One message, no supporting
+paragraph.
+
+</Fragment>
+
+<Grid cols={2}>
+
+<Figure ratio="2 / 3" caption="A1 — display type, one image, one accent element." />
+<Figure ratio="2 / 3" caption="A1 — accent flood, reversed logotype." />
+
+</Grid>
+
+</Block>
+
+<Block title="Promotional" subtitle="Materials">
+<Fragment slot="note">
+
+Everyday objects that carry the mark: mug, cap, tote, T-shirt. Bold where the object
+allows it, restrained where it does not.
+
+<Callout tone="note" title="Small applications">
+
+Embroidery, engraving and screen print all lose fine detail. Below 20 mm use the
+brandmark, single colour, with no attempt to reproduce hairlines.
+
+</Callout>
+
+</Fragment>
+
+<Grid cols={4}>
+
+<Figure ratio="1 / 1" caption="Mug — brandmark, oversized" />
+<Figure ratio="1 / 1" caption="Cap — logotype, white on black" />
+<Figure ratio="1 / 1" caption="Tote — accent, logotype repeated" />
+<Figure ratio="1 / 1" caption="T-shirt — brandmark at the chest" />
+
+</Grid>
+
+</Block>
+
+<Block title="Signage" subtitle="& displays">
+<Fragment slot="note">
+
+Signage is read at distance and at an angle. Increase clear space to twice the standard
+and check contrast against the actual wall colour, not a rendering of it.
+
+</Fragment>
+
+<Grid cols={2}>
+
+<Figure ratio="4 / 3" caption="Illuminated sign — accent face, logotype in black." />
+<Figure ratio="4 / 3" caption="Building signage — flush-mounted, no backing panel." />
+
+</Grid>
+
+</Block>
+
+<Block title="Print" subtitle="Production">
+<Fragment slot="note">
+
+Always proof the accent on the actual stock. It shifts noticeably on uncoated paper, and
+that shift is the single most common reason a print job comes back wrong.
+
+</Fragment>
+
+<SpecList
+	items={[
+		{ term: 'Colour space', value: 'CMYK for offset and digital, RGB for screen' },
+		{ term: 'Spot colour', value: 'Match the accent to the Pantone in the palette' },
+		{ term: 'Resolution', value: '300 dpi at final size, 150 dpi large format' },
+		{ term: 'Artwork', value: 'PDF/X-4 with fonts embedded' },
+	]}
+/>
+
+</Block>

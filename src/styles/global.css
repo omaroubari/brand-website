@@ -1,0 +1,487 @@
+/*
+ * Global styles for the brand guidelines site.
+ *
+ * Colour, type and spacing all come from custom properties emitted by
+ * `src/brand/tokens.ts` out of `src/brand/config.ts`. Nothing here hardcodes a
+ * brand value, so a new client only means editing the config.
+ */
+
+/* ── Reset ────────────────────────────────────────────────────────────────── */
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+* {
+	margin: 0;
+}
+
+html {
+	-webkit-text-size-adjust: 100%;
+	scroll-behavior: smooth;
+	scroll-padding-top: 6rem;
+}
+
+body {
+	-webkit-font-smoothing: antialiased;
+	text-rendering: optimizeLegibility;
+}
+
+img,
+picture,
+svg,
+video {
+	display: block;
+	max-width: 100%;
+}
+
+button,
+input,
+select,
+textarea {
+	font: inherit;
+	color: inherit;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	html {
+		scroll-behavior: auto;
+	}
+
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+	}
+}
+
+/* ── Scale & rhythm ───────────────────────────────────────────────────────── */
+
+:root {
+	--page-gutter: clamp(1.25rem, 2.6vw, 2.5rem);
+	--rail-width: 14rem;
+	/* The document's narrow left column: two-line title above small body copy. */
+	--side-column: clamp(11rem, 24vw, 21.5rem);
+	--measure: 30ch;
+	--rule: 1px;
+
+	--space-2xs: 0.25rem;
+	--space-xs: 0.5rem;
+	--space-s: 0.75rem;
+	--space-m: 1.25rem;
+	--space-l: 2rem;
+	--space-xl: clamp(2.5rem, 5vw, 4rem);
+	--space-2xl: clamp(4.5rem, 10vw, 9rem);
+
+	--ease: cubic-bezier(0.2, 0, 0, 1);
+}
+
+/* ── Base ─────────────────────────────────────────────────────────────────── */
+
+body {
+	background: var(--surface);
+	color: var(--ink);
+	font-family: var(--font-text);
+	font-size: var(--type-body-2-0-size, 0.8125rem);
+	line-height: var(--type-body-2-0-leading, 1.45);
+	font-weight: var(--type-body-2-0-weight, 300);
+	/* No colour transition here. Only `body` would animate while every panel,
+	   swatch and the nav rail switched instantly, so a fade left the page in a
+	   visibly half-themed state. An atomic switch is also truer to the document. */
+}
+
+::selection {
+	background: var(--accent);
+	color: var(--on-accent);
+}
+
+:focus-visible {
+	outline: 2px solid var(--accent);
+	outline-offset: 3px;
+	border-radius: 2px;
+}
+
+a {
+	color: inherit;
+	text-decoration-color: color-mix(in srgb, currentColor 35%, transparent);
+	text-underline-offset: 0.2em;
+	transition: text-decoration-color 0.2s var(--ease), color 0.2s var(--ease);
+}
+
+a:hover {
+	text-decoration-color: currentColor;
+}
+
+hr {
+	border: 0;
+	border-top: var(--rule) solid var(--line);
+	margin: var(--space-xl) 0;
+}
+
+/* ── Type primitives ──────────────────────────────────────────────────────── */
+
+.display-1 {
+	font-family: var(--font-display);
+	font-size: var(--type-display-1-0-size);
+	line-height: var(--type-display-1-0-leading);
+	letter-spacing: var(--type-display-1-0-tracking);
+	font-weight: var(--type-display-1-0-weight);
+	text-wrap: balance;
+}
+
+.display-2 {
+	font-family: var(--font-display);
+	font-size: var(--type-display-2-0-size);
+	line-height: var(--type-display-2-0-leading);
+	letter-spacing: var(--type-display-2-0-tracking);
+	font-weight: var(--type-display-2-0-weight);
+	text-wrap: balance;
+}
+
+.heading-1 {
+	font-family: var(--font-display);
+	font-size: var(--type-heading-1-0-size);
+	line-height: var(--type-heading-1-0-leading);
+	letter-spacing: var(--type-heading-1-0-tracking);
+	font-weight: var(--type-heading-1-0-weight);
+	text-wrap: balance;
+}
+
+.heading-2 {
+	font-family: var(--font-display);
+	font-size: var(--type-heading-2-0-size);
+	line-height: var(--type-heading-2-0-leading);
+	letter-spacing: var(--type-heading-2-0-tracking);
+	font-weight: var(--type-heading-2-0-weight);
+	text-wrap: balance;
+}
+
+/**
+ * The document's statement paragraph: one big block of light-weight copy filling
+ * the page, as on the welcome and tone-of-voice spreads.
+ */
+.statement {
+	font-family: var(--font-text);
+	font-size: var(--type-body-1-0-size);
+	line-height: var(--type-body-1-0-leading);
+	letter-spacing: var(--type-body-1-0-tracking);
+	font-weight: var(--type-body-1-0-weight);
+	text-wrap: pretty;
+	max-width: 18ch;
+}
+
+@media (min-width: 48rem) {
+	.statement {
+		max-width: 21ch;
+	}
+}
+
+/**
+ * Two-line page title — medium over light, same size, set tight. Used on every
+ * content spread ("Logotype" / "Primary logo").
+ */
+.doc-title {
+	font-family: var(--font-display);
+	font-size: var(--type-heading-1-0-size);
+	line-height: var(--type-heading-1-0-leading);
+	letter-spacing: var(--type-heading-1-0-tracking);
+	font-weight: 500;
+	text-wrap: balance;
+	display: block;
+}
+
+.doc-title__sub {
+	display: block;
+	font-weight: 300;
+}
+
+/** Small uppercase label used for eyebrows, captions and spec keys. */
+.label {
+	font-family: var(--font-text);
+	font-size: 0.625rem;
+	line-height: 1.3;
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+	font-weight: 500;
+	color: var(--muted);
+}
+
+/**
+ * The running meta stack in the top-right corner of every divider and cover
+ * page: brand, document, version, year — right-aligned, one line each.
+ */
+.colophon {
+	display: grid;
+	gap: 0.1rem;
+	justify-items: end;
+	text-align: end;
+	font-size: var(--type-caption-size);
+	line-height: 1.35;
+}
+
+.caption {
+	font-size: var(--type-caption-size);
+	line-height: var(--type-caption-leading);
+	letter-spacing: var(--type-caption-tracking);
+	color: var(--muted);
+}
+
+.mono {
+	font-family: var(--font-mono);
+	font-size: 0.75rem;
+	letter-spacing: 0.01em;
+	font-variant-numeric: tabular-nums;
+}
+
+.tnum {
+	font-variant-numeric: tabular-nums;
+}
+
+/* ── Shell ────────────────────────────────────────────────────────────────── */
+
+.shell {
+	min-height: 100dvh;
+}
+
+@media (min-width: 60rem) {
+	.shell {
+		display: grid;
+		grid-template-columns: var(--rail-width) minmax(0, 1fr);
+	}
+}
+
+.main {
+	min-width: 0;
+	display: flex;
+	flex-direction: column;
+	min-height: 100dvh;
+}
+
+/* Everything inside a page sits in the gutter; full-bleed panels opt out. */
+.page {
+	padding-inline: var(--page-gutter);
+	padding-block: var(--space-l) var(--space-2xl);
+	flex: 1;
+}
+
+.page > * + * {
+	margin-block-start: var(--space-2xl);
+}
+
+/*
+ * Escapes the page gutter to touch the edges of the content area, the way the
+ * colour fields and section dividers bleed off the printed page.
+ */
+.full-bleed {
+	margin-inline: calc(var(--page-gutter) * -1);
+	width: calc(100% + var(--page-gutter) * 2);
+	max-width: none;
+}
+
+/* A bleeding first element starts at the very top of the page, so it cancels
+   the page's own top padding — covers and section dividers both rely on this. */
+.page > .full-bleed:first-child {
+	margin-block-start: calc(var(--space-l) * -1);
+}
+
+/* Wide blocks may break the measure but never the page. */
+.bleed {
+	overflow-x: auto;
+	overscroll-behavior-x: contain;
+}
+
+/* ── The page grid: title + note left, specimen right ─────────────────────── */
+
+/*
+ * This is the document's core spread. The left column carries the two-line
+ * title and the small explanatory note; the right column carries the artwork,
+ * specimen or diagram and runs to the edge of the page.
+ */
+.block {
+	display: grid;
+	gap: var(--space-l) var(--space-xl);
+	align-items: start;
+}
+
+@media (min-width: 48rem) {
+	.block {
+		grid-template-columns: var(--side-column) minmax(0, 1fr);
+	}
+
+	.block--full {
+		grid-template-columns: minmax(0, 1fr);
+	}
+}
+
+.block__side {
+	display: grid;
+	gap: var(--space-m);
+	align-content: start;
+}
+
+.block__note {
+	max-width: var(--measure);
+}
+
+.block__note > * + * {
+	margin-block-start: var(--space-s);
+}
+
+.block__title {
+	font-family: var(--font-display);
+	font-size: var(--type-heading-1-0-size);
+	line-height: var(--type-heading-1-0-leading);
+	letter-spacing: var(--type-heading-1-0-tracking);
+	font-weight: 500;
+	text-wrap: balance;
+}
+
+.block__title--full {
+	margin-block-end: var(--space-l);
+}
+
+.block__body > * + * {
+	margin-block-start: var(--space-l);
+}
+
+/* ── Prose (MDX output) ───────────────────────────────────────────────────── */
+
+/* The measure belongs to the text, not to the container — otherwise every
+   specimen, palette and diagram inherits a 34rem cage. */
+.prose,
+.block__body {
+	max-width: none;
+}
+
+.prose > :where(p, ul, ol, dl, blockquote, h2, h3, h4),
+.block__body > :where(p, ul, ol, dl, blockquote, h3, h4) {
+	max-width: var(--measure);
+}
+
+.prose > * + * {
+	margin-block-start: var(--space-m);
+}
+
+/* Headings written in Markdown only. Component headings carry a class and
+   style themselves — without the `:not([class])` guard, every `<Block>` title
+   would inherit this rule's top margin and sit a full space-xl below its body. */
+.prose :where(h2, h3, h4):not([class]) {
+	font-family: var(--font-display);
+	font-weight: 500;
+	letter-spacing: -0.015em;
+	text-wrap: balance;
+	margin-block-start: var(--space-xl);
+}
+
+.prose :where(h2):not([class]) {
+	font-size: var(--type-heading-2-0-size);
+	line-height: var(--type-heading-2-0-leading);
+}
+
+.prose :where(h3):not([class]) {
+	font-size: 1.125rem;
+	line-height: 1.25;
+}
+
+.prose :where(h4):not([class]) {
+	font-size: 1rem;
+	line-height: 1.3;
+	color: var(--muted);
+}
+
+.prose strong {
+	font-weight: 600;
+}
+
+.prose ul,
+.prose ol {
+	padding-inline-start: 1.1em;
+}
+
+.prose li + li {
+	margin-block-start: var(--space-xs);
+}
+
+.prose li::marker {
+	color: var(--muted);
+}
+
+.prose blockquote {
+	border-inline-start: 2px solid var(--accent);
+	padding-inline-start: var(--space-m);
+	font-size: var(--type-body-1-0-size);
+	line-height: var(--type-body-1-0-leading);
+}
+
+.prose code {
+	font-family: var(--font-mono);
+	font-size: 0.85em;
+	background: color-mix(in srgb, var(--raised) 55%, transparent);
+	padding: 0.15em 0.4em;
+	border-radius: 3px;
+}
+
+.prose :where(h2, h3, h4):not([class]) + * {
+	margin-block-start: var(--space-s);
+}
+
+/* Marks a component that should always fill its column, whatever it sits in.
+   Deliberately no `width` — that would beat `.full-bleed`'s wider width when
+   the two are combined. */
+.escape {
+	max-width: none;
+}
+
+/* ── Surfaces ─────────────────────────────────────────────────────────────── */
+
+.panel {
+	border: var(--rule) solid var(--line);
+	background: var(--surface);
+	display: grid;
+	place-items: center;
+	padding: clamp(1.5rem, 5vw, 3.5rem);
+	position: relative;
+	overflow: hidden;
+}
+
+.panel--flush {
+	padding: 0;
+}
+
+.grid {
+	display: grid;
+	gap: var(--space-m);
+	grid-template-columns: repeat(var(--cols, 3), minmax(0, 1fr));
+}
+
+@media (max-width: 47.999rem) {
+	.grid {
+		grid-template-columns: repeat(var(--cols-sm, 1), minmax(0, 1fr));
+	}
+}
+
+/* ── Utilities ────────────────────────────────────────────────────────────── */
+
+.visually-hidden {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip-path: inset(50%);
+	white-space: nowrap;
+	border: 0;
+}
+
+.stack > * + * {
+	margin-block-start: var(--stack-gap, var(--space-m));
+}
+
+.rule {
+	border-top: var(--rule) solid var(--line);
+}

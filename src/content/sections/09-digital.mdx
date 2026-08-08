@@ -1,0 +1,144 @@
+---
+title: Digital
+summary: Website, app icon, favicon and social — the brand in the places it is used most.
+---
+
+import { Block, Figure, Grid, Panel, Logo, SpecList, Callout } from '../../components/mdx';
+
+<Block title="Website" subtitle="Desktop">
+<Fragment slot="note">
+
+The header carries the accent and the logotype sits inside it — the one place the accent
+is allowed to occupy a large area. It adds vibrancy and makes a memorable first
+impression.
+
+Everything below returns to white, black and the type scale.
+
+<Callout tone="note">
+
+Replace these frames with real screenshots: drop the files into
+`src/assets/applications/`, import them at the top of this file, and pass them as
+`src={...}`.
+
+</Callout>
+
+</Fragment>
+
+<Figure ratio="16 / 10" caption="Desktop — accent header, logotype, 12-column grid." />
+
+</Block>
+
+<Block title="Website" subtitle="Mobile">
+<Fragment slot="note">
+
+The header keeps its accent across devices. In the compact format the brandmark replaces
+the logotype, making better use of the screen while staying recognisable.
+
+</Fragment>
+
+<Grid cols={3}>
+
+<Figure ratio="9 / 16" caption="Home" />
+<Figure ratio="9 / 16" caption="Work" />
+<Figure ratio="9 / 16" caption="Contact" />
+
+</Grid>
+
+</Block>
+
+<Block title="Website" subtitle="Favicon">
+<Fragment slot="note">
+
+The favicon is the brandmark and nothing else — a small mark that adds identity and
+recognition to browser tabs and bookmarks.
+
+Ship SVG with a light/dark media query, plus a 180 px PNG for iOS.
+
+</Fragment>
+
+<Grid cols={3}>
+
+<Panel bg="white" ratio="1 / 1" caption="16 px" label="Favicon">
+	<Logo mark="brandmark" on="light" width="1rem" />
+</Panel>
+
+<Panel bg="white" ratio="1 / 1" caption="32 px">
+	<Logo mark="brandmark" on="light" width="2rem" />
+</Panel>
+
+<Panel bg="black" ratio="1 / 1" caption="On dark browser chrome">
+	<Logo mark="brandmark" on="dark" width="2rem" />
+</Panel>
+
+</Grid>
+
+</Block>
+
+<Block title="App icon" subtitle="Black & white">
+<Fragment slot="note">
+
+The app icon is drawn from the brandmark and used in black on white or white on black.
+Nothing else.
+
+<SpecList
+	items={[
+		{ term: 'Grid', value: '6 × 6' },
+		{ term: 'Mark width', value: '4 of 6 units' },
+		{ term: 'Radius', value: 'Set by the platform' },
+		{ term: 'Export', value: '1024 px PNG, no alpha' },
+	]}
+/>
+
+</Fragment>
+
+<Grid cols={2}>
+
+<Panel bg="black" ratio="1 / 1" caption="White on black.">
+	<Logo mark="brandmark" on="dark" width="45%" />
+</Panel>
+
+<Panel bg="white" ratio="1 / 1" caption="Black on white. No gradient, no shadow.">
+	<Logo mark="brandmark" on="light" width="45%" />
+</Panel>
+
+</Grid>
+
+</Block>
+
+<Block title="Social media" subtitle="Posts">
+<Fragment slot="note">
+
+Posts carry one idea: a team member, a piece of work, a line worth repeating. Visual
+elements do the reinforcing; the copy stays short.
+
+Profile images use the brandmark, never the logotype — it will be cropped to a circle.
+
+</Fragment>
+
+<Grid cols={3}>
+
+<Figure ratio="1 / 1" caption="Work" />
+<Figure ratio="1 / 1" caption="Quote" />
+<Figure ratio="1 / 1" caption="Studio" />
+
+</Grid>
+
+</Block>
+
+<Block title="Social media" subtitle="Stories">
+<Fragment slot="note">
+
+Stories are dynamic announcements that echo the posts: team highlights, inspiring content,
+project updates. Ephemeral, but held to the same grid.
+
+</Fragment>
+
+<Grid cols={3}>
+
+<Figure ratio="9 / 16" caption="Announcement" />
+<Figure ratio="9 / 16" caption="Behind the work" />
+<Figure ratio="9 / 16" caption="Repost" />
+
+</Grid>
+
+</Block>

@@ -1,0 +1,52 @@
+---
+title: Iconography
+summary: A single-weight line set, drawn on a 24 × 24 grid.
+---
+
+import { Block, IconGrid, Callout, SpecList } from '../../components/mdx';
+
+<Block title="Icons" subtitle="The set">
+<Fragment slot="note">
+
+Icons enhance the appeal and function of a layout, communicating ideas and actions across
+digital and print material.
+
+Every icon is drawn on the same grid with the same stroke, so a row of them reads as one
+family rather than a collection.
+
+<SpecList
+	items={[
+		{ term: 'Grid', value: '24 × 24' },
+		{ term: 'Live area', value: '20 × 20' },
+		{ term: 'Stroke', value: '1.5 px' },
+		{ term: 'Corners', value: 'Square joins and caps' },
+	]}
+/>
+
+</Fragment>
+
+<IconGrid unit={24} version="v1.0" cols={4} />
+
+</Block>
+
+<Block title="Icons" subtitle="Usage">
+<Fragment slot="note">
+
+Icons support words; they rarely replace them. An icon alone is only acceptable where the
+meaning is universal — close, search, play — or where a label appears on hover or focus.
+
+Scale in whole multiples of the grid: 16, 24, 32, 48. At 16 px the 1.5 px stroke needs to
+be redrawn rather than scaled, or it turns to mush.
+
+<Callout tone="dont">
+
+Do not fill line icons, mix them with a filled set, recolour them to the accent for
+emphasis, or rotate them to invent a new meaning. Ask for a new icon instead.
+
+</Callout>
+
+</Fragment>
+
+<IconGrid only={['arrow', 'play', 'inspect', 'message']} cols={4} />
+
+</Block>

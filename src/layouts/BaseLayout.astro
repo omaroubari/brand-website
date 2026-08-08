@@ -1,0 +1,106 @@
+---
+import "../styles/global.css";
+import { Font } from "astro:assets";
+import { brand } from "../brand/config";
+import { brandStyleSheet } from "../brand/tokens";
+import SideNav from "../components/nav/SideNav.astro";
+import "../styles/global.css";
+
+interface Props {
+    title?: string;
+    description?: string;
+    /** Pin this page to one scheme, ignoring the visitor's preference. */
+    theme?: "light" | "dark";
+    /** Drop the nav rail — used by the cover page. */
+    bare?: boolean;
+    class?: string;
+}
+
+const {
+    title,
+    description = brand.meta.description,
+    theme,
+    bare = false,
+    class: className,
+} = Astro.props;
+
+const pageTitle = title
+    ? `${title} — ${brand.meta.name} ${brand.meta.documentTitle}`
+    : `${brand.meta.name} — ${brand.meta.documentTitle}`;
+
+const canonical = new URL(
+    Astro.url.pathname,
+    Astro.site ?? "https://localhost",
+);
+const tokens = brandStyleSheet(brand);
+---
+
+<!doctype html>
+<html lang="en" data-theme={theme}>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>{pageTitle}</title>
+        <meta name="description" content={description} />
+        <link rel="canonical" href={canonical.href} />
+        <link
+            rel="icon"
+            href={brand.logo.favicon ?? "/favicon.svg"}
+            type="image/svg+xml"
+        />
+
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content={pageTitle} />
+        <meta property="og:description" content={description} />
+        <meta property="og:url" content={canonical.href} />
+        {
+            brand.meta.ogImage && (
+                <meta
+                    property="og:image"
+                    content={new URL(brand.meta.ogImage, canonical).href}
+                />
+            )
+        }
+        <meta name="twitter:card" content="summary_large_image" />
+
+        <!-- Guidelines are for the client, not for search. Remove if the site is public. -->
+        <meta name="robots" content="noindex, nofollow" />
+
+        <Font cssVariable="--font-brand" preload />
+        <style is:global set:html={tokens}></style>
+
+        {
+            /* Resolve the scheme before first paint so the page never flashes, and
+			   always write it to `data-theme` — theme-dependent artwork keys off the
+			   attribute, so leaving it unset would strand a system-dark visitor with
+			   the light logo. Skipped when the page pins its own theme. */
+            !theme && (
+                <script is:inline data-default={brand.theme.default}>
+                    {`(() => {
+	const root = document.documentElement;
+	const fallback = document.currentScript.dataset.default;
+	let stored = null;
+	try { stored = localStorage.getItem('brand-theme'); } catch {}
+	const system = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+	root.dataset.theme = stored ?? (fallback === 'system' ? system : fallback);
+})();`}
+                </script>
+            )
+        }
+    </head>
+
+    <body>
+        {
+            bare ? (
+                <slot />
+            ) : (
+                <div class:list={["shell", className]}>
+                    <SideNav />
+                    <main class="main" id="content">
+                        <slot />
+                    </main>
+                </div>
+            )
+        }
+    </body>
+</html>

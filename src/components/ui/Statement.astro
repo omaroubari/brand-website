@@ -1,0 +1,32 @@
+---
+/**
+ * The one large block of copy that carries a spread — the welcome page, the
+ * tone-of-voice opener. Set light, tight and big; never more than a few lines.
+ *
+ * Renders a `div`, not a `p`: MDX wraps slot content in its own paragraph, and
+ * a `p` inside a `p` is unnested by the HTML parser, which would leave this
+ * element empty and the text set at body size.
+ */
+interface Props {
+	class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+<div class:list={['statement', className]}>
+	<slot />
+</div>
+
+<style>
+	.statement > :global(p) {
+		margin: 0;
+		font: inherit;
+		letter-spacing: inherit;
+		max-width: none;
+	}
+
+	.statement > :global(p + p) {
+		margin-block-start: 0.4em;
+	}
+</style>

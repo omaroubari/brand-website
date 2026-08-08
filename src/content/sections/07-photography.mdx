@@ -1,0 +1,88 @@
+---
+title: Photography
+summary: Two styles — light and dark — and what belongs in each.
+---
+
+import { Block, PhotoGrid, Callout } from '../../components/mdx';
+
+import photo01 from '../../assets/photography/photo-01.jpg';
+import photo02 from '../../assets/photography/photo-02.jpg';
+import photo03 from '../../assets/photography/photo-03.jpg';
+import photo04 from '../../assets/photography/photo-04.jpg';
+import photo05 from '../../assets/photography/photo-05.jpg';
+import photo06 from '../../assets/photography/photo-06.jpg';
+import photo07 from '../../assets/photography/photo-07.jpg';
+import photo08 from '../../assets/photography/photo-08.jpg';
+
+<Block title="Photography" subtitle="Light style">
+<Fragment slot="note">
+
+Airy, high-key, generous with negative space. Used for the studio, the team and work in
+progress — anything that should feel open and unguarded.
+
+Type sits directly on these images in black, so shoot with a quiet area reserved for it.
+
+</Fragment>
+
+<PhotoGrid
+	images={[{ src: photo01, span: 2 }, { src: photo02 }, { src: photo03 }]}
+	cols={3}
+	ratio="4 / 3"
+/>
+
+</Block>
+
+<Block title="Photography" subtitle="Dark style">
+<Fragment slot="note">
+
+Low-key, high-contrast, weighted towards depth. Used for campaign and product imagery
+where the message needs gravity.
+
+Type reverses to white; keep the subject away from the corner the type will occupy.
+
+</Fragment>
+
+<PhotoGrid
+	images={[{ src: photo04 }, { src: photo05 }, { src: photo06, span: 2 }]}
+	cols={3}
+	ratio="4 / 3"
+/>
+
+</Block>
+
+<Block title="Photography" subtitle="Duotone">
+<Fragment slot="note">
+
+Where an image needs to belong to the brand more than it needs to be literal, it is
+reduced to greyscale and laid over the accent.
+
+Use sparingly — covers, dividers, campaign headers — and never for a photograph of a
+person's face.
+
+</Fragment>
+
+<PhotoGrid images={[photo07, photo08]} cols={2} ratio="3 / 2" treatment="duotone" />
+
+</Block>
+
+<Block title="Photography" subtitle="Selection">
+<Fragment slot="note">
+
+Real over staged. If a stock image looks like stock, it is the wrong image.
+
+Composition should be simple enough to survive a crop to square and to 16:9. Avoid
+photographs with their own strong colour story — they compete with the accent rather than
+sitting beneath it.
+
+<Callout tone="note" title="Licensing">
+
+Every image needs a licence on file before it ships, including social. Record the source
+and the licence term alongside the asset.
+
+</Callout>
+
+</Fragment>
+
+<PhotoGrid images={[photo03, photo05, photo01]} cols={3} ratio="1 / 1" treatment="mono" />
+
+</Block>

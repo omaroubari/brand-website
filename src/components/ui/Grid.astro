@@ -1,0 +1,21 @@
+---
+interface Props {
+	/** Columns from the medium breakpoint up. */
+	cols?: number;
+	/** Columns on small screens. */
+	colsSm?: number;
+	/** Any CSS length, or a `--space-*` value. */
+	gap?: string;
+	class?: string;
+}
+
+const { cols = 3, colsSm = 1, gap, class: className } = Astro.props;
+
+const style = [`--cols: ${cols};`, `--cols-sm: ${colsSm};`, gap && `gap: ${gap};`]
+	.filter(Boolean)
+	.join(' ');
+---
+
+<div class:list={['grid', 'escape', className]} style={style}>
+	<slot />
+</div>

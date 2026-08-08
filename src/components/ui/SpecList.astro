@@ -1,0 +1,58 @@
+---
+interface Props {
+	/** Key/value rows, in order. */
+	items: Array<{ term: string; value: string }>;
+	/** Lay the pairs out side by side instead of stacked. */
+	inline?: boolean;
+	class?: string;
+}
+
+const { items, inline = false, class: className } = Astro.props;
+---
+
+<dl class:list={['specs', inline && 'specs--inline', className]}>
+	{
+		items.map((item) => (
+			<div class="specs__row">
+				<dt class="label specs__term">{item.term}</dt>
+				<dd class="specs__value mono">{item.value}</dd>
+			</div>
+		))
+	}
+</dl>
+
+<style>
+	.specs {
+		margin: 0;
+		display: grid;
+		gap: 0.35rem;
+	}
+
+	.specs--inline {
+		grid-auto-flow: column;
+		grid-auto-columns: max-content;
+		gap: var(--space-l);
+	}
+
+	.specs__row {
+		display: grid;
+		grid-template-columns: minmax(5rem, 8rem) minmax(0, 1fr);
+		gap: var(--space-s);
+		align-items: baseline;
+		padding-block: 0.2rem;
+	}
+
+	.specs--inline .specs__row {
+		grid-template-columns: minmax(0, 1fr);
+		gap: 0.15rem;
+	}
+
+	.specs__term {
+		color: var(--muted);
+	}
+
+	.specs__value {
+		margin: 0;
+		color: inherit;
+	}
+</style>

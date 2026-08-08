@@ -1,0 +1,75 @@
+---
+interface Props {
+	items: Array<{ title: string; body: string }>;
+	/** Number each value, set as a superscript beside the name. */
+	numbered?: boolean;
+	class?: string;
+}
+
+const { items, numbered = true, class: className } = Astro.props;
+---
+
+{/* Each value is a band: the name set very large, its number riding as a
+    superscript, and the explanation small in a narrow column beside it. */}
+<ol class:list={['values', 'escape', className]}>
+	{
+		items.map((item, i) => (
+			<li class="values__item">
+				<h3 class="values__title">
+					{item.title}
+					{numbered && <sup class="values__num tnum">{String(i + 1).padStart(2, '0')}</sup>}
+				</h3>
+				<p class="values__body">{item.body}</p>
+			</li>
+		))
+	}
+</ol>
+
+<style>
+	.values {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: grid;
+		gap: var(--space-2xl);
+	}
+
+	.values__item {
+		display: grid;
+		gap: var(--space-m);
+		align-items: start;
+	}
+
+	@media (min-width: 48rem) {
+		.values__item {
+			grid-template-columns: minmax(0, 1fr) minmax(9rem, 15rem);
+			gap: var(--space-xl);
+		}
+	}
+
+	/* Sized to fit the name on one line inside its column — at the full Display
+	   2.0 size the longest value overflows into the note beside it. */
+	.values__title {
+		font-family: var(--font-display);
+		font-size: clamp(2rem, 5.2vw, 4.5rem);
+		line-height: 0.95;
+		letter-spacing: var(--type-display-2-0-tracking);
+		font-weight: var(--type-display-2-0-weight);
+		margin: 0;
+		text-wrap: balance;
+	}
+
+	.values__num {
+		font-size: 0.22em;
+		font-weight: 300;
+		letter-spacing: 0;
+		vertical-align: super;
+		margin-inline-start: 0.15em;
+	}
+
+	.values__body {
+		margin: 0;
+		text-wrap: pretty;
+		align-self: start;
+	}
+</style>

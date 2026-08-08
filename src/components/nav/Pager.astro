@@ -1,0 +1,76 @@
+---
+import { getSiblings } from '../../lib/sections';
+
+interface Props {
+	/** Current section id. */
+	id: string;
+}
+
+const { id } = Astro.props;
+const { prev, next } = await getSiblings(id);
+---
+
+<nav class="pager" aria-label="Section">
+	{
+		prev ? (
+			<a class="pager__link pager__link--prev" href={prev.href} rel="prev">
+				<span class="label">Previous</span>
+				<span class="pager__title">
+					<span class="mono pager__num">{prev.number}</span> {prev.title}
+				</span>
+			</a>
+		) : (
+			<span />
+		)
+	}
+
+	{
+		next && (
+			<a class="pager__link pager__link--next" href={next.href} rel="next">
+				<span class="label">Next</span>
+				<span class="pager__title">
+					<span class="mono pager__num">{next.number}</span> {next.title}
+				</span>
+			</a>
+		)
+	}
+</nav>
+
+<style>
+	.pager {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: var(--space-m);
+		border-block-start: var(--rule) solid var(--line);
+		padding-block-start: var(--space-m);
+	}
+
+	.pager__link {
+		display: grid;
+		gap: var(--space-2xs);
+		text-decoration: none;
+		align-content: start;
+	}
+
+	.pager__link--next {
+		text-align: end;
+	}
+
+	.pager__title {
+		font-family: var(--font-display);
+		font-size: clamp(1rem, 2vw, 1.375rem);
+		line-height: 1.15;
+		letter-spacing: -0.015em;
+		font-weight: 500;
+		text-wrap: balance;
+	}
+
+	.pager__link:hover .pager__title {
+		color: var(--accent);
+	}
+
+	.pager__num {
+		color: var(--muted);
+		font-size: 0.75rem;
+	}
+</style>

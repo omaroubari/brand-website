@@ -1,0 +1,110 @@
+---
+title: The Brand
+summary: Why we exist, where we are going, and who we are talking to.
+---
+
+import { Block, Statement, ValueGrid, PersonaCard } from '../../components/mdx';
+import portrait1 from '../../assets/photography/photo-01.jpg';
+import portrait2 from '../../assets/photography/photo-02.jpg';
+
+<Block title="Our" subtitle="purpose">
+
+<Statement>
+	To distil creativity into simplicity — brand identities that outlast trends and connect
+	with the people who matter.
+</Statement>
+
+</Block>
+
+<Block title="Mission" subtitle="& vision">
+<Fragment slot="note">
+
+**Mission.** To craft timeless brand identities that leave a lasting impression: minimal,
+considered work that reflects a client's values, ambitions and audience. We treat every
+identity as a system to be lived in, not a logo to be filed away.
+
+**Vision.** A world where brands are recognised instantly by a distilled visual identity,
+where simplicity is understood as the most powerful communication tool available and
+restraint reads as confidence rather than absence.
+
+</Fragment>
+
+<Statement>
+	We believe minimal design communicates the essence of a business more honestly than
+	decoration ever can.
+</Statement>
+
+</Block>
+
+<Block title="Values" subtitle="Three">
+<Fragment slot="note">
+
+Three commitments that decide the work when taste alone cannot. If a decision satisfies
+none of them, it is the wrong decision.
+
+</Fragment>
+
+<ValueGrid
+	items={[
+		{
+			title: 'Authentic',
+			body: 'Genuine, transparent and honest in how we work and what we make. Our designs carry real stories, which is what lets them connect.',
+		},
+		{
+			title: 'Distinctive',
+			body: 'Every project is a chance to push past the conventional. We set our clients apart deliberately, never by accident.',
+		},
+		{
+			title: 'Excellence',
+			body: 'A standard rather than a goal. It applies to the choice of a colour, the spacing of a word, and the final file we hand over.',
+		},
+	]}
+/>
+
+</Block>
+
+<Block title="Audience" subtitle="01">
+<Fragment slot="note">
+
+Fast-moving and time-poor. Values a partner who can translate a business position into a
+visual one without a six-week detour. Reads the work before the words, so the first proof
+matters more than the deck around it.
+
+</Fragment>
+
+<PersonaCard
+	name="Alex Mitchell"
+	role="Founders of small and medium companies"
+	image={portrait1}
+	facts={[
+		{ term: 'Age', value: '30' },
+		{ term: 'Location', value: 'London, UK' },
+		{ term: 'Role', value: 'Founder and CEO, early-stage technology' },
+		{ term: 'Education', value: 'BSc Computer Science, MBA' },
+	]}
+/>
+
+</Block>
+
+<Block title="Audience" subtitle="02">
+<Fragment slot="note">
+
+Judges craft closely and notices the details a client never will: kerning, grid discipline,
+whether the system holds at small sizes. Talks about the work publicly, which is how much
+of our reputation travels.
+
+</Fragment>
+
+<PersonaCard
+	name="Emma Parker"
+	role="Designers and creative peers"
+	image={portrait2}
+	facts={[
+		{ term: 'Age', value: '28' },
+		{ term: 'Location', value: 'New York, US' },
+		{ term: 'Role', value: 'Freelance graphic designer' },
+		{ term: 'Education', value: 'BA Graphic Design' },
+	]}
+/>
+
+</Block>

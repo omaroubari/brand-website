@@ -1,0 +1,46 @@
+---
+import { brand } from '../../brand/config';
+import ColorSwatch from './ColorSwatch.astro';
+
+interface Props {
+	/** Limit and order the palette by id. Defaults to every colour, in config order. */
+	only?: string[];
+	/** Show CMYK / RGB breakdowns alongside the hex. */
+	print?: boolean;
+	class?: string;
+}
+
+const { only, print = true, class: className } = Astro.props;
+
+const colors = only
+	? only.map((id) => {
+			const match = brand.colors.find((c) => c.id === id);
+			if (!match) throw new Error(`[ColorPalette] Unknown colour id "${id}"`);
+			return match;
+		})
+	: brand.colors;
+---
+
+<div class:list={['palette', 'escape', className]}>
+	{colors.map((c) => <ColorSwatch color={c} print={print} />)}
+</div>
+
+<style>
+	/* Fields butt up against each other with only a hairline between, so the
+	   palette reads as one block of colour across the page. */
+	.palette {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 2px;
+	}
+
+	/* Three columns, so a two-row swatch on the left leaves a 2 × 2 field beside
+	   it — the arrangement the printed colour page uses, and wide enough for a
+	   long colour name to stay on one line. */
+	@media (min-width: 48rem) {
+		.palette {
+			grid-template-columns: repeat(3, minmax(0, 1fr));
+			grid-auto-rows: minmax(14rem, auto);
+		}
+	}
+</style>

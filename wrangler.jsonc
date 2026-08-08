@@ -2,7 +2,8 @@
 	"$schema": "./node_modules/wrangler/config-schema.json",
 	"compatibility_date": "2026-08-02",
 	"compatibility_flags": ["global_fetch_strictly_public"],
-	"name": "",
+	// Rename per client — this is the Cloudflare Worker name.
+	"name": "brand-guidelines",
 	"main": "@astrojs/cloudflare/entrypoints/server",
 	"assets": {
 		"directory": "./dist",

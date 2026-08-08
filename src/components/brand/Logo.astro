@@ -1,0 +1,104 @@
+---
+import { brand } from '../../brand/config';
+
+interface Props {
+	/** Which piece of artwork to draw. */
+	mark?: 'logotype' | 'brandmark';
+	/**
+	 * Which background the logo sits on. `auto` follows the page theme;
+	 * `light`/`dark` pin it, for panels with a fixed background.
+	 */
+	on?: 'auto' | 'light' | 'dark';
+	/**
+	 * Paint the artwork in an arbitrary colour (any CSS colour or custom
+	 * property). Uses the SVG as a mask, so it only suits single-colour marks.
+	 */
+	tint?: string;
+	/** Any CSS width. Height follows from the artwork's aspect ratio. */
+	width?: string;
+	class?: string;
+}
+
+const { mark = 'logotype', on = 'auto', tint, width = '12rem', class: className } = Astro.props;
+
+const artwork = brand.logo[mark];
+const alt = artwork.altText ?? `${brand.meta.name} ${mark}`;
+const style = `--logo-width: ${width}; --logo-aspect: ${artwork.aspect};`;
+---
+
+{
+	tint ? (
+		<span
+			class:list={['logo', 'logo--tinted', className]}
+			style={`${style} --logo-src: url("${artwork.onLight}"); --logo-tint: ${tint};`}
+			role="img"
+			aria-label={alt}
+		/>
+	) : on === 'auto' ? (
+		<span class:list={['logo', className]} style={style}>
+			<img class="logo__art logo__art--light" src={artwork.onLight} alt={alt} width="1200" height={Math.round(1200 / artwork.aspect)} />
+			<img class="logo__art logo__art--dark" src={artwork.onDark} alt="" aria-hidden="true" width="1200" height={Math.round(1200 / artwork.aspect)} />
+		</span>
+	) : (
+		<span class:list={['logo', className]} style={style}>
+			<img
+				class="logo__art"
+				src={on === 'dark' ? artwork.onDark : artwork.onLight}
+				alt={alt}
+				width="1200"
+				height={Math.round(1200 / artwork.aspect)}
+			/>
+		</span>
+	)
+}
+
+<style>
+	.logo {
+		display: block;
+		width: var(--logo-width);
+		max-width: 100%;
+		aspect-ratio: var(--logo-aspect);
+	}
+
+	.logo__art {
+		width: 100%;
+		height: auto;
+	}
+
+	/* Swap artwork with the page theme. Both files are in the markup so the
+	   switch is instant and needs no JavaScript. */
+	.logo__art--dark {
+		display: none;
+	}
+
+	:global(:root[data-theme='dark']) .logo__art--light {
+		display: none;
+	}
+
+	:global(:root[data-theme='dark']) .logo__art--dark {
+		display: block;
+	}
+
+	/* Same swap without JavaScript, matching the colour fallback in tokens.ts. */
+	@media (prefers-color-scheme: dark) {
+		:global(:root:not([data-theme='light'])) .logo__art--light {
+			display: none;
+		}
+
+		:global(:root:not([data-theme='light'])) .logo__art--dark {
+			display: block;
+		}
+	}
+
+	.logo--tinted {
+		background-color: var(--logo-tint);
+		-webkit-mask-image: var(--logo-src);
+		mask-image: var(--logo-src);
+		-webkit-mask-repeat: no-repeat;
+		mask-repeat: no-repeat;
+		-webkit-mask-size: contain;
+		mask-size: contain;
+		-webkit-mask-position: center;
+		mask-position: center;
+	}
+</style>

@@ -1,0 +1,27 @@
+---
+import { render } from 'astro:content';
+import { getSections, sectionNumber } from '../lib/sections';
+import SectionLayout from '../layouts/SectionLayout.astro';
+
+export async function getStaticPaths() {
+	const sections = await getSections();
+	return sections.map((entry, index) => ({
+		params: { slug: entry.id },
+		props: { entry, number: sectionNumber(entry, index) },
+	}));
+}
+
+const { entry, number } = Astro.props;
+const { Content } = await render(entry);
+---
+
+<SectionLayout
+	id={entry.id}
+	title={entry.data.title}
+	number={number}
+	summary={entry.data.summary}
+	theme={entry.data.theme}
+	seo={entry.data.seo}
+>
+	<Content />
+</SectionLayout>

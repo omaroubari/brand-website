@@ -1,0 +1,105 @@
+---
+import { brand } from '../../brand/config';
+import Logo from './Logo.astro';
+
+interface Props {
+	mark?: 'logotype' | 'brandmark';
+	class?: string;
+}
+
+const { mark = 'logotype', class: className } = Astro.props;
+
+const { ratio, unit } = brand.logo.clearspace;
+/** Clear space is expressed as a fraction of the logo's own height. */
+const pad = `calc(var(--logo-h) * ${ratio})`;
+---
+
+<figure class:list={['clear', 'escape', className]}>
+	<div class="clear__stage" style={`--pad: ${pad};`}>
+		<div class="clear__zone">
+			<div class="clear__logo">
+				<Logo mark={mark} width={mark === 'brandmark' ? '5rem' : '18rem'} />
+			</div>
+		</div>
+		<span class="clear__tick clear__tick--top" aria-hidden="true"><span class="mono">x</span></span>
+		<span class="clear__tick clear__tick--side" aria-hidden="true"><span class="mono">x</span></span>
+	</div>
+
+	<figcaption class="caption clear__caption">
+		<strong>x</strong> = {unit}. Keep at least <strong>x</strong> of clear space on every side of
+		the {mark}. No type, image or graphic element may enter this zone.
+	</figcaption>
+</figure>
+
+<style>
+	.clear {
+		margin: 0;
+		display: grid;
+		gap: var(--space-s);
+	}
+
+	.clear__stage {
+		--logo-h: 4.5rem;
+		position: relative;
+		border: var(--rule) solid var(--line);
+		padding: clamp(2rem, 6vw, 4rem);
+		display: grid;
+		place-items: center;
+	}
+
+	.clear__zone {
+		padding: var(--pad);
+		outline: 1px dashed color-mix(in srgb, var(--accent) 70%, transparent);
+		outline-offset: 0;
+		position: relative;
+	}
+
+	.clear__logo {
+		display: grid;
+		place-items: center;
+	}
+
+	/* Dimension ticks, drawn from the same --pad so the diagram cannot drift
+	   out of sync with the stated ratio. */
+	.clear__tick {
+		position: absolute;
+		display: grid;
+		place-items: center;
+		color: var(--accent);
+		font-size: 0.6875rem;
+	}
+
+	.clear__tick--top {
+		inset-block-start: calc(50% - var(--logo-h) / 2 - var(--pad));
+		inset-inline-start: 50%;
+		height: var(--pad);
+		transform: translateX(-50%);
+		border-inline-start: 1px solid color-mix(in srgb, var(--accent) 55%, transparent);
+		padding-inline-start: 0.35rem;
+	}
+
+	.clear__tick--side {
+		inset-inline-start: calc(50% - var(--logo-w, 9rem) - var(--pad));
+		inset-block-start: 50%;
+		width: var(--pad);
+		transform: translateY(-50%);
+		border-block-start: 1px solid color-mix(in srgb, var(--accent) 55%, transparent);
+		padding-block-start: 0.35rem;
+	}
+
+	@media (max-width: 34rem) {
+		.clear__tick {
+			display: none;
+		}
+	}
+
+	.clear__caption {
+		max-width: var(--measure);
+		text-wrap: pretty;
+	}
+
+	.clear__caption strong {
+		color: var(--accent);
+		font-weight: 500;
+	}
+</style>

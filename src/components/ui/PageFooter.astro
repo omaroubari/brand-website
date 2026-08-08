@@ -1,0 +1,50 @@
+---
+import { brand } from '../../brand/config';
+
+/**
+ * The running foot from the printed document: brand and copyright left,
+ * document title centred, page number right. It sits at the bottom of the page,
+ * not at the end of the content.
+ */
+interface Props {
+	/** The "page number" — the section's position in the document. */
+	page?: string;
+}
+
+const { page } = Astro.props;
+---
+
+<footer class="foot">
+	<p class="caption">{brand.meta.name}©</p>
+	<p class="caption foot__mid">{brand.meta.documentTitle} Document</p>
+	<p class="caption foot__end tnum">{page ?? `Version ${brand.meta.version}`}</p>
+</footer>
+
+<style>
+	.foot {
+		display: grid;
+		grid-template-columns: 1fr auto 1fr;
+		gap: var(--space-s);
+		align-items: baseline;
+		padding: var(--space-m) var(--page-gutter);
+		margin-block-start: auto;
+	}
+
+	.foot__mid {
+		text-align: center;
+	}
+
+	.foot__end {
+		text-align: end;
+	}
+
+	@media (max-width: 34rem) {
+		.foot {
+			grid-template-columns: 1fr auto;
+		}
+
+		.foot__mid {
+			display: none;
+		}
+	}
+</style>

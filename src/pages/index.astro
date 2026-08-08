@@ -1,17 +1,273 @@
 ---
+import { brand } from "../brand/config";
+import { getSectionLinks } from "../lib/sections";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Logo from "../components/brand/Logo.astro";
+import Downloads from "../components/brand/Downloads.astro";
+import PageFooter from "../components/ui/PageFooter.astro";
 
+const links = await getSectionLinks();
+const { meta, contact } = brand;
 ---
 
-<html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-        <link rel="icon" href="/favicon.ico" />
-        <meta name="viewport" content="width=device-width" />
-        <meta name="generator" content={Astro.generator} />
-        <title>Astro</title>
-    </head>
-    <body>
-        <h1>Astro</h1>
-    </body>
-</html>
+<BaseLayout>
+    <div class="page">
+        {
+            /* The cover: black field, the title set as large as the page allows,
+		    brandmark in the top-right corner. */
+        }
+        <section class="cover full-bleed">
+            <div class="cover__mark">
+                <Logo mark="brandmark" on="dark" width="2.75rem" />
+            </div>
+            <h1 class="cover__title">{meta.documentTitle}</h1>
+            <p class="cover__foot">
+                <span><strong>{meta.name}</strong> {meta.tagline}</span>
+                <span class="cover__foot-mid"
+                    >{meta.documentTitle} Document</span
+                >
+                <span class="cover__foot-end">{meta.year}©</span>
+            </p>
+        </section>
+
+        {
+            /* Contents: label left, numbers and titles in two columns, set large and
+		    tight with no rules — as printed. */
+        }
+        <section class="contents" aria-labelledby="contents-title">
+            <h2 class="doc-title contents__heading" id="contents-title">
+                Contents
+            </h2>
+            <ol class="contents__list">
+                {
+                    links.map((link) => (
+                        <li>
+                            <a class="contents__link" href={link.href}>
+                                {brand.numbering && (
+                                    <span class="contents__num tnum">
+                                        {link.number}
+                                    </span>
+                                )}
+                                <span class="contents__title">
+                                    {link.title}
+                                </span>
+                            </a>
+                        </li>
+                    ))
+                }
+            </ol>
+        </section>
+
+        <div class="ends">
+            {
+                (brand.downloads ?? []).length > 0 && (
+                    <section aria-labelledby="downloads-title">
+                        <h2 class="label" id="downloads-title">
+                            Assets
+                        </h2>
+                        <Downloads class="ends__block" />
+                    </section>
+                )
+            }
+
+            <section aria-labelledby="contact-title">
+                <h2 class="label" id="contact-title">Contact</h2>
+                <div class="ends__block contact">
+                    <p class="contact__lead">
+                        Anything this document does not answer, ask before you
+                        improvise.
+                    </p>
+                    <ul class="contact__list">
+                        {
+                            contact.email && (
+                                <li>
+                                    <a href={`mailto:${contact.email}`}>
+                                        {contact.email}
+                                    </a>
+                                </li>
+                            )
+                        }
+                        {
+                            contact.website && (
+                                <li>
+                                    <a
+                                        href={
+                                            contact.website.startsWith("http")
+                                                ? contact.website
+                                                : `https://${contact.website}`
+                                        }
+                                    >
+                                        {contact.website}
+                                    </a>
+                                </li>
+                            )
+                        }
+                        {contact.phone && <li>{contact.phone}</li>}
+                        {
+                            (contact.socials ?? []).map((social) => (
+                                <li>
+                                    <a
+                                        href={social.url}
+                                        rel="noreferrer noopener"
+                                        target="_blank"
+                                    >
+                                        {social.label} {social.handle}
+                                    </a>
+                                </li>
+                            ))
+                        }
+                    </ul>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <PageFooter />
+</BaseLayout>
+
+<style>
+    .cover {
+        background: var(--color-black);
+        color: var(--color-white);
+        min-height: min(86vh, 44rem);
+        padding: var(--space-l) var(--page-gutter);
+        display: grid;
+        grid-template-rows: auto 1fr auto;
+        gap: var(--space-l);
+    }
+
+    .cover__mark {
+        justify-self: end;
+    }
+
+    .cover__title {
+        font-family: var(--font-display);
+        font-size: var(--type-display-1-0-size);
+        line-height: var(--type-display-1-0-leading);
+        letter-spacing: var(--type-display-1-0-tracking);
+        font-weight: var(--type-display-1-0-weight);
+        margin: 0;
+        align-self: start;
+        /* Two words, one per line, filling the field. */
+        max-width: 9ch;
+    }
+
+    .cover__foot {
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        gap: var(--space-s);
+        align-self: end;
+        font-size: var(--type-caption-size);
+        line-height: 1.4;
+    }
+
+    .cover__foot strong {
+        font-weight: 600;
+    }
+
+    .cover__foot-mid {
+        text-align: center;
+    }
+
+    .cover__foot-end {
+        text-align: end;
+    }
+
+    @media (max-width: 34rem) {
+        .cover__foot {
+            grid-template-columns: minmax(0, 1fr);
+        }
+
+        .cover__foot-mid,
+        .cover__foot-end {
+            text-align: start;
+        }
+    }
+
+    /* ── Contents ─────────────────────────────────────────────────────────── */
+
+    .contents {
+        display: grid;
+        gap: var(--space-l) var(--space-xl);
+        align-items: start;
+    }
+
+    @media (min-width: 48rem) {
+        .contents {
+            grid-template-columns: var(--side-column) minmax(0, 1fr);
+        }
+    }
+
+    .contents__heading {
+        margin: 0;
+    }
+
+    .contents__list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .contents__link {
+        display: grid;
+        grid-template-columns: 3.5em minmax(0, 1fr);
+        gap: 0 var(--space-l);
+        align-items: baseline;
+        text-decoration: none;
+        color: var(--muted);
+        transition: color 0.15s var(--ease);
+    }
+
+    .contents__link:hover {
+        color: var(--ink);
+    }
+
+    .contents__num,
+    .contents__title {
+        font-family: var(--font-display);
+        font-size: var(--type-heading-1-0-size);
+        line-height: 1.12;
+        letter-spacing: var(--type-heading-1-0-tracking);
+        font-weight: 300;
+    }
+
+    .contents__link:hover .contents__num {
+        color: var(--accent);
+    }
+
+    /* ── Ends ─────────────────────────────────────────────────────────────── */
+
+    .ends {
+        display: grid;
+        gap: var(--space-xl);
+    }
+
+    @media (min-width: 48rem) {
+        .ends {
+            grid-template-columns: var(--side-column) minmax(0, 1fr);
+            gap: var(--space-xl);
+        }
+    }
+
+    .ends__block {
+        margin-block-start: var(--space-m);
+    }
+
+    .contact {
+        display: grid;
+        gap: var(--space-m);
+    }
+
+    .contact__lead {
+        max-width: var(--measure);
+        text-wrap: pretty;
+    }
+
+    .contact__list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: grid;
+        gap: 0.3rem;
+    }
+</style>

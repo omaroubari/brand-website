@@ -1,0 +1,142 @@
+---
+import { brand } from '../../brand/config';
+
+interface Props {
+	/** Restrict to these style names, in this order. */
+	only?: string[];
+	/** Show the original print spec beside each step. */
+	print?: boolean;
+	/** Sentence used when a step has no `sample` of its own. */
+	sample?: string;
+	class?: string;
+}
+
+const {
+	only,
+	print = true,
+	sample = 'Crafting strategic visual brand identities',
+	class: className,
+} = Astro.props;
+
+const steps = only
+	? only.map((name) => {
+			const match = brand.typography.scale.find((s) => s.name === name);
+			if (!match) throw new Error(`[TypeScale] Unknown type style "${name}"`);
+			return match;
+		})
+	: brand.typography.scale;
+---
+
+<div class:list={['scale', 'escape', className]}>
+	{
+		steps.map((step) => (
+			<div class="scale__row">
+				<div class="scale__meta">
+					<p class="label scale__name">{step.name}</p>
+					{step.role && <p class="caption scale__role">{step.role}</p>}
+					<dl class="scale__specs mono">
+						<div>
+							<dt>Size</dt>
+							<dd>{step.size}</dd>
+						</div>
+						<div>
+							<dt>Leading</dt>
+							<dd>{step.lineHeight}</dd>
+						</div>
+						<div>
+							<dt>Tracking</dt>
+							<dd>{step.tracking}</dd>
+						</div>
+						<div>
+							<dt>Weight</dt>
+							<dd>{step.weight ?? 400}</dd>
+						</div>
+						{print && step.print && (
+							<div class="scale__print">
+								<dt>Print</dt>
+								<dd>
+									{step.print.size} / {step.print.leading} / {step.print.tracking}
+								</dd>
+							</div>
+						)}
+					</dl>
+				</div>
+
+				<p
+					class="scale__sample"
+					style={`font-family: var(--font-${step.font ?? 'text'}); font-size: ${step.size}; line-height: ${step.lineHeight}; letter-spacing: ${step.tracking}; font-weight: ${step.weight ?? 400};${step.transform ? ` text-transform: ${step.transform};` : ''}`}
+				>
+					{step.sample ?? sample}
+				</p>
+			</div>
+		))
+	}
+</div>
+
+<style>
+	/* Each step is a band: specs in a narrow column, the sample set at its real
+	   size beside them, a hairline running the full width between bands. */
+	.scale {
+		display: grid;
+	}
+
+	.scale__row {
+		display: grid;
+		gap: var(--space-s);
+		padding-block: var(--space-s) var(--space-l);
+		border-block-start: var(--rule) solid var(--line);
+		align-items: start;
+	}
+
+	.scale__row:last-child {
+		border-block-end: var(--rule) solid var(--line);
+	}
+
+	@media (min-width: 55rem) {
+		.scale__row {
+			grid-template-columns: 9rem minmax(0, 1fr);
+			gap: var(--space-l);
+		}
+	}
+
+	.scale__name {
+		color: var(--ink);
+	}
+
+	.scale__role {
+		margin-block-start: 0.2rem;
+		text-wrap: pretty;
+	}
+
+	.scale__specs {
+		margin-block-start: var(--space-s);
+		display: grid;
+		gap: 0.1rem;
+		color: var(--muted);
+	}
+
+	.scale__specs > div {
+		display: grid;
+		grid-template-columns: 3.75rem minmax(0, 1fr);
+		gap: 0.35rem;
+	}
+
+	.scale__specs dt {
+		opacity: 0.65;
+	}
+
+	.scale__specs dd {
+		margin: 0;
+	}
+
+	.scale__print {
+		margin-block-start: 0.3rem;
+	}
+
+	.scale__sample {
+		margin: 0;
+		text-wrap: balance;
+		/* Long display samples must not push the page sideways. */
+		overflow-wrap: anywhere;
+	}
+</style>

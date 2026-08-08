@@ -1,0 +1,106 @@
+---
+interface Props {
+	/** Column count. */
+	columns?: number;
+	/** Gutter between columns, as a CSS length — label only, drawn proportionally. */
+	gutter?: string;
+	/** Outer margin, as a CSS length. */
+	margin?: string;
+	/** width / height of the canvas being described. */
+	ratio?: string;
+	/** e.g. "Desktop · 1440 px and up". */
+	label?: string;
+	/** Rows of specs printed beneath the diagram. */
+	specs?: Array<{ term: string; value: string }>;
+	class?: string;
+}
+
+const {
+	columns = 12,
+	gutter = '30px',
+	margin = '100px',
+	ratio = '16 / 9',
+	label,
+	specs = [],
+	class: className,
+} = Astro.props;
+---
+
+<figure class:list={['layout', className]}>
+	<div
+		class="layout__canvas"
+		style={`--columns: ${columns}; --gutter: ${gutter}; --margin: ${margin}; aspect-ratio: ${ratio};`}
+	>
+		<div class="layout__cols" aria-hidden="true">
+			{Array.from({ length: columns }, () => <span class="layout__col" />)}
+		</div>
+		{label && <span class="label layout__label">{label}</span>}
+	</div>
+
+	{
+		specs.length > 0 && (
+			<figcaption class="layout__specs">
+				{specs.map((spec) => (
+					<span class="caption layout__spec">
+						<span class="layout__term">{spec.term}</span>
+						<span class="mono">{spec.value}</span>
+					</span>
+				))}
+			</figcaption>
+		)
+	}
+</figure>
+
+<style>
+	.layout {
+		margin: 0;
+		display: grid;
+		gap: var(--space-s);
+		min-width: 0;
+	}
+
+	.layout__canvas {
+		position: relative;
+		border: var(--rule) solid var(--line);
+		/* Margins are drawn at a fraction of the stated value so the diagram
+		   stays readable at any width — the numbers below are the real spec. */
+		padding: calc(var(--margin) * 0.25) calc(var(--margin) * 0.25);
+		background: var(--surface);
+	}
+
+	.layout__cols {
+		display: grid;
+		grid-template-columns: repeat(var(--columns), minmax(0, 1fr));
+		gap: calc(var(--gutter) * 0.5);
+		height: 100%;
+	}
+
+	.layout__col {
+		background: color-mix(in srgb, var(--accent) 14%, transparent);
+		border-inline: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+	}
+
+	.layout__label {
+		position: absolute;
+		inset-block-end: calc(100% + var(--space-xs));
+		inset-inline-start: 0;
+	}
+
+	.layout__specs {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--space-xs) var(--space-l);
+	}
+
+	.layout__spec {
+		display: grid;
+		gap: 0.1rem;
+	}
+
+	.layout__term {
+		color: var(--muted);
+		font-size: 0.625rem;
+		letter-spacing: 0.09em;
+		text-transform: uppercase;
+	}
+</style>

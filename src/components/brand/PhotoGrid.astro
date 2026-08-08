@@ -1,0 +1,107 @@
+---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+interface Props {
+	/**
+	 * Imported images. Import them at the top of the MDX file so Astro can
+	 * optimise and serve responsive sources:
+	 *
+	 *   import photo from '../../assets/photography/photo-01.jpg';
+	 */
+	images: Array<ImageMetadata | { src: ImageMetadata; caption?: string; span?: number }>;
+	cols?: number;
+	/** width / height for every tile. */
+	ratio?: string;
+	/** Treatment applied to the whole set — matches the styles in the guidelines. */
+	treatment?: 'none' | 'duotone' | 'mono';
+	class?: string;
+}
+
+const {
+	images,
+	cols = 3,
+	ratio = '4 / 3',
+	treatment = 'none',
+	class: className,
+} = Astro.props;
+
+// `ImageMetadata` has a `src` of its own, so the wrapper is identified by the
+// keys only an imported image carries.
+const items = images.map((item) =>
+	'width' in item && 'height' in item
+		? { src: item as ImageMetadata, caption: undefined, span: 1 }
+		: (item as { src: ImageMetadata; caption?: string; span?: number }),
+);
+---
+
+<div
+	class:list={['photos', 'escape', `photos--${treatment}`, className]}
+	style={`--cols: ${cols}; --ratio: ${ratio};`}
+>
+	{
+		items.map((item) => (
+			<figure class="photos__item" style={`--span: ${item.span ?? 1};`}>
+				<div class="photos__frame">
+					<Image
+						src={item.src}
+						alt={item.caption ?? ''}
+						class="photos__img"
+						widths={[400, 800, 1200]}
+						sizes="(min-width: 48rem) 33vw, 100vw"
+					/>
+				</div>
+				{item.caption && <figcaption class="caption">{item.caption}</figcaption>}
+			</figure>
+		))
+	}
+</div>
+
+<style>
+	.photos {
+		display: grid;
+		grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+		gap: var(--space-s);
+	}
+
+	@media (max-width: 47.999rem) {
+		.photos {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+	}
+
+	.photos__item {
+		margin: 0;
+		display: grid;
+		gap: var(--space-xs);
+		grid-column: span var(--span);
+		min-width: 0;
+	}
+
+	.photos__frame {
+		aspect-ratio: var(--ratio);
+		overflow: hidden;
+		background: var(--raised);
+	}
+
+	.photos__img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+
+	.photos--mono .photos__img {
+		filter: grayscale(1) contrast(1.05);
+	}
+
+	/* Brand-tinted duotone: greyscale underneath, accent laid over in colour-burn. */
+	.photos--duotone .photos__frame {
+		position: relative;
+		background: var(--accent);
+	}
+
+	.photos--duotone .photos__img {
+		filter: grayscale(1) contrast(1.15);
+		mix-blend-mode: luminosity;
+	}
+</style>

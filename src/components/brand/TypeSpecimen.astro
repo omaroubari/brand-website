@@ -1,0 +1,79 @@
+---
+import { brand } from '../../brand/config';
+
+interface Props {
+	/** Which family to show. */
+	font?: 'display' | 'text';
+	/** The oversized characters. */
+	glyph?: string;
+	weight?: number;
+	class?: string;
+}
+
+const { font = 'display', glyph = 'Aa', weight = 500, class: className } = Astro.props;
+
+const family = brand.typography.families.find((f) => f.label === font);
+---
+
+<div class:list={['specimen', 'escape', className]}>
+	<p class="specimen__glyph" style={`font-family: var(--font-${font}); font-weight: ${weight};`}>
+		{glyph}
+	</p>
+	<div class="specimen__meta">
+		<p class="label">{font === 'display' ? 'Display' : 'Text'}</p>
+		<p class="specimen__name" style={`font-family: var(--font-${font});`}>{family?.name}</p>
+		{family?.foundry && <p class="caption">{family.foundry}</p>}
+		{family?.note && <p class="caption specimen__note">{family.note}</p>}
+		{
+			family?.url && (
+				<p class="caption">
+					<a href={family.url} rel="noreferrer noopener" target="_blank">
+						Licence and downloads
+					</a>
+				</p>
+			)
+		}
+	</div>
+</div>
+
+<style>
+	.specimen {
+		display: grid;
+		gap: var(--space-l);
+		align-items: end;
+		border-block-start: var(--rule) solid var(--line);
+		padding-block-start: var(--space-m);
+	}
+
+	@media (min-width: 48rem) {
+		.specimen {
+			grid-template-columns: minmax(0, 1fr) 14rem;
+		}
+	}
+
+	.specimen__glyph {
+		font-size: clamp(7rem, 26vw, 20rem);
+		line-height: 0.8;
+		letter-spacing: -0.04em;
+		margin: 0;
+	}
+
+	.specimen__meta {
+		display: grid;
+		gap: var(--space-2xs);
+		align-content: end;
+		padding-block-end: var(--space-s);
+	}
+
+	.specimen__name {
+		font-size: 1.5rem;
+		line-height: 1.1;
+		letter-spacing: -0.02em;
+		font-weight: 500;
+	}
+
+	.specimen__note {
+		margin-block-start: var(--space-2xs);
+		text-wrap: pretty;
+	}
+</style>

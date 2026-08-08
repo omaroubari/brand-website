@@ -1,0 +1,60 @@
+---
+interface Props {
+	/** `do` and `dont` are the ones you will reach for on usage pages. */
+	tone?: 'note' | 'do' | 'dont';
+	title?: string;
+	class?: string;
+}
+
+const { tone = 'note', title, class: className } = Astro.props;
+
+const marks = { note: '—', do: '✓', dont: '✕' } as const;
+const labels = { note: 'Note', do: 'Do', dont: "Don't" } as const;
+---
+
+<aside class:list={['callout', `callout--${tone}`, className]}>
+	<p class="callout__head">
+		<span class="callout__mark" aria-hidden="true">{marks[tone]}</span>
+		<span class="label callout__label">{title ?? labels[tone]}</span>
+	</p>
+	<div class="callout__body">
+		<slot />
+	</div>
+</aside>
+
+<style>
+	.callout {
+		border-inline-start: 2px solid var(--line);
+		padding-inline-start: var(--space-m);
+		display: grid;
+		gap: var(--space-2xs);
+	}
+
+	.callout--do {
+		border-color: var(--ink);
+	}
+
+	.callout--dont {
+		border-color: var(--accent);
+	}
+
+	.callout__head {
+		display: flex;
+		align-items: center;
+		gap: var(--space-xs);
+	}
+
+	.callout__mark {
+		font-size: 0.75rem;
+		line-height: 1;
+	}
+
+	.callout--dont .callout__mark,
+	.callout--dont .callout__label {
+		color: var(--accent);
+	}
+
+	.callout__body > :global(* + *) {
+		margin-block-start: var(--space-xs);
+	}
+</style>

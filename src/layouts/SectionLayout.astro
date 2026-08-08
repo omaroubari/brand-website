@@ -1,0 +1,38 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import Pager from '../components/nav/Pager.astro';
+import PageFooter from '../components/ui/PageFooter.astro';
+import SectionOpener from '../components/ui/SectionOpener.astro';
+
+interface Props {
+	id: string;
+	title: string;
+	number?: string;
+	summary?: string;
+	theme?: 'light' | 'dark';
+	seo?: { title?: string; description?: string };
+}
+
+const { id, title, number, summary, theme, seo } = Astro.props;
+---
+
+<BaseLayout title={seo?.title ?? title} description={seo?.description ?? summary} theme={theme}>
+	<div class="page">
+		<SectionOpener number={number} title={title} summary={summary} />
+
+		<article class="prose section__body">
+			<slot />
+		</article>
+
+		<Pager id={id} />
+	</div>
+
+	<PageFooter page={number} />
+</BaseLayout>
+
+<style>
+	/* Spreads sit far apart, the way pages do in the printed document. */
+	.section__body > :global(.block + .block) {
+		margin-block-start: var(--space-2xl);
+	}
+</style>
