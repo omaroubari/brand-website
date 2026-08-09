@@ -1,13 +1,13 @@
 // @ts-check
-import { defineConfig, fontProviders } from 'astro/config';
-import mdx from '@astrojs/mdx';
-import cloudflare from '@astrojs/cloudflare';
+import { defineConfig, fontProviders } from "astro/config";
+import mdx from "@astrojs/mdx";
+import cloudflare from "@astrojs/cloudflare";
 
-import { brand } from './src/brand/config';
+import { brand } from "./src/brand/config";
 
-import react from '@astrojs/react';
+import react from "@astrojs/react";
 
-import tailwindcss from '@tailwindcss/vite';
+import tailwindcss from "@tailwindcss/vite";
 
 // https://astro.build/config
 export default defineConfig({
@@ -17,7 +17,7 @@ export default defineConfig({
   // A guidelines site's imagery is fixed, so images are optimised at build
   // time. That keeps the output plain static files — no Cloudflare Images
   // binding to provision, and the `dist/` folder deploys anywhere.
-  adapter: cloudflare({ imageService: 'compile' }),
+  adapter: cloudflare({ imageService: "compile" }),
 
   /**
    * Brand typefaces. Astro self-hosts these, preloads them and generates
@@ -41,29 +41,29 @@ export default defineConfig({
    *     weights: ['300 800'],
    */
   fonts: [
-      {
-          name: 'Brand Sans',
-          cssVariable: '--font-brand',
-          provider: fontProviders.local(),
-          fallbacks: [
-              'ui-sans-serif',
-              'system-ui',
-              '-apple-system',
-              'Segoe UI',
-              'Helvetica Neue',
-              'Arial',
-              'sans-serif',
-          ],
-          options: {
-              variants: [
-                  {
-                      src: ['./src/assets/fonts/BrandSans-Variable.ttf'],
-                      weight: '100 900',
-                      style: 'normal',
-                  },
-              ],
+    {
+      name: "Brand Sans",
+      cssVariable: "--font-brand",
+      provider: fontProviders.local(),
+      fallbacks: [
+        "ui-sans-serif",
+        "system-ui",
+        "-apple-system",
+        "Segoe UI",
+        "Helvetica Neue",
+        "Arial",
+        "sans-serif",
+      ],
+      options: {
+        variants: [
+          {
+            src: ["./src/assets/fonts/BrandSans-Variable.ttf"],
+            weight: "100 900",
+            style: "normal",
           },
+        ],
       },
+    },
   ],
 
   vite: {

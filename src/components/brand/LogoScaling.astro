@@ -1,74 +1,75 @@
 ---
-import { brand } from '../../brand/config';
-import Logo from './Logo.astro';
+import { brand } from "../../brand/config";
+import Logo from "./Logo.astro";
 
 interface Props {
-	mark?: 'logotype' | 'brandmark';
-	/**
-	 * Sizes to show, largest first. `width` is any CSS length; `label` is the
-	 * spec as written in the guidelines.
-	 */
-	sizes?: Array<{ width: string; label: string }>;
-	class?: string;
+  mark?: "logotype" | "brandmark";
+  /**
+   * Sizes to show, largest first. `width` is any CSS length; `label` is the
+   * spec as written in the guidelines.
+   */
+  sizes?: Array<{ width: string; label: string }>;
+  class?: string;
 }
 
 const {
-	mark = 'logotype',
-	sizes = [
-		{ width: '18rem', label: '288 px / 49 mm' },
-		{ width: '11.25rem', label: '180 px / 30 mm' },
-		{ width: '9rem', label: '144 px / 24 mm' },
-		{ width: '4.5rem', label: '72 px / 12 mm' },
-		{ width: '2.25rem', label: '36 px / 6 mm' },
-	],
-	class: className,
+  mark = "logotype",
+  sizes = [
+    { width: "18rem", label: "288 px / 49 mm" },
+    { width: "11.25rem", label: "180 px / 30 mm" },
+    { width: "9rem", label: "144 px / 24 mm" },
+    { width: "4.5rem", label: "72 px / 12 mm" },
+    { width: "2.25rem", label: "36 px / 6 mm" },
+  ],
+  class: className,
 } = Astro.props;
 ---
 
-<div class:list={['scaling', 'escape', className]}>
-	<ol class="scaling__list">
-		{
-			sizes.map((size) => (
-				<li class="scaling__item">
-					<Logo mark={mark} width={size.width} />
-					<span class="caption scaling__label">{size.label}</span>
-				</li>
-			))
-		}
-	</ol>
+<div class:list={["scaling", "escape", className]}>
+  <ol class="scaling__list">
+    {
+      sizes.map((size) => (
+        <li class="scaling__item">
+          <Logo mark={mark} width={size.width} />
+          <span class="caption scaling__label">{size.label}</span>
+        </li>
+      ))
+    }
+  </ol>
 
-	<p class="caption scaling__min">
-		Minimum size — {brand.logo.minSize.digital} on screen, {brand.logo.minSize.print} in
-		print. Below this the mark stops reading; use the brandmark instead.
-	</p>
+  <p class="caption scaling__min">
+    Minimum size — {brand.logo.minSize.digital} on screen, {
+      brand.logo.minSize.print
+    } in print. Below this the mark stops reading; use the brandmark instead.
+  </p>
 </div>
 
 <style>
-	.scaling__list {
-		list-style: none;
-		margin: 0;
-		padding: 0;
-		display: flex;
-		flex-wrap: wrap;
-		align-items: flex-end;
-		gap: var(--space-xl);
-		border-block-end: var(--rule) solid var(--line);
-		padding-block-end: var(--space-m);
-	}
+  .scaling__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: var(--space-xl);
+    border-block-end: var(--rule) solid var(--line);
+    padding-block-end: var(--space-m);
+  }
 
-	.scaling__item {
-		display: grid;
-		gap: var(--space-xs);
-		justify-items: start;
-	}
+  .scaling__item {
+    display: grid;
+    gap: var(--space-xs);
+    justify-items: start;
+  }
 
-	.scaling__label {
-		white-space: nowrap;
-	}
+  .scaling__label {
+    white-space: nowrap;
+  }
 
-	.scaling__min {
-		margin-block-start: var(--space-m);
-		max-width: var(--measure);
-		text-wrap: pretty;
-	}
+  .scaling__min {
+    margin-block-start: var(--space-m);
+    max-width: var(--measure);
+    text-wrap: pretty;
+  }
 </style>

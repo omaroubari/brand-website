@@ -8,25 +8,25 @@
  * element empty and the text set at body size.
  */
 interface Props {
-	class?: string;
+  class?: string;
 }
 
 const { class: className } = Astro.props;
 ---
 
-<div class:list={['statement', className]}>
-	<slot />
+<div class:list={["statement", className]}>
+  <slot />
 </div>
 
 <style>
-	.statement > :global(p) {
-		margin: 0;
-		font: inherit;
-		letter-spacing: inherit;
-		max-width: none;
-	}
+  .statement > :global(p) {
+    margin: 0;
+    font: inherit;
+    letter-spacing: inherit;
+    max-width: none;
+  }
 
-	.statement > :global(p + p) {
-		margin-block-start: 0.4em;
-	}
+  .statement > :global(p + p) {
+    margin-block-start: 0.4em;
+  }
 </style>

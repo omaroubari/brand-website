@@ -4,119 +4,144 @@
  * it appears here. Icons are inlined, so they inherit `currentColor` and can be
  * recoloured by the surrounding surface.
  */
-const modules = import.meta.glob<string>('../../assets/icons/*.svg', {
-	query: '?raw',
-	import: 'default',
-	eager: true,
+const modules = import.meta.glob<string>("../../assets/icons/*.svg", {
+  query: "?raw",
+  import: "default",
+  eager: true,
 });
 
 interface Props {
-	/** Restrict and order by filename, without the extension. */
-	only?: string[];
-	/** Grid the icons are drawn on, shown as an overlay on the first tile. */
-	unit?: number;
-	/** Version label printed under each icon. */
-	version?: string;
-	cols?: number;
-	class?: string;
+  /** Restrict and order by filename, without the extension. */
+  only?: string[];
+  /** Grid the icons are drawn on, shown as an overlay on the first tile. */
+  unit?: number;
+  /** Version label printed under each icon. */
+  version?: string;
+  cols?: number;
+  class?: string;
 }
 
-const { only, unit = 24, version = 'v1.0', cols = 4, class: className } = Astro.props;
+const {
+  only,
+  unit = 24,
+  version = "v1.0",
+  cols = 4,
+  class: className,
+} = Astro.props;
 
 const all = Object.entries(modules)
-	.map(([path, svg]) => ({
-		name: path.split('/').pop()!.replace(/\.svg$/, ''),
-		svg,
-	}))
-	.sort((a, b) => a.name.localeCompare(b.name));
+  .map(([path, svg]) => ({
+    name: path
+      .split("/")
+      .pop()!
+      .replace(/\.svg$/, ""),
+    svg,
+  }))
+  .sort((a, b) => a.name.localeCompare(b.name));
 
 const icons = only
-	? only.map((name) => {
-			const match = all.find((i) => i.name === name);
-			if (!match) throw new Error(`[IconGrid] No icon named "${name}" in src/assets/icons/`);
-			return match;
-		})
-	: all;
+  ? only.map((name) => {
+      const match = all.find((i) => i.name === name);
+      if (!match)
+        throw new Error(
+          `[IconGrid] No icon named "${name}" in src/assets/icons/`,
+        );
+      return match;
+    })
+  : all;
 
-const label = (name: string) => name.charAt(0).toUpperCase() + name.slice(1).replace(/-/g, ' ');
+const label = (name: string) =>
+  name.charAt(0).toUpperCase() + name.slice(1).replace(/-/g, " ");
 ---
 
-<div class:list={['icons', 'escape', className]} style={`--cols: ${cols}; --unit: ${unit};`}>
-	{
-		icons.map((icon, i) => (
-			<figure class="icons__item">
-				<div class:list={['icons__field', i === 0 && 'icons__field--gridded']}>
-					<span class="icons__art" set:html={icon.svg} />
-				</div>
-				<figcaption class="caption icons__caption">
-					<span class="icons__name">{label(icon.name)}</span>
-					<span class="icons__version mono">{version}</span>
-				</figcaption>
-			</figure>
-		))
-	}
+<div
+  class:list={["icons", "escape", className]}
+  style={`--cols: ${cols}; --unit: ${unit};`}>
+  {
+    icons.map((icon, i) => (
+      <figure class="icons__item">
+        <div class:list={["icons__field", i === 0 && "icons__field--gridded"]}>
+          <span class="icons__art" set:html={icon.svg} />
+        </div>
+        <figcaption class="caption icons__caption">
+          <span class="icons__name">{label(icon.name)}</span>
+          <span class="icons__version mono">{version}</span>
+        </figcaption>
+      </figure>
+    ))
+  }
 </div>
 
 <style>
-	.icons {
-		display: grid;
-		grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
-		gap: var(--space-m);
-	}
+  .icons {
+    display: grid;
+    grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+    gap: var(--space-m);
+  }
 
-	@media (max-width: 47.999rem) {
-		.icons {
-			grid-template-columns: repeat(2, minmax(0, 1fr));
-		}
-	}
+  @media (max-width: 47.999rem) {
+    .icons {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
 
-	.icons__item {
-		margin: 0;
-		display: grid;
-		gap: var(--space-xs);
-		min-width: 0;
-	}
+  .icons__item {
+    margin: 0;
+    display: grid;
+    gap: var(--space-xs);
+    min-width: 0;
+  }
 
-	.icons__field {
-		position: relative;
-		aspect-ratio: 1;
-		border: var(--rule) solid var(--line);
-		display: grid;
-		place-items: center;
-		padding: 22%;
-	}
+  .icons__field {
+    position: relative;
+    aspect-ratio: 1;
+    border: var(--rule) solid var(--line);
+    display: grid;
+    place-items: center;
+    padding: 22%;
+  }
 
-	/* The first tile shows the pixel grid the set is drawn on. */
-	.icons__field--gridded::before {
-		content: '';
-		position: absolute;
-		inset: 22%;
-		background-image:
-			repeating-linear-gradient(to right, var(--line) 0 1px, transparent 1px calc(100% / var(--unit))),
-			repeating-linear-gradient(to bottom, var(--line) 0 1px, transparent 1px calc(100% / var(--unit)));
-		background-size: calc(100% / var(--unit)) 100%, 100% calc(100% / var(--unit));
-		opacity: 0.7;
-	}
+  /* The first tile shows the pixel grid the set is drawn on. */
+  .icons__field--gridded::before {
+    content: "";
+    position: absolute;
+    inset: 22%;
+    background-image:
+      repeating-linear-gradient(
+        to right,
+        var(--line) 0 1px,
+        transparent 1px calc(100% / var(--unit))
+      ),
+      repeating-linear-gradient(
+        to bottom,
+        var(--line) 0 1px,
+        transparent 1px calc(100% / var(--unit))
+      );
+    background-size:
+      calc(100% / var(--unit)) 100%,
+      100% calc(100% / var(--unit));
+    opacity: 0.7;
+  }
 
-	.icons__art {
-		display: block;
-		width: 100%;
-		position: relative;
-	}
+  .icons__art {
+    display: block;
+    width: 100%;
+    position: relative;
+  }
 
-	.icons__art :global(svg) {
-		width: 100%;
-		height: auto;
-		color: var(--ink);
-	}
+  .icons__art :global(svg) {
+    width: 100%;
+    height: auto;
+    color: var(--ink);
+  }
 
-	.icons__caption {
-		display: flex;
-		justify-content: space-between;
-		gap: var(--space-xs);
-	}
+  .icons__caption {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-xs);
+  }
 
-	.icons__name {
-		color: var(--ink);
-	}
+  .icons__name {
+    color: var(--ink);
+  }
 </style>

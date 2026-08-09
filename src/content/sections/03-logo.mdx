@@ -4,18 +4,18 @@ summary: The logotype, the brandmark, and the rules that keep both intact.
 ---
 
 import {
-	Block,
-	Panel,
-	Grid,
-	Logo,
-	LogoColorways,
-	LogoScaling,
-	LogoClearspace,
-	LogoMisuse,
-	ConstructionGrid,
-	SpecList,
-	Callout,
-} from '../../components/mdx';
+  Block,
+  Panel,
+  Grid,
+  Logo,
+  LogoColorways,
+  LogoScaling,
+  LogoClearspace,
+  LogoMisuse,
+  ConstructionGrid,
+  SpecList,
+  Callout,
+} from "../../components/mdx";
 
 <Block title="Logotype" subtitle="Primary logo">
 <Fragment slot="note">
@@ -29,7 +29,7 @@ carries custom spacing that live text will not reproduce.
 </Fragment>
 
 <Panel ratio="16 / 9">
-	<Logo mark="logotype" width="66%" />
+  <Logo mark="logotype" width="66%" />
 </Panel>
 
 </Block>
@@ -43,7 +43,7 @@ is identical, only the colour changes.
 </Fragment>
 
 <Panel bg="black" ratio="16 / 9">
-	<Logo mark="logotype" on="dark" width="66%" />
+  <Logo mark="logotype" on="dark" width="66%" />
 </Panel>
 
 </Block>
@@ -60,11 +60,11 @@ icons, stamped and embroidered applications.
 <Grid cols={2}>
 
 <Panel bg="white" ratio="4 / 3">
-	<Logo mark="brandmark" on="light" width="7rem" />
+  <Logo mark="brandmark" on="light" width="7rem" />
 </Panel>
 
 <Panel bg="black" ratio="4 / 3">
-	<Logo mark="brandmark" on="dark" width="7rem" />
+  <Logo mark="brandmark" on="dark" width="7rem" />
 </Panel>
 
 </Grid>
@@ -115,11 +115,11 @@ minimum, the logotype stops reading — switch to the brandmark rather than shri
 further.
 
 <SpecList
-	items={[
-		{ term: 'Min digital', value: '96 px' },
-		{ term: 'Min print', value: '20 mm' },
-		{ term: 'Brandmark', value: '24 px / 8 mm' },
-	]}
+  items={[
+    { term: "Min digital", value: "96 px" },
+    { term: "Min print", value: "20 mm" },
+    { term: "Brandmark", value: "24 px / 8 mm" },
+  ]}
 />
 
 </Fragment>
@@ -143,15 +143,39 @@ a solid field behind it. Redraw or trace any part of the artwork.
 </Fragment>
 
 <LogoMisuse
-	mark="logotype"
-	items={[
-		{ effect: 'stretch', title: 'Distortion', note: 'Never scale one axis. Hold shift, always.' },
-		{ effect: 'recolor', title: 'Colour', note: 'Only the approved colourways. No exceptions for a campaign.' },
-		{ effect: 'low-contrast', title: 'Contrast', note: 'The mark must clear 4.5:1 against its background.' },
-		{ effect: 'too-small', title: 'Size', note: 'Below the minimum, use the brandmark instead.' },
-		{ effect: 'obstruct', title: 'Obstruction', note: 'Nothing enters the clear space — not type, not imagery.' },
-		{ effect: 'rotate', title: 'Rotation', note: 'The logo sits level. It is never set on an angle.' },
-	]}
+  mark="logotype"
+  items={[
+    {
+      effect: "stretch",
+      title: "Distortion",
+      note: "Never scale one axis. Hold shift, always.",
+    },
+    {
+      effect: "recolor",
+      title: "Colour",
+      note: "Only the approved colourways. No exceptions for a campaign.",
+    },
+    {
+      effect: "low-contrast",
+      title: "Contrast",
+      note: "The mark must clear 4.5:1 against its background.",
+    },
+    {
+      effect: "too-small",
+      title: "Size",
+      note: "Below the minimum, use the brandmark instead.",
+    },
+    {
+      effect: "obstruct",
+      title: "Obstruction",
+      note: "Nothing enters the clear space — not type, not imagery.",
+    },
+    {
+      effect: "rotate",
+      title: "Rotation",
+      note: "The logo sits level. It is never set on an angle.",
+    },
+  ]}
 />
 
 </Block>

@@ -3,7 +3,15 @@ title: Digital
 summary: Website, app icon, favicon and social — the brand in the places it is used most.
 ---
 
-import { Block, Figure, Grid, Panel, Logo, SpecList, Callout } from '../../components/mdx';
+import {
+  Block,
+  Figure,
+  Grid,
+  Panel,
+  Logo,
+  SpecList,
+  Callout,
+} from "../../components/mdx";
 
 <Block title="Website" subtitle="Desktop">
 <Fragment slot="note">
@@ -24,7 +32,10 @@ Replace these frames with real screenshots: drop the files into
 
 </Fragment>
 
-<Figure ratio="16 / 10" caption="Desktop — accent header, logotype, 12-column grid." />
+<Figure
+  ratio="16 / 10"
+  caption="Desktop — accent header, logotype, 12-column grid."
+/>
 
 </Block>
 
@@ -59,15 +70,15 @@ Ship SVG with a light/dark media query, plus a 180 px PNG for iOS.
 <Grid cols={3}>
 
 <Panel bg="white" ratio="1 / 1" caption="16 px" label="Favicon">
-	<Logo mark="brandmark" on="light" width="1rem" />
+  <Logo mark="brandmark" on="light" width="1rem" />
 </Panel>
 
 <Panel bg="white" ratio="1 / 1" caption="32 px">
-	<Logo mark="brandmark" on="light" width="2rem" />
+  <Logo mark="brandmark" on="light" width="2rem" />
 </Panel>
 
 <Panel bg="black" ratio="1 / 1" caption="On dark browser chrome">
-	<Logo mark="brandmark" on="dark" width="2rem" />
+  <Logo mark="brandmark" on="dark" width="2rem" />
 </Panel>
 
 </Grid>
@@ -81,12 +92,12 @@ The app icon is drawn from the brandmark and used in black on white or white on 
 Nothing else.
 
 <SpecList
-	items={[
-		{ term: 'Grid', value: '6 × 6' },
-		{ term: 'Mark width', value: '4 of 6 units' },
-		{ term: 'Radius', value: 'Set by the platform' },
-		{ term: 'Export', value: '1024 px PNG, no alpha' },
-	]}
+  items={[
+    { term: "Grid", value: "6 × 6" },
+    { term: "Mark width", value: "4 of 6 units" },
+    { term: "Radius", value: "Set by the platform" },
+    { term: "Export", value: "1024 px PNG, no alpha" },
+  ]}
 />
 
 </Fragment>
@@ -94,11 +105,14 @@ Nothing else.
 <Grid cols={2}>
 
 <Panel bg="black" ratio="1 / 1" caption="White on black.">
-	<Logo mark="brandmark" on="dark" width="45%" />
+  <Logo mark="brandmark" on="dark" width="45%" />
 </Panel>
 
-<Panel bg="white" ratio="1 / 1" caption="Black on white. No gradient, no shadow.">
-	<Logo mark="brandmark" on="light" width="45%" />
+<Panel
+  bg="white"
+  ratio="1 / 1"
+  caption="Black on white. No gradient, no shadow.">
+  <Logo mark="brandmark" on="light" width="45%" />
 </Panel>
 
 </Grid>

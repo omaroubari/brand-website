@@ -2,22 +2,22 @@
 import type { Theme } from "@/lib/theme";
 
 interface Props {
-    defaultTheme?: Theme;
+  defaultTheme?: Theme;
 }
 
 const { defaultTheme = "light" } = Astro.props;
 ---
 
 {
-    /*
+  /*
   Runs before paint to prevent a flash of the wrong theme. The inline script
   publishes `defaultTheme` as a global that the bundled theme module reads (see
   the `declare const defaultTheme` in @/lib/theme). Keep both in the <head>.
 */
 }
 <script is:inline define:vars={{ defaultTheme }}>
-    window.defaultTheme = defaultTheme;
+  window.defaultTheme = defaultTheme;
 </script>
 <script>
-    import "@/lib/theme";
+  import "@/lib/theme";
 </script>

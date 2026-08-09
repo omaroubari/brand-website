@@ -1,59 +1,58 @@
 ---
 interface Props {
-	font?: 'display' | 'text';
-	weight?: number;
-	/** Character sets to print. */
-	sets?: Array<{ label: string; chars: string }>;
-	class?: string;
+  font?: "display" | "text";
+  weight?: number;
+  /** Character sets to print. */
+  sets?: Array<{ label: string; chars: string }>;
+  class?: string;
 }
 
 const {
-	font = 'display',
-	weight = 400,
-	sets = [
-		{ label: 'Uppercase', chars: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' },
-		{ label: 'Lowercase', chars: 'abcdefghijklmnopqrstuvwxyz' },
-		{ label: 'Numerals', chars: '0123456789' },
-		{ label: 'Punctuation', chars: '.,;:!?‘’“”()[]{}/\\&@#%*+−=' },
-	],
-	class: className,
+  font = "display",
+  weight = 400,
+  sets = [
+    { label: "Uppercase", chars: "ABCDEFGHIJKLMNOPQRSTUVWXYZ" },
+    { label: "Lowercase", chars: "abcdefghijklmnopqrstuvwxyz" },
+    { label: "Numerals", chars: "0123456789" },
+    { label: "Punctuation", chars: ".,;:!?‘’“”()[]{}/\\&@#%*+−=" },
+  ],
+  class: className,
 } = Astro.props;
 ---
 
-<div class:list={['glyphs', 'escape', className]}>
-	{
-		sets.map((set) => (
-			<div class="glyphs__set">
-				<p class="label">{set.label}</p>
-				<p
-					class="glyphs__chars"
-					style={`font-family: var(--font-${font}); font-weight: ${weight};`}
-				>
-					{set.chars}
-				</p>
-			</div>
-		))
-	}
+<div class:list={["glyphs", "escape", className]}>
+  {
+    sets.map((set) => (
+      <div class="glyphs__set">
+        <p class="label">{set.label}</p>
+        <p
+          class="glyphs__chars"
+          style={`font-family: var(--font-${font}); font-weight: ${weight};`}>
+          {set.chars}
+        </p>
+      </div>
+    ))
+  }
 </div>
 
 <style>
-	.glyphs {
-		display: grid;
-		gap: var(--space-l);
-	}
+  .glyphs {
+    display: grid;
+    gap: var(--space-l);
+  }
 
-	.glyphs__set {
-		display: grid;
-		gap: var(--space-xs);
-		border-block-start: var(--rule) solid var(--line);
-		padding-block-start: var(--space-s);
-	}
+  .glyphs__set {
+    display: grid;
+    gap: var(--space-xs);
+    border-block-start: var(--rule) solid var(--line);
+    padding-block-start: var(--space-s);
+  }
 
-	.glyphs__chars {
-		margin: 0;
-		font-size: clamp(1.25rem, 3.4vw, 2.25rem);
-		line-height: 1.25;
-		letter-spacing: 0.01em;
-		word-break: break-all;
-	}
+  .glyphs__chars {
+    margin: 0;
+    font-size: clamp(1.25rem, 3.4vw, 2.25rem);
+    line-height: 1.25;
+    letter-spacing: 0.01em;
+    word-break: break-all;
+  }
 </style>

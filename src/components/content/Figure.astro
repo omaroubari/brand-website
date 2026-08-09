@@ -1,90 +1,114 @@
 ---
-import { Image } from 'astro:assets';
-import type { ImageMetadata } from 'astro';
+import { Image } from "astro:assets";
+import type { ImageMetadata } from "astro";
 
 interface Props {
-	/**
-	 * An imported image (optimised, responsive) or a path under `public/`.
-	 * Leave it out to get a labelled placeholder frame — useful while the
-	 * client's mockups are still being produced.
-	 */
-	src?: ImageMetadata | string;
-	alt?: string;
-	caption?: string;
-	/** width / height. Required for placeholders, otherwise optional. */
-	ratio?: string;
-	/** Fill the frame (default) or fit the whole image inside it. */
-	fit?: 'cover' | 'contain';
-	/** Palette id for the frame background. */
-	bg?: string;
-	class?: string;
+  /**
+   * An imported image (optimised, responsive) or a path under `public/`.
+   * Leave it out to get a labelled placeholder frame — useful while the
+   * client's mockups are still being produced.
+   */
+  src?: ImageMetadata | string;
+  alt?: string;
+  caption?: string;
+  /** width / height. Required for placeholders, otherwise optional. */
+  ratio?: string;
+  /** Fill the frame (default) or fit the whole image inside it. */
+  fit?: "cover" | "contain";
+  /** Palette id for the frame background. */
+  bg?: string;
+  class?: string;
 }
 
 const {
-	src,
-	alt = '',
-	caption,
-	ratio = '4 / 3',
-	fit = 'cover',
-	bg,
-	class: className,
+  src,
+  alt = "",
+  caption,
+  ratio = "4 / 3",
+  fit = "cover",
+  bg,
+  class: className,
 } = Astro.props;
 
-const style = [`--ratio: ${ratio};`, `--fit: ${fit};`, bg && `background: var(--color-${bg});`]
-	.filter(Boolean)
-	.join(' ');
+const style = [
+  `--ratio: ${ratio};`,
+  `--fit: ${fit};`,
+  bg && `background: var(--color-${bg});`,
+]
+  .filter(Boolean)
+  .join(" ");
 ---
 
-<figure class:list={['figure', className]}>
-	<div class:list={['figure__frame', !src && 'figure__frame--empty']} style={style}>
-		{
-			src && typeof src !== 'string' ? (
-				<Image src={src} alt={alt} class="figure__img" widths={[480, 800, 1200]} sizes="(min-width: 60rem) 40vw, 100vw" />
-			) : src ? (
-				<img class="figure__img" src={src} alt={alt} loading="lazy" decoding="async" />
-			) : (
-				<span class="figure__placeholder caption">{caption ?? 'Artwork pending'}</span>
-			)
-		}
-	</div>
-	{caption && <figcaption class="caption figure__caption">{caption}</figcaption>}
+<figure class:list={["figure", className]}>
+  <div
+    class:list={["figure__frame", !src && "figure__frame--empty"]}
+    style={style}>
+    {
+      src && typeof src !== "string" ? (
+        <Image
+          src={src}
+          alt={alt}
+          class="figure__img"
+          widths={[480, 800, 1200]}
+          sizes="(min-width: 60rem) 40vw, 100vw"
+        />
+      ) : src ? (
+        <img
+          class="figure__img"
+          src={src}
+          alt={alt}
+          loading="lazy"
+          decoding="async"
+        />
+      ) : (
+        <span class="figure__placeholder caption">
+          {caption ?? "Artwork pending"}
+        </span>
+      )
+    }
+  </div>
+  {
+    caption && (
+      <figcaption class="caption figure__caption">{caption}</figcaption>
+    )
+  }
 </figure>
 
 <style>
-	.figure {
-		margin: 0;
-		display: grid;
-		gap: var(--space-xs);
-		align-content: start;
-		min-width: 0;
-	}
+  .figure {
+    margin: 0;
+    display: grid;
+    gap: var(--space-xs);
+    align-content: start;
+    min-width: 0;
+  }
 
-	.figure__frame {
-		aspect-ratio: var(--ratio);
-		overflow: hidden;
-		background: var(--raised);
-		display: grid;
-		place-items: center;
-	}
+  .figure__frame {
+    aspect-ratio: var(--ratio);
+    overflow: hidden;
+    background: var(--raised);
+    display: grid;
+    place-items: center;
+  }
 
-	.figure__frame--empty {
-		background: none;
-		border: var(--rule) dashed var(--line);
-	}
+  .figure__frame--empty {
+    background: none;
+    border: var(--rule) dashed var(--line);
+  }
 
-	.figure__img {
-		width: 100%;
-		height: 100%;
-		object-fit: var(--fit);
-	}
+  .figure__img {
+    width: 100%;
+    height: 100%;
+    object-fit: var(--fit);
+  }
 
-	.figure__placeholder {
-		padding: var(--space-m);
-		text-align: center;
-		text-wrap: balance;
-	}
+  .figure__placeholder {
+    padding: var(--space-m);
+    text-align: center;
+    text-wrap: balance;
+  }
 
-	.figure__caption {
-		text-wrap: pretty;
-	}
+  .figure__caption {
+    text-wrap: pretty;
+  }
 </style>

@@ -3,7 +3,13 @@ title: Print
 summary: Stationery, promotional items and signage — the brand as a physical object.
 ---
 
-import { Block, Figure, Grid, SpecList, Callout } from '../../components/mdx.ts';
+import {
+  Block,
+  Figure,
+  Grid,
+  SpecList,
+  Callout,
+} from "../../components/mdx.ts";
 
 <Block title="Stationary" subtitle="Business cards">
 <Fragment >
@@ -12,12 +18,12 @@ The vibrant accent front, carrying the logotype, catches the eye and leaves a la
 impression. The reverse stays white and holds the details.
 
 <SpecList
-	items={[
-		{ term: 'Size', value: '85 × 55 mm' },
-		{ term: 'Stock', value: '400 gsm uncoated' },
-		{ term: 'Finish', value: 'Matt, unlaminated' },
-		{ term: 'Bleed', value: '3 mm' },
-	]}
+  items={[
+    { term: "Size", value: "85 × 55 mm" },
+    { term: "Stock", value: "400 gsm uncoated" },
+    { term: "Finish", value: "Matt, unlaminated" },
+    { term: "Bleed", value: "3 mm" },
+  ]}
 />
 
 </Fragment>
@@ -61,7 +67,10 @@ paragraph.
 
 <Grid cols={2}>
 
-<Figure ratio="2 / 3" caption="A1 — display type, one image, one accent element." />
+<Figure
+  ratio="2 / 3"
+  caption="A1 — display type, one image, one accent element."
+/>
 <Figure ratio="2 / 3" caption="A1 — accent flood, reversed logotype." />
 
 </Grid>
@@ -104,8 +113,14 @@ and check contrast against the actual wall colour, not a rendering of it.
 
 <Grid cols={2}>
 
-<Figure ratio="4 / 3" caption="Illuminated sign — accent face, logotype in black." />
-<Figure ratio="4 / 3" caption="Building signage — flush-mounted, no backing panel." />
+<Figure
+  ratio="4 / 3"
+  caption="Illuminated sign — accent face, logotype in black."
+/>
+<Figure
+  ratio="4 / 3"
+  caption="Building signage — flush-mounted, no backing panel."
+/>
 
 </Grid>
 
@@ -120,12 +135,21 @@ that shift is the single most common reason a print job comes back wrong.
 </Fragment>
 
 <SpecList
-	items={[
-		{ term: 'Colour space', value: 'CMYK for offset and digital, RGB for screen' },
-		{ term: 'Spot colour', value: 'Match the accent to the Pantone in the palette' },
-		{ term: 'Resolution', value: '300 dpi at final size, 150 dpi large format' },
-		{ term: 'Artwork', value: 'PDF/X-4 with fonts embedded' },
-	]}
+  items={[
+    {
+      term: "Colour space",
+      value: "CMYK for offset and digital, RGB for screen",
+    },
+    {
+      term: "Spot colour",
+      value: "Match the accent to the Pantone in the palette",
+    },
+    {
+      term: "Resolution",
+      value: "300 dpi at final size, 150 dpi large format",
+    },
+    { term: "Artwork", value: "PDF/X-4 with fonts embedded" },
+  ]}
 />
 
 </Block>

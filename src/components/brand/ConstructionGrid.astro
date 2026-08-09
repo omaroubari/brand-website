@@ -1,83 +1,87 @@
 ---
-import Logo from './Logo.astro';
+import Logo from "./Logo.astro";
 
 interface Props {
-	mark?: 'logotype' | 'brandmark';
-	/** Grid divisions across. */
-	cols?: number;
-	/** Grid divisions down. */
-	rows?: number;
-	caption?: string;
-	class?: string;
+  mark?: "logotype" | "brandmark";
+  /** Grid divisions across. */
+  cols?: number;
+  /** Grid divisions down. */
+  rows?: number;
+  caption?: string;
+  class?: string;
 }
 
 const {
-	mark = 'brandmark',
-	cols = 10,
-	rows = 11,
-	caption,
-	class: className,
+  mark = "brandmark",
+  cols = 10,
+  rows = 11,
+  caption,
+  class: className,
 } = Astro.props;
 ---
 
-<figure class:list={['construction', 'escape', className]}>
-	<div
-		class="construction__stage"
-		style={`--cols: ${cols}; --rows: ${rows}; aspect-ratio: ${cols} / ${rows};`}
-	>
-		<div class="construction__grid" aria-hidden="true"></div>
-		<div class="construction__art">
-			<Logo mark={mark} width="100%" />
-		</div>
-	</div>
-	<figcaption class="caption construction__caption">
-		{caption ?? `Built on a ${cols} × ${rows} field grid. Every curve and terminal lands on a grid line — reproduce the mark from the supplied artwork, never redraw it.`}
-	</figcaption>
+<figure class:list={["construction", "escape", className]}>
+  <div
+    class="construction__stage"
+    style={`--cols: ${cols}; --rows: ${rows}; aspect-ratio: ${cols} / ${rows};`}>
+    <div class="construction__grid" aria-hidden="true"></div>
+    <div class="construction__art">
+      <Logo mark={mark} width="100%" />
+    </div>
+  </div>
+  <figcaption class="caption construction__caption">
+    {
+      caption ??
+        `Built on a ${cols} × ${rows} field grid. Every curve and terminal lands on a grid line — reproduce the mark from the supplied artwork, never redraw it.`
+    }
+  </figcaption>
 </figure>
 
 <style>
-	.construction {
-		margin: 0;
-		display: grid;
-		gap: var(--space-s);
-		justify-items: start;
-	}
+  .construction {
+    margin: 0;
+    display: grid;
+    gap: var(--space-s);
+    justify-items: start;
+  }
 
-	.construction__stage {
-		position: relative;
-		width: min(100%, 22rem);
-		border: var(--rule) solid var(--line);
-	}
+  .construction__stage {
+    position: relative;
+    width: min(100%, 22rem);
+    border: var(--rule) solid var(--line);
+  }
 
-	/* Two repeating gradients draw the field grid; the count follows --cols/--rows
+  /* Two repeating gradients draw the field grid; the count follows --cols/--rows
 	   so the diagram always matches the stated construction. */
-	.construction__grid {
-		position: absolute;
-		inset: 0;
-		background-image:
-			repeating-linear-gradient(
-				to right,
-				var(--line) 0 1px,
-				transparent 1px calc(100% / var(--cols))
-			),
-			repeating-linear-gradient(
-				to bottom,
-				var(--line) 0 1px,
-				transparent 1px calc(100% / var(--rows))
-			);
-		background-size: calc(100% / var(--cols)) 100%, 100% calc(100% / var(--rows));
-		opacity: 0.9;
-	}
+  .construction__grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      repeating-linear-gradient(
+        to right,
+        var(--line) 0 1px,
+        transparent 1px calc(100% / var(--cols))
+      ),
+      repeating-linear-gradient(
+        to bottom,
+        var(--line) 0 1px,
+        transparent 1px calc(100% / var(--rows))
+      );
+    background-size:
+      calc(100% / var(--cols)) 100%,
+      100% calc(100% / var(--rows));
+    opacity: 0.9;
+  }
 
-	.construction__art {
-		position: absolute;
-		inset: calc(100% / var(--cols)) calc(100% / var(--cols));
-		display: grid;
-		place-items: center;
-	}
+  .construction__art {
+    position: absolute;
+    inset: calc(100% / var(--cols)) calc(100% / var(--cols));
+    display: grid;
+    place-items: center;
+  }
 
-	.construction__caption {
-		max-width: var(--measure);
-		text-wrap: pretty;
-	}
+  .construction__caption {
+    max-width: var(--measure);
+    text-wrap: pretty;
+  }
 </style>

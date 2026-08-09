@@ -3,16 +3,16 @@ title: Photography
 summary: Two styles — light and dark — and what belongs in each.
 ---
 
-import { Block, PhotoGrid, Callout } from '../../components/mdx';
+import { Block, PhotoGrid, Callout } from "../../components/mdx";
 
-import photo01 from '../../assets/photography/photo-01.jpg';
-import photo02 from '../../assets/photography/photo-02.jpg';
-import photo03 from '../../assets/photography/photo-03.jpg';
-import photo04 from '../../assets/photography/photo-04.jpg';
-import photo05 from '../../assets/photography/photo-05.jpg';
-import photo06 from '../../assets/photography/photo-06.jpg';
-import photo07 from '../../assets/photography/photo-07.jpg';
-import photo08 from '../../assets/photography/photo-08.jpg';
+import photo01 from "../../assets/photography/photo-01.jpg";
+import photo02 from "../../assets/photography/photo-02.jpg";
+import photo03 from "../../assets/photography/photo-03.jpg";
+import photo04 from "../../assets/photography/photo-04.jpg";
+import photo05 from "../../assets/photography/photo-05.jpg";
+import photo06 from "../../assets/photography/photo-06.jpg";
+import photo07 from "../../assets/photography/photo-07.jpg";
+import photo08 from "../../assets/photography/photo-08.jpg";
 
 <Block title="Photography" subtitle="Light style">
 <Fragment slot="note">
@@ -25,9 +25,9 @@ Type sits directly on these images in black, so shoot with a quiet area reserved
 </Fragment>
 
 <PhotoGrid
-	images={[{ src: photo01, span: 2 }, { src: photo02 }, { src: photo03 }]}
-	cols={3}
-	ratio="4 / 3"
+  images={[{ src: photo01, span: 2 }, { src: photo02 }, { src: photo03 }]}
+  cols={3}
+  ratio="4 / 3"
 />
 
 </Block>
@@ -43,9 +43,9 @@ Type reverses to white; keep the subject away from the corner the type will occu
 </Fragment>
 
 <PhotoGrid
-	images={[{ src: photo04 }, { src: photo05 }, { src: photo06, span: 2 }]}
-	cols={3}
-	ratio="4 / 3"
+  images={[{ src: photo04 }, { src: photo05 }, { src: photo06, span: 2 }]}
+  cols={3}
+  ratio="4 / 3"
 />
 
 </Block>
@@ -61,7 +61,12 @@ person's face.
 
 </Fragment>
 
-<PhotoGrid images={[photo07, photo08]} cols={2} ratio="3 / 2" treatment="duotone" />
+<PhotoGrid
+  images={[photo07, photo08]}
+  cols={2}
+  ratio="3 / 2"
+  treatment="duotone"
+/>
 
 </Block>
 
@@ -83,6 +88,11 @@ and the licence term alongside the asset.
 
 </Fragment>
 
-<PhotoGrid images={[photo03, photo05, photo01]} cols={3} ratio="1 / 1" treatment="mono" />
+<PhotoGrid
+  images={[photo03, photo05, photo01]}
+  cols={3}
+  ratio="1 / 1"
+  treatment="mono"
+/>
 
 </Block>

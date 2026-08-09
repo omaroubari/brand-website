@@ -3,7 +3,14 @@ title: Colour
 summary: Five colours, one accent, and the ratios that hold them together.
 ---
 
-import { Block, ColorPalette, ContrastMatrix, Callout, Grid, Panel } from '../../components/mdx';
+import {
+  Block,
+  ColorPalette,
+  ContrastMatrix,
+  Callout,
+  Grid,
+  Panel,
+} from "../../components/mdx";
 
 <Block title="Colour" subtitle="Palette" full>
 
@@ -24,16 +31,25 @@ If a layout needs more accent to feel finished, the layout is the problem.
 
 <Grid cols={3}>
 
-<Panel bg="white" ratio="4 / 3" caption="White — the default surface for documents and product.">
-	<span class="heading-2">Aa</span>
+<Panel
+  bg="white"
+  ratio="4 / 3"
+  caption="White — the default surface for documents and product.">
+  <span class="heading-2">Aa</span>
 </Panel>
 
-<Panel bg="black" ratio="4 / 3" caption="Black — campaign, packaging, anything that should feel like a statement.">
-	<span class="heading-2">Aa</span>
+<Panel
+  bg="black"
+  ratio="4 / 3"
+  caption="Black — campaign, packaging, anything that should feel like a statement.">
+  <span class="heading-2">Aa</span>
 </Panel>
 
-<Panel bg="accent" ratio="4 / 3" caption="Accent — short bursts only. Never a page of running text.">
-	<span class="heading-2">Aa</span>
+<Panel
+  bg="accent"
+  ratio="4 / 3"
+  caption="Accent — short bursts only. Never a page of running text.">
+  <span class="heading-2">Aa</span>
 </Panel>
 
 </Grid>

@@ -1,10 +1,10 @@
 ---
-import type { BrandColor } from '../../brand/types';
-import { hexToRgb, readableOn, tintRamp } from '../../brand/tokens';
+import type { BrandColor } from "../../brand/types";
+import { hexToRgb, readableOn, tintRamp } from "../../brand/tokens";
 
 interface Props {
-	color: BrandColor;
-	print?: boolean;
+  color: BrandColor;
+  print?: boolean;
 }
 
 const { color, print = true } = Astro.props;
@@ -12,95 +12,115 @@ const { color, print = true } = Astro.props;
 const ink = color.on ?? readableOn(color.hex);
 const [r, g, b] = hexToRgb(color.hex);
 const tints = color.tints ? tintRamp(color.hex) : [];
-const hex = color.hex.replace('#', '').toLowerCase();
+const hex = color.hex.replace("#", "").toLowerCase();
 ---
 
 <article
-	class="swatch"
-	style={`--swatch-bg: ${color.hex}; --swatch-ink: ${ink}; --span: ${color.span ?? 1}; --rows: ${color.rows ?? 1};`}
->
-	<div class="swatch__field">
-		<h3 class="swatch__name">{color.name}</h3>
+  class="swatch"
+  style={`--swatch-bg: ${color.hex}; --swatch-ink: ${ink}; --span: ${color.span ?? 1}; --rows: ${color.rows ?? 1};`}>
+  <div class="swatch__field">
+    <h3 class="swatch__name">{color.name}</h3>
 
-		<div class="swatch__specs">
-			<p class="swatch__spec mono"><span>HEX</span> {hex}</p>
-			{print && <p class="swatch__spec mono"><span>RGB</span> {r} {g} {b}</p>}
-			{print && color.cmyk && <p class="swatch__spec mono"><span>CMYK</span> {color.cmyk.join(' ')}</p>}
-			{print && color.pantone && <p class="swatch__spec mono"><span>PMS</span> {color.pantone}</p>}
-		</div>
-	</div>
+    <div class="swatch__specs">
+      <p class="swatch__spec mono"><span>HEX</span> {hex}</p>
+      {
+        print && (
+          <p class="swatch__spec mono">
+            <span>RGB</span> {r} {g} {b}
+          </p>
+        )
+      }
+      {
+        print && color.cmyk && (
+          <p class="swatch__spec mono">
+            <span>CMYK</span> {color.cmyk.join(" ")}
+          </p>
+        )
+      }
+      {
+        print && color.pantone && (
+          <p class="swatch__spec mono">
+            <span>PMS</span> {color.pantone}
+          </p>
+        )
+      }
+    </div>
+  </div>
 
-	{
-		tints.length > 0 && (
-			<div class="swatch__tints" role="img" aria-label={`Tint ramp for ${color.name}`}>
-				{tints.map((t) => (
-					<span class="swatch__tint" style={`background: ${t};`} />
-				))}
-			</div>
-		)
-	}
+  {
+    tints.length > 0 && (
+      <div
+        class="swatch__tints"
+        role="img"
+        aria-label={`Tint ramp for ${color.name}`}>
+        {tints.map((t) => (
+          <span class="swatch__tint" style={`background: ${t};`} />
+        ))}
+      </div>
+    )
+  }
 
-	{color.usage && <p class="caption swatch__usage">{color.usage}</p>}
+  {color.usage && <p class="caption swatch__usage">{color.usage}</p>}
 </article>
 
 <style>
-	.swatch {
-		grid-column: span var(--span);
-		grid-row: span var(--rows);
-		display: grid;
-		grid-template-rows: minmax(0, 1fr) auto auto;
-		min-width: 0;
-	}
+  .swatch {
+    grid-column: span var(--span);
+    grid-row: span var(--rows);
+    display: grid;
+    grid-template-rows: minmax(0, 1fr) auto auto;
+    min-width: 0;
+  }
 
-	.swatch__field {
-		background: var(--swatch-bg);
-		color: var(--swatch-ink);
-		padding: var(--space-m);
-		display: grid;
-		grid-template-rows: auto 1fr;
-		gap: var(--space-m);
-		min-height: 11rem;
-	}
+  .swatch__field {
+    background: var(--swatch-bg);
+    color: var(--swatch-ink);
+    padding: var(--space-m);
+    display: grid;
+    grid-template-rows: auto 1fr;
+    gap: var(--space-m);
+    min-height: 11rem;
+  }
 
-	/* The name sits large at the top of the field; the build values sit small in
+  /* The name sits large at the top of the field; the build values sit small in
 	   the bottom corner, as on the printed colour page. */
-	.swatch__name {
-		font-family: var(--font-display);
-		font-size: var(--type-heading-1-0-size);
-		line-height: 1;
-		letter-spacing: var(--type-heading-1-0-tracking);
-		font-weight: 500;
-		/* Compound names ("Orange/Red") must break rather than run into the
+  .swatch__name {
+    font-family: var(--font-display);
+    font-size: var(--type-heading-1-0-size);
+    line-height: 1;
+    letter-spacing: var(--type-heading-1-0-tracking);
+    font-weight: 500;
+    /* Compound names ("Orange/Red") must break rather than run into the
 		   neighbouring field. */
-		overflow-wrap: break-word;
-	}
+    overflow-wrap: break-word;
+  }
 
-	.swatch__specs {
-		align-self: end;
-		display: grid;
-		gap: 0.15rem;
-	}
+  .swatch__specs {
+    align-self: end;
+    display: grid;
+    gap: 0.15rem;
+  }
 
-	.swatch__spec {
-		display: grid;
-		grid-template-columns: 3.1rem minmax(0, 1fr);
-		gap: 0.35rem;
-		opacity: 0.85;
-	}
+  .swatch__spec {
+    display: grid;
+    grid-template-columns: 3.1rem minmax(0, 1fr);
+    gap: 0.35rem;
+    opacity: 0.85;
+  }
 
-	.swatch__spec span {
-		opacity: 0.6;
-	}
+  .swatch__spec span {
+    opacity: 0.6;
+  }
 
-	.swatch__tints {
-		display: grid;
-		grid-auto-flow: column;
-		grid-auto-columns: 1fr;
-		height: 1.5rem;
-	}
+  .swatch__tints {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 1fr;
+    height: 1.5rem;
+  }
 
-	.swatch__usage {
-		margin-block-start: var(--space-xs);
-		text-wrap: pretty;
-	}
+  .swatch__usage {
+    margin-block-start: var(--space-xs);
+    text-wrap: pretty;
+  }
 </style>

@@ -89,7 +89,7 @@ title: Colour
 summary: Five colours, one accent, and the ratios that hold them together.
 ---
 
-import { Block, ColorPalette } from '../../components/mdx';
+import { Block, ColorPalette } from "../../components/mdx";
 
 <Block title="Colour" subtitle="Palette">
 <Fragment slot="note">
@@ -139,14 +139,14 @@ application pages read correctly before the client's mockups exist.
 
 ## How it hangs together
 
-| | |
-| --- | --- |
-| `src/brand/config.ts` | The client's brand, as data |
-| `src/brand/types.ts` | What that data must look like |
-| `src/brand/tokens.ts` | Config → CSS custom properties, contrast maths, tint ramps |
-| `src/lib/sections.ts` | Ordering, numbering, prev/next |
-| `src/styles/global.css` | The document's visual language — no brand values hardcoded |
-| `src/components/ui/SectionOpener.astro` | The full-bleed accent divider that opens each section |
+|                                         |                                                            |
+| --------------------------------------- | ---------------------------------------------------------- |
+| `src/brand/config.ts`                   | The client's brand, as data                                |
+| `src/brand/types.ts`                    | What that data must look like                              |
+| `src/brand/tokens.ts`                   | Config → CSS custom properties, contrast maths, tint ramps |
+| `src/lib/sections.ts`                   | Ordering, numbering, prev/next                             |
+| `src/styles/global.css`                 | The document's visual language — no brand values hardcoded |
+| `src/components/ui/SectionOpener.astro` | The full-bleed accent divider that opens each section      |
 
 Colour resolves twice: a raw `--color-{id}` per palette entry, then semantic
 roles (`--ink`, `--surface`, `--accent`) pointing at them per scheme. Light and
@@ -157,14 +157,14 @@ persist a preference.
 
 ## Commands
 
-| Command | Action |
-| --- | --- |
-| `pnpm install` | Install dependencies |
-| `pnpm dev` | Dev server on `localhost:4321` |
-| `pnpm check` | Type-check `.astro`, `.ts` and content collections |
-| `pnpm build` | Build to `./dist/` |
-| `pnpm preview` | Preview the build locally |
-| `pnpm deploy` | Build and deploy to Cloudflare Workers |
+| Command        | Action                                             |
+| -------------- | -------------------------------------------------- |
+| `pnpm install` | Install dependencies                               |
+| `pnpm dev`     | Dev server on `localhost:4321`                     |
+| `pnpm check`   | Type-check `.astro`, `.ts` and content collections |
+| `pnpm build`   | Build to `./dist/`                                 |
+| `pnpm preview` | Preview the build locally                          |
+| `pnpm deploy`  | Build and deploy to Cloudflare Workers             |
 
 Images are optimised at build time, so `dist/` is plain static output — deploy
 it to Cloudflare, or anywhere else.

@@ -1,73 +1,75 @@
 ---
 interface Props {
-	/**
-	 * Where the brand sits between each pair of opposites.
-	 * `at` is 0–100: 0 pins the left word, 100 the right.
-	 */
-	items: Array<{ left: string; right: string; at: number }>;
-	class?: string;
+  /**
+   * Where the brand sits between each pair of opposites.
+   * `at` is 0–100: 0 pins the left word, 100 the right.
+   */
+  items: Array<{ left: string; right: string; at: number }>;
+  class?: string;
 }
 
 const { items, class: className } = Astro.props;
 ---
 
-<ul class:list={['tone', 'escape', className]}>
-	{
-		items.map((item) => (
-			<li class="tone__row">
-				<span class="tone__word tone__word--left">{item.left}</span>
-				<span
-					class="tone__track"
-					role="img"
-					aria-label={`${item.left} to ${item.right}: ${item.at} out of 100 towards ${item.right}`}
-				>
-					<span class="tone__dot" style={`left: ${Math.min(100, Math.max(0, item.at))}%;`} />
-				</span>
-				<span class="tone__word tone__word--right">{item.right}</span>
-			</li>
-		))
-	}
+<ul class:list={["tone", "escape", className]}>
+  {
+    items.map((item) => (
+      <li class="tone__row">
+        <span class="tone__word tone__word--left">{item.left}</span>
+        <span
+          class="tone__track"
+          role="img"
+          aria-label={`${item.left} to ${item.right}: ${item.at} out of 100 towards ${item.right}`}>
+          <span
+            class="tone__dot"
+            style={`left: ${Math.min(100, Math.max(0, item.at))}%;`}
+          />
+        </span>
+        <span class="tone__word tone__word--right">{item.right}</span>
+      </li>
+    ))
+  }
 </ul>
 
 <style>
-	.tone {
-		list-style: none;
-		margin: 0;
-		padding: 0;
-		display: grid;
-		gap: var(--space-s);
-	}
+  .tone {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-s);
+  }
 
-	.tone__row {
-		display: grid;
-		grid-template-columns: minmax(0, 1fr) minmax(4rem, 2fr) minmax(0, 1fr);
-		align-items: center;
-		gap: var(--space-s);
-	}
+  .tone__row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(4rem, 2fr) minmax(0, 1fr);
+    align-items: center;
+    gap: var(--space-s);
+  }
 
-	.tone__word {
-		font-size: clamp(0.8125rem, 1.6vw, 1.0625rem);
-		line-height: 1.2;
-		color: var(--muted);
-	}
+  .tone__word {
+    font-size: clamp(0.8125rem, 1.6vw, 1.0625rem);
+    line-height: 1.2;
+    color: var(--muted);
+  }
 
-	.tone__word--right {
-		text-align: end;
-	}
+  .tone__word--right {
+    text-align: end;
+  }
 
-	.tone__track {
-		position: relative;
-		height: 1px;
-		background: var(--line);
-	}
+  .tone__track {
+    position: relative;
+    height: 1px;
+    background: var(--line);
+  }
 
-	.tone__dot {
-		position: absolute;
-		top: 50%;
-		width: 0.6875rem;
-		height: 0.6875rem;
-		border-radius: 50%;
-		background: var(--accent);
-		transform: translate(-50%, -50%);
-	}
+  .tone__dot {
+    position: absolute;
+    top: 50%;
+    width: 0.6875rem;
+    height: 0.6875rem;
+    border-radius: 50%;
+    background: var(--accent);
+    transform: translate(-50%, -50%);
+  }
 </style>

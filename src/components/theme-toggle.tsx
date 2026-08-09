@@ -11,7 +11,6 @@ import { cn } from "@/lib/utils";
  * reflects the current state (sun / moon / monitor).
  */
 export function ThemeToggle({
-
   className,
   onClick,
   size = "icon",
@@ -21,7 +20,6 @@ export function ThemeToggle({
   const { isDark, isSystem, toggleSystem } = useTheme();
 
   const mode = isSystem ? "system" : isDark ? "dark" : "light";
-
 
   return (
     <Button
@@ -37,14 +35,12 @@ export function ThemeToggle({
       variant={variant}
       className={cn("", className)}
       // className="hover:text-primary relative flex cursor-pointer items-center justify-center p-2 transition-[stroke]">
-      {...props}
-    >
+      {...props}>
       {isSystem ? (
         <svg
           id="monitor"
           xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 256 256"
-        >
+          viewBox="0 0 256 256">
           <rect width="256" height="256" fill="none" />
           <rect
             x="32"

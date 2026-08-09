@@ -1,166 +1,173 @@
 ---
-import Logo from './Logo.astro';
+import Logo from "./Logo.astro";
 
 /** Each effect is a deliberate mistake, drawn so the rule is obvious at a glance. */
 export type MisuseEffect =
-	| 'stretch'
-	| 'recolor'
-	| 'low-contrast'
-	| 'too-small'
-	| 'obstruct'
-	| 'rotate'
-	| 'outline'
-	| 'shadow'
-	| 'pattern';
+  | "stretch"
+  | "recolor"
+  | "low-contrast"
+  | "too-small"
+  | "obstruct"
+  | "rotate"
+  | "outline"
+  | "shadow"
+  | "pattern";
 
 interface Props {
-	items: Array<{ effect: MisuseEffect; title: string; note: string }>;
-	mark?: 'logotype' | 'brandmark';
-	cols?: number;
-	class?: string;
+  items: Array<{ effect: MisuseEffect; title: string; note: string }>;
+  mark?: "logotype" | "brandmark";
+  cols?: number;
+  class?: string;
 }
 
-const { items, mark = 'logotype', cols = 3, class: className } = Astro.props;
+const { items, mark = "logotype", cols = 3, class: className } = Astro.props;
 ---
 
-<div class:list={['misuse', 'escape', className]} style={`--cols: ${cols};`}>
-	{
-		items.map((item, i) => (
-			<figure class="misuse__item">
-				<div class:list={['misuse__field', `is-${item.effect}`]}>
-					<span class="misuse__cross" aria-hidden="true">
-						<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
-							<path d="M5 5l14 14M19 5L5 19" />
-						</svg>
-					</span>
-					<span class="misuse__art">
-						<Logo mark={mark} on="light" width="72%" />
-					</span>
-				</div>
-				<figcaption class="caption misuse__caption">
-					<strong class="misuse__title">
-						{i + 1}. {item.title}
-					</strong>{' '}
-					{item.note}
-				</figcaption>
-			</figure>
-		))
-	}
+<div class:list={["misuse", "escape", className]} style={`--cols: ${cols};`}>
+  {
+    items.map((item, i) => (
+      <figure class="misuse__item">
+        <div class:list={["misuse__field", `is-${item.effect}`]}>
+          <span class="misuse__cross" aria-hidden="true">
+            <svg
+              viewBox="0 0 24 24"
+              width="20"
+              height="20"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2">
+              <path d="M5 5l14 14M19 5L5 19" />
+            </svg>
+          </span>
+          <span class="misuse__art">
+            <Logo mark={mark} on="light" width="72%" />
+          </span>
+        </div>
+        <figcaption class="caption misuse__caption">
+          <strong class="misuse__title">
+            {i + 1}. {item.title}
+          </strong>{" "}
+          {item.note}
+        </figcaption>
+      </figure>
+    ))
+  }
 </div>
 
 <style>
-	.misuse {
-		display: grid;
-		grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
-		gap: var(--space-m);
-	}
+  .misuse {
+    display: grid;
+    grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+    gap: var(--space-m);
+  }
 
-	@media (max-width: 47.999rem) {
-		.misuse {
-			grid-template-columns: repeat(2, minmax(0, 1fr));
-		}
-	}
+  @media (max-width: 47.999rem) {
+    .misuse {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
 
-	.misuse__item {
-		margin: 0;
-		display: grid;
-		gap: var(--space-xs);
-		min-width: 0;
-	}
+  .misuse__item {
+    margin: 0;
+    display: grid;
+    gap: var(--space-xs);
+    min-width: 0;
+  }
 
-	.misuse__field {
-		position: relative;
-		aspect-ratio: 3 / 2;
-		display: grid;
-		place-items: center;
-		padding: var(--space-m);
-		background: var(--color-white, #fff);
-		border: var(--rule) solid var(--line);
-		overflow: hidden;
-	}
+  .misuse__field {
+    position: relative;
+    aspect-ratio: 3 / 2;
+    display: grid;
+    place-items: center;
+    padding: var(--space-m);
+    background: var(--color-white, #fff);
+    border: var(--rule) solid var(--line);
+    overflow: hidden;
+  }
 
-	.misuse__art {
-		display: block;
-		width: 100%;
-		display: grid;
-		place-items: center;
-	}
+  .misuse__art {
+    display: block;
+    width: 100%;
+    display: grid;
+    place-items: center;
+  }
 
-	.misuse__cross {
-		position: absolute;
-		inset-block-start: var(--space-xs);
-		inset-inline-end: var(--space-xs);
-		color: var(--accent);
-		z-index: 2;
-	}
+  .misuse__cross {
+    position: absolute;
+    inset-block-start: var(--space-xs);
+    inset-inline-end: var(--space-xs);
+    color: var(--accent);
+    z-index: 2;
+  }
 
-	/* ── The mistakes ─────────────────────────────────────────────────────── */
+  /* ── The mistakes ─────────────────────────────────────────────────────── */
 
-	.is-stretch .misuse__art {
-		transform: scaleX(1.45) scaleY(0.72);
-	}
+  .is-stretch .misuse__art {
+    transform: scaleX(1.45) scaleY(0.72);
+  }
 
-	.is-recolor {
-		background: #00ffff;
-	}
+  .is-recolor {
+    background: #00ffff;
+  }
 
-	.is-recolor .misuse__art {
-		filter: invert(38%) sepia(88%) saturate(4000%) hue-rotate(357deg) brightness(97%);
-	}
+  .is-recolor .misuse__art {
+    filter: invert(38%) sepia(88%) saturate(4000%) hue-rotate(357deg)
+      brightness(97%);
+  }
 
-	.is-low-contrast {
-		background: #000;
-	}
+  .is-low-contrast {
+    background: #000;
+  }
 
-	.is-low-contrast .misuse__art {
-		opacity: 0.22;
-	}
+  .is-low-contrast .misuse__art {
+    opacity: 0.22;
+  }
 
-	.is-too-small .misuse__art {
-		width: 26%;
-	}
+  .is-too-small .misuse__art {
+    width: 26%;
+  }
 
-	.is-obstruct::after {
-		content: '';
-		position: absolute;
-		inset-block-start: 18%;
-		inset-inline-start: 12%;
-		width: 38%;
-		aspect-ratio: 1;
-		background: var(--color-graphite, #494e54);
-		z-index: 1;
-	}
+  .is-obstruct::after {
+    content: "";
+    position: absolute;
+    inset-block-start: 18%;
+    inset-inline-start: 12%;
+    width: 38%;
+    aspect-ratio: 1;
+    background: var(--color-graphite, #494e54);
+    z-index: 1;
+  }
 
-	.is-rotate .misuse__art {
-		transform: rotate(-13deg);
-	}
+  .is-rotate .misuse__art {
+    transform: rotate(-13deg);
+  }
 
-	.is-outline .misuse__art {
-		filter: none;
-		mix-blend-mode: normal;
-		opacity: 0.999;
-		-webkit-text-stroke: 1px currentColor;
-	}
+  .is-outline .misuse__art {
+    filter: none;
+    mix-blend-mode: normal;
+    opacity: 0.999;
+    -webkit-text-stroke: 1px currentColor;
+  }
 
-	.is-outline .misuse__art :global(img) {
-		filter: invert(1) drop-shadow(0 0 0.5px #000) drop-shadow(0 0 0.5px #000)
-			drop-shadow(0 0 0.5px #000);
-	}
+  .is-outline .misuse__art :global(img) {
+    filter: invert(1) drop-shadow(0 0 0.5px #000) drop-shadow(0 0 0.5px #000)
+      drop-shadow(0 0 0.5px #000);
+  }
 
-	.is-shadow .misuse__art :global(img) {
-		filter: drop-shadow(0.25rem 0.3rem 0 rgb(0 0 0 / 0.35));
-	}
+  .is-shadow .misuse__art :global(img) {
+    filter: drop-shadow(0.25rem 0.3rem 0 rgb(0 0 0 / 0.35));
+  }
 
-	.is-pattern {
-		background-image: repeating-linear-gradient(
-			45deg,
-			var(--color-iron, #dbdee3) 0 10px,
-			var(--color-graphite, #494e54) 10px 20px
-		);
-	}
+  .is-pattern {
+    background-image: repeating-linear-gradient(
+      45deg,
+      var(--color-iron, #dbdee3) 0 10px,
+      var(--color-graphite, #494e54) 10px 20px
+    );
+  }
 
-	.misuse__title {
-		color: var(--ink);
-		font-weight: 600;
-	}
+  .misuse__title {
+    color: var(--ink);
+    font-weight: 600;
+  }
 </style>

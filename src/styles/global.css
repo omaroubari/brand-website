@@ -15,159 +15,161 @@
  */
 
 html {
-	scroll-behavior: smooth;
-	scroll-padding-top: 6rem;
+  scroll-behavior: smooth;
+  scroll-padding-top: 6rem;
 }
 
 body {
-	-webkit-font-smoothing: antialiased;
-	text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
 @media (prefers-reduced-motion: reduce) {
-	html {
-		scroll-behavior: auto;
-	}
+  html {
+    scroll-behavior: auto;
+  }
 
-	*,
-	*::before,
-	*::after {
-		animation-duration: 0.01ms !important;
-		animation-iteration-count: 1 !important;
-		transition-duration: 0.01ms !important;
-	}
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 /* ── Scale & rhythm ───────────────────────────────────────────────────────── */
 
 :root {
-	--page-gutter: clamp(1.25rem, 2.6vw, 2.5rem);
-	--rail-width: 14rem;
-	/* The document's narrow left column: two-line title above small body copy. */
-	--side-column: clamp(11rem, 24vw, 21.5rem);
-	--measure: 30ch;
-	--rule: 1px;
+  --page-gutter: clamp(1.25rem, 2.6vw, 2.5rem);
+  --rail-width: 14rem;
+  /* The document's narrow left column: two-line title above small body copy. */
+  --side-column: clamp(11rem, 24vw, 21.5rem);
+  --measure: 30ch;
+  --rule: 1px;
 
-	--space-2xs: 0.25rem;
-	--space-xs: 0.5rem;
-	--space-s: 0.75rem;
-	--space-m: 1.25rem;
-	--space-l: 2rem;
-	--space-xl: clamp(2.5rem, 5vw, 4rem);
-	--space-2xl: clamp(4.5rem, 10vw, 9rem);
+  --space-2xs: 0.25rem;
+  --space-xs: 0.5rem;
+  --space-s: 0.75rem;
+  --space-m: 1.25rem;
+  --space-l: 2rem;
+  --space-xl: clamp(2.5rem, 5vw, 4rem);
+  --space-2xl: clamp(4.5rem, 10vw, 9rem);
 
-	--ease: cubic-bezier(0.2, 0, 0, 1);
+  --ease: cubic-bezier(0.2, 0, 0, 1);
 
-	/* shadcn primitives resolve to the brand's semantic tokens. */
-	--background: var(--surface);
-	--foreground: var(--ink);
-	--card: var(--surface);
-	--card-foreground: var(--ink);
-	--popover: var(--surface);
-	--popover-foreground: var(--ink);
-	--primary: var(--ink);
-	--primary-foreground: var(--surface);
-	--secondary: var(--raised);
-	--secondary-foreground: var(--ink);
-	--muted-foreground: var(--muted);
-	--destructive: var(--accent);
-	--border: var(--line);
-	--input: var(--line);
-	--ring: var(--accent);
-	--chart-1: var(--accent);
-	--chart-2: var(--ink);
-	--chart-3: var(--muted);
-	--chart-4: var(--line);
-	--chart-5: var(--raised);
-	--radius: 0.625rem;
-	--sidebar: var(--surface);
-	--sidebar-foreground: var(--ink);
-	--sidebar-primary: var(--accent);
-	--sidebar-primary-foreground: var(--on-accent);
-	--sidebar-accent: var(--raised);
-	--sidebar-accent-foreground: var(--ink);
-	--sidebar-border: var(--line);
-	--sidebar-ring: var(--accent);
+  /* shadcn primitives resolve to the brand's semantic tokens. */
+  --background: var(--surface);
+  --foreground: var(--ink);
+  --card: var(--surface);
+  --card-foreground: var(--ink);
+  --popover: var(--surface);
+  --popover-foreground: var(--ink);
+  --primary: var(--ink);
+  --primary-foreground: var(--surface);
+  --secondary: var(--raised);
+  --secondary-foreground: var(--ink);
+  --muted-foreground: var(--muted);
+  --destructive: var(--accent);
+  --border: var(--line);
+  --input: var(--line);
+  --ring: var(--accent);
+  --chart-1: var(--accent);
+  --chart-2: var(--ink);
+  --chart-3: var(--muted);
+  --chart-4: var(--line);
+  --chart-5: var(--raised);
+  --radius: 0.625rem;
+  --sidebar: var(--surface);
+  --sidebar-foreground: var(--ink);
+  --sidebar-primary: var(--accent);
+  --sidebar-primary-foreground: var(--on-accent);
+  --sidebar-accent: var(--raised);
+  --sidebar-accent-foreground: var(--ink);
+  --sidebar-border: var(--line);
+  --sidebar-ring: var(--accent);
 }
 
 /* ── Base ─────────────────────────────────────────────────────────────────── */
 
 body {
-	background: var(--surface);
-	color: var(--ink);
-	font-family: var(--font-text);
-	font-size: var(--type-body-2-0-size, 0.8125rem);
-	line-height: var(--type-body-2-0-leading, 1.45);
-	font-weight: var(--type-body-2-0-weight, 300);
-	/* No colour transition here. Only `body` would animate while every panel,
+  background: var(--surface);
+  color: var(--ink);
+  font-family: var(--font-text);
+  font-size: var(--type-body-2-0-size, 0.8125rem);
+  line-height: var(--type-body-2-0-leading, 1.45);
+  font-weight: var(--type-body-2-0-weight, 300);
+  /* No colour transition here. Only `body` would animate while every panel,
 	   swatch and the nav rail switched instantly, so a fade left the page in a
 	   visibly half-themed state. An atomic switch is also truer to the document. */
 }
 
 ::selection {
-	background: var(--accent);
-	color: var(--on-accent);
+  background: var(--accent);
+  color: var(--on-accent);
 }
 
 :focus-visible {
-	outline: 2px solid var(--accent);
-	outline-offset: 3px;
-	border-radius: 2px;
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 2px;
 }
 
 a {
-	color: inherit;
-	text-decoration-color: color-mix(in srgb, currentColor 35%, transparent);
-	text-underline-offset: 0.2em;
-	transition: text-decoration-color 0.2s var(--ease), color 0.2s var(--ease);
+  color: inherit;
+  text-decoration-color: color-mix(in srgb, currentColor 35%, transparent);
+  text-underline-offset: 0.2em;
+  transition:
+    text-decoration-color 0.2s var(--ease),
+    color 0.2s var(--ease);
 }
 
 a:hover {
-	text-decoration-color: currentColor;
+  text-decoration-color: currentColor;
 }
 
 hr {
-	border: 0;
-	border-top: var(--rule) solid var(--line);
-	margin: var(--space-xl) 0;
+  border: 0;
+  border-top: var(--rule) solid var(--line);
+  margin: var(--space-xl) 0;
 }
 
 /* ── Type primitives ──────────────────────────────────────────────────────── */
 
 .display-1 {
-	font-family: var(--font-display);
-	font-size: var(--type-display-1-0-size);
-	line-height: var(--type-display-1-0-leading);
-	letter-spacing: var(--type-display-1-0-tracking);
-	font-weight: var(--type-display-1-0-weight);
-	text-wrap: balance;
+  font-family: var(--font-display);
+  font-size: var(--type-display-1-0-size);
+  line-height: var(--type-display-1-0-leading);
+  letter-spacing: var(--type-display-1-0-tracking);
+  font-weight: var(--type-display-1-0-weight);
+  text-wrap: balance;
 }
 
 .display-2 {
-	font-family: var(--font-display);
-	font-size: var(--type-display-2-0-size);
-	line-height: var(--type-display-2-0-leading);
-	letter-spacing: var(--type-display-2-0-tracking);
-	font-weight: var(--type-display-2-0-weight);
-	text-wrap: balance;
+  font-family: var(--font-display);
+  font-size: var(--type-display-2-0-size);
+  line-height: var(--type-display-2-0-leading);
+  letter-spacing: var(--type-display-2-0-tracking);
+  font-weight: var(--type-display-2-0-weight);
+  text-wrap: balance;
 }
 
 .heading-1 {
-	font-family: var(--font-display);
-	font-size: var(--type-heading-1-0-size);
-	line-height: var(--type-heading-1-0-leading);
-	letter-spacing: var(--type-heading-1-0-tracking);
-	font-weight: var(--type-heading-1-0-weight);
-	text-wrap: balance;
+  font-family: var(--font-display);
+  font-size: var(--type-heading-1-0-size);
+  line-height: var(--type-heading-1-0-leading);
+  letter-spacing: var(--type-heading-1-0-tracking);
+  font-weight: var(--type-heading-1-0-weight);
+  text-wrap: balance;
 }
 
 .heading-2 {
-	font-family: var(--font-display);
-	font-size: var(--type-heading-2-0-size);
-	line-height: var(--type-heading-2-0-leading);
-	letter-spacing: var(--type-heading-2-0-tracking);
-	font-weight: var(--type-heading-2-0-weight);
-	text-wrap: balance;
+  font-family: var(--font-display);
+  font-size: var(--type-heading-2-0-size);
+  line-height: var(--type-heading-2-0-leading);
+  letter-spacing: var(--type-heading-2-0-tracking);
+  font-weight: var(--type-heading-2-0-weight);
+  text-wrap: balance;
 }
 
 /**
@@ -175,19 +177,19 @@ hr {
  * the page, as on the welcome and tone-of-voice spreads.
  */
 .statement {
-	font-family: var(--font-text);
-	font-size: var(--type-body-1-0-size);
-	line-height: var(--type-body-1-0-leading);
-	letter-spacing: var(--type-body-1-0-tracking);
-	font-weight: var(--type-body-1-0-weight);
-	text-wrap: pretty;
-	max-width: 18ch;
+  font-family: var(--font-text);
+  font-size: var(--type-body-1-0-size);
+  line-height: var(--type-body-1-0-leading);
+  letter-spacing: var(--type-body-1-0-tracking);
+  font-weight: var(--type-body-1-0-weight);
+  text-wrap: pretty;
+  max-width: 18ch;
 }
 
 @media (min-width: 48rem) {
-	.statement {
-		max-width: 21ch;
-	}
+  .statement {
+    max-width: 21ch;
+  }
 }
 
 /**
@@ -195,29 +197,29 @@ hr {
  * content spread ("Logotype" / "Primary logo").
  */
 .doc-title {
-	font-family: var(--font-display);
-	font-size: var(--type-heading-1-0-size);
-	line-height: var(--type-heading-1-0-leading);
-	letter-spacing: var(--type-heading-1-0-tracking);
-	font-weight: 500;
-	text-wrap: balance;
-	display: block;
+  font-family: var(--font-display);
+  font-size: var(--type-heading-1-0-size);
+  line-height: var(--type-heading-1-0-leading);
+  letter-spacing: var(--type-heading-1-0-tracking);
+  font-weight: 500;
+  text-wrap: balance;
+  display: block;
 }
 
 .doc-title__sub {
-	display: block;
-	font-weight: 300;
+  display: block;
+  font-weight: 300;
 }
 
 /** Small uppercase label used for eyebrows, captions and spec keys. */
 .label {
-	font-family: var(--font-text);
-	font-size: 0.625rem;
-	line-height: 1.3;
-	letter-spacing: 0.1em;
-	text-transform: uppercase;
-	font-weight: 500;
-	color: var(--muted);
+  font-family: var(--font-text);
+  font-size: 0.625rem;
+  line-height: 1.3;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 500;
+  color: var(--muted);
 }
 
 /**
@@ -225,77 +227,77 @@ hr {
  * page: brand, document, version, year — right-aligned, one line each.
  */
 .colophon {
-	display: grid;
-	gap: 0.1rem;
-	justify-items: end;
-	text-align: end;
-	font-size: var(--type-caption-size);
-	line-height: 1.35;
+  display: grid;
+  gap: 0.1rem;
+  justify-items: end;
+  text-align: end;
+  font-size: var(--type-caption-size);
+  line-height: 1.35;
 }
 
 .caption {
-	font-size: var(--type-caption-size);
-	line-height: var(--type-caption-leading);
-	letter-spacing: var(--type-caption-tracking);
-	color: var(--muted);
+  font-size: var(--type-caption-size);
+  line-height: var(--type-caption-leading);
+  letter-spacing: var(--type-caption-tracking);
+  color: var(--muted);
 }
 
 .mono {
-	font-family: var(--font-mono);
-	font-size: 0.75rem;
-	letter-spacing: 0.01em;
-	font-variant-numeric: tabular-nums;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.01em;
+  font-variant-numeric: tabular-nums;
 }
 
 .tnum {
-	font-variant-numeric: tabular-nums;
+  font-variant-numeric: tabular-nums;
 }
 
 /* ── Shell ────────────────────────────────────────────────────────────────── */
 
 .main {
-	flex: 1 1 0%;
-	min-width: 0;
-	display: flex;
-	flex-direction: column;
-	min-height: 100dvh;
+  flex: 1 1 0%;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
 }
 
 /* Tailwind handles the sidebar's layout and visual styling. These selectors
    are only the no-JavaScript theme fallback for artwork that cannot use a
    colour variable. */
 
-:root[data-theme='dark'] .theme-light-art,
-:root[data-theme='dark'] .theme-sun {
-	display: none;
+:root[data-theme="dark"] .theme-light-art,
+:root[data-theme="dark"] .theme-sun {
+  display: none;
 }
 
-:root[data-theme='dark'] .theme-dark-art,
-:root[data-theme='dark'] .theme-moon {
-	display: block;
+:root[data-theme="dark"] .theme-dark-art,
+:root[data-theme="dark"] .theme-moon {
+  display: block;
 }
 
 @media (prefers-color-scheme: dark) {
-	:root:not([data-theme='light']) .theme-light-art,
-	:root:not([data-theme='light']) .theme-sun {
-		display: none;
-	}
+  :root:not([data-theme="light"]) .theme-light-art,
+  :root:not([data-theme="light"]) .theme-sun {
+    display: none;
+  }
 
-	:root:not([data-theme='light']) .theme-dark-art,
-	:root:not([data-theme='light']) .theme-moon {
-		display: block;
-	}
+  :root:not([data-theme="light"]) .theme-dark-art,
+  :root:not([data-theme="light"]) .theme-moon {
+    display: block;
+  }
 }
 
 /* Everything inside a page sits in the gutter; full-bleed panels opt out. */
 .page {
-	padding-inline: var(--page-gutter);
-	padding-block: var(--space-l) var(--space-2xl);
-	flex: 1;
+  padding-inline: var(--page-gutter);
+  padding-block: var(--space-l) var(--space-2xl);
+  flex: 1;
 }
 
 .page > * + * {
-	margin-block-start: var(--space-2xl);
+  margin-block-start: var(--space-2xl);
 }
 
 /*
@@ -303,21 +305,21 @@ hr {
  * colour fields and section dividers bleed off the printed page.
  */
 .full-bleed {
-	margin-inline: calc(var(--page-gutter) * -1);
-	width: calc(100% + var(--page-gutter) * 2);
-	max-width: none;
+  margin-inline: calc(var(--page-gutter) * -1);
+  width: calc(100% + var(--page-gutter) * 2);
+  max-width: none;
 }
 
 /* A bleeding first element starts at the very top of the page, so it cancels
    the page's own top padding — covers and section dividers both rely on this. */
 .page > .full-bleed:first-child {
-	margin-block-start: calc(var(--space-l) * -1);
+  margin-block-start: calc(var(--space-l) * -1);
 }
 
 /* Wide blocks may break the measure but never the page. */
 .bleed {
-	overflow-x: auto;
-	overscroll-behavior-x: contain;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
 }
 
 /* ── Prose (MDX output) ───────────────────────────────────────────────────── */
@@ -326,219 +328,218 @@ hr {
    specimen, palette and diagram inherits a 34rem cage. */
 .prose,
 .block__body {
-	max-width: none;
+  max-width: none;
 }
 
 .prose > :where(p, ul, ol, dl, blockquote, h2, h3, h4),
 .block__body > :where(p, ul, ol, dl, blockquote, h3, h4) {
-	max-width: var(--measure);
+  max-width: var(--measure);
 }
 
 .prose > * + * {
-	margin-block-start: var(--space-m);
+  margin-block-start: var(--space-m);
 }
 
 /* Headings written in Markdown only. Component headings carry a class and
    style themselves — without the `:not([class])` guard, every `<Block>` title
    would inherit this rule's top margin and sit a full space-xl below its body. */
 .prose :where(h2, h3, h4):not([class]) {
-	font-family: var(--font-display);
-	font-weight: 500;
-	letter-spacing: -0.015em;
-	text-wrap: balance;
-	margin-block-start: var(--space-xl);
+  font-family: var(--font-display);
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+  margin-block-start: var(--space-xl);
 }
 
 .prose :where(h2):not([class]) {
-	font-size: var(--type-heading-2-0-size);
-	line-height: var(--type-heading-2-0-leading);
+  font-size: var(--type-heading-2-0-size);
+  line-height: var(--type-heading-2-0-leading);
 }
 
 .prose :where(h3):not([class]) {
-	font-size: 1.125rem;
-	line-height: 1.25;
+  font-size: 1.125rem;
+  line-height: 1.25;
 }
 
 .prose :where(h4):not([class]) {
-	font-size: 1rem;
-	line-height: 1.3;
-	color: var(--muted);
+  font-size: 1rem;
+  line-height: 1.3;
+  color: var(--muted);
 }
 
 .prose strong {
-	font-weight: 600;
+  font-weight: 600;
 }
 
 .prose ul,
 .prose ol {
-	padding-inline-start: 1.1em;
+  padding-inline-start: 1.1em;
 }
 
 .prose li + li {
-	margin-block-start: var(--space-xs);
+  margin-block-start: var(--space-xs);
 }
 
 .prose li::marker {
-	color: var(--muted);
+  color: var(--muted);
 }
 
 .prose blockquote {
-	border-inline-start: 2px solid var(--accent);
-	padding-inline-start: var(--space-m);
-	font-size: var(--type-body-1-0-size);
-	line-height: var(--type-body-1-0-leading);
+  border-inline-start: 2px solid var(--accent);
+  padding-inline-start: var(--space-m);
+  font-size: var(--type-body-1-0-size);
+  line-height: var(--type-body-1-0-leading);
 }
 
 .prose code {
-	font-family: var(--font-mono);
-	font-size: 0.85em;
-	background: color-mix(in srgb, var(--raised) 55%, transparent);
-	padding: 0.15em 0.4em;
-	border-radius: 3px;
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  background: color-mix(in srgb, var(--raised) 55%, transparent);
+  padding: 0.15em 0.4em;
+  border-radius: 3px;
 }
 
 .prose :where(h2, h3, h4):not([class]) + * {
-	margin-block-start: var(--space-s);
+  margin-block-start: var(--space-s);
 }
 
 /* Marks a component that should always fill its column, whatever it sits in.
    Deliberately no `width` — that would beat `.full-bleed`'s wider width when
    the two are combined. */
 .escape {
-	max-width: none;
+  max-width: none;
 }
 
 /* ── Surfaces ─────────────────────────────────────────────────────────────── */
 
 .panel {
-	border: var(--rule) solid var(--line);
-	background: var(--surface);
-	display: grid;
-	place-items: center;
-	padding: clamp(1.5rem, 5vw, 3.5rem);
-	position: relative;
-	overflow: hidden;
+  border: var(--rule) solid var(--line);
+  background: var(--surface);
+  display: grid;
+  place-items: center;
+  padding: clamp(1.5rem, 5vw, 3.5rem);
+  position: relative;
+  overflow: hidden;
 }
 
 .panel--flush {
-	padding: 0;
+  padding: 0;
 }
 
 .grid {
-	display: grid;
-	gap: var(--space-m);
-	grid-template-columns: repeat(var(--cols, 3), minmax(0, 1fr));
+  display: grid;
+  gap: var(--space-m);
+  grid-template-columns: repeat(var(--cols, 3), minmax(0, 1fr));
 }
 
 @media (max-width: 47.999rem) {
-	.grid {
-		grid-template-columns: repeat(var(--cols-sm, 1), minmax(0, 1fr));
-	}
+  .grid {
+    grid-template-columns: repeat(var(--cols-sm, 1), minmax(0, 1fr));
+  }
 }
 
 /* ── Utilities ────────────────────────────────────────────────────────────── */
 
 .visually-hidden {
-	position: absolute;
-	width: 1px;
-	height: 1px;
-	padding: 0;
-	margin: -1px;
-	overflow: hidden;
-	clip-path: inset(50%);
-	white-space: nowrap;
-	border: 0;
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
 }
 
 .stack > * + * {
-	margin-block-start: var(--stack-gap, var(--space-m));
+  margin-block-start: var(--stack-gap, var(--space-m));
 }
 
 .rule {
-	border-top: var(--rule) solid var(--line);
+  border-top: var(--rule) solid var(--line);
 }
 /*
  ---break---
  */
 @theme inline {
-	--font-heading: var(--font-sans);
-	--font-sans: 'Geist Variable', sans-serif;
-	--color-sidebar-ring: var(--sidebar-ring);
-	--color-sidebar-border: var(--sidebar-border);
-	--color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-	--color-sidebar-accent: var(--sidebar-accent);
-	--color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-	--color-sidebar-primary: var(--sidebar-primary);
-	--color-sidebar-foreground: var(--sidebar-foreground);
-	--color-sidebar: var(--sidebar);
-	--color-chart-5: var(--chart-5);
-	--color-chart-4: var(--chart-4);
-	--color-chart-3: var(--chart-3);
-	--color-chart-2: var(--chart-2);
-	--color-chart-1: var(--chart-1);
-	--color-ring: var(--ring);
-	--color-input: var(--input);
-	--color-border: var(--border);
-	--color-destructive: var(--destructive);
-	--color-accent-foreground: var(--accent-foreground);
-	--color-accent: var(--accent);
-	--color-muted-foreground: var(--muted-foreground);
-	--color-muted: var(--muted);
-	--color-secondary-foreground: var(--secondary-foreground);
-	--color-secondary: var(--secondary);
-	--color-primary-foreground: var(--primary-foreground);
-	--color-primary: var(--primary);
-	--color-popover-foreground: var(--popover-foreground);
-	--color-popover: var(--popover);
-	--color-card-foreground: var(--card-foreground);
-	--color-card: var(--card);
-	--color-foreground: var(--foreground);
-	--color-background: var(--background);
-	--radius-sm: calc(var(--radius) * 0.6);
-	--radius-md: calc(var(--radius) * 0.8);
-	--radius-lg: var(--radius);
-	--radius-xl: calc(var(--radius) * 1.4);
-	--radius-2xl: calc(var(--radius) * 1.8);
-	--radius-3xl: calc(var(--radius) * 2.2);
-	--radius-4xl: calc(var(--radius) * 2.6);
+  --font-heading: var(--font-sans);
+  --font-sans: "Geist Variable", sans-serif;
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
 }
 /*
  ---break---
  */
 .dark,
-[data-theme=dark]
-{
-	--background: oklch(0.145 0 0);
-	--foreground: oklch(0.985 0 0);
-	--card: oklch(0.205 0 0);
-	--card-foreground: oklch(0.985 0 0);
-	--popover: oklch(0.205 0 0);
-	--popover-foreground: oklch(0.985 0 0);
-	--primary: oklch(0.922 0 0);
-	--primary-foreground: oklch(0.205 0 0);
-	--secondary: oklch(0.269 0 0);
-	--secondary-foreground: oklch(0.985 0 0);
-	--muted: oklch(0.269 0 0);
-	--muted-foreground: oklch(0.708 0 0);
-	--accent: oklch(0.269 0 0);
-	--accent-foreground: oklch(0.985 0 0);
-	--destructive: oklch(0.704 0.191 22.216);
-	--border: oklch(1 0 0 / 10%);
-	--input: oklch(1 0 0 / 15%);
-	--ring: oklch(0.556 0 0);
-	--chart-1: oklch(0.87 0 0);
-	--chart-2: oklch(0.556 0 0);
-	--chart-3: oklch(0.439 0 0);
-	--chart-4: oklch(0.371 0 0);
-	--chart-5: oklch(0.269 0 0);
-	--sidebar: oklch(0.205 0 0);
-	--sidebar-foreground: oklch(0.985 0 0);
-	--sidebar-primary: oklch(0.488 0.243 264.376);
-	--sidebar-primary-foreground: oklch(0.985 0 0);
-	--sidebar-accent: oklch(0.269 0 0);
-	--sidebar-accent-foreground: oklch(0.985 0 0);
-	--sidebar-border: oklch(1 0 0 / 10%);
-	--sidebar-ring: oklch(0.556 0 0);
+[data-theme="dark"] {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.922 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.556 0 0);
 }
 /*
  ---break---
@@ -546,11 +547,11 @@ hr {
 @layer base {
   * {
     @apply border-border outline-ring/50;
-	}
+  }
   body {
     @apply bg-background text-foreground;
-	}
+  }
   html {
     @apply font-sans;
-	}
+  }
 }

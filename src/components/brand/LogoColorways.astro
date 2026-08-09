@@ -1,72 +1,75 @@
 ---
-import { brand } from '../../brand/config';
-import { color } from '../../brand/tokens';
-import Logo from './Logo.astro';
+import { brand } from "../../brand/config";
+import { color } from "../../brand/tokens";
+import Logo from "./Logo.astro";
 
 interface Props {
-	mark?: 'logotype' | 'brandmark';
-	/** Columns from the medium breakpoint up. */
-	cols?: number;
-	class?: string;
+  mark?: "logotype" | "brandmark";
+  /** Columns from the medium breakpoint up. */
+  cols?: number;
+  class?: string;
 }
 
-const { mark = 'logotype', cols = 3, class: className } = Astro.props;
+const { mark = "logotype", cols = 3, class: className } = Astro.props;
 
 const colorways = brand.logo.colorways.map((way) => ({
-	...way,
-	fgColor: color(brand, way.fg),
-	bgColor: color(brand, way.bg),
+  ...way,
+  fgColor: color(brand, way.fg),
+  bgColor: color(brand, way.bg),
 }));
 ---
 
-<div class:list={['ways', 'escape', className]} style={`--cols: ${cols};`}>
-	{
-		colorways.map((way) => (
-			<figure class="ways__item">
-				<div
-					class="ways__field"
-					style={`background: var(--color-${way.bg}); border-color: color-mix(in srgb, var(--color-${way.fg}) 18%, transparent);`}
-				>
-					<Logo mark={mark} tint={`var(--color-${way.fg})`} width={mark === 'brandmark' ? '4rem' : '70%'} />
-				</div>
-				<figcaption class="caption ways__caption">
-					{way.label && <span class="ways__label">{way.label} · </span>}
-					{way.fgColor.name} on {way.bgColor.name}
-				</figcaption>
-			</figure>
-		))
-	}
+<div class:list={["ways", "escape", className]} style={`--cols: ${cols};`}>
+  {
+    colorways.map((way) => (
+      <figure class="ways__item">
+        <div
+          class="ways__field"
+          style={`background: var(--color-${way.bg}); border-color: color-mix(in srgb, var(--color-${way.fg}) 18%, transparent);`}>
+          <Logo
+            mark={mark}
+            tint={`var(--color-${way.fg})`}
+            width={mark === "brandmark" ? "4rem" : "70%"}
+          />
+        </div>
+        <figcaption class="caption ways__caption">
+          {way.label && <span class="ways__label">{way.label} · </span>}
+          {way.fgColor.name} on {way.bgColor.name}
+        </figcaption>
+      </figure>
+    ))
+  }
 </div>
 
 <style>
-	.ways {
-		display: grid;
-		grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
-		gap: var(--space-m);
-	}
+  .ways {
+    display: grid;
+    grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+    gap: var(--space-m);
+  }
 
-	@media (max-width: 47.999rem) {
-		.ways {
-			grid-template-columns: repeat(2, minmax(0, 1fr));
-		}
-	}
+  @media (max-width: 47.999rem) {
+    .ways {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
 
-	.ways__item {
-		margin: 0;
-		display: grid;
-		gap: var(--space-xs);
-		min-width: 0;
-	}
+  .ways__item {
+    margin: 0;
+    display: grid;
+    gap: var(--space-xs);
+    min-width: 0;
+  }
 
-	.ways__field {
-		aspect-ratio: 3 / 2;
-		border: var(--rule) solid transparent;
-		display: grid;
-		place-items: center;
-		padding: var(--space-m);
-	}
+  .ways__field {
+    aspect-ratio: 3 / 2;
+    border: var(--rule) solid transparent;
+    display: grid;
+    place-items: center;
+    padding: var(--space-m);
+  }
 
-	.ways__label {
-		color: var(--ink);
-	}
+  .ways__label {
+    color: var(--ink);
+  }
 </style>
