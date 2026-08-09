@@ -6,13 +6,13 @@
  *   import { Block, ColorPalette, TypeScale } from '../../components/mdx';
  */
 
-export { default as Block } from './ui/Block.astro';
-export { default as Callout } from './ui/Callout.astro';
-export { default as Figure } from './ui/Figure.astro';
-export { default as Grid } from './ui/Grid.astro';
-export { default as Panel } from './ui/Panel.astro';
-export { default as SpecList } from './ui/SpecList.astro';
-export { default as Statement } from './ui/Statement.astro';
+export { default as Block } from './content/Block.astro';
+export { default as Callout } from './content/Callout.astro';
+export { default as Figure } from './content/Figure.astro';
+export { default as Grid } from './content/Grid.astro';
+export { default as Panel } from './content/Panel.astro';
+export { default as SpecList } from './content/SpecList.astro';
+export { default as Statement } from './content/Statement.astro';
 
 export { default as ColorPalette } from './brand/ColorPalette.astro';
 export { default as ColorSwatch } from './brand/ColorSwatch.astro';

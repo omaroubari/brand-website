@@ -5,7 +5,7 @@
 /*
  ---break---
  */
-@custom-variant dark (&:is(.dark *));
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 /*
  * Global styles for the brand guidelines site.
  *
@@ -58,38 +58,36 @@ body {
 
 	--ease: cubic-bezier(0.2, 0, 0, 1);
 
-	--background: oklch(1 0 0);
-	--foreground: oklch(0.145 0 0);
-	--card: oklch(1 0 0);
-	--card-foreground: oklch(0.145 0 0);
-	--popover: oklch(1 0 0);
-	--popover-foreground: oklch(0.145 0 0);
-	--primary: oklch(0.205 0 0);
-	--primary-foreground: oklch(0.985 0 0);
-	--secondary: oklch(0.97 0 0);
-	--secondary-foreground: oklch(0.205 0 0);
-	--muted: oklch(0.97 0 0);
-	--muted-foreground: oklch(0.556 0 0);
-	--accent: oklch(0.97 0 0);
-	--accent-foreground: oklch(0.205 0 0);
-	--destructive: oklch(0.577 0.245 27.325);
-	--border: oklch(0.922 0 0);
-	--input: oklch(0.922 0 0);
-	--ring: oklch(0.708 0 0);
-	--chart-1: oklch(0.87 0 0);
-	--chart-2: oklch(0.556 0 0);
-	--chart-3: oklch(0.439 0 0);
-	--chart-4: oklch(0.371 0 0);
-	--chart-5: oklch(0.269 0 0);
+	/* shadcn primitives resolve to the brand's semantic tokens. */
+	--background: var(--surface);
+	--foreground: var(--ink);
+	--card: var(--surface);
+	--card-foreground: var(--ink);
+	--popover: var(--surface);
+	--popover-foreground: var(--ink);
+	--primary: var(--ink);
+	--primary-foreground: var(--surface);
+	--secondary: var(--raised);
+	--secondary-foreground: var(--ink);
+	--muted-foreground: var(--muted);
+	--destructive: var(--accent);
+	--border: var(--line);
+	--input: var(--line);
+	--ring: var(--accent);
+	--chart-1: var(--accent);
+	--chart-2: var(--ink);
+	--chart-3: var(--muted);
+	--chart-4: var(--line);
+	--chart-5: var(--raised);
 	--radius: 0.625rem;
-	--sidebar: oklch(0.985 0 0);
-	--sidebar-foreground: oklch(0.145 0 0);
-	--sidebar-primary: oklch(0.205 0 0);
-	--sidebar-primary-foreground: oklch(0.985 0 0);
-	--sidebar-accent: oklch(0.97 0 0);
-	--sidebar-accent-foreground: oklch(0.205 0 0);
-	--sidebar-border: oklch(0.922 0 0);
-	--sidebar-ring: oklch(0.708 0 0);
+	--sidebar: var(--surface);
+	--sidebar-foreground: var(--ink);
+	--sidebar-primary: var(--accent);
+	--sidebar-primary-foreground: var(--on-accent);
+	--sidebar-accent: var(--raised);
+	--sidebar-accent-foreground: var(--ink);
+	--sidebar-border: var(--line);
+	--sidebar-ring: var(--accent);
 }
 
 /* ── Base ─────────────────────────────────────────────────────────────────── */
@@ -255,22 +253,38 @@ hr {
 
 /* ── Shell ────────────────────────────────────────────────────────────────── */
 
-.shell {
-	min-height: 100dvh;
-}
-
-@media (min-width: 60rem) {
-	.shell {
-		display: grid;
-		grid-template-columns: var(--rail-width) minmax(0, 1fr);
-	}
-}
-
 .main {
+	flex: 1 1 0%;
 	min-width: 0;
 	display: flex;
 	flex-direction: column;
 	min-height: 100dvh;
+}
+
+/* Tailwind handles the sidebar's layout and visual styling. These selectors
+   are only the no-JavaScript theme fallback for artwork that cannot use a
+   colour variable. */
+
+:root[data-theme='dark'] .theme-light-art,
+:root[data-theme='dark'] .theme-sun {
+	display: none;
+}
+
+:root[data-theme='dark'] .theme-dark-art,
+:root[data-theme='dark'] .theme-moon {
+	display: block;
+}
+
+@media (prefers-color-scheme: dark) {
+	:root:not([data-theme='light']) .theme-light-art,
+	:root:not([data-theme='light']) .theme-sun {
+		display: none;
+	}
+
+	:root:not([data-theme='light']) .theme-dark-art,
+	:root:not([data-theme='light']) .theme-moon {
+		display: block;
+	}
 }
 
 /* Everything inside a page sits in the gutter; full-bleed panels opt out. */
@@ -545,7 +559,9 @@ hr {
 /*
  ---break---
  */
-.dark {
+.dark,
+[data-theme=dark]
+{
 	--background: oklch(0.145 0 0);
 	--foreground: oklch(0.985 0 0);
 	--card: oklch(0.205 0 0);

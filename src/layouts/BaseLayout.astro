@@ -3,8 +3,10 @@ import "../styles/global.css";
 import { Font } from "astro:assets";
 import { brand } from "../brand/config";
 import { brandStyleSheet } from "../brand/tokens";
-import SideNav from "../components/nav/SideNav.astro";
+import { getSectionLinks } from "../lib/sections";
+import SideNav from "../components/nav/SideNav";
 import "../styles/global.css";
+import ThemeScript from "@/components/theme-script.astro";
 
 interface Props {
     title?: string;
@@ -32,6 +34,8 @@ const canonical = new URL(
     Astro.url.pathname,
     Astro.site ?? "https://localhost",
 );
+const links = await getSectionLinks();
+const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
 const tokens = brandStyleSheet(brand);
 ---
 
@@ -68,25 +72,7 @@ const tokens = brandStyleSheet(brand);
 
         <Font cssVariable="--font-brand" preload />
         <style is:global set:html={tokens}></style>
-
-        {
-            /* Resolve the scheme before first paint so the page never flashes, and
-			   always write it to `data-theme` — theme-dependent artwork keys off the
-			   attribute, so leaving it unset would strand a system-dark visitor with
-			   the light logo. Skipped when the page pins its own theme. */
-            !theme && (
-                <script is:inline data-default={brand.theme.default}>
-                    {`(() => {
-	const root = document.documentElement;
-	const fallback = document.currentScript.dataset.default;
-	let stored = null;
-	try { stored = localStorage.getItem('brand-theme'); } catch {}
-	const system = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-	root.dataset.theme = stored ?? (fallback === 'system' ? system : fallback);
-})();`}
-                </script>
-            )
-        }
+        <ThemeScript />
     </head>
 
     <body>
@@ -94,11 +80,16 @@ const tokens = brandStyleSheet(brand);
             bare ? (
                 <slot />
             ) : (
-                <div class:list={["shell", className]}>
-                    <SideNav />
-                    <main class="main" id="content">
-                        <slot />
-                    </main>
+                <div class:list={["min-h-dvh", className]}>
+                    <SideNav
+                        links={links}
+                        currentPath={currentPath}
+                        client:load
+                    >
+                        <main class="main" id="content">
+                            <slot />
+                        </main>
+                    </SideNav>
                 </div>
             )
         }
