@@ -14,15 +14,15 @@ import { defineBrand } from "./types";
  */
 export const brand = defineBrand({
   meta: {
-    name: "Typefool",
-    legalName: "Typefool Design Agency",
-    tagline: "Graphic Design Studio",
+    name: "Valence",
+    legalName: "Studio Valence Design",
+    tagline: "Web Design Studio",
     documentTitle: "Brand Guidelines",
     version: "1.0",
-    year: 2024,
+    year: 2026,
     url: "https://brand.example.com",
     description:
-      "The brand guidelines for Typefool — logo usage, colour, typography and application rules.",
+      "The brand guidelines for Studio Valence — logo usage, colour, typography and application rules.",
   },
 
   /**
@@ -241,9 +241,9 @@ export const brand = defineBrand({
       aspect: 1,
     },
     favicon: "/favicon.svg",
-    pronunciation: "tīp • fül",
+    pronunciation: "VAY • luhns",
     clearspace: {
-      unit: "the height of the lowercase “o”",
+      unit: "the height of the lowercase “e”",
       ratio: 0.34,
     },
     minSize: {
@@ -262,18 +262,18 @@ export const brand = defineBrand({
   },
 
   contact: {
-    email: "info@typefool.com",
-    website: "www.typefool.com",
+    email: "omar@byvalence.com",
+    website: "www.byvalence.com",
     socials: [
       {
         label: "Instagram",
-        handle: "@typefool",
-        url: "https://instagram.com/typefool",
+        handle: "@byvalence",
+        url: "https://instagram.com/byvalence",
       },
       {
         label: "Behance",
-        handle: "@typefool",
-        url: "https://behance.net/typefool",
+        handle: "@byvalence",
+        url: "https://behance.net/byvalence",
       },
     ],
   },
