@@ -101,8 +101,12 @@ const hasNote = Astro.slots.has("note");
     max-width: var(--measure);
   }
 
-  .block__note > * + * {
+  .block__note > :global(* + *) {
     margin-block-start: var(--space-s);
+  }
+
+  .block__note--full {
+    margin-block-end: var(--space-l);
   }
 
   .block__title {
@@ -120,8 +124,5 @@ const hasNote = Astro.slots.has("note");
 
   .block__body > * + * {
     margin-block-start: var(--space-l);
-  }
-  .block__note--full {
-    margin-block-end: var(--space-l);
   }
 </style>

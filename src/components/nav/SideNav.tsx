@@ -63,9 +63,6 @@ export default function SideNav({ links, currentPath, children }: Props) {
               href="/"
               aria-label={`${brand.meta.name} ${brand.meta.documentTitle}`}>
               <BrandLogo />
-              {/*<span className="text-[0.6875rem] font-medium uppercase tracking-[0.09em] text-muted">
-                {brand.meta.documentTitle}
-              </span>*/}
             </a>
             <SidebarTrigger className="m-0" />
           </div>
@@ -95,7 +92,7 @@ export default function SideNav({ links, currentPath, children }: Props) {
                           }>
                           {brand.numbering && (
                             <span
-                              className={`tnum [font-family:var(--font-text)] text-[0.6875rem] tracking-[0.06em] text-[color-mix(in_srgb,currentColor_65%,transparent)] ${isActive ? "text-accent" : ""}`}>
+                              className={`tnum [font-family:var(--font-text)] text-[0.6875rem] tracking-[0.06em] text-[color-mix(in_srgb,currentColor_65%,transparent)]`}>
                               {link.number}
                             </span>
                           )}
