@@ -320,60 +320,6 @@ hr {
 	overscroll-behavior-x: contain;
 }
 
-/* ── The page grid: title + note left, specimen right ─────────────────────── */
-
-/*
- * This is the document's core spread. The left column carries the two-line
- * title and the small explanatory note; the right column carries the artwork,
- * specimen or diagram and runs to the edge of the page.
- */
-.block {
-	display: grid;
-	gap: var(--space-l) var(--space-xl);
-	align-items: start;
-}
-
-@media (min-width: 48rem) {
-	.block {
-		grid-template-columns: var(--side-column) minmax(0, 1fr);
-	}
-
-	.block--full {
-		grid-template-columns: minmax(0, 1fr);
-	}
-}
-
-.block__side {
-	display: grid;
-	gap: var(--space-m);
-	align-content: start;
-}
-
-.block__note {
-	max-width: var(--measure);
-}
-
-.block__note > * + * {
-	margin-block-start: var(--space-s);
-}
-
-.block__title {
-	font-family: var(--font-display);
-	font-size: var(--type-heading-1-0-size);
-	line-height: var(--type-heading-1-0-leading);
-	letter-spacing: var(--type-heading-1-0-tracking);
-	font-weight: 500;
-	text-wrap: balance;
-}
-
-.block__title--full {
-	margin-block-end: var(--space-l);
-}
-
-.block__body > * + * {
-	margin-block-start: var(--space-l);
-}
-
 /* ── Prose (MDX output) ───────────────────────────────────────────────────── */
 
 /* The measure belongs to the text, not to the container — otherwise every

@@ -11,62 +11,117 @@
  *   </Block>
  */
 interface Props {
-	/** First line, set in the medium weight. */
-	title?: string;
-	/** Second line, set in the light weight at the same size. */
-	subtitle?: string;
-	/** Drop the left column and run the content the full width of the page. */
-	full?: boolean;
-	/** Heading level, so each page keeps a sensible outline. */
-	as?: 'h2' | 'h3';
-	id?: string;
-	class?: string;
+  /** First line, set in the medium weight. */
+  title?: string;
+  /** Second line, set in the light weight at the same size. */
+  subtitle?: string;
+  /** Drop the left column and run the content the full width of the page. */
+  full?: boolean;
+  /** Heading level, so each page keeps a sensible outline. */
+  as?: "h2" | "h3";
+  id?: string;
+  class?: string;
 }
 
-const { title, subtitle, full = false, as: Tag = 'h2', id, class: className } = Astro.props;
+const {
+  title,
+  subtitle,
+  full = false,
+  as: Tag = "h2",
+  id,
+  class: className,
+} = Astro.props;
 
-const hasNote = Astro.slots.has('note');
+const hasNote = Astro.slots.has("note");
 ---
 
-<section class:list={['block', full && 'block--full', className]} id={id}>
-	{
-		!full && (
-			<div class="block__side">
-				{title && (
-					<Tag class="block__title doc-title">
-						{title}
-						{subtitle && <span class="doc-title__sub">{subtitle}</span>}
-					</Tag>
-				)}
-				{hasNote && (
-					<div class="block__note">
-						<slot name="note" />
-					</div>
-				)}
-			</div>
-		)
-	}
+<section class:list={["block", full && "block--full", className]} id={id}>
+  {
+    !full && (
+      <div class="block__side">
+        {title && (
+          <Tag class="block__title doc-title">
+            {title}
+            {subtitle && <span class="doc-title__sub">{subtitle}</span>}
+          </Tag>
+        )}
+        {hasNote && (
+          <div class="block__note">
+            <slot name="note" />
+          </div>
+        )}
+      </div>
+    )
+  }
 
-	<div class="block__body">
-		{
-			full && title && (
-				<Tag class="block__title block__title--full doc-title">
-					{title}
-					{subtitle && <span class="doc-title__sub">{subtitle}</span>}
-				</Tag>
-			)
-		}
-		{full && hasNote && (
-			<div class="block__note block__note--full">
-				<slot name="note" />
-			</div>
-		)}
-		<slot />
-	</div>
+  <div class="block__body">
+    {
+      full && title && (
+        <Tag class="block__title block__title--full doc-title">
+          {title}
+          {subtitle && <span class="doc-title__sub">{subtitle}</span>}
+        </Tag>
+      )
+    }
+    {
+      full && hasNote && (
+        <div class="block__note block__note--full">
+          <slot name="note" />
+        </div>
+      )
+    }
+    <slot />
+  </div>
 </section>
 
 <style>
-	.block__note--full {
-		margin-block-end: var(--space-l);
-	}
+  .block {
+    display: grid;
+    gap: var(--space-l) var(--space-xl);
+    align-items: start;
+  }
+
+  @media (min-width: 48rem) {
+    .block {
+      grid-template-columns: var(--side-column) minmax(0, 1fr);
+    }
+
+    .block--full {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  .block__side {
+    display: grid;
+    gap: var(--space-m);
+    align-content: start;
+  }
+
+  .block__note {
+    max-width: var(--measure);
+  }
+
+  .block__note > * + * {
+    margin-block-start: var(--space-s);
+  }
+
+  .block__title {
+    font-family: var(--font-display);
+    font-size: var(--type-heading-1-0-size);
+    line-height: var(--type-heading-1-0-leading);
+    letter-spacing: var(--type-heading-1-0-tracking);
+    font-weight: 500;
+    text-wrap: balance;
+  }
+
+  .block__title--full {
+    margin-block-end: var(--space-l);
+  }
+
+  .block__body > * + * {
+    margin-block-start: var(--space-l);
+  }
+  .block__note--full {
+    margin-block-end: var(--space-l);
+  }
 </style>
