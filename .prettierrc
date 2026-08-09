@@ -6,6 +6,13 @@
       "options": {
         "parser": "astro"
       }
+    },
+    {
+      "files": "**/*.svg",
+      "options": {
+        "parser": "html",
+        "htmlWhitespaceSensitivity": "ignore"
+      }
     }
   ],
   "bracketSameLine": true,
