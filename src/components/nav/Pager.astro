@@ -16,7 +16,7 @@ const { prev, next } = await getSiblings(id);
       <a class="pager__link pager__link--prev" href={prev.href} rel="prev">
         <span class="label">Previous</span>
         <span class="pager__title">
-          <span class="mono pager__num">{prev.number}</span> {prev.title}
+          <span class="pager__num">{prev.number}</span> {prev.title}
         </span>
       </a>
     ) : (
@@ -29,7 +29,7 @@ const { prev, next } = await getSiblings(id);
       <a class="pager__link pager__link--next" href={next.href} rel="next">
         <span class="label">Next</span>
         <span class="pager__title">
-          <span class="mono pager__num">{next.number}</span> {next.title}
+          <span class="pager__num">{next.number}</span> {next.title}
         </span>
       </a>
     )
