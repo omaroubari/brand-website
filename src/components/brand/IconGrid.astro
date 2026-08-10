@@ -107,19 +107,12 @@ const label = (name: string) =>
     position: absolute;
     inset: 22%;
     background-image:
-      repeating-linear-gradient(
-        to right,
-        var(--line) 0 1px,
-        transparent 1px calc(100% / var(--unit))
-      ),
-      repeating-linear-gradient(
-        to bottom,
-        var(--line) 0 1px,
-        transparent 1px calc(100% / var(--unit))
-      );
+      linear-gradient(to right, var(--line) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--line) 1px, transparent 1px);
     background-size:
-      calc(100% / var(--unit)) 100%,
-      100% calc(100% / var(--unit));
+      calc(100% / var(--unit)) calc(100% / var(--unit)),
+      calc(100% / var(--unit)) calc(100% / var(--unit));
+    background-repeat: repeat;
     opacity: 0.7;
   }
 
