@@ -55,7 +55,7 @@ function BrandLogo() {
 export default function SideNav({ links, currentPath, children }: Props) {
   return (
     <SidebarProvider className="min-w-0" defaultOpen>
-      <Sidebar className="">
+      <Sidebar className="h-full">
         <SidebarHeader>
           <div className="flex items-center justify-between p-2">
             <a
