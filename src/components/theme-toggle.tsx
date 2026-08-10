@@ -1,42 +1,49 @@
 "use client";
 
 import { useTheme } from "@/hooks/use-theme";
+import type { ThemeSetting } from "@/lib/theme";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 /**
- * Two-state theme control driven by the shared theme state (@/lib/theme via
- * useTheme). System is the default; each click toggles between following the
- * system preference and pinning the opposite of the current theme. The icon
- * reflects the current state (sun / moon / monitor).
+ * Theme control driven by the shared theme state (@/lib/theme via useTheme).
+ * The icon reflects the next useful action: moon switches to dark, monitor
+ * returns to the system preference, and sun switches to light.
  */
 export function ThemeToggle({
   className,
+  defaultTheme = "system",
   onClick,
   size = "icon",
   variant = "link",
   ...props
-}: React.ComponentProps<typeof Button>) {
-  const { isDark, isSystem, toggleSystem } = useTheme();
+}: React.ComponentProps<typeof Button> & { defaultTheme?: ThemeSetting }) {
+  const { isDark, systemTheme, setTheme } = useTheme({ defaultTheme });
 
-  const mode = isSystem ? "system" : isDark ? "dark" : "light";
+  const mode =
+    isDark === (systemTheme === "dark")
+      ? isDark
+        ? "light"
+        : "dark"
+      : "system";
+  const actionLabel = `Switch to ${mode} mode`;
 
   return (
     <Button
       type="button"
       data-theme-mode={mode}
-      aria-label={mode}
-      title={mode}
+      aria-label={actionLabel}
+      title={actionLabel}
       onClick={(e) => {
         onClick?.(e);
-        toggleSystem();
+        setTheme(mode);
       }}
       size={size}
       variant={variant}
       className={cn("", className)}
       // className="hover:text-primary relative flex cursor-pointer items-center justify-center p-2 transition-[stroke]">
       {...props}>
-      {isSystem ? (
+      {mode === "system" ? (
         <svg
           id="monitor"
           xmlns="http://www.w3.org/2000/svg"
@@ -67,7 +74,7 @@ export function ThemeToggle({
             strokeWidth="20"
           />
         </svg>
-      ) : isDark ? (
+      ) : mode === "light" ? (
         <svg id="sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
           <rect width="256" height="256" fill="none" />
           <line

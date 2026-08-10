@@ -82,7 +82,7 @@ export default function SideNav({ links, currentPath, children }: Props) {
                     return (
                       <SidebarMenuItem key={link.id}>
                         <SidebarMenuButton
-                          className={`text-sm font-light tracking-[-0.01em] no-underline ${isActive ? "!text-[var(--ink)]" : ""}`}
+                          className={`text-sm font-light tracking-[-0.01em] no-underline ${isActive ? "!text-[var(--foreground)]" : ""}`}
                           isActive={isActive}
                           render={
                             <a
@@ -108,8 +108,8 @@ export default function SideNav({ links, currentPath, children }: Props) {
         </SidebarContent>
 
         <SidebarFooter className="gap-[var(--space-m)] p-[var(--space-m)]">
-          <ThemeToggle />
-          <p className="text-[length:var(--text-caption)] leading-[var(--text-caption--line-height)] tracking-[var(--text-caption--letter-spacing)] text-[var(--muted)]">
+          <ThemeToggle defaultTheme={brand.theme.default} />
+          <p className="text-[length:var(--text-caption)] leading-[var(--text-caption--line-height)] tracking-[var(--text-caption--letter-spacing)] text-[var(--muted-foreground)]">
             {brand.meta.name} © {brand.meta.year}
             <br />
             Version {brand.meta.version}
@@ -119,8 +119,8 @@ export default function SideNav({ links, currentPath, children }: Props) {
 
       {children}
 
-      <div className="fixed top-[var(--space-m)] right-[var(--page-gutter)] z-30 hidden items-center gap-[var(--space-xs)] rounded-full border border-[var(--line)] bg-[var(--surface)] py-[0.25rem] pr-[0.55rem] pl-[0.25rem] text-[length:var(--text-label)] leading-[var(--text-label--line-height)] font-medium tracking-[var(--text-label--letter-spacing)] text-[var(--ink)] uppercase max-[47.999rem]:inline-flex">
-        <SidebarTrigger className="m-0 text-[var(--muted)]" />
+      <div className="fixed top-[var(--space-m)] right-[var(--page-gutter)] z-30 hidden items-center gap-[var(--space-xs)] rounded-full border border-[var(--border)] bg-[var(--background)] py-[0.25rem] pr-[0.55rem] pl-[0.25rem] text-[length:var(--text-label)] leading-[var(--text-label--line-height)] font-medium tracking-[var(--text-label--letter-spacing)] text-[var(--foreground)] uppercase max-[47.999rem]:inline-flex">
+        <SidebarTrigger className="m-0 text-[var(--muted-foreground)]" />
         <span>Contents</span>
       </div>
     </SidebarProvider>
