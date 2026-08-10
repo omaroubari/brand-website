@@ -78,7 +78,7 @@ const { name, role, image, facts = [], class: className } = Astro.props;
 
   .persona__media {
     aspect-ratio: 3 / 4;
-    background: var(--raised);
+    background: var(--muted);
     overflow: hidden;
     display: grid;
     place-items: center;
@@ -115,7 +115,7 @@ const { name, role, image, facts = [], class: className } = Astro.props;
     grid-template-columns: minmax(6rem, 9rem) minmax(0, 1fr);
     gap: var(--space-s);
     align-items: baseline;
-    border-block-start: var(--rule) solid var(--line);
+    border-block-start: var(--rule) solid var(--border);
     padding-block-start: 0.3rem;
   }
 

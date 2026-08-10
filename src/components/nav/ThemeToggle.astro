@@ -33,7 +33,7 @@
     align-items: center;
     gap: 0.45rem;
     background: none;
-    border: var(--rule) solid var(--line);
+    border: var(--rule) solid var(--border);
     border-radius: 999px;
     padding: 0.35rem 0.7rem;
     cursor: pointer;
@@ -42,15 +42,15 @@
     letter-spacing: var(--text-label--letter-spacing);
     text-transform: uppercase;
     font-weight: var(--text-label--font-weight);
-    color: var(--muted);
+    color: var(--muted-foreground);
     transition:
       color 0.15s var(--ease),
       border-color 0.15s var(--ease);
   }
 
   .toggle:hover {
-    color: var(--ink);
-    border-color: var(--ink);
+    color: var(--foreground);
+    border-color: var(--foreground);
   }
 
   .toggle__moon {

@@ -41,7 +41,7 @@ const { prev, next } = await getSiblings(id);
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: var(--space-m);
-    border-block-start: var(--rule) solid var(--line);
+    border-block-start: var(--rule) solid var(--border);
     padding-block-start: var(--space-m);
   }
 
@@ -66,11 +66,11 @@ const { prev, next } = await getSiblings(id);
   }
 
   .pager__link:hover .pager__title {
-    color: var(--accent);
+    color: var(--primary);
   }
 
   .pager__num {
-    color: var(--muted);
+    color: var(--muted-foreground);
     font-size: var(--text-caption);
     line-height: var(--text-caption--line-height);
   }

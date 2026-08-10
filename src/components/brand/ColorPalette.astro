@@ -14,11 +14,11 @@ const { only, print = true, class: className } = Astro.props;
 
 const colors = only
   ? only.map((id) => {
-      const match = brand.colors.find((c) => c.id === id);
+      const match = brand.palette.find((c) => c.id === id);
       if (!match) throw new Error(`[ColorPalette] Unknown colour id "${id}"`);
       return match;
     })
-  : brand.colors;
+  : brand.palette;
 ---
 
 <div class:list={["palette", "escape", className]}>

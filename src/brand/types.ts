@@ -7,7 +7,7 @@
  */
 
 /** A palette entry. `id` is the stable handle used by themes and CSS variables. */
-export interface BrandColor {
+export interface BrandSwatch {
   /** Slug used for `--color-{id}` and referenced by `theme`. Keep it stable. */
   id: string;
   /** Display name shown on the swatch, e.g. "Orange/Red". */
@@ -28,22 +28,40 @@ export interface BrandColor {
   on?: string;
 }
 
-/** Maps semantic roles onto palette ids, per colour scheme. */
+/** Maps the complete shadcn colour contract onto palette ids, per scheme. */
 export interface BrandScheme {
-  /** Page background. */
-  surface: string;
-  /** Slightly raised background: panels, swatch chrome, code. */
-  raised: string;
-  /** Body text and rules. */
-  ink: string;
-  /** Secondary text, captions, footnotes. */
+  background: string;
+  foreground: string;
+  card: string;
+  cardForeground: string;
+  popover: string;
+  popoverForeground: string;
+  primary: string;
+  primaryForeground: string;
+  secondary: string;
+  secondaryForeground: string;
   muted: string;
-  /** Hairlines and dividers. */
-  line: string;
-  /** The one colour that carries the brand. */
+  mutedForeground: string;
   accent: string;
-  /** Text placed on top of `accent`. */
-  onAccent: string;
+  accentForeground: string;
+  destructive: string;
+  destructiveForeground: string;
+  border: string;
+  input: string;
+  ring: string;
+  chart1: string;
+  chart2: string;
+  chart3: string;
+  chart4: string;
+  chart5: string;
+  sidebar: string;
+  sidebarForeground: string;
+  sidebarPrimary: string;
+  sidebarPrimaryForeground: string;
+  sidebarAccent: string;
+  sidebarAccentForeground: string;
+  sidebarBorder: string;
+  sidebarRing: string;
 }
 
 export interface BrandTheme {
@@ -165,7 +183,7 @@ export interface BrandDownload {
 
 export interface BrandConfig {
   meta: BrandMeta;
-  colors: BrandColor[];
+  palette: BrandSwatch[];
   theme: BrandTheme;
   typography: BrandTypography;
   logo: BrandLogo;

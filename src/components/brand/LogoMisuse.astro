@@ -80,8 +80,8 @@ const { items, mark = "logotype", cols = 3, class: className } = Astro.props;
     display: grid;
     place-items: center;
     padding: var(--space-m);
-    background: var(--color-white, #fff);
-    border: var(--rule) solid var(--line);
+    background: var(--color-white);
+    border: var(--rule) solid var(--border);
     overflow: hidden;
   }
 
@@ -96,7 +96,7 @@ const { items, mark = "logotype", cols = 3, class: className } = Astro.props;
     position: absolute;
     inset-block-start: var(--space-xs);
     inset-inline-end: var(--space-xs);
-    color: var(--accent);
+    color: var(--primary);
     z-index: 2;
   }
 
@@ -116,7 +116,7 @@ const { items, mark = "logotype", cols = 3, class: className } = Astro.props;
   }
 
   .is-low-contrast {
-    background: #000;
+    background: var(--color-black);
   }
 
   .is-low-contrast .misuse__art {
@@ -134,7 +134,7 @@ const { items, mark = "logotype", cols = 3, class: className } = Astro.props;
     inset-inline-start: 12%;
     width: 38%;
     aspect-ratio: 1;
-    background: var(--color-graphite, #494e54);
+    background: var(--color-graphite);
     z-index: 1;
   }
 
@@ -150,8 +150,10 @@ const { items, mark = "logotype", cols = 3, class: className } = Astro.props;
   }
 
   .is-outline .misuse__art :global(img) {
-    filter: invert(1) drop-shadow(0 0 0.5px #000) drop-shadow(0 0 0.5px #000)
-      drop-shadow(0 0 0.5px #000);
+    filter: invert(1)
+      drop-shadow(0 0 0.5px var(--color-black))
+      drop-shadow(0 0 0.5px var(--color-black))
+      drop-shadow(0 0 0.5px var(--color-black));
   }
 
   .is-shadow .misuse__art :global(img) {
@@ -161,13 +163,13 @@ const { items, mark = "logotype", cols = 3, class: className } = Astro.props;
   .is-pattern {
     background-image: repeating-linear-gradient(
       45deg,
-      var(--color-iron, #dbdee3) 0 10px,
-      var(--color-graphite, #494e54) 10px 20px
+      var(--color-iron) 0 10px,
+      var(--color-graphite) 10px 20px
     );
   }
 
   .misuse__title {
-    color: var(--ink);
+    color: var(--foreground);
     font-weight: var(--text-label--font-weight);
   }
 </style>

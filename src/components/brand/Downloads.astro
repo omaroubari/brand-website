@@ -51,12 +51,12 @@ const { items = brand.downloads ?? [], class: className } = Astro.props;
   }
 
   .downloads__item {
-    border-block-start: var(--rule) solid var(--line);
+    border-block-start: var(--rule) solid var(--border);
     padding-block: var(--space-s);
   }
 
   .downloads__item:last-child {
-    border-block-end: var(--rule) solid var(--line);
+    border-block-end: var(--rule) solid var(--border);
   }
 
   .downloads__link {
@@ -76,14 +76,14 @@ const { items = brand.downloads ?? [], class: className } = Astro.props;
   }
 
   .downloads__link:hover .downloads__label {
-    color: var(--accent);
+    color: var(--primary);
   }
 
   .downloads__meta {
     display: inline-flex;
     align-items: center;
     gap: var(--space-s);
-    color: var(--muted);
+    color: var(--muted-foreground);
     flex: none;
   }
 

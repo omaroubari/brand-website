@@ -114,7 +114,7 @@ const { meta, contact } = brand;
 
 <style>
   .cover {
-    background: var(--color-black);
+    background: var(--color-accent);
     color: var(--color-white);
     min-height: min(100svh, 64rem);
     padding: var(--space-l) var(--page-gutter);
@@ -201,12 +201,12 @@ const { meta, contact } = brand;
     gap: 0 var(--space-l);
     align-items: baseline;
     text-decoration: none;
-    color: var(--muted);
+    color: var(--muted-foreground);
     transition: color 0.15s var(--ease);
   }
 
   .contents__link:hover {
-    color: var(--ink);
+    color: var(--foreground);
   }
 
   .contents__num,
@@ -219,7 +219,7 @@ const { meta, contact } = brand;
   }
 
   .contents__link:hover .contents__num {
-    color: var(--accent);
+    color: var(--primary);
   }
 
   /* ── Ends ─────────────────────────────────────────────────────────────── */

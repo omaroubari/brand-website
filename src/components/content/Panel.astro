@@ -1,6 +1,6 @@
 ---
 import { brand } from "../../brand/config";
-import { color, readableOn } from "../../brand/tokens";
+import { readableOn, swatch } from "../../brand/tokens";
 
 interface Props {
   /** Palette id for the background. Defaults to the page surface. */
@@ -28,9 +28,9 @@ const {
   class: className,
 } = Astro.props;
 
-const background = bg ? color(brand, bg).hex : undefined;
+const background = bg ? swatch(brand, bg).hex : undefined;
 const foreground = fg
-  ? color(brand, fg).hex
+  ? swatch(brand, fg).hex
   : background
     ? readableOn(background)
     : undefined;

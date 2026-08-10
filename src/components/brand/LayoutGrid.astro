@@ -60,11 +60,11 @@ const {
 
   .layout__canvas {
     position: relative;
-    border: var(--rule) solid var(--line);
+    border: var(--rule) solid var(--border);
     /* Margins are drawn at a fraction of the stated value so the diagram
 		   stays readable at any width — the numbers below are the real spec. */
     padding: calc(var(--margin) * 0.25) calc(var(--margin) * 0.25);
-    background: var(--surface);
+    background: var(--background);
   }
 
   .layout__cols {
@@ -75,8 +75,8 @@ const {
   }
 
   .layout__col {
-    background: color-mix(in srgb, var(--accent) 14%, transparent);
-    border-inline: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+    background: color-mix(in srgb, var(--primary) 14%, transparent);
+    border-inline: 1px solid color-mix(in srgb, var(--primary) 30%, transparent);
   }
 
   .layout__label {
@@ -97,7 +97,7 @@ const {
   }
 
   .layout__term {
-    color: var(--muted);
+    color: var(--muted-foreground);
     font-size: var(--text-label);
     line-height: var(--text-label--line-height);
     letter-spacing: var(--text-label--letter-spacing);

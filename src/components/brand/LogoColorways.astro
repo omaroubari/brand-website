@@ -1,6 +1,6 @@
 ---
 import { brand } from "../../brand/config";
-import { color } from "../../brand/tokens";
+import { swatch } from "../../brand/tokens";
 import Logo from "./Logo.astro";
 
 interface Props {
@@ -14,8 +14,8 @@ const { mark = "logotype", cols = 3, class: className } = Astro.props;
 
 const colorways = brand.logo.colorways.map((way) => ({
   ...way,
-  fgColor: color(brand, way.fg),
-  bgColor: color(brand, way.bg),
+  fgColor: swatch(brand, way.fg),
+  bgColor: swatch(brand, way.bg),
 }));
 ---
 
@@ -70,6 +70,6 @@ const colorways = brand.logo.colorways.map((way) => ({
   }
 
   .ways__label {
-    color: var(--ink);
+    color: var(--foreground);
   }
 </style>

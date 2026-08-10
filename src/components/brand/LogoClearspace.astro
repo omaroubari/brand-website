@@ -46,7 +46,7 @@ const pad = `calc(var(--logo-h) * ${ratio})`;
   .clear__stage {
     --logo-h: 4.5rem;
     position: relative;
-    border: var(--rule) solid var(--line);
+    border: var(--rule) solid var(--border);
     padding: clamp(2rem, 6vw, 4rem);
     display: grid;
     place-items: center;
@@ -54,7 +54,7 @@ const pad = `calc(var(--logo-h) * ${ratio})`;
 
   .clear__zone {
     padding: var(--pad);
-    outline: 1px dashed color-mix(in srgb, var(--accent) 70%, transparent);
+    outline: 1px dashed color-mix(in srgb, var(--primary) 70%, transparent);
     outline-offset: 0;
     position: relative;
   }
@@ -70,7 +70,7 @@ const pad = `calc(var(--logo-h) * ${ratio})`;
     position: absolute;
     display: grid;
     place-items: center;
-    color: var(--accent);
+    color: var(--primary);
     font-size: var(--text-label);
     line-height: var(--text-label--line-height);
     letter-spacing: var(--text-label--letter-spacing);
@@ -83,7 +83,7 @@ const pad = `calc(var(--logo-h) * ${ratio})`;
     height: var(--pad);
     transform: translateX(-50%);
     border-inline-start: 1px solid
-      color-mix(in srgb, var(--accent) 55%, transparent);
+      color-mix(in srgb, var(--primary) 55%, transparent);
     padding-inline-start: 0.35rem;
   }
 
@@ -93,7 +93,7 @@ const pad = `calc(var(--logo-h) * ${ratio})`;
     width: var(--pad);
     transform: translateY(-50%);
     border-block-start: 1px solid
-      color-mix(in srgb, var(--accent) 55%, transparent);
+      color-mix(in srgb, var(--primary) 55%, transparent);
     padding-block-start: 0.35rem;
   }
 
@@ -109,7 +109,7 @@ const pad = `calc(var(--logo-h) * ${ratio})`;
   }
 
   .clear__caption strong {
-    color: var(--accent);
+    color: var(--primary);
     font-weight: var(--text-label--font-weight);
   }
 </style>

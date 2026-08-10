@@ -13,8 +13,8 @@ interface Props {
 const { only, threshold = 4.5, class: className } = Astro.props;
 
 const colors = only
-  ? brand.colors.filter((c) => only.includes(c.id))
-  : brand.colors;
+  ? brand.palette.filter((c) => only.includes(c.id))
+  : brand.palette;
 
 const rows = colors.map((fg) => ({
   fg,
@@ -88,7 +88,7 @@ const rows = colors.map((fg) => ({
 
 <style>
   .matrix-wrap {
-    border: var(--rule) solid var(--line);
+    border: var(--rule) solid var(--border);
   }
 
   .matrix {
@@ -106,7 +106,7 @@ const rows = colors.map((fg) => ({
   }
 
   .matrix__head--row {
-    border-inline-end: var(--rule) solid var(--line);
+    border-inline-end: var(--rule) solid var(--border);
   }
 
   .matrix__cell {
@@ -138,7 +138,7 @@ const rows = colors.map((fg) => ({
   }
 
   .matrix__cell--same {
-    color: var(--muted);
+    color: var(--muted-foreground);
     background: none;
   }
 </style>

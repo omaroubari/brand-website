@@ -1,11 +1,96 @@
-import type { BrandColor, BrandConfig, BrandScheme } from "./types";
+import type { BrandConfig, BrandScheme, BrandSwatch } from "./types";
+
+const SWATCH_ID = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+const HEX = /^#(?:[0-9a-f]{3}|[0-9a-f]{6})$/i;
+
+/** The canonical order and complete runtime shape of the shadcn contract. */
+export const schemeRoles = [
+  "background",
+  "foreground",
+  "card",
+  "cardForeground",
+  "popover",
+  "popoverForeground",
+  "primary",
+  "primaryForeground",
+  "secondary",
+  "secondaryForeground",
+  "muted",
+  "mutedForeground",
+  "accent",
+  "accentForeground",
+  "destructive",
+  "destructiveForeground",
+  "border",
+  "input",
+  "ring",
+  "chart1",
+  "chart2",
+  "chart3",
+  "chart4",
+  "chart5",
+  "sidebar",
+  "sidebarForeground",
+  "sidebarPrimary",
+  "sidebarPrimaryForeground",
+  "sidebarAccent",
+  "sidebarAccentForeground",
+  "sidebarBorder",
+  "sidebarRing",
+] as const satisfies ReadonlyArray<keyof BrandScheme>;
+
+function validatePalette(brand: BrandConfig): void {
+  const seen = new Set<string>();
+
+  for (const swatch of brand.palette) {
+    if (!SWATCH_ID.test(swatch.id)) {
+      throw new Error(
+        `[brand] Invalid swatch id "${swatch.id}". Use lowercase kebab-case.`,
+      );
+    }
+    if (seen.has(swatch.id)) {
+      throw new Error(`[brand] Duplicate swatch id "${swatch.id}".`);
+    }
+    if (!HEX.test(swatch.hex)) {
+      throw new Error(
+        `[brand] Invalid hex for swatch "${swatch.id}": "${swatch.hex}".`,
+      );
+    }
+    seen.add(swatch.id);
+  }
+}
+
+function validateScheme(brand: BrandConfig, name: "light" | "dark"): void {
+  const scheme = brand.theme[name];
+  const roles = new Set(Object.keys(scheme));
+
+  for (const role of schemeRoles) {
+    if (!roles.has(role)) {
+      throw new Error(`[brand] ${name} scheme is missing role "${role}".`);
+    }
+
+    const id = scheme[role];
+    if (!brand.palette.some((swatch) => swatch.id === id)) {
+      throw new Error(
+        `[brand] Unknown swatch id "${id}" in ${name} scheme role "${role}".`,
+      );
+    }
+  }
+}
+
+function validateBrandTheme(brand: BrandConfig): void {
+  validatePalette(brand);
+  validateScheme(brand, "light");
+  validateScheme(brand, "dark");
+}
 
 /** Look a palette entry up by id. Throws early so typos fail the build, not the page. */
-export function color(brand: BrandConfig, id: string): BrandColor {
-  const found = brand.colors.find((c) => c.id === id);
+export function swatch(brand: BrandConfig, id: string): BrandSwatch {
+  validatePalette(brand);
+  const found = brand.palette.find((c) => c.id === id);
   if (!found) {
-    const known = brand.colors.map((c) => c.id).join(", ");
-    throw new Error(`[brand] Unknown colour id "${id}". Known ids: ${known}`);
+    const known = brand.palette.map((c) => c.id).join(", ");
+    throw new Error(`[brand] Unknown swatch id "${id}". Known ids: ${known}`);
   }
   return found;
 }
@@ -66,28 +151,59 @@ export function tintRamp(hex: string, steps = 9): string[] {
 }
 
 function schemeVars(brand: BrandConfig, scheme: BrandScheme): string {
-  return (Object.entries(scheme) as Array<[keyof BrandScheme, string]>)
-    .map(
-      ([role, id]) => `--${kebab(role)}: var(--color-${color(brand, id).id});`,
-    )
+  return schemeRoles
+    .map((role) => {
+      const id = scheme[role];
+      return `--${kebab(role)}: var(--color-${swatch(brand, id).id});`;
+    })
     .join("\n\t\t");
 }
 
 function kebab(s: string): string {
-  return s.replace(/[A-Z]/g, (m) => `-${m.toLowerCase()}`);
+  return s
+    .replace(/[A-Z]/g, (m) => `-${m.toLowerCase()}`)
+    .replace(/([a-z])([0-9])/g, "$1-$2");
 }
 
 /**
  * Every brand-derived custom property, as one `<style>` body.
  *
  * Emitted once in `BaseLayout`. Colours resolve twice — a raw `--color-{id}`
- * for each palette entry, then semantic roles pointing at them per scheme — so
- * components only ever reference `--ink`, `--surface`, `--accent` and friends.
+ * for each palette entry, then canonical shadcn roles pointing at them per
+ * scheme — so components only ever reference semantic UI intent.
  */
 export function brandStyleSheet(brand: BrandConfig): string {
-  const palette = brand.colors
+  validateBrandTheme(brand);
+
+  const palette = brand.palette
     .map((c) => `--color-${c.id}: ${c.hex};`)
     .join("\n\t\t");
+
+  const darkScheme = `:root[data-theme='dark'] {
+		${schemeVars(brand, brand.theme.dark)}
+
+		color-scheme: dark;
+	}`;
+
+  const defaultScheme =
+    brand.theme.default === "dark"
+      ? `
+	:root:not([data-theme='light']):not([data-theme='dark']) {
+		${schemeVars(brand, brand.theme.dark)}
+
+		color-scheme: dark;
+	}`
+      : brand.theme.default === "system"
+        ? `
+	@media (prefers-color-scheme: dark) {
+		:root:not([data-theme='light']) {
+			${schemeVars(brand, brand.theme.dark)}
+
+			color-scheme: dark;
+		}
+	}`
+        : "";
+
   return `:root {
 		${palette}
 
@@ -100,21 +216,6 @@ export function brandStyleSheet(brand: BrandConfig): string {
 		color-scheme: light;
 	}
 
-	:root[data-theme='dark'] {
-		${schemeVars(brand, brand.theme.dark)}
-
-		color-scheme: dark;
-	}
-${
-  brand.theme.default === "light"
-    ? ""
-    : `
-	@media (prefers-color-scheme: dark) {
-		:root:not([data-theme='light']) {
-			${schemeVars(brand, brand.theme.dark)}
-
-			color-scheme: dark;
-		}
-	}`
-}`;
+	${darkScheme}
+${defaultScheme}`;
 }

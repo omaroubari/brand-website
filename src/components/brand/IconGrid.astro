@@ -95,7 +95,7 @@ const label = (name: string) =>
   .icons__field {
     position: relative;
     aspect-ratio: 1;
-    border: var(--rule) solid var(--line);
+    border: var(--rule) solid var(--border);
     display: grid;
     place-items: center;
     padding: 22%;
@@ -107,8 +107,8 @@ const label = (name: string) =>
     position: absolute;
     inset: 22%;
     background-image:
-      linear-gradient(to right, var(--line) 1px, transparent 1px),
-      linear-gradient(to bottom, var(--line) 1px, transparent 1px);
+      linear-gradient(to right, var(--border) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--border) 1px, transparent 1px);
     background-size:
       calc(100% / var(--unit)) calc(100% / var(--unit)),
       calc(100% / var(--unit)) calc(100% / var(--unit));
@@ -125,7 +125,7 @@ const label = (name: string) =>
   .icons__art :global(svg) {
     width: 100%;
     height: auto;
-    color: var(--ink);
+    color: var(--foreground);
   }
 
   .icons__caption {
@@ -135,6 +135,6 @@ const label = (name: string) =>
   }
 
   .icons__name {
-    color: var(--ink);
+    color: var(--foreground);
   }
 </style>

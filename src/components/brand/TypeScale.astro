@@ -84,12 +84,12 @@ const steps = only
     display: grid;
     gap: var(--space-s);
     padding-block: var(--space-s) var(--space-l);
-    border-block-start: var(--rule) solid var(--line);
+    border-block-start: var(--rule) solid var(--border);
     align-items: start;
   }
 
   .scale__row:last-child {
-    border-block-end: var(--rule) solid var(--line);
+    border-block-end: var(--rule) solid var(--border);
   }
 
   @media (min-width: 55rem) {
@@ -100,7 +100,7 @@ const steps = only
   }
 
   .scale__name {
-    color: var(--ink);
+    color: var(--foreground);
   }
 
   .scale__role {
@@ -112,7 +112,7 @@ const steps = only
     margin-block-start: var(--space-s);
     display: grid;
     gap: 0.1rem;
-    color: var(--muted);
+    color: var(--muted-foreground);
   }
 
   .scale__specs > div {

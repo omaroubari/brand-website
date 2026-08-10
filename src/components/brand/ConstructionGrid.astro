@@ -48,7 +48,7 @@ const {
   .construction__stage {
     position: relative;
     width: min(100%, 22rem);
-    border: var(--rule) solid var(--line);
+    border: var(--rule) solid var(--border);
   }
 
   /* Two repeating gradients draw the field grid; the count follows --cols/--rows
@@ -59,12 +59,12 @@ const {
     background-image:
       repeating-linear-gradient(
         to right,
-        var(--line) 0 1px,
+        var(--border) 0 1px,
         transparent 1px calc(100% / var(--cols))
       ),
       repeating-linear-gradient(
         to bottom,
-        var(--line) 0 1px,
+        var(--border) 0 1px,
         transparent 1px calc(100% / var(--rows))
       );
     background-size:

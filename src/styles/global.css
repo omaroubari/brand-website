@@ -43,44 +43,14 @@ body {
 
 :root {
   --ease: cubic-bezier(0.2, 0, 0, 1);
-
-  /* shadcn primitives resolve to the brand's semantic tokens. */
-  --background: var(--surface);
-  --foreground: var(--ink);
-  --card: var(--surface);
-  --card-foreground: var(--ink);
-  --popover: var(--surface);
-  --popover-foreground: var(--ink);
-  --primary: var(--ink);
-  --primary-foreground: var(--surface);
-  --secondary: var(--raised);
-  --secondary-foreground: var(--ink);
-  --muted-foreground: var(--muted);
-  --destructive: var(--accent);
-  --border: var(--line);
-  --input: var(--line);
-  --ring: var(--accent);
-  --chart-1: var(--accent);
-  --chart-2: var(--ink);
-  --chart-3: var(--muted);
-  --chart-4: var(--line);
-  --chart-5: var(--raised);
   --radius: 0.625rem;
-  --sidebar: var(--surface);
-  --sidebar-foreground: var(--ink);
-  --sidebar-primary: var(--accent);
-  --sidebar-primary-foreground: var(--on-accent);
-  --sidebar-accent: var(--raised);
-  --sidebar-accent-foreground: var(--ink);
-  --sidebar-border: var(--line);
-  --sidebar-ring: var(--accent);
 }
 
 /* ── Base ─────────────────────────────────────────────────────────────────── */
 
 body {
-  background: var(--surface);
-  color: var(--ink);
+  background: var(--background);
+  color: var(--foreground);
   font-family: var(--font-body);
   font-size: var(--text-body);
   line-height: var(--text-body--line-height);
@@ -91,12 +61,12 @@ body {
 }
 
 ::selection {
-  background: var(--accent);
-  color: var(--on-accent);
+  background: var(--primary);
+  color: var(--primary-foreground);
 }
 
 :focus-visible {
-  outline: 2px solid var(--accent);
+  outline: 2px solid var(--ring);
   outline-offset: 3px;
   border-radius: 2px;
 }
@@ -116,7 +86,7 @@ a:hover {
 
 hr {
   border: 0;
-  border-top: var(--rule) solid var(--line);
+  border-top: var(--rule) solid var(--border);
   margin: var(--space-xl) 0;
 }
 
@@ -158,7 +128,6 @@ hr {
   text-wrap: balance;
 }
 
-
 /**
  * Two-line page title — medium over light, same size, set tight. Used on every
  * content spread ("Logotype" / "Primary logo").
@@ -186,7 +155,7 @@ hr {
   letter-spacing: var(--text-label--letter-spacing);
   text-transform: uppercase;
   font-weight: var(--text-label--font-weight);
-  color: var(--muted);
+  color: var(--muted-foreground);
 }
 
 /**
@@ -207,7 +176,7 @@ hr {
   line-height: var(--text-caption--line-height);
   letter-spacing: var(--text-caption--letter-spacing);
   font-weight: var(--text-caption--font-weight);
-  color: var(--muted);
+  color: var(--muted-foreground);
 }
 
 .mono {
@@ -334,7 +303,7 @@ hr {
 .prose :where(h4):not([class]) {
   font-size: var(--text-body);
   line-height: var(--text-body--line-height);
-  color: var(--muted);
+  color: var(--muted-foreground);
 }
 
 .prose strong {
@@ -351,11 +320,11 @@ hr {
 }
 
 .prose li::marker {
-  color: var(--muted);
+  color: var(--muted-foreground);
 }
 
 .prose blockquote {
-  border-inline-start: 2px solid var(--accent);
+  border-inline-start: 2px solid var(--primary);
   padding-inline-start: var(--space-m);
   font-size: var(--text-body-large);
   line-height: var(--text-body-large--line-height);
@@ -365,7 +334,7 @@ hr {
 .prose code {
   font-family: var(--font-mono);
   font-size: 0.85em;
-  background: color-mix(in srgb, var(--raised) 55%, transparent);
+  background: color-mix(in srgb, var(--muted) 55%, transparent);
   padding: 0.15em 0.4em;
   border-radius: 3px;
 }
@@ -384,8 +353,8 @@ hr {
 /* ── Surfaces ─────────────────────────────────────────────────────────────── */
 
 .panel {
-  border: var(--rule) solid var(--line);
-  background: var(--surface);
+  border: var(--rule) solid var(--border);
+  background: var(--card);
   display: grid;
   place-items: center;
   padding: clamp(1.5rem, 5vw, 3.5rem);
@@ -428,7 +397,7 @@ hr {
 }
 
 .rule {
-  border-top: var(--rule) solid var(--line);
+  border-top: var(--rule) solid var(--border);
 }
 /*
  ---break---
@@ -474,43 +443,6 @@ hr {
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
-}
-/*
- ---break---
- */
-.dark,
-[data-theme="dark"] {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
 }
 /*
  ---break---
