@@ -88,27 +88,12 @@ export function brandStyleSheet(brand: BrandConfig): string {
   const palette = brand.colors
     .map((c) => `--color-${c.id}: ${c.hex};`)
     .join("\n\t\t");
-  const typeScale = brand.typography.scale
-    .map((s, i) => {
-      const key = slug(s.name);
-      return [
-        `--type-${key}-size: ${s.size};`,
-        `--type-${key}-leading: ${s.lineHeight};`,
-        `--type-${key}-tracking: ${s.tracking};`,
-        `--type-${key}-weight: ${s.weight ?? 400};`,
-        i === 0 ? "" : "",
-      ].join("\n\t\t");
-    })
-    .join("\n\t\t");
-
   return `:root {
 		${palette}
 
 		--font-display: ${brand.typography.display};
 		--font-text: ${brand.typography.text};
 		--font-mono: ${brand.typography.mono};
-
-		${typeScale}
 
 		${schemeVars(brand, brand.theme.light)}
 
@@ -132,33 +117,4 @@ ${
 		}
 	}`
 }`;
-}
-
-/** "Display 1.0" → "display-1-0". Used for the type scale custom properties. */
-export function slug(name: string): string {
-  return name
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-|-$/g, "");
-}
-
-/** Inline styles for one step of the type scale. */
-export function typeStyle(brand: BrandConfig, name: string): string {
-  const step = brand.typography.scale.find((s) => s.name === name);
-  if (!step) {
-    const known = brand.typography.scale.map((s) => s.name).join(", ");
-    throw new Error(
-      `[brand] Unknown type style "${name}". Known styles: ${known}`,
-    );
-  }
-  return [
-    `font-family: var(--font-${step.font ?? "text"})`,
-    `font-size: ${step.size}`,
-    `line-height: ${step.lineHeight}`,
-    `letter-spacing: ${step.tracking}`,
-    `font-weight: ${step.weight ?? 400}`,
-    step.transform ? `text-transform: ${step.transform}` : "",
-  ]
-    .filter(Boolean)
-    .join("; ");
 }

@@ -57,11 +57,11 @@ const { prev, next } = await getSiblings(id);
   }
 
   .pager__title {
-    font-family: var(--font-display);
-    font-size: clamp(1rem, 2vw, 1.375rem);
-    line-height: 1.15;
-    letter-spacing: -0.015em;
-    font-weight: 500;
+    font-family: var(--font-heading);
+    font-size: var(--text-heading);
+    line-height: var(--text-heading--line-height);
+    letter-spacing: var(--text-heading--letter-spacing);
+    font-weight: var(--text-heading--font-weight);
     text-wrap: balance;
   }
 
@@ -71,6 +71,7 @@ const { prev, next } = await getSiblings(id);
 
   .pager__num {
     color: var(--muted);
-    font-size: 0.75rem;
+    font-size: var(--text-caption);
+    line-height: var(--text-caption--line-height);
   }
 </style>

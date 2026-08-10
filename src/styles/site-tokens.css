@@ -1,0 +1,72 @@
+/*
+ * TemplateDesignSystem
+ *
+ * These are reading and layout rules for the website itself. They are
+ * intentionally independent from the client's documented typography scale.
+ * Brand font families remain the only typography values supplied by config.
+ */
+
+:root {
+  /* BrandFonts: family identity is the narrow runtime bridge. */
+  --font-body: var(--font-text);
+  --font-heading: var(--font-display);
+
+  /* Semantic text roles. Values are template-owned, not client-authored. */
+  --text-display: clamp(3rem, 10vw, 6rem);
+  --text-display--line-height: 0.9;
+  --text-display--letter-spacing: -0.035em;
+  --text-display--font-weight: 500;
+
+  --text-title: clamp(1.875rem, 3.9vw, 3.5rem);
+  --text-title--line-height: 1.05;
+  --text-title--letter-spacing: -0.028em;
+  --text-title--font-weight: 500;
+
+  --text-heading: clamp(1.25rem, 2.1vw, 1.875rem);
+  --text-heading--line-height: 1.15;
+  --text-heading--letter-spacing: -0.02em;
+  --text-heading--font-weight: 500;
+
+  --text-body-large: clamp(1.5rem, 3.4vw, 3rem);
+  --text-body-large--line-height: 1.2;
+  --text-body-large--letter-spacing: -0.02em;
+  --text-body-large--font-weight: 400;
+
+  --text-body: 1rem;
+  --text-body--line-height: 1.5;
+  --text-body--letter-spacing: 0;
+  --text-body--font-weight: 400;
+
+  --text-label: 0.6875rem;
+  --text-label--line-height: 1.4;
+  --text-label--letter-spacing: 0.08em;
+  --text-label--font-weight: 500;
+
+  --text-caption: 0.75rem;
+  --text-caption--line-height: 1.4;
+  --text-caption--letter-spacing: 0.02em;
+  --text-caption--font-weight: 400;
+
+  --text-mono: 0.75rem;
+  --text-mono--line-height: 1.5;
+  --text-mono--letter-spacing: 0.01em;
+  --text-mono--font-weight: 400;
+
+  /* Tailwind-shaped 4px rhythm, exposed through stable semantic names. */
+  --space-2xs: 0.25rem;
+  --space-xs: 0.5rem;
+  --space-s: 0.75rem;
+  --space-m: 1rem;
+  --space-l: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 3rem;
+  --space-3xl: 4rem;
+  --space-4xl: 6rem;
+
+  --page-gutter: clamp(1.25rem, 2.6vw, 2.5rem);
+  --measure: 65ch;
+  --measure-statement: 21ch;
+  --rail-width: 14rem;
+  --side-column: clamp(11rem, 24vw, 21.5rem);
+  --rule: 1px;
+}

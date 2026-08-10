@@ -92,7 +92,7 @@ export default function SideNav({ links, currentPath, children }: Props) {
                           }>
                           {brand.numbering && (
                             <span
-                              className={`tnum [font-family:var(--font-text)] text-[0.6875rem] tracking-[0.06em] text-[color-mix(in_srgb,currentColor_65%,transparent)]`}>
+                              className={`tnum [font-family:var(--font-body)] text-[length:var(--text-label)] leading-[var(--text-label--line-height)] tracking-[var(--text-label--letter-spacing)] text-[color-mix(in_srgb,currentColor_65%,transparent)]`}>
                               {link.number}
                             </span>
                           )}
@@ -109,7 +109,7 @@ export default function SideNav({ links, currentPath, children }: Props) {
 
         <SidebarFooter className="gap-[var(--space-m)] p-[var(--space-m)]">
           <ThemeToggle />
-          <p className="text-[0.6875rem] leading-[1.5] tracking-[var(--type-caption-tracking)] text-[var(--muted)]">
+          <p className="text-[length:var(--text-caption)] leading-[var(--text-caption--line-height)] tracking-[var(--text-caption--letter-spacing)] text-[var(--muted)]">
             {brand.meta.name} © {brand.meta.year}
             <br />
             Version {brand.meta.version}
@@ -119,7 +119,7 @@ export default function SideNav({ links, currentPath, children }: Props) {
 
       {children}
 
-      <div className="fixed top-[var(--space-m)] right-[var(--page-gutter)] z-30 hidden items-center gap-[var(--space-xs)] rounded-full border border-[var(--line)] bg-[var(--surface)] py-[0.25rem] pr-[0.55rem] pl-[0.25rem] text-[0.6875rem] font-medium tracking-[0.06em] text-[var(--ink)] uppercase max-[47.999rem]:inline-flex">
+      <div className="fixed top-[var(--space-m)] right-[var(--page-gutter)] z-30 hidden items-center gap-[var(--space-xs)] rounded-full border border-[var(--line)] bg-[var(--surface)] py-[0.25rem] pr-[0.55rem] pl-[0.25rem] text-[length:var(--text-label)] leading-[var(--text-label--line-height)] font-medium tracking-[var(--text-label--letter-spacing)] text-[var(--ink)] uppercase max-[47.999rem]:inline-flex">
         <SidebarTrigger className="m-0 text-[var(--muted)]" />
         <span>Contents</span>
       </div>

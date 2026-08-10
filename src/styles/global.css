@@ -2,6 +2,7 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 @import "@fontsource-variable/geist";
+@import "./site-tokens.css";
 /*
  ---break---
  */
@@ -9,9 +10,9 @@
 /*
  * Global styles for the brand guidelines site.
  *
- * Colour, type and spacing all come from custom properties emitted by
- * `src/brand/tokens.ts` out of `src/brand/config.ts`. Nothing here hardcodes a
- * brand value, so a new client only means editing the config.
+ * Colours and font identity come from `src/brand/tokens.ts`. Reading and
+ * spacing rules belong to the template-owned `TemplateDesignSystem` in
+ * `src/styles/site-tokens.css`.
  */
 
 html {
@@ -41,21 +42,6 @@ body {
 /* ── Scale & rhythm ───────────────────────────────────────────────────────── */
 
 :root {
-  --page-gutter: clamp(1.25rem, 2.6vw, 2.5rem);
-  --rail-width: 14rem;
-  /* The document's narrow left column: two-line title above small body copy. */
-  --side-column: clamp(11rem, 24vw, 21.5rem);
-  --measure: 30ch;
-  --rule: 1px;
-
-  --space-2xs: 0.25rem;
-  --space-xs: 0.5rem;
-  --space-s: 0.75rem;
-  --space-m: 1.25rem;
-  --space-l: 2rem;
-  --space-xl: clamp(2.5rem, 5vw, 4rem);
-  --space-2xl: clamp(4.5rem, 10vw, 9rem);
-
   --ease: cubic-bezier(0.2, 0, 0, 1);
 
   /* shadcn primitives resolve to the brand's semantic tokens. */
@@ -95,10 +81,10 @@ body {
 body {
   background: var(--surface);
   color: var(--ink);
-  font-family: var(--font-text);
-  font-size: var(--type-body-2-0-size, 0.8125rem);
-  line-height: var(--type-body-2-0-leading, 1.45);
-  font-weight: var(--type-body-2-0-weight, 300);
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  line-height: var(--text-body--line-height);
+  font-weight: var(--text-body--font-weight);
   /* No colour transition here. Only `body` would animate while every panel,
 	   swatch and the nav rail switched instantly, so a fade left the page in a
 	   visibly half-themed state. An atomic switch is also truer to the document. */
@@ -137,71 +123,52 @@ hr {
 /* ── Type primitives ──────────────────────────────────────────────────────── */
 
 .display-1 {
-  font-family: var(--font-display);
-  font-size: var(--type-display-1-0-size);
-  line-height: var(--type-display-1-0-leading);
-  letter-spacing: var(--type-display-1-0-tracking);
-  font-weight: var(--type-display-1-0-weight);
+  font-family: var(--font-heading);
+  font-size: var(--text-display);
+  line-height: var(--text-display--line-height);
+  letter-spacing: var(--text-display--letter-spacing);
+  font-weight: var(--text-display--font-weight);
   text-wrap: balance;
 }
 
 .display-2 {
-  font-family: var(--font-display);
-  font-size: var(--type-display-2-0-size);
-  line-height: var(--type-display-2-0-leading);
-  letter-spacing: var(--type-display-2-0-tracking);
-  font-weight: var(--type-display-2-0-weight);
+  font-family: var(--font-heading);
+  font-size: var(--text-title);
+  line-height: var(--text-title--line-height);
+  letter-spacing: var(--text-title--letter-spacing);
+  font-weight: var(--text-title--font-weight);
   text-wrap: balance;
 }
 
 .heading-1 {
-  font-family: var(--font-display);
-  font-size: var(--type-heading-1-0-size);
-  line-height: var(--type-heading-1-0-leading);
-  letter-spacing: var(--type-heading-1-0-tracking);
-  font-weight: var(--type-heading-1-0-weight);
+  font-family: var(--font-heading);
+  font-size: var(--text-title);
+  line-height: var(--text-title--line-height);
+  letter-spacing: var(--text-title--letter-spacing);
+  font-weight: var(--text-title--font-weight);
   text-wrap: balance;
 }
 
 .heading-2 {
-  font-family: var(--font-display);
-  font-size: var(--type-heading-2-0-size);
-  line-height: var(--type-heading-2-0-leading);
-  letter-spacing: var(--type-heading-2-0-tracking);
-  font-weight: var(--type-heading-2-0-weight);
+  font-family: var(--font-heading);
+  font-size: var(--text-heading);
+  line-height: var(--text-heading--line-height);
+  letter-spacing: var(--text-heading--letter-spacing);
+  font-weight: var(--text-heading--font-weight);
   text-wrap: balance;
 }
 
-/**
- * The document's statement paragraph: one big block of light-weight copy filling
- * the page, as on the welcome and tone-of-voice spreads.
- */
-.statement {
-  font-family: var(--font-text);
-  font-size: var(--type-body-1-0-size);
-  line-height: var(--type-body-1-0-leading);
-  letter-spacing: var(--type-body-1-0-tracking);
-  font-weight: var(--type-body-1-0-weight);
-  text-wrap: pretty;
-  max-width: 18ch;
-}
-
-@media (min-width: 48rem) {
-  .statement {
-    max-width: 21ch;
-  }
-}
 
 /**
  * Two-line page title — medium over light, same size, set tight. Used on every
  * content spread ("Logotype" / "Primary logo").
  */
 .doc-title {
-  font-family: var(--font-display);
-  font-size: var(--type-heading-1-0-size);
-  line-height: var(--type-heading-1-0-leading);
-  letter-spacing: var(--type-heading-1-0-tracking);
-  font-weight: 500;
+  font-family: var(--font-heading);
+  font-size: var(--text-title);
+  line-height: var(--text-title--line-height);
+  letter-spacing: var(--text-title--letter-spacing);
+  font-weight: var(--text-title--font-weight);
   text-wrap: balance;
   display: block;
 }
@@ -213,12 +180,12 @@ hr {
 
 /** Small uppercase label used for eyebrows, captions and spec keys. */
 .label {
-  font-family: var(--font-text);
-  font-size: 0.625rem;
-  line-height: 1.3;
-  letter-spacing: 0.1em;
+  font-family: var(--font-body);
+  font-size: var(--text-label);
+  line-height: var(--text-label--line-height);
+  letter-spacing: var(--text-label--letter-spacing);
   text-transform: uppercase;
-  font-weight: 500;
+  font-weight: var(--text-label--font-weight);
   color: var(--muted);
 }
 
@@ -231,21 +198,24 @@ hr {
   gap: 0.1rem;
   justify-items: end;
   text-align: end;
-  font-size: var(--type-caption-size);
-  line-height: 1.35;
+  font-size: var(--text-caption);
+  line-height: var(--text-caption--line-height);
 }
 
 .caption {
-  font-size: var(--type-caption-size);
-  line-height: var(--type-caption-leading);
-  letter-spacing: var(--type-caption-tracking);
+  font-size: var(--text-caption);
+  line-height: var(--text-caption--line-height);
+  letter-spacing: var(--text-caption--letter-spacing);
+  font-weight: var(--text-caption--font-weight);
   color: var(--muted);
 }
 
 .mono {
   font-family: var(--font-mono);
-  font-size: 0.75rem;
-  letter-spacing: 0.01em;
+  font-size: var(--text-mono);
+  line-height: var(--text-mono--line-height);
+  letter-spacing: var(--text-mono--letter-spacing);
+  font-weight: var(--text-mono--font-weight);
   font-variant-numeric: tabular-nums;
 }
 
@@ -344,26 +314,26 @@ hr {
    style themselves — without the `:not([class])` guard, every `<Block>` title
    would inherit this rule's top margin and sit a full space-xl below its body. */
 .prose :where(h2, h3, h4):not([class]) {
-  font-family: var(--font-display);
-  font-weight: 500;
-  letter-spacing: -0.015em;
+  font-family: var(--font-heading);
+  font-weight: var(--text-heading--font-weight);
+  letter-spacing: var(--text-heading--letter-spacing);
   text-wrap: balance;
   margin-block-start: var(--space-xl);
 }
 
 .prose :where(h2):not([class]) {
-  font-size: var(--type-heading-2-0-size);
-  line-height: var(--type-heading-2-0-leading);
+  font-size: var(--text-heading);
+  line-height: var(--text-heading--line-height);
 }
 
 .prose :where(h3):not([class]) {
-  font-size: 1.125rem;
-  line-height: 1.25;
+  font-size: var(--text-body);
+  line-height: var(--text-body--line-height);
 }
 
 .prose :where(h4):not([class]) {
-  font-size: 1rem;
-  line-height: 1.3;
+  font-size: var(--text-body);
+  line-height: var(--text-body--line-height);
   color: var(--muted);
 }
 
@@ -387,8 +357,9 @@ hr {
 .prose blockquote {
   border-inline-start: 2px solid var(--accent);
   padding-inline-start: var(--space-m);
-  font-size: var(--type-body-1-0-size);
-  line-height: var(--type-body-1-0-leading);
+  font-size: var(--text-body-large);
+  line-height: var(--text-body-large--line-height);
+  letter-spacing: var(--text-body-large--letter-spacing);
 }
 
 .prose code {

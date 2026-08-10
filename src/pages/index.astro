@@ -129,10 +129,10 @@ const { meta, contact } = brand;
 
   .cover__title {
     font-family: var(--font-display);
-    font-size: var(--type-display-1-0-size);
-    line-height: var(--type-display-1-0-leading);
-    letter-spacing: var(--type-display-1-0-tracking);
-    font-weight: var(--type-display-1-0-weight);
+    font-size: var(--text-display);
+    line-height: var(--text-display--line-height);
+    letter-spacing: var(--text-display--letter-spacing);
+    font-weight: var(--text-display--font-weight);
     margin: 0;
     align-self: start;
     /* Two words, one per line, filling the field. */
@@ -144,12 +144,12 @@ const { meta, contact } = brand;
     grid-template-columns: 1fr auto 1fr;
     gap: var(--space-s);
     align-self: end;
-    font-size: var(--type-caption-size);
-    line-height: 1.4;
+    font-size: var(--text-caption);
+    line-height: var(--text-caption--line-height);
   }
 
   .cover__foot strong {
-    font-weight: 600;
+    font-weight: var(--text-label--font-weight);
   }
 
   .cover__foot-mid {
@@ -211,11 +211,11 @@ const { meta, contact } = brand;
 
   .contents__num,
   .contents__title {
-    font-family: var(--font-display);
-    font-size: var(--type-heading-1-0-size);
-    line-height: 1.12;
-    letter-spacing: var(--type-heading-1-0-tracking);
-    font-weight: 300;
+    font-family: var(--font-heading);
+    font-size: var(--text-title);
+    line-height: var(--text-title--line-height);
+    letter-spacing: var(--text-title--letter-spacing);
+    font-weight: var(--text-title--font-weight);
   }
 
   .contents__link:hover .contents__num {

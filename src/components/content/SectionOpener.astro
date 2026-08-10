@@ -62,11 +62,11 @@ const { meta } = brand;
 	   the full display size they wrap past the bottom of the field. */
   .opener__num,
   .opener__title {
-    font-family: var(--font-display);
-    font-size: clamp(3rem, 10.5vw, 9.5rem);
-    line-height: 0.88;
-    letter-spacing: var(--type-display-1-0-tracking);
-    font-weight: var(--type-display-1-0-weight);
+    font-family: var(--font-heading);
+    font-size: var(--text-display);
+    line-height: var(--text-display--line-height);
+    letter-spacing: var(--text-display--letter-spacing);
+    font-weight: var(--text-display--font-weight);
     margin: 0;
   }
 
@@ -77,8 +77,8 @@ const { meta } = brand;
   .opener__summary {
     max-width: 46ch;
     align-self: end;
-    font-size: var(--type-caption-size);
-    line-height: 1.5;
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
     opacity: 0.85;
     text-wrap: pretty;
   }

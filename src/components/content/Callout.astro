@@ -45,8 +45,8 @@ const labels = { note: "Note", do: "Do", dont: "Don't" } as const;
   }
 
   .callout__mark {
-    font-size: 0.75rem;
-    line-height: 1;
+    font-size: var(--text-caption);
+    line-height: var(--text-caption--line-height);
   }
 
   .callout--dont .callout__mark,
