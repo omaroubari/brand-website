@@ -267,7 +267,7 @@ hr {
 }
 
 .page > * + * {
-  margin-block-start: var(--space-2xl);
+  margin-block-start: var(--space-4xl);
 }
 
 /*

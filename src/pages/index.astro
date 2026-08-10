@@ -98,7 +98,7 @@ const { meta, contact } = brand;
                     href={social.url}
                     rel="noreferrer noopener"
                     target="_blank">
-                    {social.label} {social.handle}
+                    {social.label}
                   </a>
                 </li>
               ))
@@ -116,7 +116,7 @@ const { meta, contact } = brand;
   .cover {
     background: var(--color-black);
     color: var(--color-white);
-    min-height: min(86vh, 44rem);
+    min-height: min(100svh, 64rem);
     padding: var(--space-l) var(--page-gutter);
     display: grid;
     grid-template-rows: auto 1fr auto;
@@ -175,7 +175,7 @@ const { meta, contact } = brand;
 
   .contents {
     display: grid;
-    gap: var(--space-l) var(--space-xl);
+    gap: var(--space-xl) var(--space-4xl);
     align-items: start;
   }
 
@@ -232,7 +232,7 @@ const { meta, contact } = brand;
   @media (min-width: 48rem) {
     .ends {
       grid-template-columns: var(--side-column) minmax(0, 1fr);
-      gap: var(--space-xl);
+      gap: var(--space-xl) var(--space-4xl);
     }
   }
 
@@ -256,5 +256,10 @@ const { meta, contact } = brand;
     padding: 0;
     display: grid;
     gap: 0.3rem;
+  }
+
+  .contact__list a {
+    text-decoration: underline;
+    text-decoration-style: dotted;
   }
 </style>
