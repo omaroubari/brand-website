@@ -102,7 +102,7 @@ const rows = colors.map((fg) => ({
     text-align: start;
     vertical-align: bottom;
     white-space: nowrap;
-    font-weight: 500;
+    font-weight: var(--text-label--font-weight);
   }
 
   .matrix__head--row {
@@ -114,18 +114,19 @@ const rows = colors.map((fg) => ({
     text-align: start;
     vertical-align: top;
     min-width: 5.5rem;
-    line-height: 1.3;
+    line-height: var(--text-body--line-height);
   }
 
   .matrix__ratio {
     display: block;
-    font-size: 0.8125rem;
   }
 
   .matrix__grade {
     display: block;
-    font-size: 0.625rem;
-    letter-spacing: 0.08em;
+    font-size: var(--text-label);
+    line-height: var(--text-label--line-height);
+    letter-spacing: var(--text-label--letter-spacing);
+    font-weight: var(--text-label--font-weight);
     text-transform: uppercase;
     opacity: 0.75;
   }

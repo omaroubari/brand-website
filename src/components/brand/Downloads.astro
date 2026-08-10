@@ -69,10 +69,10 @@ const { items = brand.downloads ?? [], class: className } = Astro.props;
 
   .downloads__label {
     font-family: var(--font-display);
-    font-size: 1.125rem;
-    line-height: 1.2;
-    letter-spacing: -0.01em;
-    font-weight: 500;
+    font-size: var(--text-body-large);
+    line-height: var(--text-body-large--line-height);
+    letter-spacing: var(--text-body-large--letter-spacing);
+    font-weight: var(--text-body-large--font-weight);
   }
 
   .downloads__link:hover .downloads__label {

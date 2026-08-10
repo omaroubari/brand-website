@@ -71,7 +71,10 @@ const pad = `calc(var(--logo-h) * ${ratio})`;
     display: grid;
     place-items: center;
     color: var(--accent);
-    font-size: 0.6875rem;
+    font-size: var(--text-label);
+    line-height: var(--text-label--line-height);
+    letter-spacing: var(--text-label--letter-spacing);
+    font-weight: var(--text-label--font-weight);
   }
 
   .clear__tick--top {
@@ -107,6 +110,6 @@ const pad = `calc(var(--logo-h) * ${ratio})`;
 
   .clear__caption strong {
     color: var(--accent);
-    font-weight: 500;
+    font-weight: var(--text-label--font-weight);
   }
 </style>

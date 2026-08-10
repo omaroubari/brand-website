@@ -87,9 +87,9 @@ const hex = color.hex.replace("#", "").toLowerCase();
   .swatch__name {
     font-family: var(--font-display);
     font-size: var(--text-title);
-    line-height: 1;
+    line-height: var(--text-title--line-height);
     letter-spacing: var(--text-title--letter-spacing);
-    font-weight: 500;
+    font-weight: var(--text-title--font-weight);
     /* Compound names ("Orange/Red") must break rather than run into the
 		   neighbouring field. */
     overflow-wrap: break-word;

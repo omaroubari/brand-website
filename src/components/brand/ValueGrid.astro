@@ -54,7 +54,7 @@ const { items, numbered = true, class: className } = Astro.props;
   .values__title {
     font-family: var(--font-display);
     font-size: var(--text-heading);
-    line-height: 0.95;
+    line-height: var(--text-heading--line-height);
     letter-spacing: var(--text-heading--letter-spacing);
     font-weight: var(--text-heading--font-weight);
     margin: 0;
@@ -62,9 +62,10 @@ const { items, numbered = true, class: className } = Astro.props;
   }
 
   .values__num {
-    font-size: 0.6em;
-    font-weight: 300;
-    letter-spacing: 0;
+    font-size: var(--text-label);
+    line-height: var(--text-label--line-height);
+    font-weight: var(--text-label--font-weight);
+    letter-spacing: var(--text-label--letter-spacing);
     vertical-align: super;
     margin-inline-start: 0.15em;
   }
