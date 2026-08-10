@@ -41,6 +41,7 @@ const { class: className } = Astro.props;
   }
 
   .statement > :global(p + p) {
-    margin-block-start: 0.4em;
+    /* A full line of space makes MDX paragraph breaks read as intentional. */
+    margin-block-start: 1em;
   }
 </style>
