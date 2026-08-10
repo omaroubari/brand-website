@@ -40,7 +40,11 @@ const tokens = brandStyleSheet(brand);
 ---
 
 <!doctype html>
-<html lang="en" data-theme={theme}>
+<html
+  lang="en"
+  data-theme={theme}
+  data-theme-preference={theme ??
+    (brand.theme.default === "dark" ? "dark" : "light")}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -72,7 +76,7 @@ const tokens = brandStyleSheet(brand);
 
     <Font cssVariable="--font-brand" preload />
     <style is:global set:html={tokens}></style>
-    <ThemeScript />
+    <ThemeScript defaultTheme={theme ?? brand.theme.default} />
   </head>
 
   <body>

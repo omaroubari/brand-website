@@ -1,5 +1,5 @@
 import { useCallback, useSyncExternalStore } from "react";
-import type { Theme } from "@/lib/theme";
+import type { Theme, ThemeSetting } from "@/lib/theme";
 
 const THEME_ATTR = "data-theme";
 
@@ -8,8 +8,8 @@ const PREFERENCE_ATTR = "data-theme-preference";
 /**
  * Subscribe to the theme state written to <html> by @/lib/theme. The module
  * reflects the resolved theme onto `data-theme` and the user's explicit choice
- * (or "" for "follow system") onto `data-theme-preference`, so a MutationObserver
- * on those attributes is our source of truth.
+ * onto `data-theme-preference`, so a MutationObserver on those attributes is
+ * our source of truth.
  */
 function subscribe(onChange: () => void): () => void {
   const observer = new MutationObserver(onChange);
@@ -17,7 +17,15 @@ function subscribe(onChange: () => void): () => void {
     attributes: true,
     attributeFilter: [THEME_ATTR, PREFERENCE_ATTR],
   });
-  return () => observer.disconnect();
+  const handleThemeChange = () => onChange();
+  const prefersDark = window.matchMedia("(prefers-color-scheme: dark)");
+  document.addEventListener("theme-change", handleThemeChange);
+  prefersDark.addEventListener("change", handleThemeChange);
+  return () => {
+    observer.disconnect();
+    document.removeEventListener("theme-change", handleThemeChange);
+    prefersDark.removeEventListener("change", handleThemeChange);
+  };
 }
 
 function getThemeSnapshot(): Theme {
@@ -26,21 +34,23 @@ function getThemeSnapshot(): Theme {
   );
 }
 
-function getPreferenceSnapshot(): Theme | null {
+function getSystemThemeSnapshot(): Theme {
+  return window.matchMedia("(prefers-color-scheme: dark)").matches
+    ? "dark"
+    : "light";
+}
+
+function getPreferenceSnapshot(): Theme {
   const value = document.documentElement.getAttribute(PREFERENCE_ATTR);
-  return value === "light" || value === "dark" ? value : null;
+  return value === "dark" ? "dark" : "light";
 }
 
 // Rendered on the server (and the first client pass) before <html> is readable.
-function getServerTheme(): Theme {
-  return "light";
+function getServerTheme(defaultTheme: ThemeSetting): Theme {
+  return defaultTheme === "dark" ? "dark" : "light";
 }
 
-function getServerPreference(): Theme | null {
-  return null;
-}
-
-function setTheme(preference: Theme | null): void {
+function setTheme(preference: ThemeSetting | null): void {
   // @/lib/theme owns persistence + reflection; nudge it via the event it listens for.
   document.dispatchEvent(new CustomEvent("set-theme", { detail: preference }));
 }
@@ -48,32 +58,46 @@ function setTheme(preference: Theme | null): void {
 export interface UseThemeResult {
   /** The resolved theme currently applied to the document. */
   theme: Theme;
-  /** The user's explicit choice, or null when following the system preference. */
-  preference: Theme | null;
+  /** The theme currently preferred by the operating system. */
+  systemTheme: Theme;
+  /** The resolved preference currently reflected in the document. */
+  preference: Theme;
   isDark: boolean;
-  /** True when following the system preference (no explicit choice). */
+  /** True when the active setting follows the OS preference. */
   isSystem: boolean;
-  /** Set an explicit theme, or pass null to fall back to the system preference. */
-  setTheme: (preference: Theme | null) => void;
+  /** Set light, dark, or system; pass null to return to the author default. */
+  setTheme: (preference: ThemeSetting | null) => void;
   /** Flip between explicit light and dark based on the resolved theme. */
   toggleTheme: () => void;
   /**
-   * Toggle between following the system preference and an explicit override:
-   * from system, pin the opposite of the current theme; otherwise return to system.
+   * Toggle between system mode and the opposite of the current OS mode.
    */
   toggleSystem: () => void;
 }
 
-export function useTheme(): UseThemeResult {
+export function useTheme({
+  defaultTheme = "system",
+}: { defaultTheme?: ThemeSetting } = {}): UseThemeResult {
+  const getServerSnapshot = () => getServerTheme(defaultTheme);
   const theme = useSyncExternalStore(
     subscribe,
     getThemeSnapshot,
-    getServerTheme,
+    getServerSnapshot,
+  );
+  const systemTheme = useSyncExternalStore(
+    subscribe,
+    getSystemThemeSnapshot,
+    getServerSnapshot,
   );
   const preference = useSyncExternalStore(
     subscribe,
     getPreferenceSnapshot,
-    getServerPreference,
+    getServerSnapshot,
+  );
+  const isSystem = useSyncExternalStore(
+    subscribe,
+    () => getActiveThemeSetting(defaultTheme) === "system",
+    () => defaultTheme === "system",
   );
 
   const toggleTheme = useCallback(() => {
@@ -81,22 +105,42 @@ export function useTheme(): UseThemeResult {
   }, []);
 
   const toggleSystem = useCallback(() => {
-    // Two states: follow the system preference (the default), or pin the
-    // opposite of whatever is currently shown.
-    if (getPreferenceSnapshot() === null) {
+    // Follow the OS, or pin the opposite of the current OS mode.
+    if (getActiveThemeSetting(defaultTheme) === "system") {
       setTheme(getThemeSnapshot() === "dark" ? "light" : "dark");
     } else {
-      setTheme(null);
+      setTheme("system");
     }
-  }, []);
+  }, [defaultTheme]);
 
   return {
     theme,
+    systemTheme,
     preference,
     isDark: theme === "dark",
-    isSystem: preference === null,
+    isSystem,
     setTheme,
     toggleTheme,
     toggleSystem,
   };
+}
+
+function isThemeSetting(value: string | null): value is ThemeSetting {
+  return value === "light" || value === "dark" || value === "system";
+}
+
+/** User settings take precedence over the author's configured fallback. */
+export function resolveThemeSetting(
+  userSetting: ThemeSetting | null,
+  authorDefault: ThemeSetting,
+): ThemeSetting {
+  return userSetting ?? authorDefault;
+}
+
+function getActiveThemeSetting(defaultTheme: ThemeSetting): ThemeSetting {
+  const stored = localStorage.getItem("theme");
+  return resolveThemeSetting(
+    isThemeSetting(stored) ? stored : null,
+    defaultTheme,
+  );
 }

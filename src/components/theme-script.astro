@@ -1,11 +1,11 @@
 ---
-import type { Theme } from "@/lib/theme";
+import type { ThemeSetting } from "@/lib/theme";
 
 interface Props {
-  defaultTheme?: Theme;
+  defaultTheme?: ThemeSetting;
 }
 
-const { defaultTheme = "light" } = Astro.props;
+const { defaultTheme = "system" } = Astro.props;
 ---
 
 {
