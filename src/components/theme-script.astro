@@ -1,5 +1,5 @@
 ---
-import type { ThemeSetting } from "@/lib/theme";
+import type { ThemeSetting } from "@/lib/theme-state";
 
 interface Props {
   defaultTheme?: ThemeSetting;
@@ -11,8 +11,8 @@ const { defaultTheme = "system" } = Astro.props;
 {
   /*
   Runs before paint to prevent a flash of the wrong theme. The inline script
-  publishes `defaultTheme` as a global that the bundled theme module reads (see
-  the `declare const defaultTheme` in @/lib/theme). Keep both in the <head>.
+  publishes `defaultTheme` as a global that the bundled theme store reads. Keep
+  both scripts in the <head> so stored preferences resolve before paint.
 */
 }
 <script is:inline define:vars={{ defaultTheme }}>

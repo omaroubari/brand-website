@@ -30,8 +30,6 @@ const sections = defineCollection({
     number: z.string().optional(),
     /** Hidden from nav and excluded from the build. */
     draft: z.boolean().default(false),
-    /** Force a colour scheme for this section, regardless of the visitor's. */
-    theme: z.enum(["light", "dark"]).optional(),
     /** Override the `<title>` and meta description for this page. */
     seo: z
       .object({

@@ -1,31 +1,29 @@
-export type Theme = "light" | "dark";
-export type ThemeSetting = Theme | "system";
+/** @file Browser theme store: persistence, OS observation, and DOM reflection. */
+import {
+  isThemeSetting,
+  resolveThemePreference,
+  resolveThemeState,
+} from "./theme-state";
+import type { Theme, ThemeSetting, ThemeState } from "./theme-state";
 
-declare const defaultTheme: ThemeSetting;
+export type { Theme, ThemeSetting, ThemeState } from "./theme-state";
 
 declare global {
-  interface DocumentEventMap {
-    "set-theme": CustomEvent<ThemeSetting | null>;
-    "theme-change": Event;
-  }
-
   interface Window {
-    // Published by ThemeScript.astro before this module runs so `defaultTheme`
-    // resolves as a global.
+    /** Published by ThemeScript.astro before this module runs. */
     defaultTheme: ThemeSetting;
   }
 }
 
-export interface Props {
-  defaultTheme?: ThemeSetting;
-}
-
 const STORAGE_KEY = "theme";
+const listeners = new Set<() => void>();
 
-const prefersDark = window.matchMedia("(prefers-color-scheme: dark)");
+let state: ThemeState | undefined;
+let initialized = false;
+let systemPreference: MediaQueryList | undefined;
 
-function isThemeSetting(value: string | null): value is ThemeSetting {
-  return value === "light" || value === "dark" || value === "system";
+function getBrandDefault(): ThemeSetting {
+  return isThemeSetting(window.defaultTheme) ? window.defaultTheme : "system";
 }
 
 function getStoredThemeSetting(): ThemeSetting | null {
@@ -33,52 +31,76 @@ function getStoredThemeSetting(): ThemeSetting | null {
   return isThemeSetting(value) ? value : null;
 }
 
-function getSystemPreference(): Theme {
-  return prefersDark.matches ? "dark" : "light";
+function getSystemTheme(): Theme {
+  return getSystemPreference().matches ? "dark" : "light";
 }
 
-function resolveTheme(setting?: ThemeSetting | null): Theme {
-  const activeSetting = setting ?? getStoredThemeSetting() ?? defaultTheme;
-  return activeSetting === "system" ? getSystemPreference() : activeSetting;
+function getSystemPreference(): MediaQueryList {
+  systemPreference ??= window.matchMedia("(prefers-color-scheme: dark)");
+  return systemPreference;
 }
 
-function getActiveThemeSetting(): ThemeSetting {
-  return getStoredThemeSetting() ?? defaultTheme;
+function calculateThemeState(): ThemeState {
+  const preference = resolveThemePreference(
+    getStoredThemeSetting(),
+    getBrandDefault(),
+  );
+  return resolveThemeState(preference, getSystemTheme());
 }
 
-function writeTheme(theme: Theme): void {
-  document.documentElement.setAttribute("data-theme", theme);
-  document.documentElement.setAttribute("data-theme-preference", theme);
-  document.documentElement.style.colorScheme = theme;
-  document.dispatchEvent(new Event("theme-change"));
+function reflectTheme(nextState: ThemeState): void {
+  document.documentElement.setAttribute("data-theme", nextState.theme);
+  document.documentElement.setAttribute(
+    "data-theme-preference",
+    nextState.preference,
+  );
+  document.documentElement.style.colorScheme = nextState.theme;
 }
 
-function handleStorageChange(event: StorageEvent): void {
-  if (event.key !== STORAGE_KEY) return;
-  const newSetting = isThemeSetting(event.newValue) ? event.newValue : null;
-  const setting = newSetting ?? defaultTheme;
-  writeTheme(resolveTheme(setting));
+function publishTheme(): void {
+  const nextState = calculateThemeState();
+  const changed =
+    !state ||
+    state.theme !== nextState.theme ||
+    state.preference !== nextState.preference ||
+    state.systemTheme !== nextState.systemTheme;
+
+  state = nextState;
+  reflectTheme(nextState);
+  if (changed) listeners.forEach((listener) => listener());
 }
 
-function rewriteTheme(): void {
-  const setting = getActiveThemeSetting();
-  writeTheme(resolveTheme(setting));
+function initialize(): void {
+  if (initialized) return;
+  initialized = true;
+
+  window.addEventListener("storage", (event) => {
+    if (event.key === STORAGE_KEY) publishTheme();
+  });
+  getSystemPreference().addEventListener("change", publishTheme);
+  document.addEventListener("astro:after-swap", publishTheme);
+  publishTheme();
 }
 
-function handleThemeChange(event: CustomEvent<ThemeSetting | null>): void {
-  if (event.detail !== null) {
-    localStorage.setItem(STORAGE_KEY, event.detail);
-    writeTheme(resolveTheme(event.detail));
-  } else {
-    localStorage.removeItem(STORAGE_KEY);
-    writeTheme(resolveTheme(defaultTheme));
-  }
+/** Return the store's stable current snapshot for useSyncExternalStore. */
+export function getThemeState(): ThemeState {
+  initialize();
+  if (!state) throw new Error("Theme store failed to initialize");
+  return state;
 }
 
-document.addEventListener("set-theme", handleThemeChange);
-window.addEventListener("storage", handleStorageChange);
-prefersDark.addEventListener("change", () => {
-  if (getActiveThemeSetting() === "system") rewriteTheme();
-});
-document.addEventListener("astro:after-swap", rewriteTheme);
-rewriteTheme();
+/** Subscribe to resolved theme changes. */
+export function subscribeToTheme(listener: () => void): () => void {
+  initialize();
+  listeners.add(listener);
+  return () => listeners.delete(listener);
+}
+
+/** Set a visitor preference, or pass null to return to the brand default. */
+export function setThemePreference(preference: ThemeSetting | null): void {
+  if (preference === null) localStorage.removeItem(STORAGE_KEY);
+  else localStorage.setItem(STORAGE_KEY, preference);
+  publishTheme();
+}
+
+if (typeof window !== "undefined") initialize();

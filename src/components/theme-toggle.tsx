@@ -1,7 +1,7 @@
 "use client";
 
 import { useTheme } from "@/hooks/use-theme";
-import type { ThemeSetting } from "@/lib/theme";
+import { getSuggestedThemeSetting, type ThemeSetting } from "@/lib/theme-state";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -18,14 +18,8 @@ export function ThemeToggle({
   variant = "link",
   ...props
 }: React.ComponentProps<typeof Button> & { defaultTheme?: ThemeSetting }) {
-  const { isDark, systemTheme, setTheme } = useTheme({ defaultTheme });
-
-  const mode =
-    isDark === (systemTheme === "dark")
-      ? isDark
-        ? "light"
-        : "dark"
-      : "system";
+  const theme = useTheme({ defaultTheme });
+  const mode = getSuggestedThemeSetting(theme);
   const actionLabel = `Switch to ${mode} mode`;
 
   return (
@@ -36,7 +30,7 @@ export function ThemeToggle({
       title={actionLabel}
       onClick={(e) => {
         onClick?.(e);
-        setTheme(mode);
+        theme.setTheme(mode);
       }}
       size={size}
       variant={variant}

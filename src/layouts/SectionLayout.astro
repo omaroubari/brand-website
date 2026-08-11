@@ -9,17 +9,15 @@ interface Props {
   title: string;
   number?: string;
   summary?: string;
-  theme?: "light" | "dark";
   seo?: { title?: string; description?: string };
 }
 
-const { id, title, number, summary, theme, seo } = Astro.props;
+const { id, title, number, summary, seo } = Astro.props;
 ---
 
 <BaseLayout
   title={seo?.title ?? title}
-  description={seo?.description ?? summary}
-  theme={theme}>
+  description={seo?.description ?? summary}>
   <div class="page">
     <SectionOpener number={number} title={title} summary={summary} />
 

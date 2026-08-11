@@ -4,6 +4,7 @@ import { Font } from "astro:assets";
 import { brand } from "../brand/config";
 import { brandStyleSheet } from "../brand/tokens";
 import { getSectionLinks } from "../lib/sections";
+import { getInitialThemeAttributes } from "../lib/theme-state";
 import SideNav from "../components/nav/SideNav";
 import "../styles/global.css";
 import ThemeScript from "@/components/theme-script.astro";
@@ -11,8 +12,6 @@ import ThemeScript from "@/components/theme-script.astro";
 interface Props {
   title?: string;
   description?: string;
-  /** Pin this page to one scheme, ignoring the visitor's preference. */
-  theme?: "light" | "dark";
   /** Drop the nav rail — used by the cover page. */
   bare?: boolean;
   class?: string;
@@ -21,7 +20,6 @@ interface Props {
 const {
   title,
   description = brand.meta.description,
-  theme,
   bare = false,
   class: className,
 } = Astro.props;
@@ -37,14 +35,14 @@ const canonical = new URL(
 const links = await getSectionLinks();
 const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
 const tokens = brandStyleSheet(brand);
+const initialTheme = getInitialThemeAttributes(brand.theme.default);
 ---
 
 <!doctype html>
 <html
   lang="en"
-  data-theme={theme}
-  data-theme-preference={theme ??
-    (brand.theme.default === "dark" ? "dark" : "light")}>
+  data-theme={initialTheme.theme}
+  data-theme-preference={initialTheme.preference}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -76,7 +74,7 @@ const tokens = brandStyleSheet(brand);
 
     <Font cssVariable="--font-brand" preload />
     <style is:global set:html={tokens}></style>
-    <ThemeScript defaultTheme={theme ?? brand.theme.default} />
+    <ThemeScript defaultTheme={brand.theme.default} />
   </head>
 
   <body>
