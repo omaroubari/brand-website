@@ -148,10 +148,10 @@ application pages read correctly before the client's mockups exist.
 | `src/styles/global.css`                 | The document's visual language — no brand values hardcoded |
 | `src/components/ui/SectionOpener.astro` | The full-bleed accent divider that opens each section      |
 
-Colour resolves twice: a raw `--color-{id}` per palette entry, then semantic
-roles (`--ink`, `--surface`, `--accent`) pointing at them per scheme. Light and
-dark both work without JavaScript; the toggle and the pre-paint script only
-persist a preference.
+Colour resolves twice: a raw `--color-{id}` per palette entry, then canonical
+shadcn roles (`--background`, `--foreground`, `--primary`) pointing at them per
+scheme. Light and dark both work without JavaScript; the toggle and the
+pre-paint script only persist a preference.
 
 ---
 
@@ -176,8 +176,7 @@ it to Cloudflare, or anywhere else.
 - **`noindex` is on by default** in `src/layouts/BaseLayout.astro`. A client's
   guidelines usually should not be in search results. Remove the meta tag if
   this one should be.
-- **Placeholder assets ship with the template**: the logo SVGs, the icon set,
-  and the photography are all stand-ins. `CREDITS.md` in the photography folder
-  lists the sources.
+- **Placeholder assets ship with the template**: the logo SVGs and photography
+  are stand-ins. The starter icon set is sourced from [Phosphor Icons](https://phosphoricons.com/);
 - **`typescript` is pinned to 6.x** because `astro check` needs the programmatic
   API that TypeScript 7 does not yet expose.
