@@ -79,7 +79,7 @@ export default function SideNav({ links, currentPath, children }: Props) {
                     return (
                       <SidebarMenuItem key={link.id}>
                         <SidebarMenuButton
-                          className="text-sm tracking-[-0.01em] no-underline data-active:bg-transparent hover:bg-transparent hover:text-accent"
+                          className="text-sm tracking-[-0.01em] no-underline data-active:bg-transparent data-active:text-sidebar-primary hover:bg-transparent hover:text-accent"
                           isActive={isActive}
                           render={
                             <a
@@ -89,7 +89,7 @@ export default function SideNav({ links, currentPath, children }: Props) {
                           }>
                           {brand.numbering && (
                             <span
-                              className={`tnum text-[color-mix(in_srgb,currentColor_40%,transparent)]`}>
+                              className={`tnum font-normal text-[color-mix(in_srgb,currentColor_40%,transparent)]`}>
                               {link.number}
                             </span>
                           )}

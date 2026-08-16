@@ -1,6 +1,7 @@
 ---
 import { brand } from "../../brand/config";
 import ColorSwatch from "./ColorSwatch.astro";
+import ColorPaletteInteractions from "./ColorPaletteInteractions";
 
 interface Props {
   /** Limit and order the palette by id. Defaults to every colour, in config order. */
@@ -21,9 +22,10 @@ const colors = only
   : brand.palette;
 ---
 
-<div class:list={["palette", "escape", className]}>
+<div class:list={["palette", "escape", className]} data-color-palette>
   {colors.map((c) => <ColorSwatch color={c} print={print} />)}
 </div>
+<ColorPaletteInteractions client:load />
 
 <style>
   /* Fields butt up against each other with only a hairline between, so the
