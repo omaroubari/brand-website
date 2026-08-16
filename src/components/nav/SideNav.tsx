@@ -57,7 +57,7 @@ export default function SideNav({ links, currentPath, children }: Props) {
     <SidebarProvider className="min-w-0" defaultOpen>
       <Sidebar className="h-full">
         <SidebarHeader>
-          <div className="flex items-center justify-between p-2">
+          <div className="flex items-center justify-between ps-2 pt-2">
             <a
               className=""
               href="/"
@@ -67,12 +67,9 @@ export default function SideNav({ links, currentPath, children }: Props) {
             <SidebarTrigger className="m-0" />
           </div>
         </SidebarHeader>
-
-        <SidebarSeparator className="mx-0" />
-
         <SidebarContent>
           <SidebarGroup>
-            <SidebarGroupLabel>Contents</SidebarGroupLabel>
+            <SidebarGroupLabel className="text-sm">Contents</SidebarGroupLabel>
             <SidebarGroupContent>
               <nav aria-label="Sections">
                 <SidebarMenu>
@@ -82,7 +79,7 @@ export default function SideNav({ links, currentPath, children }: Props) {
                     return (
                       <SidebarMenuItem key={link.id}>
                         <SidebarMenuButton
-                          className={`text-sm font-light tracking-[-0.01em] no-underline ${isActive ? "!text-[var(--foreground)]" : ""}`}
+                          className="text-sm tracking-[-0.01em] no-underline data-active:bg-transparent hover:bg-transparent hover:text-accent"
                           isActive={isActive}
                           render={
                             <a
@@ -92,7 +89,7 @@ export default function SideNav({ links, currentPath, children }: Props) {
                           }>
                           {brand.numbering && (
                             <span
-                              className={`tnum [font-family:var(--font-body)] text-[length:var(--text-label)] leading-[var(--text-label--line-height)] tracking-[var(--text-label--letter-spacing)] text-[color-mix(in_srgb,currentColor_65%,transparent)]`}>
+                              className={`tnum text-[color-mix(in_srgb,currentColor_40%,transparent)]`}>
                               {link.number}
                             </span>
                           )}

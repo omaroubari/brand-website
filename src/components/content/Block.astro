@@ -102,7 +102,12 @@ const hasNote = Astro.slots.has("note");
   }
 
   .block__note > :global(* + *) {
-    margin-block-start: var(--space-s);
+    margin-block-start: 1em;
+  }
+
+  /* SpecList resets its own margin, so keep the note rhythm at the slot boundary. */
+  .block__note > :global(.specs) {
+    margin-block-start: 1em;
   }
 
   .block__note--full {
