@@ -14,7 +14,7 @@ interface Props {
 const {
   mark = "brandmark",
   cols = 10,
-  rows = 11,
+  rows = 10,
   caption,
   class: className,
 } = Astro.props;
@@ -48,7 +48,7 @@ const {
   .construction__stage {
     position: relative;
     width: min(100%, 22rem);
-    border: var(--rule) solid var(--border);
+    /* border: var(--rule) solid var(--border); */
   }
 
   /* Two repeating gradients draw the field grid; the count follows --cols/--rows

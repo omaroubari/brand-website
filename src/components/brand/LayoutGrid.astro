@@ -27,13 +27,13 @@ const {
 ---
 
 <figure class:list={["layout", className]}>
+  {label && <span class="label layout__label">{label}</span>}
   <div
     class="layout__canvas"
     style={`--columns: ${columns}; --gutter: ${gutter}; --margin: ${margin}; aspect-ratio: ${ratio};`}>
     <div class="layout__cols" aria-hidden="true">
       {Array.from({ length: columns }, () => <span class="layout__col" />)}
     </div>
-    {label && <span class="label layout__label">{label}</span>}
   </div>
 
   {
@@ -52,10 +52,16 @@ const {
 
 <style>
   .layout {
-    margin: 0;
     display: grid;
     gap: var(--space-s);
     min-width: 0;
+    align-content: start;
+  }
+
+  @media (min-width: 48rem) {
+    .layout--mobile-capped {
+      max-width: 24.5rem;
+    }
   }
 
   .layout__canvas {
@@ -65,6 +71,7 @@ const {
 		   stays readable at any width — the numbers below are the real spec. */
     padding: calc(var(--margin) * 0.25) calc(var(--margin) * 0.25);
     background: var(--background);
+    min-width: 0;
   }
 
   .layout__cols {
@@ -80,9 +87,6 @@ const {
   }
 
   .layout__label {
-    position: absolute;
-    inset-block-end: calc(100% + var(--space-xs));
-    inset-inline-start: 0;
   }
 
   .layout__specs {

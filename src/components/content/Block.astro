@@ -1,9 +1,9 @@
 ---
 /**
- * The document's core spread.
+ * The document's core block.
  *
- * Left column: a two-line title — medium over light — with the small
- * explanatory note beneath it. Right column: the specimen, artwork or diagram.
+ * By default, title, note and content share one column. Add `split` to place
+ * the title and note in a side column beside the specimen, artwork or diagram.
  *
  *   <Block title="Logotype" subtitle="Scaling">
  *     <Fragment slot="note">Small copy explaining the rule.</Fragment>
@@ -15,8 +15,8 @@ interface Props {
   title?: string;
   /** Second line, set in the light weight at the same size. */
   subtitle?: string;
-  /** Drop the left column and run the content the full width of the page. */
-  full?: boolean;
+  /** Put the title and note in a side column beside the content. */
+  split?: boolean;
   /** Heading level, so each page keeps a sensible outline. */
   as?: "h2" | "h3";
   id?: string;
@@ -26,7 +26,7 @@ interface Props {
 const {
   title,
   subtitle,
-  full = false,
+  split = false,
   as: Tag = "h2",
   id,
   class: className,
@@ -35,9 +35,9 @@ const {
 const hasNote = Astro.slots.has("note");
 ---
 
-<section class:list={["block", full && "block--full", className]} id={id}>
+<section class:list={["block", split && "block--split", className]} id={id}>
   {
-    !full && (
+    split && (
       <div class="block__side">
         {title && (
           <Tag class="block__title doc-title">
@@ -56,16 +56,16 @@ const hasNote = Astro.slots.has("note");
 
   <div class="block__body">
     {
-      full && title && (
-        <Tag class="block__title block__title--full doc-title">
+      !split && title && (
+        <Tag class="block__title block__title--body doc-title">
           {title}
           {subtitle && <span class="doc-title__sub">{subtitle}</span>}
         </Tag>
       )
     }
     {
-      full && hasNote && (
-        <div class="block__note block__note--full">
+      !split && hasNote && (
+        <div class="block__note block__note--body">
           <slot name="note" />
         </div>
       )
@@ -77,17 +77,14 @@ const hasNote = Astro.slots.has("note");
 <style>
   .block {
     display: grid;
+    grid-template-columns: minmax(0, 1fr);
     gap: var(--space-xl) var(--space-4xl);
     align-items: start;
   }
 
   @media (min-width: 48rem) {
-    .block {
+    .block--split {
       grid-template-columns: var(--side-column) minmax(0, 1fr);
-    }
-
-    .block--full {
-      grid-template-columns: minmax(0, 1fr);
     }
   }
 
@@ -105,12 +102,7 @@ const hasNote = Astro.slots.has("note");
     margin-block-start: 1em;
   }
 
-  /* SpecList resets its own margin, so keep the note rhythm at the slot boundary. */
-  .block__note > :global(.specs) {
-    margin-block-start: 1em;
-  }
-
-  .block__note--full {
+  .block__note--body {
     margin-block-end: var(--space-l);
   }
 
@@ -123,11 +115,11 @@ const hasNote = Astro.slots.has("note");
     text-wrap: balance;
   }
 
-  .block__title--full {
+  .block__title--body {
     margin-block-end: var(--space-l);
   }
 
-  .block__body > * + * {
-    margin-block-start: var(--space-l);
+  .block__body > :global(* + *) {
+    margin-block-start: 1em;
   }
 </style>

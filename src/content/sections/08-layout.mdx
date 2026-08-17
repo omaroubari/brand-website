@@ -5,7 +5,7 @@ summary: The grids everything is built on, from a business card to a billboard.
 
 import { Block, LayoutGrid, Grid, SpecList } from "../../components/mdx";
 
-<Block title="Web 1/2" subtitle="Grid system">
+<Block title="Web 1/2" subtitle="Grid system" >
 <Fragment slot="note">
 
 The desktop site is structured on a grid that arranges content with precision and keeps
@@ -32,7 +32,7 @@ Break it deliberately, once per piece, or not at all.
 
 </Block>
 
-<Block title="Web 2/2" subtitle="Grid system">
+<Block title="Web 2/2" subtitle="Grid system" >
 <Fragment slot="note">
 
 The mobile grid optimises the same system for smaller screens, keeping content organised
@@ -45,7 +45,8 @@ and navigation consistent.
   gutter="15px"
   margin="38px"
   ratio="9 / 16"
-  label="Mobile · up to 599 px"
+  class="layout--mobile-capped"
+  label="Mobile · up to 640 px"
   specs={[
     { term: "Columns", value: "4" },
     { term: "Gutter", value: "15 px" },
@@ -56,7 +57,7 @@ and navigation consistent.
 
 </Block>
 
-<Block title="Social media" subtitle="Grid system">
+<Block title="Social media" subtitle="Grid system" >
 <Fragment slot="note">
 
 Grids guide content placement across posts, so the feed reads as one voice. The safe areas
@@ -67,7 +68,7 @@ are not suggestions — platform chrome will cover anything inside them.
 <Grid cols={2} gap="var(--space-xl)">
 
 <LayoutGrid
-  columns={6}
+  columns={4}
   gutter="24px"
   margin="80px"
   ratio="1 / 1"
@@ -79,7 +80,7 @@ are not suggestions — platform chrome will cover anything inside them.
 />
 
 <LayoutGrid
-  columns={6}
+  columns={4}
   gutter="24px"
   margin="96px"
   ratio="9 / 16"
@@ -94,7 +95,7 @@ are not suggestions — platform chrome will cover anything inside them.
 
 </Block>
 
-<Block title="Print 1/2" subtitle="Grid system">
+<Block title="Print 1/2" subtitle="Grid system" >
 <Fragment slot="note">
 
 Grids ensure contact details, logos and branding elements sit consistently, presenting a
@@ -102,7 +103,7 @@ unified and professional image. They also make updates and customisation quick.
 
 </Fragment>
 
-<Grid cols={2} gap="var(--space-xl)">
+<Grid cols={1} gap="var(--space-xl)">
 
 <LayoutGrid
   columns={4}
@@ -126,7 +127,7 @@ unified and professional image. They also make updates and customisation quick.
 
 </Block>
 
-<Block title="Print 2/2" subtitle="Grid system">
+<Block title="Print 2/2" subtitle="Grid system" >
 <Fragment slot="note">
 
 The landscape A4 grid is the cornerstone of document design: a structured framework that
@@ -145,7 +146,7 @@ keeps text, images and other elements consistently placed.
 
 </Block>
 
-<Block title="Presentation" subtitle="Grid system">
+<Block title="Presentation" subtitle="Grid system" >
 <Fragment slot="note">
 
 Sixteen by nine, twelve columns, the same type scale as everywhere else. One idea per

@@ -61,8 +61,8 @@ body {
 }
 
 ::selection {
-  background: var(--primary);
-  color: var(--primary-foreground);
+  background: color-mix(in srgb, var(--primary) 14%, transparent);
+  color: var(--primary);
 }
 
 :focus-visible {
@@ -236,7 +236,7 @@ hr {
 }
 
 .page > * + * {
-  margin-block-start: var(--space-4xl);
+  margin-block-start: var(--space-2xl);
 }
 
 /*

@@ -103,10 +103,10 @@ Black and white carry the work. The accent is the exception, not the rule.
 </Block>
 ```
 
-`Block` is the document's spread: `title` sets the first line in medium,
-`subtitle` the second in light, the `note` slot holds the small copy beneath
-them, and children fill the wide column on the right. Add `full` to drop the
-left column entirely.
+`Block` is the document's core layout: `title` sets the first line in medium,
+`subtitle` the second in light, the `note` slot holds the explanatory copy, and
+children fill the content column. It is one column by default. Add `split` to
+place the title and note in a side column beside the content.
 
 The frontmatter `summary` becomes the standfirst on the section divider. Set
 `draft: true` to keep a section visible in `dev` but out of the build.
