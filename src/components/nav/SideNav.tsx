@@ -64,12 +64,11 @@ export default function SideNav({ links, currentPath, children }: Props) {
               aria-label={`${brand.meta.name} ${brand.meta.documentTitle}`}>
               <BrandLogo />
             </a>
-            {/* <SidebarTrigger className="m-0" /> */}
           </div>
         </SidebarHeader>
         <SidebarContent>
           <SidebarGroup>
-            <SidebarGroupLabel className="text-sm">Contents</SidebarGroupLabel>
+            <SidebarGroupLabel className="text-(length:--text-body) font-medium text-muted-foreground">Contents</SidebarGroupLabel>
             <SidebarGroupContent>
               <nav aria-label="Sections">
                 <SidebarMenu>
@@ -79,7 +78,7 @@ export default function SideNav({ links, currentPath, children }: Props) {
                     return (
                       <SidebarMenuItem key={link.id}>
                         <SidebarMenuButton
-                          className="text-sm tracking-[-0.01em] no-underline data-active:bg-transparent data-active:text-sidebar-primary hover:bg-transparent hover:text-accent"
+                          className="text-sm text-muted-foreground data-active:font-medium tracking-[-0.01em] no-underline data-active:bg-transparent data-active:text-foreground hover:bg-transparent hover:text-accent"
                           isActive={isActive}
                           render={
                             <a

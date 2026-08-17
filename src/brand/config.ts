@@ -244,7 +244,7 @@ export const brand = defineBrand({
         name: "Title 3",
         role: "Small headings, navigation titles, and compact blocks.",
         font: "display",
-        weight: 600,
+        weight: 500,
         size: "1rem",
         lineHeight: "1.5",
         tracking: "0",

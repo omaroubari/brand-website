@@ -6,6 +6,9 @@ worker-configuration.d.ts
 # wrangler local state
 .wrangler/
 
+# local brand reference PDFs
+brands/
+
 # dependencies
 node_modules/
 
