@@ -250,7 +250,7 @@ function SidebarTrigger({
   onClick,
   ...props
 }: React.ComponentProps<typeof Button>) {
-  const { toggleSidebar } = useSidebar();
+  const { toggleSidebar, state } = useSidebar();
 
   return (
     <Button
@@ -264,7 +264,19 @@ function SidebarTrigger({
         toggleSidebar();
       }}
       {...props}>
-      <PanelLeftIcon />
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" 
+        data-state={state}
+        className="data-[state=expanded]:[&_#sidebar-line]:translate-x-20"
+        >
+        <rect width="256" height="256" fill="none"/>
+        <line
+        id="sidebar-line"
+        x1="88" y1="48" x2="88" y2="208" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"
+        className="translate-x-0"
+        />
+        <rect x="32" y="48" width="192" height="160" rx="8" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/>
+        </svg>
+
       <span className="sr-only">Toggle Sidebar</span>
     </Button>
   );

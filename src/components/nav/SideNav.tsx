@@ -64,7 +64,7 @@ export default function SideNav({ links, currentPath, children }: Props) {
               aria-label={`${brand.meta.name} ${brand.meta.documentTitle}`}>
               <BrandLogo />
             </a>
-            <SidebarTrigger className="m-0" />
+            {/* <SidebarTrigger className="m-0" /> */}
           </div>
         </SidebarHeader>
         <SidebarContent>
@@ -114,11 +114,9 @@ export default function SideNav({ links, currentPath, children }: Props) {
         </SidebarFooter>
       </Sidebar>
 
-      {children}
-
-      <div className="fixed top-[var(--space-m)] right-[var(--page-gutter)] z-30 hidden items-center gap-[var(--space-xs)] rounded-full border border-[var(--border)] bg-[var(--background)] py-[0.25rem] pr-[0.55rem] pl-[0.25rem] text-[length:var(--text-label)] leading-[var(--text-label--line-height)] font-medium tracking-[var(--text-label--letter-spacing)] text-[var(--foreground)] uppercase max-[47.999rem]:inline-flex">
-        <SidebarTrigger className="m-0 text-[var(--muted-foreground)]" />
-        <span>Contents</span>
+      <div className="relative min-w-0 flex-1">
+        <SidebarTrigger className="absolute top-(--space-m) text-primary-foreground hover:bg-primary-foreground hover:text-primary border-primary-foreground inset-s-(--page-gutter) rounded-full z-30" variant="outline" size="icon" />
+        {children}
       </div>
     </SidebarProvider>
   );
