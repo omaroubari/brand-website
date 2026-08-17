@@ -2,75 +2,47 @@
 /**
  * The document's core block.
  *
- * By default, title, note and content share one column. Add `split` to place
- * the title and note in a side column beside the specimen, artwork or diagram.
+ * A block has three content regions: Markdown-rich `copy`, rich component
+ * `content`, and an optional `note`. Add `split` to place the copy and note in
+ * a side column beside the specimen, artwork or diagram.
  *
- *   <Block title="Logotype" subtitle="Scaling">
+ *   <Block split>
+ *     <Fragment slot="copy">
+ *       ## Logotype
+ *
+ *       The primary logo is a logotype.
+ *     </Fragment>
  *     <Fragment slot="note">Small copy explaining the rule.</Fragment>
- *     <LogoScaling />
+ *     <Fragment slot="content"><LogoScaling /></Fragment>
  *   </Block>
  */
 interface Props {
-  /** First line, set in the medium weight. */
-  title?: string;
-  /** Second line, set in the light weight at the same size. */
-  subtitle?: string;
-  /** Put the title and note in a side column beside the content. */
+  /** Put the copy and note in a side column beside the content. */
   split?: boolean;
-  /** Heading level, so each page keeps a sensible outline. */
-  as?: "h2" | "h3";
   id?: string;
   class?: string;
 }
 
-const {
-  title,
-  subtitle,
-  split = false,
-  as: Tag = "h2",
-  id,
-  class: className,
-} = Astro.props;
+const { split = false, id, class: className } = Astro.props;
 
 const hasNote = Astro.slots.has("note");
 ---
 
 <section class:list={["block", split && "block--split", className]} id={id}>
-  {
-    split && (
-      <div class="block__side">
-        {title && (
-          <Tag class="block__title doc-title">
-            {title}
-            {subtitle && <span class="doc-title__sub">{subtitle}</span>}
-          </Tag>
-        )}
-        {hasNote && (
-          <div class="block__note">
-            <slot name="note" />
-          </div>
-        )}
-      </div>
-    )
-  }
+  <div class="block__copy">
+    <slot name="copy" />
 
-  <div class="block__body">
     {
-      !split && title && (
-        <Tag class="block__title block__title--body doc-title">
-          {title}
-          {subtitle && <span class="doc-title__sub">{subtitle}</span>}
-        </Tag>
-      )
-    }
-    {
-      !split && hasNote && (
-        <div class="block__note block__note--body">
+      hasNote && (
+        <aside class="block__note">
           <slot name="note" />
-        </div>
+        </aside>
       )
     }
-    <slot />
+  </div>
+
+  <div class="block__content">
+    <slot name="content" />
   </div>
 </section>
 
@@ -88,25 +60,13 @@ const hasNote = Astro.slots.has("note");
     }
   }
 
-  .block__side {
-    display: grid;
-    gap: var(--space-m);
-    align-content: start;
-  }
-
-  .block__note {
-    max-width: var(--measure);
-  }
-
-  .block__note > :global(* + *) {
+  .block__copy > :global(* + *),
+  .block__content > :global(* + *) {
     margin-block-start: 1em;
   }
 
-  .block__note--body {
-    margin-block-end: var(--space-l);
-  }
-
-  .block__title {
+  .block__copy > :global(h2:first-child) {
+    margin-block-start: 0;
     font-family: var(--font-heading);
     font-size: var(--text-title);
     line-height: var(--text-title--line-height);
@@ -115,11 +75,11 @@ const hasNote = Astro.slots.has("note");
     text-wrap: balance;
   }
 
-  .block__title--body {
-    margin-block-end: var(--space-l);
+  .block__note {
+    max-width: var(--measure);
   }
 
-  .block__body > :global(* + *) {
+  .block__note > :global(* + *) {
     margin-block-start: 1em;
   }
 </style>

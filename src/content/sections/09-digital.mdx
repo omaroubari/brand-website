@@ -13,7 +13,16 @@ import {
   Callout,
 } from "../../components/mdx";
 
-<Block title="Website" subtitle="Desktop" >
+<Block>
+
+<Fragment slot="copy">
+
+## Website
+
+### Desktop
+
+</Fragment>
+
 <Fragment slot="note">
 
 The header carries the accent and the logotype sits inside it — the one place the accent
@@ -32,20 +41,34 @@ Replace these frames with real screenshots: drop the files into
 
 </Fragment>
 
+<Fragment slot="content">
+
 <Figure
   ratio="16 / 10"
   caption="Desktop — accent header, logotype, 12-column grid."
 />
 
+</Fragment>
 </Block>
 
-<Block title="Website" subtitle="Mobile" >
+<Block>
+
+<Fragment slot="copy">
+
+## Website
+
+### Mobile
+
+</Fragment>
+
 <Fragment slot="note">
 
 The header keeps its accent across devices. In the compact format the brandmark replaces
 the logotype, making better use of the screen while staying recognisable.
 
 </Fragment>
+
+<Fragment slot="content">
 
 <Grid cols={3}>
 
@@ -55,9 +78,19 @@ the logotype, making better use of the screen while staying recognisable.
 
 </Grid>
 
+</Fragment>
 </Block>
 
-<Block title="Website" subtitle="Favicon" >
+<Block>
+
+<Fragment slot="copy">
+
+## Website
+
+### Favicon
+
+</Fragment>
+
 <Fragment slot="note">
 
 The favicon is the brandmark and nothing else — a small mark that adds identity and
@@ -66,6 +99,8 @@ recognition to browser tabs and bookmarks.
 Ship SVG with a light/dark media query, plus a 180 px PNG for iOS.
 
 </Fragment>
+
+<Fragment slot="content">
 
 <Grid cols={3}>
 
@@ -83,9 +118,19 @@ Ship SVG with a light/dark media query, plus a 180 px PNG for iOS.
 
 </Grid>
 
+</Fragment>
 </Block>
 
-<Block title="App icon" subtitle="Black & white" >
+<Block>
+
+<Fragment slot="copy">
+
+## App icon
+
+### Black & white
+
+</Fragment>
+
 <Fragment slot="note">
 
 The app icon is drawn from the brandmark and used in black on white or white on black.
@@ -102,6 +147,8 @@ Nothing else.
 
 </Fragment>
 
+<Fragment slot="content">
+
 <Grid cols={2}>
 
 <Panel bg="black" ratio="1 / 1" caption="White on black.">
@@ -117,9 +164,19 @@ Nothing else.
 
 </Grid>
 
+</Fragment>
 </Block>
 
-<Block title="Social media" subtitle="Posts" >
+<Block>
+
+<Fragment slot="copy">
+
+## Social media
+
+### Posts
+
+</Fragment>
+
 <Fragment slot="note">
 
 Posts carry one idea: a team member, a piece of work, a line worth repeating. Visual
@@ -129,6 +186,8 @@ Profile images use the brandmark, never the logotype — it will be cropped to a
 
 </Fragment>
 
+<Fragment slot="content">
+
 <Grid cols={3}>
 
 <Figure ratio="1 / 1" caption="Work" />
@@ -137,15 +196,27 @@ Profile images use the brandmark, never the logotype — it will be cropped to a
 
 </Grid>
 
+</Fragment>
 </Block>
 
-<Block title="Social media" subtitle="Stories" >
+<Block>
+
+<Fragment slot="copy">
+
+## Social media
+
+### Stories
+
+</Fragment>
+
 <Fragment slot="note">
 
 Stories are dynamic announcements that echo the posts: team highlights, inspiring content,
 project updates. Ephemeral, but held to the same grid.
 
 </Fragment>
+
+<Fragment slot="content">
 
 <Grid cols={3}>
 
@@ -155,4 +226,5 @@ project updates. Ephemeral, but held to the same grid.
 
 </Grid>
 
+</Fragment>
 </Block>

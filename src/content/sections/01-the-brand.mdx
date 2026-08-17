@@ -7,40 +7,79 @@ import { Block, Statement, ValueGrid, PersonaCard } from "../../components/mdx";
 import portrait1 from "../../assets/photography/photo-01.jpg";
 import portrait2 from "../../assets/photography/photo-02.jpg";
 
-<Block title="Purpose" split>
+<Block split>
+
+<Fragment slot="copy">
+
+## Purpose
+
+</Fragment>
+
+<Fragment slot="content">
 
 <Statement>
   To distil creativity into simplicity — brand identities that outlast trends
   and connect with the people who matter.
 </Statement>
 
+</Fragment>
+
 </Block>
 
-<Block title="Mission" split>
-  <Statement>
-    To craft timeless brand identities that leave a lasting impression: minimal,
-    considered work that reflects a client's values, ambitions and audience. We
-    treat every identity as a system to be lived in, not a logo to be filed
-    away.
-  </Statement>
-</Block>
+<Block split>
 
-<Block title="Vision" split>
+<Fragment slot="copy">
+
+## Mission
+
+</Fragment>
+
+<Fragment slot="content">
+
 <Statement>
-    A world where brands are recognised instantly by a distilled visual identity,
-    where simplicity is understood as the most powerful communication tool available and
-    restraint reads as confidence rather than absence.
+  To craft timeless brand identities that leave a lasting impression: minimal,
+  considered work that reflects a client's values, ambitions and audience. We
+  treat every identity as a system to be lived in, not a logo to be filed away.
 </Statement>
 
+</Fragment>
 </Block>
 
-<Block title="Values" split>
+<Block split>
+
+<Fragment slot="copy">
+
+## Vision
+
+</Fragment>
+
+<Fragment slot="content">
+
+<Statement>
+  A world where brands are recognised instantly by a distilled visual identity,
+  where simplicity is understood as the most powerful communication tool
+  available and restraint reads as confidence rather than absence.
+</Statement>
+
+</Fragment>
+</Block>
+
+<Block split>
+
+<Fragment slot="copy">
+
+## Values
+
+</Fragment>
+
 <Fragment slot="note">
 
 Three commitments that decide the work when taste alone cannot. If a decision satisfies
 none of them, it is the wrong decision.
 
 </Fragment>
+
+<Fragment slot="content">
 
 <ValueGrid
   items={[
@@ -59,9 +98,19 @@ none of them, it is the wrong decision.
   ]}
 />
 
+</Fragment>
 </Block>
 
-<Block title="Audience" subtitle="01" split>
+<Block split>
+
+<Fragment slot="copy">
+
+## Audience
+
+### 01
+
+</Fragment>
+
 <Fragment slot="note">
 
 Fast-moving and time-poor. Values a partner who can translate a business position into a
@@ -69,6 +118,8 @@ visual one without a six-week detour. Reads the work before the words, so the fi
 matters more than the deck around it.
 
 </Fragment>
+
+<Fragment slot="content">
 
 <PersonaCard
   name="Faisal Al-Harbi"
@@ -82,9 +133,19 @@ matters more than the deck around it.
   ]}
 />
 
+</Fragment>
 </Block>
 
-<Block title="Audience" subtitle="02" split>
+<Block split>
+
+<Fragment slot="copy">
+
+## Audience
+
+### 02
+
+</Fragment>
+
 <Fragment slot="note">
 
 Judges craft closely and notices the details a client never will: kerning, grid discipline,
@@ -92,6 +153,8 @@ whether the system holds at small sizes. Talks about the work publicly, which is
 of our reputation travels.
 
 </Fragment>
+
+<Fragment slot="content">
 
 <PersonaCard
   name="Noor Al-Mansouri"
@@ -105,4 +168,5 @@ of our reputation travels.
   ]}
 />
 
+</Fragment>
 </Block>

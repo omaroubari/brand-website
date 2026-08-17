@@ -12,13 +12,29 @@ import {
   Panel,
 } from "../../components/mdx";
 
-<Block title="Palette">
+<Block>
+
+<Fragment slot="copy">
+
+## Palette
+
+</Fragment>
+
+<Fragment slot="content">
 
 <ColorPalette class="_full-bleed" />
 
+</Fragment>
 </Block>
 
-<Block title="Proportion" >
+<Block>
+
+<Fragment slot="copy">
+
+## Proportion
+
+</Fragment>
+
 <Fragment slot="note">
 
 Black and white carry the work. Iron and dark grey do the structural jobs — rules,
@@ -28,6 +44,8 @@ part accent to nine parts everything else.
 If a layout needs more accent to feel finished, the layout is the problem.
 
 </Fragment>
+
+<Fragment slot="content">
 
 <Grid cols={3}>
 
@@ -54,9 +72,17 @@ If a layout needs more accent to feel finished, the layout is the problem.
 
 </Grid>
 
+</Fragment>
 </Block>
 
-<Block title="Contrast" >
+<Block>
+
+<Fragment slot="copy">
+
+## Contrast
+
+</Fragment>
+
 <Fragment slot="note">
 
 Every pairing, measured. Anything under 4.5:1 fails for body copy at normal sizes; the
@@ -71,6 +97,9 @@ need 3:1 against what is behind them.
 
 </Fragment>
 
+<Fragment slot="content">
+
 <ContrastMatrix />
 
+</Fragment>
 </Block>

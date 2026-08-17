@@ -266,12 +266,14 @@ hr {
 /* The measure belongs to the text, not to the container — otherwise every
    specimen, palette and diagram inherits a 34rem cage. */
 .prose,
-.block__body {
+.block__copy,
+.block__content {
   max-width: none;
 }
 
 .prose > :where(p, ul, ol, dl, blockquote, h2, h3, h4),
-.block__body > :where(p, ul, ol, dl, blockquote, h3, h4) {
+.block__copy > :where(p, ul, ol, dl, blockquote, h2, h3, h4),
+.block__note > :where(p, ul, ol, dl, blockquote, h2, h3, h4) {
   max-width: var(--measure);
 }
 
@@ -279,9 +281,8 @@ hr {
   margin-block-start: var(--space-m);
 }
 
-/* Headings written in Markdown only. Component headings carry a class and
-   style themselves — without the `:not([class])` guard, every `<Block>` title
-   would inherit this rule's top margin and sit a full space-xl below its body. */
+/* Headings written in Markdown inherit the document's heading rhythm. The
+   first heading inside a block's copy is reset and promoted by Block itself. */
 .prose :where(h2, h3, h4):not([class]) {
   font-family: var(--font-heading);
   font-weight: var(--text-heading--font-weight);

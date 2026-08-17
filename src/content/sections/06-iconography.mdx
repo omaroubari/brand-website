@@ -5,7 +5,14 @@ summary: A single-weight line set, drawn on a 24 × 24 grid.
 
 import { Block, IconGrid, Callout, SpecList } from "../../components/mdx";
 
-<Block title="Iconset" >
+<Block>
+
+<Fragment slot="copy">
+
+## Iconset
+
+</Fragment>
+
 <Fragment slot="note">
 
 Icons enhance the appeal and function of a layout, communicating ideas and actions across
@@ -25,11 +32,21 @@ family rather than a collection.
 
 </Fragment>
 
+<Fragment slot="content">
+
 <IconGrid unit={16} version="v1.0" cols={4} />
 
+</Fragment>
 </Block>
 
-<Block title="Usage" >
+<Block>
+
+<Fragment slot="copy">
+
+## Usage
+
+</Fragment>
+
 <Fragment slot="note">
 
 Icons support words; they rarely replace them. An icon alone is only acceptable where the
@@ -47,6 +64,9 @@ emphasis, or rotate them to invent a new meaning. Ask for a new icon instead.
 
 </Fragment>
 
+<Fragment slot="content">
+
 <IconGrid unit={16} only={["arrow", "play", "inspect", "message"]} cols={4} />
 
+</Fragment>
 </Block>

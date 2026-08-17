@@ -91,22 +91,43 @@ summary: Five colours, one accent, and the ratios that hold them together.
 
 import { Block, ColorPalette } from "../../components/mdx";
 
-<Block title="Colour" subtitle="Palette">
+<Block split>
+<Fragment slot="copy">
+
+## Colour
+
+### Palette
+
+Five colours, one accent, and the ratios that hold them together.
+
+</Fragment>
+
+<Fragment slot="content">
+
+<ColorPalette />
+
+</Fragment>
+
 <Fragment slot="note">
 
 Black and white carry the work. The accent is the exception, not the rule.
 
 </Fragment>
-
-<ColorPalette />
-
 </Block>
 ```
 
-`Block` is the document's core layout: `title` sets the first line in medium,
-`subtitle` the second in light, the `note` slot holds the explanatory copy, and
-children fill the content column. It is one column by default. Add `split` to
-place the title and note in a side column beside the content.
+`Block` is the document's core layout. Its named slots are:
+
+- `copy` — the block's Markdown/MDX richtext, including its heading,
+  subheading, and any supporting paragraphs.
+- `content` — rich component content such as an image gallery, type scale
+  chart, colour palette, or specimen.
+- `note` — optional secondary Markdown/MDX copy.
+
+Blocks stack in one column by default. Add `split` to place the `copy` and
+`note` in a side column beside the `content`. Keep structural headings in the
+`copy` slot so they remain native Markdown/MDX headings and can be included in
+the page contents outline.
 
 The frontmatter `summary` becomes the standfirst on the section divider. Set
 `draft: true` to keep a section visible in `dev` but out of the build.

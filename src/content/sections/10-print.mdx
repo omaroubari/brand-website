@@ -11,11 +11,17 @@ import {
   Callout,
 } from "../../components/mdx.ts";
 
-<Block title="Stationary" subtitle="Business cards" split>
-<Fragment >
+<Block split>
+<Fragment slot="copy">
+
+## Business cards
 
 The vibrant accent front, carrying the logotype, catches the eye and leaves a lasting
 impression. The reverse stays white and holds the details.
+
+</Fragment>
+
+<Fragment slot="content">
 
 <SpecList
   items={[
@@ -26,8 +32,6 @@ impression. The reverse stays white and holds the details.
   ]}
 />
 
-</Fragment>
-
 <Grid cols={2}>
 
 <Figure ratio="85 / 55" caption="Front — accent field, logotype centred." />
@@ -35,15 +39,24 @@ impression. The reverse stays white and holds the details.
 
 </Grid>
 
+</Fragment>
 </Block>
 
-<Block title="Letterhead & envelopes" split>
+<Block split>
+<Fragment slot="copy">
+
+## Letterhead & envelopes
+
+</Fragment>
+
 <Fragment slot="note">
 
 A blend of subtlety and statement. The front stays clean and professional; the back is
 printed in full accent, so correspondence arrives recognisable before it is read.
 
 </Fragment>
+
+<Fragment slot="content">
 
 <Grid cols={2}>
 
@@ -52,9 +65,16 @@ printed in full accent, so correspondence arrives recognisable before it is read
 
 </Grid>
 
+</Fragment>
 </Block>
 
-<Block title="Posters & banners" split>
+<Block split>
+<Fragment slot="copy">
+
+## Posters & banners
+
+</Fragment>
+
 <Fragment slot="note">
 
 Not a daily tool, but a potent extension of the communication strategy — posters reach a
@@ -64,6 +84,8 @@ They are where the type scale is allowed to run to Display 1.0. One message, no 
 paragraph.
 
 </Fragment>
+
+<Fragment slot="content">
 
 <Grid cols={2}>
 
@@ -75,9 +97,16 @@ paragraph.
 
 </Grid>
 
+</Fragment>
 </Block>
 
-<Block title="Promotional materials" split>
+<Block split>
+<Fragment slot="copy">
+
+## Promotional materials
+
+</Fragment>
+
 <Fragment slot="note">
 
 Everyday objects that carry the mark: mug, cap, tote, T-shirt. Bold where the object
@@ -92,6 +121,8 @@ brandmark, single colour, with no attempt to reproduce hairlines.
 
 </Fragment>
 
+<Fragment slot="content">
+
 <Grid cols={4}>
 
 <Figure ratio="1 / 1" caption="Mug — brandmark, oversized" />
@@ -101,15 +132,24 @@ brandmark, single colour, with no attempt to reproduce hairlines.
 
 </Grid>
 
+</Fragment>
 </Block>
 
-<Block title="Signage & displays" split>
+<Block split>
+<Fragment slot="copy">
+
+## Signage & displays
+
+</Fragment>
+
 <Fragment slot="note">
 
 Signage is read at distance and at an angle. Increase clear space to twice the standard
 and check contrast against the actual wall colour, not a rendering of it.
 
 </Fragment>
+
+<Fragment slot="content">
 
 <Grid cols={2}>
 
@@ -124,15 +164,24 @@ and check contrast against the actual wall colour, not a rendering of it.
 
 </Grid>
 
+</Fragment>
 </Block>
 
-<Block title="Production" split>
+<Block split>
+<Fragment slot="copy">
+
+## Production
+
+</Fragment>
+
 <Fragment slot="note">
 
 Always proof the accent on the actual stock. It shifts noticeably on uncoated paper, and
 that shift is the single most common reason a print job comes back wrong.
 
 </Fragment>
+
+<Fragment slot="content">
 
 <SpecList
   items={[
@@ -152,4 +201,5 @@ that shift is the single most common reason a print job comes back wrong.
   ]}
 />
 
+</Fragment>
 </Block>
