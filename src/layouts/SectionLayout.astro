@@ -100,6 +100,16 @@ const tocItems = shouldRenderToc ? generateToC(headings, tocConfig) : [];
       position: fixed;
       inset-block-start: 0.75rem;
       inset-inline-start: var(--page-gutter);
+      color: var(--foreground);
+      border-color: var(--border);
+    }
+
+    :global(
+      [data-page-shell]:has(.section__mobile-toc)
+        > [data-slot="sidebar-trigger"]:hover
+    ) {
+      background-color: var(--muted);
+      color: var(--foreground);
     }
   }
 

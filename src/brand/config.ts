@@ -116,7 +116,7 @@ export const brand = defineBrand({
       foreground: "white",
       card: "graphite",
       cardForeground: "white",
-      popover: "graphite",
+      popover: "black",
       popoverForeground: "white",
       primary: "accent",
       primaryForeground: "white",

@@ -36,7 +36,9 @@ const { items, minHeadingLevel, maxHeadingLevel } = Astro.props;
 
   nav {
     z-index: 10;
-    background-color: var(--color-red-500);
+    background-color: var(--background);
+    color: var(--foreground);
+    border-bottom: var(--rule) solid var(--border);
   }
   @media (min-width: 50rem) {
     nav {
@@ -47,12 +49,10 @@ const { items, minHeadingLevel, maxHeadingLevel } = Astro.props;
     gap: 0.5rem;
     align-items: center;
     padding-inline: var(--page-gutter);
-    /* height: 3rem; */
     font-size: var(--text-sm);
-    /* outline-offset: var(--sl-outline-offset-inside); */
   }
-  summary: : marker,
-    summary: : -webkit-details-marker {
+  summary::marker,
+  summary::-webkit-details-marker {
     display: none;
   }
   .toggle {
@@ -67,18 +67,23 @@ const { items, minHeadingLevel, maxHeadingLevel } = Astro.props;
     padding-inline-end: 0.75rem;
     line-height: 1;
     background-color: var(--background);
+    color: var(--muted-foreground);
     user-select: none;
     cursor: pointer;
   }
   details[open] .toggle {
-    color: var(--sl-color-white);
-    border-color: var(--color-accent);
+    color: var(--foreground);
+    border-color: var(--primary);
   }
-  details .toggle: hover {
-    color: var(--color-white);
-    border-color: var(--sl-color-gray-2);
+  details .toggle:hover {
+    color: var(--foreground);
+    border-color: var(--border);
   }
-  : global([dir= "rtl"]) .caret {
+  details[open] .toggle:hover,
+  details[open] .toggle:focus-visible {
+    border-color: var(--primary);
+  }
+  :global([dir="rtl"]) .caret {
     transform: rotateZ(180deg);
   }
   details[open] .caret {
@@ -88,17 +93,15 @@ const { items, minHeadingLevel, maxHeadingLevel } = Astro.props;
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
-    color: var(--color-white);
+    color: var(--foreground);
   }
   .dropdown {
-    --border-top: 1px;
-    margin-top: calc(-1 * var(--border-top));
-    border: var(--border-top) solid var(--sl-color-gray-6);
-    border-top-color: var(--sl-color-hairline-shade);
-    max-height: calc(85vh - var(--sl-nav-height) - var(--sl-mobile-toc-height));
+    max-height: 85vh;
     overflow-y: auto;
-    background-color: var(--sl-color-black);
-    box-shadow: var(--sl-shadow-md);
+    background-color: var(--popover);
+    color: var(--popover-foreground);
+    box-shadow: 0 0.5rem 1.5rem
+      color-mix(in srgb, var(--foreground) 12%, transparent);
     overscroll-behavior: contain;
   }
 </style>

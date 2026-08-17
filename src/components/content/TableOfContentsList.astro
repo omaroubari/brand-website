@@ -63,12 +63,12 @@ const { toc, isMobile = false, depth = 0 } = Astro.props;
       display: flex;
       justify-content: space-between;
       gap: var(--pad-inline);
-      border-top: 1px solid var(--color-base-400);
+      border-top: 1px solid var(--border);
       border-radius: 0;
       padding-block: 0.5rem;
       padding-inline: calc(1rem * var(--depth) + var(--pad-inline))
         var(--pad-inline);
-      color: var(--color-base-400);
+      color: var(--muted-foreground);
       font-size: var(--text-sm);
       text-decoration: none;
       outline-offset: var(--sl-outline-offset-inside);
@@ -79,13 +79,13 @@ const { toc, isMobile = false, depth = 0 } = Astro.props;
     .isMobile a[aria-current="true"],
     .isMobile a[aria-current="true"]:hover,
     .isMobile a[aria-current="true"]:focus {
-      color: var(--color-foreground);
+      color: var(--foreground);
       background-color: unset;
     }
     .isMobile a[aria-current="true"]::after {
       content: "";
       width: 1rem;
-      background-color: var(--color-foreground);
+      background-color: var(--foreground);
       /* Check mark SVG icon */
       -webkit-mask-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAxNCAxNCc+PHBhdGggZD0nTTEwLjkxNCA0LjIwNmEuNTgzLjU4MyAwIDAgMC0uODI4IDBMNS43NCA4LjU1NyAzLjkxNCA2LjcyNmEuNTk2LjU5NiAwIDAgMC0uODI4Ljg1N2wyLjI0IDIuMjRhLjU4My41ODMgMCAwIDAgLjgyOCAwbDQuNzYtNC43NmEuNTgzLjU4MyAwIDAgMCAwLS44NTdaJy8+PC9zdmc+Cg==");
       mask-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAxNCAxNCc+PHBhdGggZD0nTTEwLjkxNCA0LjIwNmEuNTgzLjU4MyAwIDAgMC0uODI4IDBMNS43NCA4LjU1NyAzLjkxNCA2LjcyNmEuNTk2LjU5NiAwIDAgMC0uODI4Ljg1N2wyLjI0IDIuMjRhLjU4My41ODMgMCAwIDAgLjgyOCAwbDQuNzYtNC43NmEuNTgzLjU4MyAwIDAgMCAwLS44NTdaJy8+PC9zdmc+Cg==");
