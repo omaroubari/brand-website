@@ -63,9 +63,11 @@ const { toc, isMobile = false, depth = 0 } = Astro.props;
       display: flex;
       justify-content: space-between;
       gap: var(--pad-inline);
-      /*border-top: 1px solid var(--color-base-400);*/
+      border-top: 1px solid var(--color-base-400);
       border-radius: 0;
       padding-block: 0.5rem;
+      padding-inline: calc(1rem * var(--depth) + var(--pad-inline))
+        var(--pad-inline);
       color: var(--color-base-400);
       font-size: var(--text-sm);
       text-decoration: none;

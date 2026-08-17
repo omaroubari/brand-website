@@ -113,7 +113,7 @@ export default function SideNav({ links, currentPath, children }: Props) {
         </SidebarFooter>
       </Sidebar>
 
-      <div className="relative min-w-0 flex-1">
+      <div className="relative min-w-0 flex-1" data-page-shell>
         <SidebarTrigger className="absolute top-(--space-m) text-primary-foreground hover:bg-primary-foreground hover:text-primary border-primary-foreground inset-s-(--page-gutter) rounded-full z-30" variant="outline" size="icon" />
         {children}
       </div>

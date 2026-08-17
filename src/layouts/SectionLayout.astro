@@ -35,6 +35,17 @@ const tocItems = shouldRenderToc ? generateToC(headings, tocConfig) : [];
   title={seo?.title ?? title}
   description={seo?.description ?? summary}>
   <div class="page">
+    {
+      shouldRenderToc && (
+        <div class="section__mobile-toc lg:hidden">
+          <MobileTableOfContents
+            minHeadingLevel={tocConfig.minHeadingLevel}
+            maxHeadingLevel={tocConfig.maxHeadingLevel}
+            items={tocItems}
+          />
+        </div>
+      )
+    }
     <SectionOpener number={number} title={title} summary={summary} />
     <div class="section">
       <div class="section__content">
@@ -48,21 +59,12 @@ const tocItems = shouldRenderToc ? generateToC(headings, tocConfig) : [];
       </div>
       {
         shouldRenderToc && (
-          <aside class="scrollbar-thumb-border sticky top-0 hidden h-dvh scrollbar-thin scrollbar-track-transparent overflow-y-auto px-4 pt-(--page-gutter) pb-10 text-sm xl:block">
-            <div class="max-lg:hidden lg:block">
-              <TableOfContents
-                minHeadingLevel={tocConfig.minHeadingLevel}
-                maxHeadingLevel={tocConfig.maxHeadingLevel}
-                items={tocItems}
-              />
-            </div>
-            <div class="max-lg:block lg:hidden">
-              <MobileTableOfContents
-                minHeadingLevel={tocConfig.minHeadingLevel}
-                maxHeadingLevel={tocConfig.maxHeadingLevel}
-                items={tocItems}
-              />
-            </div>
+          <aside class="scrollbar-thumb-border sticky top-0 hidden h-dvh scrollbar-thin scrollbar-track-transparent overflow-y-auto px-4 pt-(--page-gutter) pb-10 text-sm lg:block">
+            <TableOfContents
+              minHeadingLevel={tocConfig.minHeadingLevel}
+              maxHeadingLevel={tocConfig.maxHeadingLevel}
+              items={tocItems}
+            />
           </aside>
         )
       }
@@ -73,8 +75,32 @@ const tocItems = shouldRenderToc ? generateToC(headings, tocConfig) : [];
 <style>
   .section {
     display: grid;
-    grid-template-columns: 1fr 16rem;
+    grid-template-columns: minmax(0, 1fr);
     align-items: stretch;
+  }
+
+  @media (min-width: 64rem) {
+    .section {
+      grid-template-columns: minmax(0, 1fr) 16rem;
+    }
+  }
+
+  .section__mobile-toc {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: var(--color-background);
+  }
+
+  @media (max-width: 63.999rem) {
+    :global(
+      [data-page-shell]:has(.section__mobile-toc)
+        > [data-slot="sidebar-trigger"]
+    ) {
+      position: fixed;
+      inset-block-start: 0.75rem;
+      inset-inline-start: var(--page-gutter);
+    }
   }
 
   .section__content {
