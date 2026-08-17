@@ -78,7 +78,7 @@ export default function SideNav({ links, currentPath, children }: Props) {
                     return (
                       <SidebarMenuItem key={link.id}>
                         <SidebarMenuButton
-                          className="text-sm text-muted-foreground data-active:font-medium tracking-[-0.01em] no-underline data-active:bg-transparent data-active:text-foreground hover:bg-transparent hover:text-accent"
+                          className="text-sm text-muted-foreground data-active:font-medium active:bg-transparent tracking-[-0.01em] no-underline data-active:bg-transparent data-active:text-foreground hover:bg-transparent hover:text-accent"
                           isActive={isActive}
                           render={
                             <a
