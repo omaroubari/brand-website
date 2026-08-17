@@ -1,7 +1,6 @@
 ---
 import BaseLayout from "./BaseLayout.astro";
 import Pager from "../components/nav/Pager.astro";
-import PageFooter from "../components/content/PageFooter.astro";
 import SectionOpener from "../components/content/SectionOpener.astro";
 import TableOfContents from "../components/content/TableOfContents.astro";
 import MobileTableOfContents from "../components/content/MobileTableOfContents.astro";
@@ -38,12 +37,18 @@ const tocItems = shouldRenderToc ? generateToC(headings, tocConfig) : [];
   <div class="page">
     <SectionOpener number={number} title={title} summary={summary} />
     <div class="section">
-      <article class="prose section__body">
-        <slot />
-      </article>
+      <div class="section__content">
+        <article class="prose section__body">
+          <slot />
+        </article>
+
+        <div class="section__tail">
+          <Pager id={id} />
+        </div>
+      </div>
       {
         shouldRenderToc && (
-          <aside class="scrollbar-thumb-border sticky top-0 hidden h-[calc(100dvh-4rem)] scrollbar-thin scrollbar-track-transparent overflow-y-auto px-4 pt-(--page-gutter) pb-10 text-sm xl:block">
+          <aside class="scrollbar-thumb-border sticky top-0 hidden h-dvh scrollbar-thin scrollbar-track-transparent overflow-y-auto px-4 pt-(--page-gutter) pb-10 text-sm xl:block">
             <div class="max-lg:hidden lg:block">
               <TableOfContents
                 minHeadingLevel={tocConfig.minHeadingLevel}
@@ -62,23 +67,24 @@ const tocItems = shouldRenderToc ? generateToC(headings, tocConfig) : [];
         )
       }
     </div>
-
-    <Pager id={id} />
   </div>
-
-  <PageFooter page={number} />
 </BaseLayout>
 
 <style>
   .section {
     display: grid;
     grid-template-columns: 1fr 16rem;
-    align-items: start;
+    align-items: stretch;
+  }
+
+  .section__content {
+    min-width: 0;
+    padding-inline: var(--page-gutter);
+    padding-bottom: var(--space-4xl);
   }
 
   .section__body {
     padding-block: var(--page-gutter);
-    padding-inline: var(--page-gutter);
   }
 
   .section__body > :global(h2:first-of-type) {
