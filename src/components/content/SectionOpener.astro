@@ -18,7 +18,7 @@ const { number, title, summary, bg = "accent" } = Astro.props;
 const { meta } = brand;
 ---
 
-<header class="opener full-bleed" style={`--opener-bg: var(--color-${bg});`}>
+<header class="opener" style={`--opener-bg: var(--color-${bg});`}>
   <p class="colophon opener__colophon">
     <span>{meta.name}</span>
     <span>{meta.documentTitle}</span>

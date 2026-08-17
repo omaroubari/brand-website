@@ -16,7 +16,7 @@ const { meta, contact } = brand;
       /* The cover: black field, the title set as large as the page allows,
 		    brandmark in the top-right corner. */
     }
-    <section class="cover full-bleed">
+    <section class="cover">
       <div class="cover__mark">
         <Logo mark="brandmark" on="dark" width="2.75rem" />
       </div>
@@ -177,6 +177,7 @@ const { meta, contact } = brand;
     display: grid;
     gap: var(--space-xl) var(--space-4xl);
     align-items: start;
+    padding: var(--page-gutter);
   }
 
   @media (min-width: 48rem) {
@@ -227,6 +228,7 @@ const { meta, contact } = brand;
   .ends {
     display: grid;
     gap: var(--space-xl);
+    padding: var(--page-gutter);
   }
 
   @media (min-width: 48rem) {

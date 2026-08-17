@@ -43,8 +43,8 @@ const tocItems = shouldRenderToc ? generateToC(headings, tocConfig) : [];
       </article>
       {
         shouldRenderToc && (
-          <aside class="scrollbar-thumb-border sticky top-0 me-[calc(var(--page-gutter)*-1)] hidden h-[calc(100dvh-4rem)] scrollbar-thin scrollbar-track-transparent overflow-y-auto px-4 pt-(--page-gutter) pb-10 text-sm xl:block">
-            <div class="w-60 pb-4 max-lg:hidden lg:block">
+          <aside class="scrollbar-thumb-border sticky top-0 hidden h-[calc(100dvh-4rem)] scrollbar-thin scrollbar-track-transparent overflow-y-auto px-4 pt-(--page-gutter) pb-10 text-sm xl:block">
+            <div class="max-lg:hidden lg:block">
               <TableOfContents
                 minHeadingLevel={tocConfig.minHeadingLevel}
                 maxHeadingLevel={tocConfig.maxHeadingLevel}
@@ -73,13 +73,18 @@ const tocItems = shouldRenderToc ? generateToC(headings, tocConfig) : [];
   .section {
     display: grid;
     grid-template-columns: 1fr 16rem;
-    gap: var(--space-l);
     align-items: start;
   }
 
   .section__body {
-    padding-bottom: var(--page-gutter);
+    padding-block: var(--page-gutter);
+    padding-inline: var(--page-gutter);
   }
+
+  .section__body > :global(h2:first-of-type) {
+    margin-block-start: 0;
+  }
+
   /* Spreads sit far apart, the way pages do in the printed document. */
   .section__body > :global(.block + .block) {
     margin-block-start: var(--space-4xl);

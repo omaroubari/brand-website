@@ -228,27 +228,8 @@ hr {
   }
 }
 
-/* Everything inside a page sits in the gutter; full-bleed panels opt out. */
 .page {
-  padding-inline: var(--page-gutter);
-  padding-block: var(--space-l) var(--space-2xl);
   flex: 1;
-}
-
-/*
- * Escapes the page gutter to touch the edges of the content area, the way the
- * colour fields and section dividers bleed off the printed page.
- */
-.full-bleed {
-  margin-inline: calc(var(--page-gutter) * -1);
-  width: calc(100% + var(--page-gutter) * 2);
-  max-width: none;
-}
-
-/* A bleeding first element starts at the very top of the page, so it cancels
-   the page's own top padding — covers and section dividers both rely on this. */
-.page > .full-bleed:first-child {
-  margin-block-start: calc(var(--space-l) * -1);
 }
 
 /* Wide blocks may break the measure but never the page. */
