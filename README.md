@@ -91,7 +91,7 @@ summary: Five colours, one accent, and the ratios that hold them together.
 
 import { Block, ColorPalette } from "../../components/mdx";
 
-<Block split>
+<Block>
 <Fragment slot="copy">
 
 ## Colour
@@ -124,10 +124,37 @@ Black and white carry the work. The accent is the exception, not the rule.
   chart, colour palette, or specimen.
 - `note` — optional secondary Markdown/MDX copy.
 
-Blocks stack in one column by default. Add `split` to place the `copy` and
-`note` in a side column beside the `content`. Keep structural headings in the
-`copy` slot so they remain native Markdown/MDX headings and can be included in
-the page contents outline.
+Use `Block` for split layouts only. It places the `copy` and `note` in a side
+column beside the `content`; keep structural headings in the `copy` slot so
+they remain native Markdown/MDX headings and can be included in the page
+contents outline. The named slots are the API for that layout, not a
+general-purpose wrapper.
+
+For regular grouped content, write the headings, copy, and components directly
+in the MDX flow. This keeps one subject together without creating multiple
+split blocks:
+
+```mdx
+import { Logo, Panel } from "../../components/mdx";
+
+## Logotype
+
+### Primary logo
+
+The primary logo is a logotype. Always place the supplied artwork.
+
+<Panel ratio="16 / 9">
+  <Logo mark="logotype" width="66%" />
+</Panel>
+
+### On black
+
+On dark surfaces the logotype reverses to white.
+
+<Panel bg="black" ratio="16 / 9">
+  <Logo mark="logotype" on="dark" width="66%" />
+</Panel>
+```
 
 The frontmatter `summary` becomes the standfirst on the section divider. Set
 `draft: true` to keep a section visible in `dev` but out of the build.
@@ -138,8 +165,10 @@ The frontmatter `summary` becomes the standfirst on the section divider. Set
 
 One import line per file, from [`src/components/mdx.ts`](src/components/mdx.ts).
 
-**Layout** — `Block` (the spread), `Statement` (the one oversized paragraph that
-carries a page), `Grid`, `Panel`, `Figure`, `SpecList`, `Callout`.
+**Layout** — `Block` (split layouts with `copy`, `note`, and `content` slots),
+`Statement` (the one oversized paragraph that carries a page), `Grid`, `Panel`,
+`Figure`, `SpecList`, `Callout`. For grouped content without a split layout, use
+normal MDX flow rather than wrapping it in `Block`.
 
 **Colour** — `ColorPalette`, `ColorSwatch`, `ContrastMatrix` (every pairing
 measured against WCAG, failures struck through).

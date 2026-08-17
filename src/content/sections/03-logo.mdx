@@ -4,7 +4,6 @@ summary: The logotype, the brandmark, and the rules that keep both intact.
 ---
 
 import {
-  Block,
   Panel,
   Grid,
   Logo,
@@ -17,17 +16,9 @@ import {
   Callout,
 } from "../../components/mdx";
 
-<Block>
-
-<Fragment slot="copy">
-
 ## Logotype
 
 ### Primary logo
-
-</Fragment>
-
-<Fragment slot="note">
 
 The primary logo is a logotype: the brand name set in the brand face, spaced and drawn as
 a single piece of artwork. It is the default in every context where there is room for it.
@@ -35,62 +26,26 @@ a single piece of artwork. It is the default in every context where there is roo
 Always place the supplied file. Never re-set the name in the typeface — the logotype
 carries custom spacing that live text will not reproduce.
 
-</Fragment>
-
-<Fragment slot="content">
-
 <Panel ratio="16 / 9">
   <Logo mark="logotype" width="66%" />
 </Panel>
 
-</Fragment>
-</Block>
-
-<Block>
-
-<Fragment slot="copy">
-
-## Logotype
-
 ### On black
-
-</Fragment>
-
-<Fragment slot="note">
 
 On dark surfaces the logotype reverses to white. There is no third version — the artwork
 is identical, only the colour changes.
-
-</Fragment>
-
-<Fragment slot="content">
 
 <Panel bg="black" ratio="16 / 9">
   <Logo mark="logotype" on="dark" width="66%" />
 </Panel>
 
-</Fragment>
-</Block>
-
-<Block>
-
-<Fragment slot="copy">
-
 ## Brandmark
 
 ### Monogram
 
-</Fragment>
-
-<Fragment slot="note">
-
 A monogram of the initials, unified into one shape. It stands in for the logotype where
 space is tight or the brand is already established in context: avatars, favicons, app
 icons, stamped and embroidered applications.
-
-</Fragment>
-
-<Fragment slot="content">
 
 <Grid cols={2}>
 
@@ -104,92 +59,30 @@ icons, stamped and embroidered applications.
 
 </Grid>
 
-</Fragment>
-</Block>
-
-<Block>
-
-<Fragment slot="copy">
-
-## Brandmark
-
 ### Grid
-
-</Fragment>
-
-<Fragment slot="note">
 
 The mark is built on a field grid so its proportions and alignment survive every
 application. Reproduce it from the supplied artwork — never redraw it.
 
-</Fragment>
-
-<Fragment slot="content">
-
 <ConstructionGrid mark="brandmark" cols={10} rows={10} />
-
-</Fragment>
-</Block>
-
-<Block>
-
-<Fragment slot="copy">
 
 ## Logo
 
 ### Safezone
 
-</Fragment>
-
-<Fragment slot="note">
-
 Clear space is a protective buffer. It keeps the logo legible and stops surrounding
 elements from crowding it, whatever the layout.
 
-</Fragment>
-
-<Fragment slot="content">
-
 <LogoClearspace mark="logotype" />
 
-</Fragment>
-</Block>
-
-<Block>
-
-<Fragment slot="copy">
-
-## Logo
-
 ### Usage
-
-</Fragment>
-
-<Fragment slot="note">
 
 Six approved combinations, and no others. The first is primary; reach for the rest only
 when the background forces it.
 
-</Fragment>
-
-<Fragment slot="content">
-
 <LogoColorways mark="logotype" cols={3} />
 
-</Fragment>
-</Block>
-
-<Block>
-
-<Fragment slot="copy">
-
-## Logotype
-
 ### Scaling
-
-</Fragment>
-
-<Fragment slot="note">
 
 Proportions never change, whether the logo is on a billboard or a business card. Below the
 minimum, the logotype stops reading — switch to the brandmark rather than shrinking
@@ -203,26 +96,7 @@ further.
   ]}
 />
 
-</Fragment>
-
-<Fragment slot="content">
-
-<LogoScaling mark="logotype" />
-
-</Fragment>
-</Block>
-
-<Block>
-
-<Fragment slot="copy">
-
-## Logo
-
 ### Misusage
-
-</Fragment>
-
-<Fragment slot="note">
 
 Six ways to break the logo. Each one is a real mistake we have had to correct.
 
@@ -232,10 +106,6 @@ Add a drop shadow, outline, gradient or bevel. Place the logo on a busy photogra
 a solid field behind it. Redraw or trace any part of the artwork.
 
 </Callout>
-
-</Fragment>
-
-<Fragment slot="content">
 
 <LogoMisuse
   mark="logotype"
@@ -272,6 +142,3 @@ a solid field behind it. Redraw or trace any part of the artwork.
     },
   ]}
 />
-
-</Fragment>
-</Block>

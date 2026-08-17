@@ -21,7 +21,7 @@ const { id, title, number, summary, seo, headings } = Astro.props;
 
 const tocConfig = {
   minHeadingLevel: 0,
-  maxHeadingLevel: 2,
+  maxHeadingLevel: 3,
 };
 
 const tocHeadings = headings.filter(
@@ -78,7 +78,7 @@ const tocItems = shouldRenderToc ? generateToC(headings, tocConfig) : [];
   }
 
   .section__body {
-    padding-block: var(--page-gutter);
+    padding-bottom: var(--page-gutter);
   }
   /* Spreads sit far apart, the way pages do in the printed document. */
   .section__body > :global(.block + .block) {

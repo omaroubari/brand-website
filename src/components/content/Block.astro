@@ -1,12 +1,12 @@
 ---
 /**
- * The document's core block.
+ * The document's split-layout block.
  *
  * A block has three content regions: Markdown-rich `copy`, rich component
- * `content`, and an optional `note`. Add `split` to place the copy and note in
- * a side column beside the specimen, artwork or diagram.
+ * `content`, and an optional `note`. The copy and note sit in a side column
+ * beside the specimen, artwork or diagram.
  *
- *   <Block split>
+ *   <Block>
  *     <Fragment slot="copy">
  *       ## Logotype
  *
@@ -17,18 +17,16 @@
  *   </Block>
  */
 interface Props {
-  /** Put the copy and note in a side column beside the content. */
-  split?: boolean;
   id?: string;
   class?: string;
 }
 
-const { split = false, id, class: className } = Astro.props;
+const { id, class: className } = Astro.props;
 
 const hasNote = Astro.slots.has("note");
 ---
 
-<section class:list={["block", split && "block--split", className]} id={id}>
+<section class:list={["block", className]} id={id}>
   <div class="block__copy">
     <slot name="copy" />
 
@@ -55,7 +53,7 @@ const hasNote = Astro.slots.has("note");
   }
 
   @media (min-width: 48rem) {
-    .block--split {
+    .block {
       grid-template-columns: var(--side-column) minmax(0, 1fr);
     }
   }

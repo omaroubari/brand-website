@@ -4,7 +4,6 @@ summary: Five colours, one accent, and the ratios that hold them together.
 ---
 
 import {
-  Block,
   ColorPalette,
   ContrastMatrix,
   Callout,
@@ -12,40 +11,17 @@ import {
   Panel,
 } from "../../components/mdx";
 
-<Block>
-
-<Fragment slot="copy">
-
 ## Palette
-
-</Fragment>
-
-<Fragment slot="content">
 
 <ColorPalette class="_full-bleed" />
 
-</Fragment>
-</Block>
-
-<Block>
-
-<Fragment slot="copy">
-
 ## Proportion
-
-</Fragment>
-
-<Fragment slot="note">
 
 Black and white carry the work. Iron and dark grey do the structural jobs — rules,
 secondary surfaces, quiet type. The accent is the exception, not the rule: roughly one
 part accent to nine parts everything else.
 
 If a layout needs more accent to feel finished, the layout is the problem.
-
-</Fragment>
-
-<Fragment slot="content">
 
 <Grid cols={3}>
 
@@ -72,18 +48,7 @@ If a layout needs more accent to feel finished, the layout is the problem.
 
 </Grid>
 
-</Fragment>
-</Block>
-
-<Block>
-
-<Fragment slot="copy">
-
 ## Contrast
-
-</Fragment>
-
-<Fragment slot="note">
 
 Every pairing, measured. Anything under 4.5:1 fails for body copy at normal sizes; the
 struck-through values are not available to you.
@@ -95,11 +60,4 @@ need 3:1 against what is behind them.
 
 </Callout>
 
-</Fragment>
-
-<Fragment slot="content">
-
 <ContrastMatrix />
-
-</Fragment>
-</Block>
