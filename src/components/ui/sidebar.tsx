@@ -271,10 +271,10 @@ function SidebarTrigger({
         <rect width="256" height="256" fill="none"/>
         <line
         id="sidebar-line"
-        x1="88" y1="48" x2="88" y2="208" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"
+        x1="88" y1="48" x2="88" y2="208" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="16"
         className="translate-x-0"
         />
-        <rect x="32" y="48" width="192" height="160" rx="8" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/>
+        <rect x="32" y="48" width="192" height="160" rx="8" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="16"/>
         </svg>
 
       <span className="sr-only">Toggle Sidebar</span>
