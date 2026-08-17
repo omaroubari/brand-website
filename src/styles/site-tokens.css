@@ -11,41 +11,96 @@
   --font-body: var(--font-text);
   --font-heading: var(--font-display);
 
-  /* Semantic text roles. Values are template-owned, not client-authored. */
-  --text-display: clamp(3rem, 10vw, 6rem);
-  --text-display--line-height: 0.9;
-  --text-display--letter-spacing: -0.035em;
-  --text-display--font-weight: 500;
+  /* Semantic text roles follow the compact digital ramp used by eBay:
+     46/36/30 display, 24/20/16 titles, 20/16 subtitles, 14 body, 12 caption. */
+  --text-display-plus: clamp(3rem, 8vw, 5rem);
+  --text-display-plus--line-height: 1;
+  --text-display-plus--letter-spacing: -0.04em;
+  --text-display-plus--font-weight: 600;
 
-  --text-title: clamp(1.25rem, 2.1vw, 1.875rem);
-  --text-title--line-height: 1.15;
-  --text-title--letter-spacing: -0.02em;
-  --text-title--font-weight: 500;
+  --text-display-1: clamp(2.25rem, 5vw, 2.875rem);
+  --text-display-1--line-height: 1.22;
+  --text-display-1--letter-spacing: -0.02em;
+  --text-display-1--font-weight: 600;
 
-  --text-heading: clamp(1.25rem, 2.1vw, 1.875rem);
-  --text-heading--line-height: 1.15;
-  --text-heading--letter-spacing: -0.02em;
-  --text-heading--font-weight: 500;
+  --text-display-2: clamp(2rem, 4vw, 2.25rem);
+  --text-display-2--line-height: 1.28;
+  --text-display-2--letter-spacing: -0.02em;
+  --text-display-2--font-weight: 600;
 
-  --text-body-large: clamp(1.2rem, 1.9vw, 1.25rem);
-  --text-body-large--line-height: 1.2;
-  --text-body-large--letter-spacing: -0.02em;
-  --text-body-large--font-weight: 400;
+  --text-display-3: 1.875rem;
+  --text-display-3--line-height: 1.33;
+  --text-display-3--letter-spacing: -0.02em;
+  --text-display-3--font-weight: 600;
 
-  --text-body: 1rem;
-  --text-body--line-height: 1.5;
+  --text-title-1: clamp(1.25rem, 2.1vw, 1.5rem);
+  --text-title-1--line-height: 1.33;
+  --text-title-1--letter-spacing: 0;
+  --text-title-1--font-weight: 600;
+
+  --text-title-2: clamp(1.125rem, 1.6vw, 1.25rem);
+  --text-title-2--line-height: 1.4;
+  --text-title-2--letter-spacing: 0;
+  --text-title-2--font-weight: 600;
+
+  --text-title-3: 1rem;
+  --text-title-3--line-height: 1.5;
+  --text-title-3--letter-spacing: 0;
+  --text-title-3--font-weight: 600;
+
+  --text-subtitle-1: clamp(1.125rem, 1.6vw, 1.25rem);
+  --text-subtitle-1--line-height: 1.4;
+  --text-subtitle-1--letter-spacing: 0;
+  --text-subtitle-1--font-weight: 400;
+
+  --text-subtitle-2: 1rem;
+  --text-subtitle-2--line-height: 1.5;
+  --text-subtitle-2--letter-spacing: 0;
+  --text-subtitle-2--font-weight: 400;
+
+  --text-body: 0.875rem;
+  --text-body--line-height: 1.43;
   --text-body--letter-spacing: 0;
   --text-body--font-weight: 400;
 
-  --text-label: 0.6875rem;
-  --text-label--line-height: 1.4;
-  --text-label--letter-spacing: 0.08em;
-  --text-label--font-weight: 500;
+  --text-body-bold--font-weight: 600;
 
   --text-caption: 0.75rem;
-  --text-caption--line-height: 1.4;
-  --text-caption--letter-spacing: 0.02em;
+  --text-caption--line-height: 1.33;
+  --text-caption--letter-spacing: 0;
   --text-caption--font-weight: 400;
+
+  --text-signal-1: 0.875rem;
+  --text-signal-1--line-height: 1.43;
+  --text-signal-1--letter-spacing: 0.05em;
+  --text-signal-1--font-weight: 400;
+
+  --text-signal-2: 0.625rem;
+  --text-signal-2--line-height: 1.2;
+  --text-signal-2--letter-spacing: 0.05em;
+  --text-signal-2--font-weight: 600;
+
+  /* Compatibility aliases for components that use the template roles. */
+  --text-display: var(--text-display-plus);
+  --text-display--line-height: var(--text-display-plus--line-height);
+  --text-display--letter-spacing: var(--text-display-plus--letter-spacing);
+  --text-display--font-weight: var(--text-display-plus--font-weight);
+  --text-title: var(--text-title-1);
+  --text-title--line-height: var(--text-title-1--line-height);
+  --text-title--letter-spacing: var(--text-title-1--letter-spacing);
+  --text-title--font-weight: var(--text-title-1--font-weight);
+  --text-heading: var(--text-title-2);
+  --text-heading--line-height: var(--text-title-2--line-height);
+  --text-heading--letter-spacing: var(--text-title-2--letter-spacing);
+  --text-heading--font-weight: var(--text-title-2--font-weight);
+  --text-body-large: var(--text-subtitle-1);
+  --text-body-large--line-height: var(--text-subtitle-1--line-height);
+  --text-body-large--letter-spacing: var(--text-subtitle-1--letter-spacing);
+  --text-body-large--font-weight: var(--text-subtitle-1--font-weight);
+  --text-label: var(--text-signal-2);
+  --text-label--line-height: var(--text-signal-2--line-height);
+  --text-label--letter-spacing: var(--text-signal-2--letter-spacing);
+  --text-label--font-weight: var(--text-signal-2--font-weight);
 
   --text-mono: 0.75rem;
   --text-mono--line-height: 1.5;

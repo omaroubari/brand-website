@@ -94,8 +94,8 @@ two steps.
 
 <Callout tone="note" title="On the web">
 
-Sizes use `clamp()`, so each step scales with the viewport between a floor and a ceiling.
-The print values remain the reference for anything laid out in InDesign.
+Display and title sizes use `clamp()`, so they scale with the viewport between a floor and
+a ceiling. Body and caption styles stay fixed for legibility and consistency across the UI.
 
 </Callout>
 
@@ -130,7 +130,7 @@ to stay legible.
 
 <Fragment slot="content">
 
-<TypeScale only={["Display 2.0", "Heading 1.0", "Body 2.0"]} print={false} />
+<TypeScale only={["Display 2", "Title 1", "Body"]} print={false} />
 
 </Fragment>
 </Block>

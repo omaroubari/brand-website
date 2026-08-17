@@ -66,7 +66,7 @@ const steps = only
         <p
           class="scale__sample"
           style={`font-family: var(--font-${step.font ?? "text"}); font-size: ${step.size}; line-height: ${step.lineHeight}; letter-spacing: ${step.tracking}; font-weight: ${step.weight ?? 400};${step.transform ? ` text-transform: ${step.transform};` : ""}`}>
-          {step.name ?? sample}
+          {step.sample ?? sample}
         </p>
       </div>
     ))
