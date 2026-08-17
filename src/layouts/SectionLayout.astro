@@ -3,6 +3,10 @@ import BaseLayout from "./BaseLayout.astro";
 import Pager from "../components/nav/Pager.astro";
 import PageFooter from "../components/content/PageFooter.astro";
 import SectionOpener from "../components/content/SectionOpener.astro";
+import TableOfContents from "../components/content/TableOfContents.astro";
+import MobileTableOfContents from "../components/content/MobileTableOfContents.astro";
+import type { MarkdownHeading } from "astro";
+import { generateToC } from "../lib/generate-toc";
 
 interface Props {
   id: string;
@@ -10,9 +14,22 @@ interface Props {
   number?: string;
   summary?: string;
   seo?: { title?: string; description?: string };
+  headings: MarkdownHeading[];
 }
 
-const { id, title, number, summary, seo } = Astro.props;
+const { id, title, number, summary, seo, headings } = Astro.props;
+
+const tocConfig = {
+  minHeadingLevel: 0,
+  maxHeadingLevel: 2,
+};
+
+const tocHeadings = headings.filter(
+  ({ depth }) =>
+    depth >= tocConfig.minHeadingLevel && depth <= tocConfig.maxHeadingLevel,
+);
+const shouldRenderToc = tocHeadings.length >= 2;
+const tocItems = shouldRenderToc ? generateToC(headings, tocConfig) : [];
 ---
 
 <BaseLayout
@@ -20,10 +37,31 @@ const { id, title, number, summary, seo } = Astro.props;
   description={seo?.description ?? summary}>
   <div class="page">
     <SectionOpener number={number} title={title} summary={summary} />
-
-    <article class="prose section__body">
-      <slot />
-    </article>
+    <div class="section">
+      <article class="prose section__body">
+        <slot />
+      </article>
+      {
+        shouldRenderToc && (
+          <aside class="scrollbar-thumb-border sticky top-0 me-[calc(var(--page-gutter)*-1)] hidden h-[calc(100dvh-4rem)] scrollbar-thin scrollbar-track-transparent overflow-y-auto px-4 pt-(--page-gutter) pb-10 text-sm xl:block">
+            <div class="w-60 pb-4 max-lg:hidden lg:block">
+              <TableOfContents
+                minHeadingLevel={tocConfig.minHeadingLevel}
+                maxHeadingLevel={tocConfig.maxHeadingLevel}
+                items={tocItems}
+              />
+            </div>
+            <div class="max-lg:block lg:hidden">
+              <MobileTableOfContents
+                minHeadingLevel={tocConfig.minHeadingLevel}
+                maxHeadingLevel={tocConfig.maxHeadingLevel}
+                items={tocItems}
+              />
+            </div>
+          </aside>
+        )
+      }
+    </div>
 
     <Pager id={id} />
   </div>
@@ -32,6 +70,16 @@ const { id, title, number, summary, seo } = Astro.props;
 </BaseLayout>
 
 <style>
+  .section {
+    display: grid;
+    grid-template-columns: 1fr 16rem;
+    gap: var(--space-l);
+    align-items: start;
+  }
+
+  .section__body {
+    padding-block: var(--page-gutter);
+  }
   /* Spreads sit far apart, the way pages do in the printed document. */
   .section__body > :global(.block + .block) {
     margin-block-start: var(--space-4xl);

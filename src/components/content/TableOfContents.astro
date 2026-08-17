@@ -1,0 +1,28 @@
+---
+import TableOfContentsList from "./TableOfContentsList.astro";
+
+const { items, minHeadingLevel, maxHeadingLevel } = Astro.props;
+---
+
+{
+  Astro.props && (
+    <starlight-toc
+      data-min-h={Astro.props.minHeadingLevel}
+      data-max-h={Astro.props.maxHeadingLevel}>
+      <nav aria-labelledby="starlight__on-this-page">
+        <h2 id="starlight__on-this-page">On this page</h2>
+        <TableOfContentsList toc={Astro.props.items} />
+      </nav>
+    </starlight-toc>
+  )
+}
+
+<script src="../../lib/toc"></script>
+<style>
+  #starlight__on-this-page {
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--foreground);
+    margin-block-end: 0.5rem;
+  }
+</style>

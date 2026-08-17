@@ -12,7 +12,7 @@ export async function getStaticPaths() {
 }
 
 const { entry, number } = Astro.props;
-const { Content } = await render(entry);
+const { Content, headings } = await render(entry);
 ---
 
 <SectionLayout
@@ -20,6 +20,7 @@ const { Content } = await render(entry);
   title={entry.data.title}
   number={number}
   summary={entry.data.summary}
-  seo={entry.data.seo}>
+  seo={entry.data.seo}
+  headings={headings}>
   <Content />
 </SectionLayout>

@@ -235,10 +235,6 @@ hr {
   flex: 1;
 }
 
-.page > * + * {
-  margin-block-start: var(--space-2xl);
-}
-
 /*
  * Escapes the page gutter to touch the edges of the content area, the way the
  * colour fields and section dividers bleed off the printed page.
