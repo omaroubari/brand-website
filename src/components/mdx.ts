@@ -15,6 +15,7 @@ export { default as SpecList } from "./content/SpecList.astro";
 export { default as Statement } from "./content/Statement.astro";
 
 export { default as ColorPalette } from "./brand/ColorPalette.astro";
+export { default as ColorScale } from "./brand/ColorScale.astro";
 export { default as ColorSwatch } from "./brand/ColorSwatch.astro";
 export { default as ConstructionGrid } from "./brand/ConstructionGrid.astro";
 export { default as ContrastMatrix } from "./brand/ContrastMatrix.astro";

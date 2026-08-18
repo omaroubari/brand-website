@@ -63,19 +63,34 @@ tells you what a field is for and the build fails on a typo rather than
 rendering a blank swatch.
 
 ```ts
-colors: [
-  { id: 'accent', name: 'Orange/Red', hex: '#ef3800', cmyk: [0, 87, 100, 0], tints: true },
-],
+colors: {
+  palette: [
+    {
+      id: 'orange',
+      name: 'Orange',
+      shades: {
+        50: { space: 'hex', value: '#fff3ed' },
+        500: { space: 'hex', value: '#ef3800' },
+        950: { space: 'hex', value: '#3b1000' },
+      },
+    },
+  ],
+  swatches: [
+    { id: 'orange-red', name: 'Orange/Red', color: 'orange-500', category: 'secondary' },
+  ],
+},
 
 theme: {
   default: 'system',
-  light: { surface: 'white', ink: 'black', accent: 'accent', /* … */ },
-  dark:  { surface: 'black', ink: 'white', accent: 'accent', /* … */ },
+  light: { background: 'white', foreground: 'black', primary: 'orange-500', /* … */ },
+  dark:  { background: 'black', foreground: 'white', primary: 'orange-500', /* … */ },
 },
 ```
 
-Roles map onto palette ids, and components only ever reference the role — so
-re-theming is a five-line change, and light and dark stay in step.
+Roles map onto stable shade references, and components only ever reference the
+role — so the underlying source values can be Hex or OKLCH without changing
+the UI contract. `black` and `white` are built-in colour tokens, available to
+swatches and theme roles without palette entries.
 
 ### `src/content/sections/NN-slug.mdx`
 
@@ -86,7 +101,7 @@ slug alone (`03-logo.mdx` → `/logo`). Frontmatter is validated by
 ```mdx
 ---
 title: Colour
-summary: Five colours, one accent, and the ratios that hold them together.
+summary: Two colour families, one signal colour, and the ratios that hold them together.
 ---
 
 import { Block, ColorPalette } from "../../components/mdx";
@@ -98,7 +113,7 @@ import { Block, ColorPalette } from "../../components/mdx";
 
 ### Palette
 
-Five colours, one accent, and the ratios that hold them together.
+Two colour families, one signal colour, and the ratios that hold them together.
 
 </Fragment>
 
@@ -170,8 +185,9 @@ One import line per file, from [`src/components/mdx.ts`](src/components/mdx.ts).
 `Figure`, `SpecList`, `Callout`. For grouped content without a split layout, use
 normal MDX flow rather than wrapping it in `Block`.
 
-**Colour** — `ColorPalette`, `ColorSwatch`, `ContrastMatrix` (every pairing
-measured against WCAG, failures struck through).
+**Colour** — `ColorPalette`, `ColorScale` (config-defined Tailwind-style
+shades), `ColorSwatch`, `ContrastMatrix` (every pairing measured against WCAG,
+failures struck through).
 
 **Type** — `TypeSpecimen`, `FontWeights`, `Glyphs`, `TypeScale` (renders each
 step at its real size beside its spec).

@@ -1,6 +1,13 @@
 ---
 import type { BrandSwatch } from "../../brand/types";
-import { hexToRgb, readableOn, tintRamp } from "../../brand/tokens";
+import {
+  colorCss,
+  colorToHex,
+  colorToRgb,
+  formatColor,
+  resolveColor,
+} from "../../brand/tokens";
+import { brand } from "../../brand/config";
 
 interface Props {
   color: BrandSwatch;
@@ -9,20 +16,26 @@ interface Props {
 
 const { color, print = true } = Astro.props;
 
-const ink = color.on ?? readableOn(color.hex);
-const [r, g, b] = hexToRgb(color.hex);
-const tints = color.tints ? tintRamp(color.hex) : [];
-const hex = color.hex.replace("#", "").toLowerCase();
+const resolved = resolveColor(brand, color.color);
+const source = resolved.value;
+const sourceCss = colorCss(source);
+const fg = color.on
+  ? resolveColor(brand, color.on).css
+  : "contrast-color(var(--swatch-bg))";
+const [r, g, b] = colorToRgb(source);
+const hex = colorToHex(source).replace("#", "").toLowerCase();
+const sourceLabel = source.space.toUpperCase();
+const sourceValue = formatColor(source).replace("#", "");
 ---
 
 <article
   class="swatch"
-  style={`--swatch-bg: ${color.hex}; --swatch-ink: ${ink}; --span: ${color.span ?? 1}; --rows: ${color.rows ?? 1};`}>
+  style={`--swatch-bg: ${sourceCss}; --swatch-fg: ${fg}; --span: ${color.span ?? 1}; --rows: ${color.rows ?? 1};`}>
   <button
-    class="swatch__field"
+    class="swatch__field soft-outline"
     type="button"
-    data-copy-color={color.hex}
-    aria-label={`Copy ${color.name} hex code ${color.hex} to clipboard`}>
+    data-copy-color={sourceCss}
+    aria-label={`Copy ${color.name} ${sourceLabel} value ${sourceCss} to clipboard`}>
     <span class="swatch__copy-icon" aria-hidden="true">
       <svg
         viewBox="0 0 24 24"
@@ -39,7 +52,14 @@ const hex = color.hex.replace("#", "").toLowerCase();
     <h3 class="swatch__name">{color.name}</h3>
 
     <div class="swatch__specs">
-      <p class="swatch__spec mono"><span>HEX</span> {hex}</p>
+      <p class="swatch__spec mono"><span>{sourceLabel}</span> {sourceValue}</p>
+      {
+        print && source.space !== "hex" && (
+          <p class="swatch__spec mono">
+            <span>HEX</span> {hex}
+          </p>
+        )
+      }
       {
         print && (
           <p class="swatch__spec mono">
@@ -64,19 +84,6 @@ const hex = color.hex.replace("#", "").toLowerCase();
     </div>
   </button>
 
-  {
-    tints.length > 0 && (
-      <div
-        class="swatch__tints"
-        role="img"
-        aria-label={`Tint ramp for ${color.name}`}>
-        {tints.map((t) => (
-          <span class="swatch__tint" style={`background: ${t};`} />
-        ))}
-      </div>
-    )
-  }
-
   {color.usage && <p class="caption swatch__usage">{color.usage}</p>}
 </article>
 
@@ -85,13 +92,13 @@ const hex = color.hex.replace("#", "").toLowerCase();
     grid-column: span var(--span);
     grid-row: span var(--rows);
     display: grid;
-    grid-template-rows: minmax(0, 1fr) auto auto;
+    grid-template-rows: minmax(0, 1fr) auto;
     min-width: 0;
   }
 
   .swatch__field {
     background: var(--swatch-bg);
-    color: var(--swatch-ink);
+    color: var(--swatch-fg);
     border: 0;
     font: inherit;
     text-align: start;
@@ -140,10 +147,10 @@ const hex = color.hex.replace("#", "").toLowerCase();
 	   the bottom corner, as on the printed colour page. */
   .swatch__name {
     font-family: var(--font-display);
-    font-size: var(--text-title);
-    line-height: var(--text-title--line-height);
-    letter-spacing: var(--text-title--letter-spacing);
-    font-weight: var(--text-title--font-weight);
+    font-size: var(--text-title-3);
+    line-height: var(--text-title-3--line-height);
+    letter-spacing: var(--text-title-3--letter-spacing);
+    font-weight: var(--text-title-3--font-weight);
     /* Compound names ("Orange/Red") must break rather than run into the
 		   neighbouring field. */
     overflow-wrap: break-word;
@@ -164,13 +171,6 @@ const hex = color.hex.replace("#", "").toLowerCase();
 
   .swatch__spec span {
     opacity: 0.6;
-  }
-
-  .swatch__tints {
-    display: grid;
-    grid-auto-flow: column;
-    grid-auto-columns: 1fr;
-    height: 1.5rem;
   }
 
   .swatch__usage {

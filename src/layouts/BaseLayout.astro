@@ -6,6 +6,7 @@ import { brandStyleSheet } from "../brand/tokens";
 import { getSectionLinks } from "../lib/sections";
 import { getInitialThemeAttributes } from "../lib/theme-state";
 import SideNav from "../components/nav/SideNav";
+import ColorPaletteInteractions from "../components/brand/ColorPaletteInteractions";
 import "../styles/global.css";
 import ThemeScript from "@/components/theme-script.astro";
 
@@ -78,6 +79,7 @@ const initialTheme = getInitialThemeAttributes(brand.theme.default);
   </head>
 
   <body>
+    <ColorPaletteInteractions client:load />
     {
       bare ? (
         <slot />

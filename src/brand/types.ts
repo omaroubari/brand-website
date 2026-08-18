@@ -6,62 +6,106 @@
  * when spinning up a new client.
  */
 
-/** A palette entry. `id` is the stable handle used by themes and CSS variables. */
+/** Tailwind-compatible stops used in a published brand shade scale. */
+export type BrandShadeStep =
+  50 | 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900 | 950;
+
+/** A colour stored in its source colour space. */
+export type BrandColorValue =
+  | { space: "hex"; value: string }
+  | {
+      space: "oklch";
+      /** Lightness from 0 to 1. */
+      l: number;
+      c: number;
+      /** Hue angle from 0 to 360. */
+      h: number;
+      /** Optional alpha from 0 to 1. */
+      alpha?: number;
+    };
+
+/** A stable pointer to one published shade, for example `neutral-950`. */
+export type BrandColorReference = `${string}-${BrandShadeStep}`;
+
+/** Built-in, format-independent extremes that never need palette entries. */
+export type BrandSpecialColor = "black" | "white";
+
+/** Any colour token available to components and semantic theme roles. */
+export type BrandColorToken = BrandColorReference | BrandSpecialColor;
+
+/** A named family of related, approved digital shades. */
+export interface BrandColorFamily {
+  /** Stable CSS-token prefix, e.g. `neutral` → `--color-neutral-950`. */
+  id: string;
+  /** Display name for the scale, e.g. "Neutral". */
+  name: string;
+  /** Every published shade is explicit — no runtime colour generation. */
+  shades: Record<BrandShadeStep, BrandColorValue>;
+}
+
+/** A named colour shown in the primary or secondary documentation. */
 export interface BrandSwatch {
-  /** Slug used for `--color-{id}` and referenced by `theme`. Keep it stable. */
+  /** Stable handle for documenting this named reference point. */
   id: string;
   /** Display name shown on the swatch, e.g. "Orange/Red". */
   name: string;
-  hex: string;
+  /** An approved palette shade or built-in black/white token. */
+  color: BrandColorToken;
   /** Print values, shown alongside the swatch when present. */
   cmyk?: [number, number, number, number];
   pantone?: string;
   /** One line on where this colour is allowed to be used. */
   usage?: string;
-  /** Render a tint ramp beneath the swatch. */
-  tints?: boolean;
+  /** Where this colour appears in the colour guidelines. */
+  category?: "primary" | "secondary";
   /** Number of grid columns the swatch spans on the palette page. */
   span?: 1 | 2;
   /** Number of grid rows the swatch spans on the palette page. */
   rows?: 1 | 2;
   /** Force the label/spec colour when automatic contrast picks wrong. */
-  on?: string;
+  on?: BrandColorToken;
 }
 
-/** Maps the complete shadcn colour contract onto palette ids, per scheme. */
+/** The complete, centralised colour system for a brand. */
+export interface BrandColors {
+  palette: BrandColorFamily[];
+  swatches: BrandSwatch[];
+}
+
+/** Maps the complete shadcn colour contract onto shade references, per scheme. */
 export interface BrandScheme {
-  background: string;
-  foreground: string;
-  card: string;
-  cardForeground: string;
-  popover: string;
-  popoverForeground: string;
-  primary: string;
-  primaryForeground: string;
-  secondary: string;
-  secondaryForeground: string;
-  muted: string;
-  mutedForeground: string;
-  accent: string;
-  accentForeground: string;
-  destructive: string;
-  destructiveForeground: string;
-  border: string;
-  input: string;
-  ring: string;
-  chart1: string;
-  chart2: string;
-  chart3: string;
-  chart4: string;
-  chart5: string;
-  sidebar: string;
-  sidebarForeground: string;
-  sidebarPrimary: string;
-  sidebarPrimaryForeground: string;
-  sidebarAccent: string;
-  sidebarAccentForeground: string;
-  sidebarBorder: string;
-  sidebarRing: string;
+  background: BrandColorToken;
+  foreground: BrandColorToken;
+  card: BrandColorToken;
+  cardForeground: BrandColorToken;
+  popover: BrandColorToken;
+  popoverForeground: BrandColorToken;
+  primary: BrandColorToken;
+  primaryForeground: BrandColorToken;
+  secondary: BrandColorToken;
+  secondaryForeground: BrandColorToken;
+  muted: BrandColorToken;
+  mutedForeground: BrandColorToken;
+  accent: BrandColorToken;
+  accentForeground: BrandColorToken;
+  destructive: BrandColorToken;
+  destructiveForeground: BrandColorToken;
+  border: BrandColorToken;
+  input: BrandColorToken;
+  ring: BrandColorToken;
+  chart1: BrandColorToken;
+  chart2: BrandColorToken;
+  chart3: BrandColorToken;
+  chart4: BrandColorToken;
+  chart5: BrandColorToken;
+  sidebar: BrandColorToken;
+  sidebarForeground: BrandColorToken;
+  sidebarPrimary: BrandColorToken;
+  sidebarPrimaryForeground: BrandColorToken;
+  sidebarAccent: BrandColorToken;
+  sidebarAccentForeground: BrandColorToken;
+  sidebarBorder: BrandColorToken;
+  sidebarRing: BrandColorToken;
 }
 
 export interface BrandTheme {
@@ -141,8 +185,12 @@ export interface BrandLogo {
     digital: string;
     print: string;
   };
-  /** Approved foreground/background pairs, referenced by palette id. */
-  colorways: Array<{ fg: string; bg: string; label?: string }>;
+  /** Approved foreground/background pairs, referenced by palette shade. */
+  colorways: Array<{
+    fg: BrandColorToken;
+    bg: BrandColorToken;
+    label?: string;
+  }>;
 }
 
 export interface BrandMeta {
@@ -183,7 +231,7 @@ export interface BrandDownload {
 
 export interface BrandConfig {
   meta: BrandMeta;
-  palette: BrandSwatch[];
+  colors: BrandColors;
   theme: BrandTheme;
   typography: BrandTypography;
   logo: BrandLogo;

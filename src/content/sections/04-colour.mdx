@@ -1,25 +1,44 @@
 ---
 title: Colour
-summary: Five colours, one accent, and the ratios that hold them together.
+summary: Two colour families, one signal colour, and the ratios that hold them together.
 ---
 
 import {
   ColorPalette,
+  ColorScale,
   ContrastMatrix,
   Callout,
   Grid,
   Panel,
 } from "../../components/mdx";
 
+## Primary colours
+
+Black and white are the foundation. They carry the logotype, typography, surfaces and
+the high-contrast moments of the identity.
+
+<ColorPalette category="primary" />
+
+## Secondary colours
+
+Orange/Red creates focus. The neutral scale provides the quieter structure around it;
+use the signal colour deliberately, and let the primary colours do most of the work.
+
+<ColorPalette category="secondary" />
+
 ## Palette
 
-<ColorPalette />
+These are the approved digital shades for interface work. `neutral` and `orange` are
+stable token families; the named colours above are their reference points. Use a numbered
+shade only where a UI needs a measured step lighter or darker.
+
+<ColorScale />
 
 ## Proportion
 
-Black and white carry the work. Iron and dark grey do the structural jobs — rules,
-secondary surfaces, quiet type. The accent is the exception, not the rule: roughly one
-part accent to nine parts everything else.
+Black and white carry the work. The neutral scale supplies rules, secondary surfaces and
+quiet type. Orange/Red is the exception, not the rule: roughly one part signal colour to
+nine parts everything else.
 
 If a layout needs more accent to feel finished, the layout is the problem.
 
@@ -40,7 +59,7 @@ If a layout needs more accent to feel finished, the layout is the problem.
 </Panel>
 
 <Panel
-  bg="accent"
+  bg="orange-500"
   ratio="4 / 3"
   caption="Accent — short bursts only. Never a page of running text.">
   <span class="heading-2">Aa</span>

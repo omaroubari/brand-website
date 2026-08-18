@@ -1,12 +1,13 @@
 ---
 import { brand } from "../../brand/config";
-import { readableOn, swatch } from "../../brand/tokens";
+import type { BrandColorToken } from "../../brand/types";
+import { resolveColor } from "../../brand/tokens";
 
 interface Props {
-  /** Palette id for the background. Defaults to the page surface. */
-  bg?: string;
-  /** Palette id for the contents. Defaults to whatever is legible on `bg`. */
-  fg?: string;
+  /** Palette shade reference for the background. Defaults to the page surface. */
+  bg?: BrandColorToken;
+  /** Palette shade reference for the contents. Defaults to whatever is legible on `bg`. */
+  fg?: BrandColorToken;
   /** width / height. Use to hold a consistent shape across a row. */
   ratio?: string;
   /** Remove the internal padding — for artwork that should bleed. */
@@ -28,18 +29,17 @@ const {
   class: className,
 } = Astro.props;
 
-const background = bg ? swatch(brand, bg).hex : undefined;
-const foreground = fg
-  ? swatch(brand, fg).hex
+const background = bg ? resolveColor(brand, bg) : undefined;
+const foreground = fg ? resolveColor(brand, fg) : undefined;
+const foregroundCss = fg
+  ? foreground?.css
   : background
-    ? readableOn(background)
-    : undefined;
+    ? `contrast-color(${background.css})`
+    : "black"; // fall-back to black foreground
 
 const style = [
-  background && `background: var(--color-${bg});`,
-  foreground && `color: ${fg ? `var(--color-${fg})` : foreground};`,
-  background &&
-    `border-color: color-mix(in srgb, ${foreground} 18%, transparent);`,
+  background && `background: ${background.css};`,
+  `color: ${foregroundCss};`,
   ratio && `aspect-ratio: ${ratio};`,
 ]
   .filter(Boolean)
@@ -47,7 +47,9 @@ const style = [
 ---
 
 <figure class:list={["panel-wrap", className]}>
-  <div class:list={["panel", flush && "panel--flush"]} style={style}>
+  <div
+    class:list={["panel", flush && "panel--flush", "soft-outline"]}
+    style={style}>
     {label && <span class="panel__label">{label}</span>}
     <slot />
   </div>

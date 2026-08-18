@@ -331,7 +331,6 @@ hr {
 /* ── Surfaces ─────────────────────────────────────────────────────────────── */
 
 .panel {
-  border: var(--rule) solid var(--border);
   background: var(--card);
   display: grid;
   place-items: center;
@@ -434,5 +433,12 @@ hr {
   }
   html {
     @apply font-sans;
+  }
+}
+
+@layer utilities {
+  .soft-outline {
+    outline-offset: calc(1px * -1);
+    outline: 1px solid  color-mix(in oklab, var(--color-foreground) 8%, transparent);
   }
 }

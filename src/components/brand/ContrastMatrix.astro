@@ -1,6 +1,11 @@
 ---
 import { brand } from "../../brand/config";
-import { contrastGrade, contrastRatio } from "../../brand/tokens";
+import {
+  colorCss,
+  contrastGrade,
+  contrastRatio,
+  resolveColor,
+} from "../../brand/tokens";
 
 interface Props {
   /** Restrict the matrix to these palette ids. */
@@ -13,20 +18,24 @@ interface Props {
 const { only, threshold = 4.5, class: className } = Astro.props;
 
 const colors = only
-  ? brand.palette.filter((c) => only.includes(c.id))
-  : brand.palette;
+  ? brand.colors.swatches.filter((c) => only.includes(c.id))
+  : brand.colors.swatches;
 
 const rows = colors.map((fg) => ({
   fg,
   cells: colors.map((bg) => {
-    const ratio = contrastRatio(fg.hex, bg.hex);
+    const foreground = resolveColor(brand, fg.color);
+    const background = resolveColor(brand, bg.color);
+    const ratio = contrastRatio(foreground.value, background.value);
     return {
       bg,
+      foreground,
+      background,
       ratio,
       grade: contrastGrade(ratio),
       passes: ratio >= threshold,
       // A colour on itself would print invisibly; say so instead.
-      same: bg.hex.toLowerCase() === fg.hex.toLowerCase(),
+      same: bg.color === fg.color,
     };
   }),
 }));
@@ -71,7 +80,7 @@ const rows = colors.map((fg) => ({
                     "matrix__cell",
                     !cell.passes && "matrix__cell--fail",
                   ]}
-                  style={`background: ${cell.bg.hex}; color: ${row.fg.hex};`}>
+                  style={`background: ${colorCss(cell.background.value)}; color: ${colorCss(cell.foreground.value)};`}>
                   <span class="matrix__ratio mono">
                     {cell.ratio.toFixed(2)}
                   </span>

@@ -1,0 +1,140 @@
+---
+import { brand } from "../../brand/config";
+import { colorCss, formatColor, shadeSteps } from "../../brand/tokens";
+
+interface Props {
+  /** Limit and order shade families by id. Defaults to every configured scale. */
+  only?: string[];
+  class?: string;
+}
+
+const { only, class: className } = Astro.props;
+
+const colors = only
+  ? only.map((id) => {
+      const color = brand.colors.palette.find((family) => family.id === id);
+      if (!color) throw new Error(`[ColorScale] Unknown colour id "${id}"`);
+      return color;
+    })
+  : brand.colors.palette;
+---
+
+<div
+  class:list={["colour-scale", "bleed", "escape", className]}
+  data-color-palette>
+  <div class="colour-scale__grid">
+    <div class="colour-scale__corner" aria-hidden="true"></div>
+    <div class="colour-scale__steps colour-scale__markers">
+      {
+        shadeSteps.map((step) => (
+          <div class="colour-scale__step" aria-label={`Shade ${step}`}>
+            {step}
+          </div>
+        ))
+      }
+    </div>
+    {
+      colors.map((color) => (
+        <>
+          <div class="colour-scale__name">{color.name}</div>
+          <div class="colour-scale__steps">
+            {shadeSteps.map((step) => {
+              const value = color.shades[step];
+              const css = colorCss(value);
+              return (
+                <button
+                  class="colour-scale__cell soft-outline"
+                  type="button"
+                  style={`background: var(--color-${color.id}-${step}); color: contrast-color(${css});`}
+                  data-copy-color={css}
+                  aria-label={`Copy ${color.name} ${step}, ${css}, to clipboard`}>
+                  {/* <span class="colour-scale__value mono">
+                    {formatColor(value).replace("#", "")}
+                  </span> */}
+                </button>
+              );
+            })}
+          </div>
+        </>
+      ))
+    }
+  </div>
+</div>
+
+<style>
+  .colour-scale {
+    /* border: var(--rule) solid var(--border); */
+  }
+
+  .colour-scale__grid {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 1rem;
+    align-items: center;
+  }
+
+  /* .colour-scale__corner,
+  .colour-scale__step,
+  .colour-scale__name,
+  .colour-scale__cell {
+    border-inline-end: var(--rule) solid var(--border);
+    border-block-end: var(--rule) solid var(--border);
+  } */
+
+  .colour-scale__steps {
+    display: grid;
+    grid-template-columns: repeat(11, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  .colour-scale__markers {
+    justify-items: center;
+  }
+
+  .colour-scale__step {
+    color: var(--muted-foreground);
+    font-size: var(--text-caption);
+    line-height: var(--text-caption--line-height);
+  }
+
+  .colour-scale__name {
+    padding-inline-end: var(--space-s);
+    font-size: var(--text-body);
+    font-weight: var(--text-body--font-weight);
+  }
+
+  .colour-scale__cell {
+    padding: var(--space-s);
+    border-block-start: 0;
+    border-inline-start: 0;
+    font: inherit;
+    text-align: start;
+    cursor: copy;
+    transition: filter 0.15s var(--ease);
+    aspect-ratio: 1/1;
+  }
+
+  .colour-scale__cell:hover {
+    filter: brightness(1.05);
+  }
+
+  .colour-scale__cell:focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: -2px;
+  }
+
+  .colour-scale__value {
+    font-size: var(--text-label);
+    line-height: var(--text-label--line-height);
+    letter-spacing: var(--text-label--letter-spacing);
+    text-transform: uppercase;
+  }
+
+  .colour-scale__grid > :nth-last-child(-n + 12) {
+    border-block-end: 0;
+  }
+
+  .colour-scale__grid > :nth-child(12n) {
+    border-inline-end: 0;
+  }
+</style>

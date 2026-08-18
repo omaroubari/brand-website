@@ -1,7 +1,34 @@
-import type { BrandConfig, BrandScheme, BrandSwatch } from "./types";
+import type {
+  BrandColorFamily,
+  BrandColorToken,
+  BrandColorValue,
+  BrandConfig,
+  BrandScheme,
+  BrandShadeStep,
+  BrandSpecialColor,
+  BrandSwatch,
+} from "./types";
 
-const SWATCH_ID = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+const ID = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const HEX = /^#(?:[0-9a-f]{3}|[0-9a-f]{6})$/i;
+
+/** The fixed order used by Tailwind-style shade scales. */
+export const shadeSteps = [
+  50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950,
+] as const satisfies readonly BrandShadeStep[];
+
+/** System colours that are always available without a palette declaration. */
+const specialColors: Record<BrandSpecialColor, BrandColorValue> = {
+  black: { space: "hex", value: "#000000" },
+  white: { space: "hex", value: "#ffffff" },
+};
+
+interface ResolvedColor {
+  value: BrandColorValue;
+  css: string;
+  family?: BrandColorFamily;
+  shade?: BrandShadeStep;
+}
 
 /** The canonical order and complete runtime shape of the shadcn contract. */
 export const schemeRoles = [
@@ -39,24 +66,57 @@ export const schemeRoles = [
   "sidebarRing",
 ] as const satisfies ReadonlyArray<keyof BrandScheme>;
 
-function validatePalette(brand: BrandConfig): void {
-  const seen = new Set<string>();
+function validateColor(value: BrandColorValue, label: string): void {
+  if (value.space === "hex") {
+    if (!HEX.test(value.value)) {
+      throw new Error(`[brand] Invalid hex for ${label}: "${value.value}".`);
+    }
+    return;
+  }
 
-  for (const swatch of brand.palette) {
-    if (!SWATCH_ID.test(swatch.id)) {
+  if (
+    value.l < 0 ||
+    value.l > 1 ||
+    value.c < 0 ||
+    value.h < 0 ||
+    value.h > 360 ||
+    (value.alpha !== undefined && (value.alpha < 0 || value.alpha > 1))
+  ) {
+    throw new Error(`[brand] Invalid OKLCH value for ${label}.`);
+  }
+}
+
+function validatePalette(brand: BrandConfig): void {
+  const familyIds = new Set<string>();
+  const swatchIds = new Set<string>();
+
+  for (const family of brand.colors.palette) {
+    if (!ID.test(family.id)) {
+      throw new Error(
+        `[brand] Invalid palette family id "${family.id}". Use lowercase kebab-case.`,
+      );
+    }
+    if (familyIds.has(family.id)) {
+      throw new Error(`[brand] Duplicate palette family id "${family.id}".`);
+    }
+    for (const step of shadeSteps) {
+      validateColor(family.shades[step], `${family.id}-${step}`);
+    }
+    familyIds.add(family.id);
+  }
+
+  for (const swatch of brand.colors.swatches) {
+    if (!ID.test(swatch.id)) {
       throw new Error(
         `[brand] Invalid swatch id "${swatch.id}". Use lowercase kebab-case.`,
       );
     }
-    if (seen.has(swatch.id)) {
+    if (swatchIds.has(swatch.id)) {
       throw new Error(`[brand] Duplicate swatch id "${swatch.id}".`);
     }
-    if (!HEX.test(swatch.hex)) {
-      throw new Error(
-        `[brand] Invalid hex for swatch "${swatch.id}": "${swatch.hex}".`,
-      );
-    }
-    seen.add(swatch.id);
+    resolveColor(brand, swatch.color);
+    if (swatch.on) resolveColor(brand, swatch.on);
+    swatchIds.add(swatch.id);
   }
 }
 
@@ -68,13 +128,7 @@ function validateScheme(brand: BrandConfig, name: "light" | "dark"): void {
     if (!roles.has(role)) {
       throw new Error(`[brand] ${name} scheme is missing role "${role}".`);
     }
-
-    const id = scheme[role];
-    if (!brand.palette.some((swatch) => swatch.id === id)) {
-      throw new Error(
-        `[brand] Unknown swatch id "${id}" in ${name} scheme role "${role}".`,
-      );
-    }
+    resolveColor(brand, scheme[role]);
   }
 }
 
@@ -84,50 +138,147 @@ function validateBrandTheme(brand: BrandConfig): void {
   validateScheme(brand, "dark");
 }
 
-/** Look a palette entry up by id. Throws early so typos fail the build, not the page. */
+/** Look a named documentation swatch up by id. */
 export function swatch(brand: BrandConfig, id: string): BrandSwatch {
-  validatePalette(brand);
-  const found = brand.palette.find((c) => c.id === id);
+  const found = brand.colors.swatches.find((candidate) => candidate.id === id);
   if (!found) {
-    const known = brand.palette.map((c) => c.id).join(", ");
+    const known = brand.colors.swatches.map((color) => color.id).join(", ");
     throw new Error(`[brand] Unknown swatch id "${id}". Known ids: ${known}`);
   }
   return found;
 }
 
+/** Resolve a palette shade or built-in black/white token to its source value. */
+export function resolveColor(
+  brand: BrandConfig,
+  reference: BrandColorToken,
+): ResolvedColor {
+  if (reference === "black" || reference === "white") {
+    return { value: specialColors[reference], css: reference };
+  }
+
+  const shade = shadeSteps.find((step) => reference.endsWith(`-${step}`));
+  const familyId = shade
+    ? reference.slice(0, `-${shade}`.length * -1)
+    : undefined;
+  const family = familyId
+    ? brand.colors.palette.find((candidate) => candidate.id === familyId)
+    : undefined;
+
+  if (!shade || !family) {
+    const known = [
+      ...Object.keys(specialColors),
+      ...brand.colors.palette.flatMap((candidate) =>
+        shadeSteps.map((step) => `${candidate.id}-${step}`),
+      ),
+    ].join(", ");
+    throw new Error(
+      `[brand] Unknown colour reference "${reference}". Known references: ${known}`,
+    );
+  }
+
+
+  return { family, shade, value: family.shades[shade], css: `var(--color-${reference})` };
+}
+
+/** Returns the label of a named swatch where there is one, otherwise the family and shade. */
+export function colorName(
+  brand: BrandConfig,
+  reference: BrandColorToken,
+): string {
+  if (reference === "black") return "Black";
+  if (reference === "white") return "White";
+
+  const named = brand.colors.swatches.find(
+    (candidate) => candidate.color === reference,
+  );
+  if (named) return named.name;
+
+  const { family, shade } = resolveColor(brand, reference);
+  if (!family || !shade) return reference;
+  return `${family.name} ${shade}`;
+}
+
+/** CSS-ready output from either supported source colour format. */
+export function colorCss(value: BrandColorValue): string {
+  if (value.space === "hex") return value.value;
+
+  const alpha = value.alpha === undefined ? "" : ` / ${value.alpha}`;
+  return `oklch(${value.l * 100}% ${value.c} ${value.h}${alpha})`;
+}
+
 /** `#f0f` and `#ff00ff` → `[r, g, b]`. */
 export function hexToRgb(hex: string): [number, number, number] {
-  let h = hex.replace("#", "").trim();
-  if (h.length === 3)
-    h = h
+  let value = hex.replace("#", "").trim();
+  if (value.length === 3) {
+    value = value
       .split("")
-      .map((c) => c + c)
+      .map((channel) => channel + channel)
       .join("");
-  const n = Number.parseInt(h.slice(0, 6), 16);
-  return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+  }
+  const integer = Number.parseInt(value.slice(0, 6), 16);
+  return [(integer >> 16) & 255, (integer >> 8) & 255, integer & 255];
+}
+
+function linearToSrgb(value: number): number {
+  const bounded = Math.max(0, Math.min(1, value));
+  return bounded <= 0.0031308
+    ? 12.92 * bounded
+    : 1.055 * bounded ** (1 / 2.4) - 0.055;
+}
+
+/** Convert an OKLCH source colour to sRGB for contrast and print values. */
+function oklchToRgb(
+  value: Extract<BrandColorValue, { space: "oklch" }>,
+): [number, number, number] {
+  const hue = (value.h * Math.PI) / 180;
+  const a = value.c * Math.cos(hue);
+  const b = value.c * Math.sin(hue);
+  const l = (value.l + 0.3963377774 * a + 0.2158037573 * b) ** 3;
+  const m = (value.l - 0.1055613458 * a - 0.0638541728 * b) ** 3;
+  const s = (value.l - 0.0894841775 * a - 1.291485548 * b) ** 3;
+  const r = 4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s;
+  const g = -1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s;
+  const blue = -0.0041960863 * l - 0.7034186147 * m + 1.707614701 * s;
+
+  return [r, g, blue].map((channel) =>
+    Math.round(linearToSrgb(channel) * 255),
+  ) as [number, number, number];
+}
+
+/** Convert either supported source colour format to sRGB. */
+export function colorToRgb(value: BrandColorValue): [number, number, number] {
+  return value.space === "hex" ? hexToRgb(value.value) : oklchToRgb(value);
+}
+
+/** A derived sRGB Hex value for print specs and other legacy outputs. */
+export function colorToHex(value: BrandColorValue): string {
+  return `#${colorToRgb(value)
+    .map((channel) => channel.toString(16).padStart(2, "0"))
+    .join("")}`;
+}
+
+/** A concise representation of the configured source format. */
+export function formatColor(value: BrandColorValue): string {
+  return value.space === "hex" ? value.value.toLowerCase() : colorCss(value);
 }
 
 /** Relative luminance per WCAG 2.1. */
-export function luminance(hex: string): number {
-  const channel = (v: number) => {
-    const s = v / 255;
-    return s <= 0.03928 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4;
+export function luminance(value: BrandColorValue): number {
+  const channel = (component: number) => {
+    const srgb = component / 255;
+    return srgb <= 0.03928 ? srgb / 12.92 : ((srgb + 0.055) / 1.055) ** 2.4;
   };
-  const [r, g, b] = hexToRgb(hex);
+  const [r, g, b] = colorToRgb(value);
   return 0.2126 * channel(r) + 0.7152 * channel(g) + 0.0722 * channel(b);
 }
 
-/** WCAG contrast ratio between two hex colours, 1–21. */
-export function contrastRatio(a: string, b: string): number {
-  const [hi, lo] = [luminance(a), luminance(b)].sort((x, y) => y - x);
+/** WCAG contrast ratio between two configured colour values, 1–21. */
+export function contrastRatio(a: BrandColorValue, b: BrandColorValue): number {
+  const [hi, lo] = [luminance(a), luminance(b)].sort(
+    (left, right) => right - left,
+  );
   return (hi + 0.05) / (lo + 0.05);
-}
-
-/** Black or white — whichever is legible on `hex`. */
-export function readableOn(hex: string): "#000000" | "#ffffff" {
-  return contrastRatio(hex, "#000000") >= contrastRatio(hex, "#ffffff")
-    ? "#000000"
-    : "#ffffff";
 }
 
 /** WCAG grade for a pairing, used by the contrast matrix. */
@@ -140,82 +291,76 @@ export function contrastGrade(
   return "Fail";
 }
 
-/** `steps` tints of `hex`, lightest last, matching the ramps in the printed guidelines. */
-export function tintRamp(hex: string, steps = 9): string[] {
-  const [r, g, b] = hexToRgb(hex);
-  return Array.from({ length: steps }, (_, i) => {
-    const mix = (i + 1) / (steps + 1);
-    const blend = (c: number) => Math.round(c + (255 - c) * mix);
-    return `rgb(${blend(r)} ${blend(g)} ${blend(b)})`;
-  });
-}
-
-function schemeVars(brand: BrandConfig, scheme: BrandScheme): string {
+function schemeVars(scheme: BrandScheme): string {
   return schemeRoles
-    .map((role) => {
-      const id = scheme[role];
-      return `--${kebab(role)}: var(--color-${swatch(brand, id).id});`;
-    })
+    .map((role) => `--${kebab(role)}: var(--color-${scheme[role]});`)
     .join("\n\t\t");
 }
 
-function kebab(s: string): string {
-  return s
-    .replace(/[A-Z]/g, (m) => `-${m.toLowerCase()}`)
+function kebab(value: string): string {
+  return value
+    .replace(/[A-Z]/g, (match) => `-${match.toLowerCase()}`)
     .replace(/([a-z])([0-9])/g, "$1-$2");
 }
 
 /**
  * Every brand-derived custom property, as one `<style>` body.
  *
- * Emitted once in `BaseLayout`. Colours resolve twice — a raw `--color-{id}`
- * for each palette entry, then canonical shadcn roles pointing at them per
- * scheme — so components only ever reference semantic UI intent.
+ * Built-in black/white and each family/shade pair get raw tokens. Semantic
+ * shadcn roles then point to those tokens per scheme.
  */
 export function brandStyleSheet(brand: BrandConfig): string {
   validateBrandTheme(brand);
 
-  const palette = brand.palette
-    .map((c) => `--color-${c.id}: ${c.hex};`)
-    .join("\n\t\t");
+  const palette = [
+    ...Object.entries(specialColors).map(
+      ([id, value]) => `--color-${id}: ${colorCss(value)};`,
+    ),
+    ...brand.colors.palette.flatMap((family) =>
+      shadeSteps.map(
+        (step) =>
+          `--color-${family.id}-${step}: ${colorCss(family.shades[step])};`,
+      ),
+    ),
+  ].join("\n\t\t");
 
   const darkScheme = `:root[data-theme='dark'] {
-		${schemeVars(brand, brand.theme.dark)}
+\t\t${schemeVars(brand.theme.dark)}
 
-		color-scheme: dark;
-	}`;
+\t\tcolor-scheme: dark;
+\t}`;
 
   const defaultScheme =
     brand.theme.default === "dark"
       ? `
-	:root:not([data-theme='light']):not([data-theme='dark']) {
-		${schemeVars(brand, brand.theme.dark)}
+\t:root:not([data-theme='light']):not([data-theme='dark']) {
+\t\t${schemeVars(brand.theme.dark)}
 
-		color-scheme: dark;
-	}`
+\t\tcolor-scheme: dark;
+\t}`
       : brand.theme.default === "system"
         ? `
-	@media (prefers-color-scheme: dark) {
-		:root:not([data-theme='light']) {
-			${schemeVars(brand, brand.theme.dark)}
+\t@media (prefers-color-scheme: dark) {
+\t\t:root:not([data-theme='light']) {
+\t\t\t${schemeVars(brand.theme.dark)}
 
-			color-scheme: dark;
-		}
-	}`
+\t\t\tcolor-scheme: dark;
+\t\t}
+\t}`
         : "";
 
   return `:root {
-		${palette}
+\t\t${palette}
 
-		--font-display: ${brand.typography.display};
-		--font-text: ${brand.typography.text};
-		--font-mono: ${brand.typography.mono};
+\t\t--font-display: ${brand.typography.display};
+\t\t--font-text: ${brand.typography.text};
+\t\t--font-mono: ${brand.typography.mono};
 
-		${schemeVars(brand, brand.theme.light)}
+\t\t${schemeVars(brand.theme.light)}
 
-		color-scheme: light;
-	}
+\t\tcolor-scheme: light;
+\t}
 
-	${darkScheme}
+\t${darkScheme}
 ${defaultScheme}`;
 }

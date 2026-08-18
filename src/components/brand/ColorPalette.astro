@@ -1,31 +1,34 @@
 ---
 import { brand } from "../../brand/config";
+import type { BrandSwatch } from "../../brand/types";
 import ColorSwatch from "./ColorSwatch.astro";
-import ColorPaletteInteractions from "./ColorPaletteInteractions";
 
 interface Props {
-  /** Limit and order the palette by id. Defaults to every colour, in config order. */
+  /** Limit and order named swatches by id. Defaults to every configured swatch. */
   only?: string[];
+  /** Limit the palette to a named group from the brand configuration. */
+  category?: BrandSwatch["category"];
   /** Show CMYK / RGB breakdowns alongside the hex. */
   print?: boolean;
   class?: string;
 }
 
-const { only, print = true, class: className } = Astro.props;
+const { only, category, print = true, class: className } = Astro.props;
 
 const colors = only
   ? only.map((id) => {
-      const match = brand.palette.find((c) => c.id === id);
+      const match = brand.colors.swatches.find((c) => c.id === id);
       if (!match) throw new Error(`[ColorPalette] Unknown colour id "${id}"`);
       return match;
     })
-  : brand.palette;
+  : category
+    ? brand.colors.swatches.filter((color) => color.category === category)
+    : brand.colors.swatches;
 ---
 
 <div class:list={["palette", "escape", className]} data-color-palette>
   {colors.map((c) => <ColorSwatch color={c} print={print} />)}
 </div>
-<ColorPaletteInteractions client:load />
 
 <style>
   /* Fields butt up against each other with only a hairline between, so the
