@@ -1,7 +1,12 @@
 ---
+import { defaultLocale, getLocale, LOCALE_COOKIE_NAME } from "../i18n";
+
 // Keep the old root URL useful while making every rendered page locale-prefixed.
 // Render only this route on demand so production returns a real HTTP redirect.
 export const prerender = false;
 
-return Astro.redirect("/en/", 302);
+return Astro.redirect(
+  `/${getLocale(Astro.cookies.get(LOCALE_COOKIE_NAME)?.value ?? defaultLocale)}/`,
+  302,
+);
 ---

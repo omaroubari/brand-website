@@ -9,6 +9,7 @@ import {
   getDirection,
   getLocaleFromPath,
   getLocalizedPath,
+  LOCALE_COOKIE_NAME,
   resolveBrand,
 } from "../i18n";
 import SideNav from "../components/nav/SideNav";
@@ -103,6 +104,12 @@ const alternatePath = getLocalizedPath(Astro.url.pathname, alternateLocale);
     <Font cssVariable="--font-arabic" preload />
     <style is:global set:html={tokens}></style>
     <ThemeScript defaultTheme={brand.theme.default} />
+    <script
+      is:inline
+      define:vars={{ locale, localeCookieName: LOCALE_COOKIE_NAME }}
+    >
+      document.cookie = `${localeCookieName}=${encodeURIComponent(locale)}; Path=/; Max-Age=31536000; SameSite=Lax`;
+    </script>
   </head>
 
   <body>

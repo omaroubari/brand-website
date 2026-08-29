@@ -8,6 +8,7 @@ import type {
 export const supportedLocales = ["en", "ar"] as const;
 export type Locale = BrandLocale;
 export const defaultLocale: Locale = "en";
+export const LOCALE_COOKIE_NAME = "brand-locale";
 
 /** Alias constants useful in Astro config and route generation. */
 export const SUPPORTED_LOCALES = supportedLocales;
