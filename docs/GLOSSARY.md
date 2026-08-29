@@ -68,3 +68,63 @@ duplicating the value.
 One canonical shadcn semantic CSS custom property emitted from a
 `BrandScheme`, such as `--background`, `--primary`, or `--chart-1`. It
 describes UI intent and resolves to a raw swatch variable.
+
+## Canonical brand config
+
+The complete root `BrandConfig` stored in `src/brand/config.ts`. It is the
+source of truth for brand facts and may be authored in any language. A resolved
+locale falls back directly to this config when its override omits a field.
+
+## Canonical identity
+
+The stable value that matches an item in a locale collection overlay to its
+canonical collection item. Most collections use a required `id`; typography
+weights use their numeric `weight`. Identity does not change when display copy
+is translated.
+
+## Locale override
+
+The optional structured brand data under `brand.locales[locale]`. It contains
+only language-sensitive differences for that requested locale and is layered
+directly onto the `Canonical brand config`. No locale, including English, is a
+privileged fallback layer.
+
+## Localizable field
+
+A client-authored value whose wording or script may legitimately differ by
+locale, such as a swatch name, usage note, type specimen, or download label.
+Only fields exposed by `BrandLocaleOverride` may be changed by a locale.
+
+## Invariant field
+
+A brand fact shared by every locale, such as a colour value, theme mapping,
+artwork path, URL, dimension, font foundry, or download format and size.
+Invariant fields exist only in the canonical config and cannot be changed by a
+locale override.
+
+## Sparse overlay
+
+A partial locale representation that supplies only translated fields and
+collection items. Identity-bearing collections remain arrays and match items
+by `Canonical identity`, not position. Canonical membership and order are
+preserved; omitted items and fields retain their canonical values.
+
+## Locale resolution
+
+The operation performed by `resolveBrand`: clone the canonical config and
+merge the requested locale override onto it field by field. Its only layers are
+`canonical root -> requested locale`; `locales.en` participates only when
+English is requested.
+
+## Locale-prefixed section
+
+A prose section stored at
+`src/content/sections/{locale}/NN-slug.mdx`. The directory selects the locale,
+the numeric prefix determines order and section number, and the remaining slug
+defines the locale-prefixed route.
+
+## UI dictionary
+
+The complete template-owned set of interface labels for one supported locale
+in `src/i18n/index.ts`. UI dictionaries translate navigation and controls;
+they do not contain client-authored brand content.
