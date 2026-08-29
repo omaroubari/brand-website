@@ -1,5 +1,6 @@
 ---
 import { brand } from "../../brand/config";
+import { getLocaleFromPath, getUi, resolveBrand } from "../../i18n";
 
 /**
  * The running foot from the printed document: brand and copyright left,
@@ -12,13 +13,20 @@ interface Props {
 }
 
 const { page } = Astro.props;
+const locale = getLocaleFromPath(Astro.url.pathname);
+const localizedBrand = resolveBrand(brand, locale);
+const ui = getUi(locale);
 ---
 
 <footer class="foot">
-  <p class="caption">{brand.meta.name}©</p>
-  <p class="caption foot__mid">{brand.meta.documentTitle} Document</p>
+  <p class="caption">{localizedBrand.meta.name}©</p>
+  <p class="caption foot__mid">
+    {localizedBrand.meta.documentTitle}
+    {" "}
+    {ui.document}
+  </p>
   <p class="caption foot__end tnum">
-    {page ?? `Version ${brand.meta.version}`}
+    {page ?? `${ui.version} ${localizedBrand.meta.version}`}
   </p>
 </footer>
 

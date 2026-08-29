@@ -1,6 +1,7 @@
 ---
 import { Image } from "astro:assets";
 import type { ImageMetadata } from "astro";
+import { getLocaleFromPath, getUi } from "../../i18n";
 
 interface Props {
   /**
@@ -29,6 +30,7 @@ const {
   bg,
   class: className,
 } = Astro.props;
+const ui = getUi(getLocaleFromPath(Astro.url.pathname));
 
 const style = [
   `--ratio: ${ratio};`,
@@ -62,7 +64,7 @@ const style = [
         />
       ) : (
         <span class="figure__placeholder caption">
-          {caption ?? "Artwork pending"}
+          {caption ?? ui.artworkPending}
         </span>
       )
     }

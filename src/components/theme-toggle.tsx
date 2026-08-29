@@ -4,6 +4,7 @@ import { useTheme } from "@/hooks/use-theme";
 import { getSuggestedThemeSetting, type ThemeSetting } from "@/lib/theme-state";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { getUi, type Locale } from "@/i18n";
 
 /**
  * Theme control driven by the shared theme state (@/lib/theme via useTheme).
@@ -16,11 +17,16 @@ export function ThemeToggle({
   onClick,
   size = "icon",
   variant = "link",
+  locale = "en",
   ...props
-}: React.ComponentProps<typeof Button> & { defaultTheme?: ThemeSetting }) {
+}: React.ComponentProps<typeof Button> & {
+  defaultTheme?: ThemeSetting;
+  locale?: Locale;
+}) {
   const theme = useTheme({ defaultTheme });
   const mode = getSuggestedThemeSetting(theme);
-  const actionLabel = `Switch to ${mode} mode`;
+  const labels = getUi(locale);
+  const actionLabel = `${labels.switchToTheme} ${labels[mode]} ${labels.language.toLowerCase()}`;
 
   return (
     <Button

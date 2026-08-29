@@ -5,17 +5,23 @@ interface Props {
   title?: string;
   class?: string;
 }
+import { getLocaleFromPath, getUi } from "../../i18n";
 
 const { tone = "note", title, class: className } = Astro.props;
 
 const marks = { note: "—", do: "✓", dont: "✕" } as const;
-const labels = { note: "Note", do: "Do", dont: "Don't" } as const;
+const labels = getUi(getLocaleFromPath(Astro.url.pathname));
+const toneLabels = {
+  note: labels.note,
+  do: labels.do,
+  dont: labels.dont,
+} as const;
 ---
 
 <aside class:list={["callout", `callout--${tone}`, className]}>
   <p class="callout__head">
     <span class="callout__mark" aria-hidden="true">{marks[tone]}</span>
-    <span class="label callout__label">{title ?? labels[tone]}</span>
+    <span class="label callout__label">{title ?? toneLabels[tone]}</span>
   </p>
   <div class="callout__body">
     <slot />

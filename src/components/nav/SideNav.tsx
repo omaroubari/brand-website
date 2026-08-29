@@ -20,16 +20,24 @@ import {
 import ThemeToggle from "@/components/theme-toggle";
 import { brand } from "../../brand/config";
 import type { SectionLink } from "../../lib/sections";
+import {
+  getLocalizedPath,
+  getUi,
+  localeInfo,
+  resolveBrand,
+  type Locale,
+} from "../../i18n";
 
 interface Props {
   links: SectionLink[];
   currentPath: string;
+  locale: Locale;
   children?: ReactNode;
 }
 
-function BrandLogo() {
+function BrandLogo({ altText }: { altText?: string }) {
   const artwork = brand.logo.logotype;
-  const alt = artwork.altText ?? `${brand.meta.name} logotype`;
+  const alt = altText ?? artwork.altText ?? `${brand.meta.name} logotype`;
 
   return (
     <span className="">
@@ -52,25 +60,39 @@ function BrandLogo() {
   );
 }
 
-export default function SideNav({ links, currentPath, children }: Props) {
+export default function SideNav({
+  links,
+  currentPath,
+  locale,
+  children,
+}: Props) {
+  const localizedBrand = resolveBrand(brand, locale);
+  const ui = getUi(locale);
+  const otherLocale = locale === "en" ? "ar" : "en";
+
   return (
     <SidebarProvider className="min-w-0" defaultOpen>
-      <Sidebar className="h-full">
+      <Sidebar
+        side={locale === "ar" ? "right" : "left"}
+        locale={locale}
+        className="h-full">
         <SidebarHeader>
           <div className="flex items-center justify-between ps-2 pt-2">
             <a
               className=""
-              href="/"
-              aria-label={`${brand.meta.name} ${brand.meta.documentTitle}`}>
-              <BrandLogo />
+              href={`/${locale}/`}
+              aria-label={`${localizedBrand.meta.name} ${localizedBrand.meta.documentTitle}`}>
+              <BrandLogo altText={localizedBrand.logo.logotype.altText} />
             </a>
           </div>
         </SidebarHeader>
         <SidebarContent>
           <SidebarGroup>
-            <SidebarGroupLabel className="text-(length:--text-body) font-medium text-muted-foreground">Contents</SidebarGroupLabel>
+            <SidebarGroupLabel className="text-muted-foreground text-(length:--text-body) font-medium">
+              {ui.contents}
+            </SidebarGroupLabel>
             <SidebarGroupContent>
-              <nav aria-label="Sections">
+              <nav aria-label={ui.sections}>
                 <SidebarMenu>
                   {links.map((link) => {
                     const isActive = currentPath === link.href;
@@ -78,7 +100,7 @@ export default function SideNav({ links, currentPath, children }: Props) {
                     return (
                       <SidebarMenuItem key={link.id}>
                         <SidebarMenuButton
-                          className="text-sm text-muted-foreground data-active:font-medium active:bg-transparent tracking-[-0.01em] no-underline data-active:bg-transparent data-active:text-foreground hover:bg-transparent hover:text-accent"
+                          className="text-muted-foreground data-active:text-foreground hover:text-accent text-sm tracking-[-0.01em] no-underline hover:bg-transparent active:bg-transparent data-active:bg-transparent data-active:font-medium"
                           isActive={isActive}
                           render={
                             <a
@@ -104,17 +126,33 @@ export default function SideNav({ links, currentPath, children }: Props) {
         </SidebarContent>
 
         <SidebarFooter className="gap-[var(--space-m)] p-[var(--space-m)]">
-          <ThemeToggle defaultTheme={brand.theme.default} />
+          <ThemeToggle defaultTheme={brand.theme.default} locale={locale} />
+          <nav
+            className="flex items-center gap-2 text-[length:var(--text-caption)]"
+            aria-label={ui.language}>
+            <a href={getLocalizedPath(currentPath, locale)} aria-current="page">
+              {localeInfo[locale].nativeLabel}
+            </a>
+            <span aria-hidden="true">/</span>
+            <a href={getLocalizedPath(currentPath, otherLocale)}>
+              {localeInfo[otherLocale].nativeLabel}
+            </a>
+          </nav>
           <p className="text-[length:var(--text-caption)] leading-[var(--text-caption--line-height)] tracking-[var(--text-caption--letter-spacing)] text-[var(--muted-foreground)]">
-            {brand.meta.name} © {brand.meta.year}
+            {localizedBrand.meta.name} © {localizedBrand.meta.year}
             <br />
-            Version {brand.meta.version}
+            {ui.version} {localizedBrand.meta.version}
           </p>
         </SidebarFooter>
       </Sidebar>
 
       <div className="relative min-w-0 flex-1" data-page-shell>
-        <SidebarTrigger className="absolute top-(--space-m) text-primary-foreground hover:bg-primary-foreground hover:text-primary border-primary-foreground inset-s-(--page-gutter) rounded-full z-30" variant="outline" size="icon" />
+        <SidebarTrigger
+          locale={locale}
+          className="text-primary-foreground hover:bg-primary-foreground hover:text-primary border-primary-foreground absolute inset-s-(--page-gutter) top-(--space-m) z-30 rounded-full"
+          variant="outline"
+          size="icon"
+        />
         {children}
       </div>
     </SidebarProvider>

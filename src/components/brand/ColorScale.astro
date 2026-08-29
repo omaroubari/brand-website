@@ -1,6 +1,7 @@
 ---
 import { brand } from "../../brand/config";
-import { colorCss, formatColor, shadeSteps } from "../../brand/tokens";
+import { colorCss, shadeSteps } from "../../brand/tokens";
+import { getLocaleFromPath, getUi, resolveBrand } from "../../i18n";
 
 interface Props {
   /** Limit and order shade families by id. Defaults to every configured scale. */
@@ -9,14 +10,19 @@ interface Props {
 }
 
 const { only, class: className } = Astro.props;
+const locale = getLocaleFromPath(Astro.url.pathname);
+const localizedBrand = resolveBrand(brand, locale);
+const ui = getUi(locale);
 
 const colors = only
   ? only.map((id) => {
-      const color = brand.colors.palette.find((family) => family.id === id);
+      const color = localizedBrand.colors.palette.find(
+        (family) => family.id === id,
+      );
       if (!color) throw new Error(`[ColorScale] Unknown colour id "${id}"`);
       return color;
     })
-  : brand.colors.palette;
+  : localizedBrand.colors.palette;
 ---
 
 <div
@@ -27,7 +33,7 @@ const colors = only
     <div class="colour-scale__steps colour-scale__markers">
       {
         shadeSteps.map((step) => (
-          <div class="colour-scale__step" aria-label={`Shade ${step}`}>
+          <div class="colour-scale__step" aria-label={`${ui.shade} ${step}`}>
             {step}
           </div>
         ))
@@ -47,7 +53,7 @@ const colors = only
                   type="button"
                   style={`background: var(--color-${color.id}-${step}); color: contrast-color(${css});`}
                   data-copy-color={css}
-                  aria-label={`Copy ${color.name} ${step}, ${css}, to clipboard`}>
+                  aria-label={`${ui.copy} ${color.name} ${step}, ${ui.copyToClipboard}`}>
                   {/* <span class="colour-scale__value mono">
                     {formatColor(value).replace("#", "")}
                   </span> */}

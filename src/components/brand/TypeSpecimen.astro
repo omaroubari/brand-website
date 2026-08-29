@@ -1,5 +1,6 @@
 ---
 import { brand } from "../../brand/config";
+import { getLocaleFromPath, getUi, resolveBrand } from "../../i18n";
 
 interface Props {
   /** Which family to show. */
@@ -17,7 +18,10 @@ const {
   class: className,
 } = Astro.props;
 
-const family = brand.typography.families.find((f) => f.label === font);
+const locale = getLocaleFromPath(Astro.url.pathname);
+const localizedBrand = resolveBrand(brand, locale);
+const family = localizedBrand.typography.families.find((f) => f.id === font);
+const ui = getUi(locale);
 ---
 
 <div class:list={["specimen", "escape", className]}>
@@ -27,7 +31,7 @@ const family = brand.typography.families.find((f) => f.label === font);
     {glyph}
   </p>
   <div class="specimen__meta">
-    <p class="label">{font === "display" ? "Display" : "Text"}</p>
+    <p class="label">{font === "display" ? ui.display : ui.text}</p>
     <p class="specimen__name" style={`font-family: var(--font-${font});`}>
       {family?.name}
     </p>
@@ -37,7 +41,7 @@ const family = brand.typography.families.find((f) => f.label === font);
       family?.url && (
         <p class="caption">
           <a href={family.url} rel="noreferrer noopener" target="_blank">
-            Licence and downloads
+            {ui.licenceAndDownloads}
           </a>
         </p>
       )
@@ -62,7 +66,6 @@ const family = brand.typography.families.find((f) => f.label === font);
 
   .specimen__glyph {
     font-size: clamp(7rem, 26vw, 20rem);
-    line-height: 0.8;
     letter-spacing: -0.04em;
     margin: 0;
   }

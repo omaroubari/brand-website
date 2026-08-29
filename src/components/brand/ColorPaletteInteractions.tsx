@@ -1,6 +1,7 @@
 import * as React from "react";
 
 import { Toaster, toast } from "../ui/toast";
+import { getUi, type Locale } from "../../i18n";
 
 async function copyToClipboard(value: string): Promise<boolean> {
   try {
@@ -27,7 +28,13 @@ async function copyToClipboard(value: string): Promise<boolean> {
   }
 }
 
-export default function ColorPaletteInteractions() {
+export default function ColorPaletteInteractions({
+  locale = "en",
+}: {
+  locale?: Locale;
+}) {
+  const labels = getUi(locale);
+
   React.useEffect(() => {
     const palettes = document.querySelectorAll<HTMLElement>(
       "[data-color-palette]",
@@ -44,10 +51,10 @@ export default function ColorPaletteInteractions() {
       void copyToClipboard(hex).then((copied) => {
         toast.add({
           id: "color-copy",
-          title: copied ? "Colour copied" : "Copy failed",
+          title: copied ? labels.colourCopied : labels.copyFailed,
           description: copied
-            ? `${hex} copied to clipboard.`
-            : `Unable to copy ${hex}.`,
+            ? `${hex} ${labels.copied.toLowerCase()}.`
+            : `${labels.copyFailed}: ${hex}`,
           type: copied ? "success" : "error",
           timeout: 1800,
         });
@@ -63,7 +70,7 @@ export default function ColorPaletteInteractions() {
         palette.removeEventListener("click", handleClick);
       });
     };
-  }, []);
+  }, [labels]);
 
   return <Toaster />;
 }

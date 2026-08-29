@@ -1,6 +1,7 @@
 ---
 import { brand } from "../../brand/config";
 import type { BrandDownload } from "../../brand/types";
+import { getLocaleFromPath, resolveBrand } from "../../i18n";
 
 interface Props {
   /** Defaults to `downloads` in the brand config. */
@@ -8,7 +9,16 @@ interface Props {
   class?: string;
 }
 
-const { items = brand.downloads ?? [], class: className } = Astro.props;
+const locale = getLocaleFromPath(Astro.url.pathname);
+const localizedBrand = resolveBrand(brand, locale);
+const configuredItems = Astro.props.items ?? localizedBrand.downloads ?? [];
+const items = configuredItems.map(
+  (item) =>
+    localizedBrand.downloads?.find((download) =>
+      item.id ? download.id === item.id : download.href === item.href,
+    ) ?? item,
+);
+const { class: className } = Astro.props;
 ---
 
 {

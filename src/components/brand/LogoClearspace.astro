@@ -1,6 +1,7 @@
 ---
 import { brand } from "../../brand/config";
 import Logo from "./Logo.astro";
+import { getLocaleFromPath, getUi } from "../../i18n";
 
 interface Props {
   mark?: "logotype" | "brandmark";
@@ -10,6 +11,10 @@ interface Props {
 const { mark = "logotype", class: className } = Astro.props;
 
 const { ratio, unit } = brand.logo.clearspace;
+const ui = getUi(getLocaleFromPath(Astro.url.pathname));
+const clearspaceCopy = ui.clearspaceInstruction
+  .replace("{unit}", unit)
+  .replace("{mark}", mark);
 /** Clear space is expressed as a fraction of the logo's own height. */
 const pad = `calc(var(--logo-h) * ${ratio})`;
 ---
@@ -30,9 +35,7 @@ const pad = `calc(var(--logo-h) * ${ratio})`;
   </div>
 
   <figcaption class="caption clear__caption">
-    <strong>x</strong> = {unit}. Keep at least <strong>x</strong> of clear space on
-    every side of the {mark}. No type, image or graphic element may enter this
-    zone.
+    {clearspaceCopy}
   </figcaption>
 </figure>
 

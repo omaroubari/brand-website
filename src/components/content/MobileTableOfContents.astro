@@ -1,7 +1,9 @@
 ---
 import TableOfContentsList from "./TableOfContentsList.astro";
+import { getLocaleFromPath, getUi } from "../../i18n";
 
 const { items, minHeadingLevel, maxHeadingLevel } = Astro.props;
+const labels = getUi(getLocaleFromPath(Astro.url.pathname));
 ---
 
 {
@@ -16,7 +18,7 @@ const { items, minHeadingLevel, maxHeadingLevel } = Astro.props;
             class="mx-auto flex w-full">
             <div class="flex w-full items-center justify-between gap-2 py-3">
               <span class="toggle text-muted-foreground ms-10 flex">
-                On this page
+                {labels.onThisPage}
                 {/* <ArrowRight /> */}
               </span>
               <span class="display-current" />

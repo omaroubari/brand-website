@@ -1,5 +1,6 @@
 ---
 import { brand } from "../../brand/config";
+import { getLocaleFromPath, resolveBrand } from "../../i18n";
 
 interface Props {
   font?: "display" | "text";
@@ -9,7 +10,8 @@ interface Props {
 }
 
 const { font = "display", sample, class: className } = Astro.props;
-const weights = brand.typography.weights;
+const locale = getLocaleFromPath(Astro.url.pathname);
+const weights = resolveBrand(brand, locale).typography.weights;
 ---
 
 <ul class:list={["weights", "escape", className]}>

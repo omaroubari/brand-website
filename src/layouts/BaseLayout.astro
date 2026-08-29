@@ -5,6 +5,12 @@ import { brand } from "../brand/config";
 import { brandStyleSheet } from "../brand/tokens";
 import { getSectionLinks } from "../lib/sections";
 import { getInitialThemeAttributes } from "../lib/theme-state";
+import {
+  getDirection,
+  getLocaleFromPath,
+  getLocalizedPath,
+  resolveBrand,
+} from "../i18n";
 import SideNav from "../components/nav/SideNav";
 import ColorPaletteInteractions from "../components/brand/ColorPaletteInteractions";
 import "../styles/global.css";
@@ -18,53 +24,73 @@ interface Props {
   class?: string;
 }
 
-const {
-  title,
-  description = brand.meta.description,
-  bare = false,
-  class: className,
-} = Astro.props;
+const { title, description, bare = false, class: className } = Astro.props;
+
+const locale = getLocaleFromPath(Astro.url.pathname);
+const localizedBrand = resolveBrand(brand, locale);
 
 const pageTitle = title
-  ? `${title} — ${brand.meta.name} ${brand.meta.documentTitle}`
-  : `${brand.meta.name} — ${brand.meta.documentTitle}`;
+  ? `${title} — ${localizedBrand.meta.name} ${localizedBrand.meta.documentTitle}`
+  : `${localizedBrand.meta.name} — ${localizedBrand.meta.documentTitle}`;
 
 const canonical = new URL(
   Astro.url.pathname,
   Astro.site ?? "https://localhost",
 );
-const links = await getSectionLinks();
 const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
 const tokens = brandStyleSheet(brand);
 const initialTheme = getInitialThemeAttributes(brand.theme.default);
+const alternateLocale = locale === "en" ? "ar" : "en";
+const alternatePath = getLocalizedPath(Astro.url.pathname, alternateLocale);
 ---
 
 <!doctype html>
 <html
-  lang="en"
+  lang={locale}
+  dir={getDirection(locale)}
   data-theme={initialTheme.theme}
   data-theme-preference={initialTheme.preference}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{pageTitle}</title>
-    <meta name="description" content={description} />
+    <meta
+      name="description"
+      content={description ?? localizedBrand.meta.description}
+    />
     <link rel="canonical" href={canonical.href} />
+    <link rel="alternate" hreflang={locale} href={canonical.href} />
+    <link
+      rel="alternate"
+      hreflang={alternateLocale}
+      href={new URL(alternatePath, Astro.site ?? "https://localhost").href}
+    />
+    <link
+      rel="alternate"
+      hreflang="x-default"
+      href={new URL(
+        getLocalizedPath(Astro.url.pathname, "en"),
+        Astro.site ?? "https://localhost",
+      ).href}
+    />
     <link
       rel="icon"
-      href={brand.logo.favicon ?? "/favicon.svg"}
+      href={localizedBrand.logo.favicon ?? "/favicon.svg"}
       type="image/svg+xml"
     />
 
     <meta property="og:type" content="website" />
     <meta property="og:title" content={pageTitle} />
-    <meta property="og:description" content={description} />
+    <meta
+      property="og:description"
+      content={description ?? localizedBrand.meta.description}
+    />
     <meta property="og:url" content={canonical.href} />
     {
-      brand.meta.ogImage && (
+      localizedBrand.meta.ogImage && (
         <meta
           property="og:image"
-          content={new URL(brand.meta.ogImage, canonical).href}
+          content={new URL(localizedBrand.meta.ogImage, canonical).href}
         />
       )
     }
@@ -74,18 +100,23 @@ const initialTheme = getInitialThemeAttributes(brand.theme.default);
     <meta name="robots" content="noindex, nofollow" />
 
     <Font cssVariable="--font-brand" preload />
+    <Font cssVariable="--font-arabic" preload />
     <style is:global set:html={tokens}></style>
     <ThemeScript defaultTheme={brand.theme.default} />
   </head>
 
   <body>
-    <ColorPaletteInteractions client:load />
+    <ColorPaletteInteractions locale={locale} client:load />
     {
       bare ? (
         <slot />
       ) : (
         <div class:list={["min-h-dvh", className]}>
-          <SideNav links={links} currentPath={currentPath} client:load>
+          <SideNav
+            links={await getSectionLinks(locale)}
+            currentPath={currentPath}
+            locale={locale}
+            client:load>
             <main class="main" id="content">
               <slot />
             </main>

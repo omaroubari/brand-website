@@ -1,5 +1,6 @@
 ---
 import { brand } from "../../brand/config";
+import { getLocaleFromPath, getUi, resolveBrand } from "../../i18n";
 
 interface Props {
   /** Restrict to these style names, in this order. */
@@ -17,14 +18,22 @@ const {
   sample = "Crafting strategic visual brand identities",
   class: className,
 } = Astro.props;
+const locale = getLocaleFromPath(Astro.url.pathname);
+const localizedBrand = resolveBrand(brand, locale);
+const ui = getUi(locale);
 
 const steps = only
   ? only.map((name) => {
-      const match = brand.typography.scale.find((s) => s.name === name);
-      if (!match) throw new Error(`[TypeScale] Unknown type style "${name}"`);
-      return match;
+      const baseMatch = brand.typography.scale.find((s) => s.name === name);
+      if (!baseMatch)
+        throw new Error(`[TypeScale] Unknown type style "${name}"`);
+      return (
+        localizedBrand.typography.scale.find((s) =>
+          baseMatch.id ? s.id === baseMatch.id : s.name === baseMatch.name,
+        ) ?? baseMatch
+      );
     })
-  : brand.typography.scale;
+  : localizedBrand.typography.scale;
 ---
 
 <div class:list={["scale", "escape", className]}>
@@ -36,24 +45,24 @@ const steps = only
           {step.role && <p class="caption scale__role">{step.role}</p>}
           <dl class="scale__specs mono">
             <div>
-              <dt>Size</dt>
+              <dt>{ui.size}</dt>
               <dd>{step.size}</dd>
             </div>
             <div>
-              <dt>Leading</dt>
+              <dt>{ui.leading}</dt>
               <dd>{step.lineHeight}</dd>
             </div>
             <div>
-              <dt>Tracking</dt>
+              <dt>{ui.tracking}</dt>
               <dd>{step.tracking}</dd>
             </div>
             <div>
-              <dt>Weight</dt>
+              <dt>{ui.weight}</dt>
               <dd>{step.weight ?? 400}</dd>
             </div>
             {print && step.print && (
               <div class="scale__print">
-                <dt>Print</dt>
+                <dt>{ui.print}</dt>
                 <dd>
                   {step.print.size} / {step.print.leading} /{" "}
                   {step.print.tracking}

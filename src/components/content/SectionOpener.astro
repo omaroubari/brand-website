@@ -1,5 +1,6 @@
 ---
 import { brand } from "../../brand/config";
+import { getLocaleFromPath, getUi, resolveBrand } from "../../i18n";
 
 /**
  * The divider page that opens every section of the printed document: a
@@ -15,14 +16,16 @@ interface Props {
 }
 
 const { number, title, summary, bg = "accent" } = Astro.props;
-const { meta } = brand;
+const locale = getLocaleFromPath(Astro.url.pathname);
+const { meta } = resolveBrand(brand, locale);
+const ui = getUi(locale);
 ---
 
 <header class="opener" style={`--opener-bg: var(--color-${bg});`}>
   <p class="colophon opener__colophon">
     <span>{meta.name}</span>
     <span>{meta.documentTitle}</span>
-    <span>Version {meta.version}</span>
+    <span>{ui.version} {meta.version}</span>
     <span>{meta.year}©</span>
   </p>
 

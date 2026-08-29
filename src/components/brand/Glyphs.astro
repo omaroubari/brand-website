@@ -1,4 +1,6 @@
 ---
+import { getLocaleFromPath, getUi } from "../../i18n";
+
 interface Props {
   font?: "display" | "text";
   weight?: number;
@@ -7,22 +9,28 @@ interface Props {
   class?: string;
 }
 
-const {
-  font = "display",
-  weight = 400,
-  sets = [
-    { label: "Uppercase", chars: "ABCDEFGHIJKLMNOPQRSTUVWXYZ" },
-    { label: "Lowercase", chars: "abcdefghijklmnopqrstuvwxyz" },
-    { label: "Numerals", chars: "0123456789" },
-    { label: "Punctuation", chars: ".,;:!?‘’“”()[]{}/\\&@#%*+−=" },
-  ],
-  class: className,
-} = Astro.props;
+const { font = "display", weight = 400, sets, class: className } = Astro.props;
+const locale = getLocaleFromPath(Astro.url.pathname);
+const ui = getUi(locale);
+const defaultSets =
+  locale === "ar"
+    ? [
+        { label: ui.letters, chars: "ابتثجحخدذرزسشصضطظعغفقكلمنهوي" },
+        { label: ui.numerals, chars: "٠١٢٣٤٥٦٧٨٩ 0123456789" },
+        { label: ui.punctuation, chars: "،؛؟.!:()[]{}«»/\\&@#٪%*+−=" },
+      ]
+    : [
+        { label: ui.uppercase, chars: "ABCDEFGHIJKLMNOPQRSTUVWXYZ" },
+        { label: ui.lowercase, chars: "abcdefghijklmnopqrstuvwxyz" },
+        { label: ui.numerals, chars: "0123456789" },
+        { label: ui.punctuation, chars: ".,;:!?‘’“”()[]{}/\\&@#%*+−=" },
+      ];
+const resolvedSets = sets ?? defaultSets;
 ---
 
 <div class:list={["glyphs", "escape", className]}>
   {
-    sets.map((set) => (
+    resolvedSets.map((set) => (
       <div class="glyphs__set">
         <p class="label">{set.label}</p>
         <p
