@@ -4,17 +4,23 @@ import { glob } from "astro/loaders";
 /**
  * One MDX file per section of the guidelines.
  *
- * Files are named `NN-slug.mdx`. The numeric prefix sets the running order and
- * the printed section number; the URL is just the slug (`03-logo.mdx` → `/logo`).
+ * Files are named `locale/NN-slug.mdx`. The numeric prefix sets the running
+ * order and the printed section number; the URL is locale-prefixed (`en/03-logo.mdx`
+ * → `/en/logo`).
  * Delete a file to drop the section — nav, numbering and prev/next follow.
  */
 const sections = defineCollection({
   loader: glob({
     base: "./src/content/sections",
     pattern: "**/[^_]*.{md,mdx}",
-    // `03-logo.mdx` → `logo`
-    generateId: ({ entry }) =>
-      entry.replace(/\.mdx?$/, "").replace(/^\d+[-_]/, ""),
+    // `en/03-logo.mdx` → `en/logo` (the locale is part of the content ID,
+    // while the numeric filename prefix remains an ordering concern).
+    generateId: ({ entry }) => {
+      const parts = entry.split("/");
+      const filename = parts.pop() ?? entry;
+      const slug = filename.replace(/\.mdx?$/, "").replace(/^\d+[-_]/, "");
+      return parts.length > 0 ? `${parts.join("/")}/${slug}` : slug;
+    },
   }),
   schema: z.object({
     /** Section title, as printed. */

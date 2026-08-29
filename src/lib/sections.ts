@@ -1,14 +1,40 @@
 import { getCollection, type CollectionEntry } from "astro:content";
+import {
+  defaultLocale as DEFAULT_LOCALE,
+  supportedLocales as SUPPORTED_LOCALES,
+  type Locale,
+} from "../i18n";
+
+export { DEFAULT_LOCALE, SUPPORTED_LOCALES };
+export type { Locale };
 
 export type Section = CollectionEntry<"sections">;
 
 export interface SectionLink {
   id: string;
+  locale: Locale;
   href: string;
   title: string;
   summary?: string;
   /** Two-digit section number, "01". */
   number: string;
+}
+
+function isLocale(value: string): value is Locale {
+  return (SUPPORTED_LOCALES as readonly string[]).includes(value);
+}
+
+/** Locale encoded by the content ID (`en/logo`). */
+export function sectionLocale(entry: Section): Locale {
+  const candidate = entry.id.split("/", 1)[0];
+  return isLocale(candidate) ? candidate : DEFAULT_LOCALE;
+}
+
+/** Stable URL slug without the locale prefix (`en/logo` → `logo`). */
+export function sectionSlug(entryOrId: Section | string): string {
+  const id = typeof entryOrId === "string" ? entryOrId : entryOrId.id;
+  const [candidate, ...rest] = id.split("/");
+  return rest.length > 0 && isLocale(candidate) ? rest.join("/") : id;
 }
 
 /** Filename prefix (`03-logo.mdx` → 3) — the running order, unless frontmatter overrides it. */
@@ -24,12 +50,16 @@ function orderOf(entry: Section): number {
  * Drafts are excluded from production builds but kept during `astro dev` so you
  * can preview what you are writing.
  */
-export async function getSections(): Promise<Section[]> {
+export async function getSections(
+  locale: Locale = DEFAULT_LOCALE,
+): Promise<Section[]> {
   const entries = await getCollection(
     "sections",
     ({ data }) => import.meta.env.DEV || !data.draft,
   );
-  return entries.sort((a, b) => orderOf(a) - orderOf(b));
+  return entries
+    .filter((entry) => sectionLocale(entry) === locale)
+    .sort((a, b) => orderOf(a) - orderOf(b));
 }
 
 export function sectionNumber(entry: Section, index: number): string {
@@ -42,9 +72,12 @@ export function sectionNumber(entry: Section, index: number): string {
 }
 
 export function toLink(entry: Section, index: number): SectionLink {
+  const locale = sectionLocale(entry);
+  const id = sectionSlug(entry);
   return {
-    id: entry.id,
-    href: `/${entry.id}`,
+    id,
+    locale,
+    href: `/${locale}/${id}`,
     title: entry.data.title,
     summary: entry.data.summary,
     number: sectionNumber(entry, index),
@@ -52,16 +85,19 @@ export function toLink(entry: Section, index: number): SectionLink {
 }
 
 /** Ordered nav entries — used by the rail, the contents list and the pager. */
-export async function getSectionLinks(): Promise<SectionLink[]> {
-  return (await getSections()).map(toLink);
+export async function getSectionLinks(
+  locale: Locale = DEFAULT_LOCALE,
+): Promise<SectionLink[]> {
+  return (await getSections(locale)).map(toLink);
 }
 
 /** Previous and next sections relative to `id`, for the pager. */
 export async function getSiblings(
   id: string,
+  locale: Locale = DEFAULT_LOCALE,
 ): Promise<{ prev?: SectionLink; next?: SectionLink }> {
-  const links = await getSectionLinks();
-  const i = links.findIndex((l) => l.id === id);
+  const links = await getSectionLinks(locale);
+  const i = links.findIndex((l) => l.id === sectionSlug(id));
   if (i === -1) return {};
   return { prev: links[i - 1], next: links[i + 1] };
 }
