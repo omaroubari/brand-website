@@ -1,5 +1,7 @@
 ---
 // Keep the old root URL useful while making every rendered page locale-prefixed.
-// Astro emits this as a static redirect in the static build.
-return Astro.redirect("/en/");
+// Render only this route on demand so production returns a real HTTP redirect.
+export const prerender = false;
+
+return Astro.redirect("/en/", 302);
 ---
