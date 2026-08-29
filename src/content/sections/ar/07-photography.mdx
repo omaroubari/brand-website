@@ -1,0 +1,77 @@
+---
+title: التصوير الفوتوغرافي
+summary: نمطان — فاتح وداكن — وما يناسب كلًّا منهما.
+---
+
+import { PhotoGrid, Callout } from "../../../components/mdx";
+
+import photo01 from "../../../assets/photography/photo-01.jpg";
+import photo02 from "../../../assets/photography/photo-02.jpg";
+import photo03 from "../../../assets/photography/photo-03.jpg";
+import photo04 from "../../../assets/photography/photo-04.jpg";
+import photo05 from "../../../assets/photography/photo-05.jpg";
+import photo06 from "../../../assets/photography/photo-06.jpg";
+import photo07 from "../../../assets/photography/photo-07.jpg";
+import photo08 from "../../../assets/photography/photo-08.jpg";
+
+## النمط الفاتح
+
+خفيف ومضيء، مع مساحة سخية من الفراغ. يُستخدم للاستوديو والفريق والعمل قيد التنفيذ —
+ولكل ما نريده أن يبدو منفتحًا وعفويًا.
+
+يوضع النص مباشرةً على هذه الصور باللون الأسود، لذا اترك عند التصوير مساحة هادئة مخصصة له.
+
+<PhotoGrid
+  images={[{ src: photo01, span: 2 }, { src: photo02 }, { src: photo03 }]}
+  cols={3}
+  ratio="4 / 3"
+/>
+
+## النمط الداكن
+
+داكن ومنخفض الإضاءة، عالي التباين، ومائل إلى الإحساس بالعمق. يُستخدم لصور الحملات
+والمنتجات حين تحتاج الرسالة إلى حضور قوي.
+
+ينعكس النص إلى الأبيض؛ أبقِ العنصر الرئيس بعيدًا عن الزاوية التي سيشغلها النص.
+
+<PhotoGrid
+  images={[{ src: photo04 }, { src: photo05 }, { src: photo06, span: 2 }]}
+  cols={3}
+  ratio="4 / 3"
+/>
+
+## ثنائي اللون
+
+عندما تحتاج الصورة إلى الانتماء إلى العلامة أكثر من حاجتها إلى نقل الواقع حرفيًا، تُختزل
+إلى تدرجات رمادية وتوضع فوق اللون المميّز.
+
+استخدمه باعتدال — للأغلفة والفواصل وعناوين الحملات — ولا تستخدمه مطلقًا في صورة لوجه
+شخص.
+
+<PhotoGrid
+  images={[photo07, photo08]}
+  cols={2}
+  ratio="3 / 2"
+  treatment="duotone"
+/>
+
+## الاختيار
+
+الأصيل قبل المصطنع. إذا بدت الصورة الجاهزة كصورة جاهزة، فهي الصورة غير المناسبة.
+
+ينبغي أن يكون التكوين بسيطًا بما يكفي ليتحمل القص إلى مربع وإلى نسبة 16:9. تجنّب الصور
+ذات الحضور اللوني القوي — فهي تنافس اللون المميّز بدل أن تعمل تحته.
+
+<Callout tone="note" title="الترخيص">
+
+تحتاج كل صورة إلى ترخيص محفوظ قبل نشرها، بما في ذلك صور وسائل التواصل الاجتماعي. سجّل
+المصدر ومدة الترخيص إلى جانب الأصل.
+
+</Callout>
+
+<PhotoGrid
+  images={[photo03, photo05, photo01]}
+  cols={3}
+  ratio="1 / 1"
+  treatment="mono"
+/>
