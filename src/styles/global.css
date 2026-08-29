@@ -439,6 +439,7 @@ hr {
 @layer utilities {
   .soft-outline {
     outline-offset: calc(1px * -1);
-    outline: 1px solid  color-mix(in oklab, var(--color-foreground) 8%, transparent);
+    outline: 1px solid
+      color-mix(in oklab, var(--color-foreground) 8%, transparent);
   }
 }

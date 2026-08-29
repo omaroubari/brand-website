@@ -1,7 +1,9 @@
 const PAGE_TITLE_ID = "_top";
 
 export class StarlightTOC extends HTMLElement {
-  private _current = this.querySelector<HTMLAnchorElement>('a[aria-current="true"]');
+  private _current = this.querySelector<HTMLAnchorElement>(
+    'a[aria-current="true"]',
+  );
   private minH = parseInt(this.dataset.minH || "2", 10);
   private maxH = parseInt(this.dataset.maxH || "3", 10);
 
@@ -37,7 +39,9 @@ export class StarlightTOC extends HTMLElement {
       el.matches(this.tocHeadingSelector);
 
     /** Walk up the DOM to find the nearest heading. */
-    const getElementHeading = (el: Element | null): HTMLHeadingElement | null => {
+    const getElementHeading = (
+      el: Element | null,
+    ): HTMLHeadingElement | null => {
       if (!el) return null;
       const origin = el;
       while (el) {
@@ -47,7 +51,9 @@ export class StarlightTOC extends HTMLElement {
         }
         if (isHeading(el)) return el;
         // Find the first heading that is a child of this element, and return it if there is one.
-        const childHeading = el.querySelector<HTMLHeadingElement>(this.tocHeadingSelector);
+        const childHeading = el.querySelector<HTMLHeadingElement>(
+          this.tocHeadingSelector,
+        );
         if (childHeading) return childHeading;
         // Assign the previous sibling’s last, most deeply nested child to el.
         el = el.previousElementSibling;
@@ -68,7 +74,9 @@ export class StarlightTOC extends HTMLElement {
         if (!isIntersecting) continue;
         const heading = getElementHeading(target);
         if (!heading) continue;
-        const link = links.find((link) => link.hash === "#" + encodeURIComponent(heading.id));
+        const link = links.find(
+          (link) => link.hash === "#" + encodeURIComponent(heading.id),
+        );
         if (link) {
           this.current = link;
           break;
@@ -88,7 +96,7 @@ export class StarlightTOC extends HTMLElement {
         `main :where(${this.tocHeadingSelector}, .sl-heading-wrapper) ~ *:not(:has(${this.tocHeadingSelector}))`,
         `main .sl-markdown-content > *:not(:has(${this.tocHeadingSelector}))`,
         `main > *:not(:has(${this.tocHeadingSelector}))`,
-      ].join()
+      ].join(),
     );
 
     let observer: IntersectionObserver | undefined;
@@ -114,9 +122,11 @@ export class StarlightTOC extends HTMLElement {
   };
 
   private getRootMargin(): `-${number}px 0% ${number}px` {
-    const navBarHeight = document.querySelector("header")?.getBoundingClientRect().height || 0;
+    const navBarHeight =
+      document.querySelector("header")?.getBoundingClientRect().height || 0;
     // `<summary>` only exists in mobile ToC, so will fall back to 0 in large viewport component.
-    const mobileTocHeight = this.querySelector("summary")?.getBoundingClientRect().height || 0;
+    const mobileTocHeight =
+      this.querySelector("summary")?.getBoundingClientRect().height || 0;
     /** Start intersections at nav height + 2rem padding. */
     const top = navBarHeight + mobileTocHeight + 32;
     /** End intersections `53px` later. This is slightly more than the maximum `margin-top` in Markdown content. */
