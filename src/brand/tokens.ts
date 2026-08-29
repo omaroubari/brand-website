@@ -177,8 +177,12 @@ export function resolveColor(
     );
   }
 
-
-  return { family, shade, value: family.shades[shade], css: `var(--color-${reference})` };
+  return {
+    family,
+    shade,
+    value: family.shades[shade],
+    css: `var(--color-${reference})`,
+  };
 }
 
 /** Returns the label of a named swatch where there is one, otherwise the family and shade. */
@@ -349,6 +353,26 @@ export function brandStyleSheet(brand: BrandConfig): string {
 \t}`
         : "";
 
+  const localeTypography = Object.entries(brand.locales ?? {})
+    .map(([locale, override]) => {
+      const typography = override?.typography;
+      if (!typography) return "";
+
+      const declarations = [
+        typography.display && `--font-display: ${typography.display};`,
+        typography.text && `--font-text: ${typography.text};`,
+        typography.mono && `--font-mono: ${typography.mono};`,
+      ]
+        .filter(Boolean)
+        .join("\n\t\t");
+
+      return declarations
+        ? `:root[lang='${locale}'] {\n\t\t${declarations}\n\t}`
+        : "";
+    })
+    .filter(Boolean)
+    .join("\n\n\t");
+
   return `:root {
 \t\t${palette}
 
@@ -360,6 +384,8 @@ export function brandStyleSheet(brand: BrandConfig): string {
 
 \t\tcolor-scheme: light;
 \t}
+
+\t${localeTypography}
 
 \t${darkScheme}
 ${defaultScheme}`;

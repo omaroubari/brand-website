@@ -85,6 +85,24 @@ describe("brandStyleSheet", () => {
     expect(css).toContain(":root:not([data-theme='light'])");
   });
 
+  it("emits locale typography from the root locale overlay", () => {
+    const config = fixture();
+    config.locales = {
+      ar: {
+        typography: {
+          display: "arabic-display",
+          text: "arabic-text",
+        },
+      },
+    };
+
+    const css = brandStyleSheet(config);
+
+    expect(css).toContain(":root[lang='ar']");
+    expect(css).toContain("--font-display: arabic-display;");
+    expect(css).toContain("--font-text: arabic-text;");
+  });
+
   it("fails when a scheme references an unknown shade", () => {
     const config = fixture();
     config.theme.light.primary = "missing-500";

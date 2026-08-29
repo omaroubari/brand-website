@@ -12,6 +12,14 @@ import tailwindcss from "@tailwindcss/vite";
 // https://astro.build/config
 export default defineConfig({
   site: brand.meta.url,
+  output: "static",
+  i18n: {
+    locales: ["en", "ar"],
+    defaultLocale: "en",
+    routing: {
+      prefixDefaultLocale: true,
+    },
+  },
   integrations: [mdx(), react()],
 
   // A guidelines site's imagery is fixed, so images are optimised at build
@@ -58,6 +66,21 @@ export default defineConfig({
         variants: [
           {
             src: ["./src/assets/fonts/BrandSans-Variable.ttf"],
+            weight: "100 900",
+            style: "normal",
+          },
+        ],
+      },
+    },
+    {
+      name: "PP Neue Montreal Arabic",
+      cssVariable: "--font-arabic",
+      provider: fontProviders.local(),
+      fallbacks: ["ui-sans-serif", "system-ui", "sans-serif"],
+      options: {
+        variants: [
+          {
+            src: ["./src/assets/fonts/PPNeueMontrealArabic-Variable.ttf"],
             weight: "100 900",
             style: "normal",
           },

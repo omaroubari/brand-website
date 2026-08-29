@@ -18,7 +18,7 @@ export const brand = defineBrand({
     legalName: "Studio Valence Design",
     tagline: "Web Design Studio",
     documentTitle: "Brand Guidelines",
-    version: "1.0",
+    version: "1.1",
     year: 2026,
     url: "https://brand.example.com",
     description:
@@ -92,7 +92,7 @@ export const brand = defineBrand({
         usage:
           "One accent, used sparingly: calls to action, headers, highlights.",
         category: "secondary",
-        on: "white"
+        on: "white",
       },
     ],
   },
@@ -175,15 +175,14 @@ export const brand = defineBrand({
     display: "var(--font-brand)",
     text: "var(--font-brand)",
     mono: "ui-monospace, SFMono-Regular, Menlo, monospace",
-
     families: [
       {
-        label: "display",
+        id: "display",
         name: "Inter",
         note: "Swap in the licensed brand face via the fonts block in astro.config.ts. Ships as Inter (SIL Open Font License) so the template runs out of the box.",
       },
       {
-        label: "text",
+        id: "text",
         name: "Inter",
         note: "Same family as display in the default setup — add a second entry in astro.config.ts to split them.",
       },
@@ -205,6 +204,7 @@ export const brand = defineBrand({
     scale: [
       {
         name: "Display+",
+        id: "display-plus",
         role: "The largest expressive style. Use for covers and hero moments.",
         font: "display",
         weight: 600,
@@ -215,6 +215,7 @@ export const brand = defineBrand({
       },
       {
         name: "Display 1",
+        id: "display-1",
         role: "Large headlines for page and section openers.",
         font: "display",
         weight: 600,
@@ -225,6 +226,7 @@ export const brand = defineBrand({
       },
       {
         name: "Display 2",
+        id: "display-2",
         role: "Statement headlines inside a section.",
         font: "display",
         weight: 600,
@@ -235,6 +237,7 @@ export const brand = defineBrand({
       },
       {
         name: "Display 3",
+        id: "display-3",
         role: "Short headlines and compact display moments.",
         font: "display",
         weight: 600,
@@ -245,6 +248,7 @@ export const brand = defineBrand({
       },
       {
         name: "Title 1",
+        id: "title-1",
         role: "Page titles and major block headings.",
         font: "display",
         weight: 600,
@@ -255,6 +259,7 @@ export const brand = defineBrand({
       },
       {
         name: "Title 2",
+        id: "title-2",
         role: "Section headings, notices, and supporting titles.",
         font: "display",
         weight: 600,
@@ -265,6 +270,7 @@ export const brand = defineBrand({
       },
       {
         name: "Title 3",
+        id: "title-3",
         role: "Small headings, navigation titles, and compact blocks.",
         font: "display",
         weight: 500,
@@ -275,6 +281,7 @@ export const brand = defineBrand({
       },
       {
         name: "Subtitle 1",
+        id: "subtitle-1",
         role: "Larger supporting copy beneath a title.",
         font: "text",
         weight: 400,
@@ -285,6 +292,7 @@ export const brand = defineBrand({
       },
       {
         name: "Subtitle 2",
+        id: "subtitle-2",
         role: "Supporting copy for section titles and introductions.",
         font: "text",
         weight: 400,
@@ -295,6 +303,7 @@ export const brand = defineBrand({
       },
       {
         name: "Body",
+        id: "body",
         role: "Default running text and short descriptions.",
         font: "text",
         weight: 400,
@@ -305,6 +314,7 @@ export const brand = defineBrand({
       },
       {
         name: "Body bold",
+        id: "body-bold",
         role: "Emphasis within body copy and compact labels.",
         font: "text",
         weight: 600,
@@ -315,6 +325,7 @@ export const brand = defineBrand({
       },
       {
         name: "Caption",
+        id: "caption",
         role: "Footnotes, captions, legal copy, and the running foot.",
         font: "text",
         weight: 400,
@@ -325,6 +336,7 @@ export const brand = defineBrand({
       },
       {
         name: "Caption bold",
+        id: "caption-bold",
         role: "Emphasised captions and compact metadata.",
         font: "text",
         weight: 600,
@@ -335,6 +347,7 @@ export const brand = defineBrand({
       },
       {
         name: "Signal 1",
+        id: "signal-1",
         role: "Short uppercase statuses, tags, and signal components.",
         font: "text",
         weight: 400,
@@ -346,6 +359,7 @@ export const brand = defineBrand({
       },
       {
         name: "Signal 2",
+        id: "signal-2",
         role: "The smallest uppercase signal for compact UI labels.",
         font: "text",
         weight: 600,
@@ -381,9 +395,14 @@ export const brand = defineBrand({
     },
     /** Approved pairings, by palette shade. Order matters — first is primary. */
     colorways: [
-      { fg: "white", bg: "black", label: "Primary" },
-      { fg: "black", bg: "white", label: "Primary reversed" },
-      { fg: "white", bg: "orange-500" },
+      { id: "primary", fg: "white", bg: "black", label: "Primary" },
+      {
+        id: "primary-reversed",
+        fg: "black",
+        bg: "white",
+        label: "Primary reversed",
+      },
+      { id: "accent", fg: "white", bg: "orange-500" },
     ],
   },
 
@@ -392,11 +411,13 @@ export const brand = defineBrand({
     website: "www.byvalence.com",
     socials: [
       {
+        id: "instagram",
         label: "Instagram",
         handle: "@byvalence",
         url: "https://instagram.com/byvalence",
       },
       {
+        id: "behance",
         label: "Behance",
         handle: "@byvalence",
         url: "https://behance.net/byvalence",
@@ -407,18 +428,189 @@ export const brand = defineBrand({
   /** Shown on the home page. Drop the real files into `public/brand/`. */
   downloads: [
     {
+      id: "logo-pack",
       label: "Logo pack",
       href: "/brand/logotype-dark.svg",
       format: "SVG",
       note: "Logotype and brandmark, all approved colourways.",
     },
     {
+      id: "document",
       label: "This document",
       href: "/",
       format: "PDF",
       note: "Replace with an exported PDF of the guidelines.",
     },
   ],
+
+  /**
+   * Locale-sensitive typography and translated reader-facing copy. Palette
+   * values, artwork, URLs, dimensions and other brand facts stay canonical
+   * above; `resolveBrand` applies this overlay for Arabic routes.
+   */
+  locales: {
+    ar: {
+      meta: {
+        tagline: "استوديو تصميم الويب",
+        documentTitle: "دليل الهوية",
+        description:
+          "دليل الهوية لاستوديو فالنس — استخدام الشعار والألوان والطباعة وقواعد التطبيق.",
+      },
+      colors: {
+        palette: [
+          { id: "neutral", name: "محايد" },
+          { id: "orange", name: "برتقالي" },
+        ],
+        swatches: [
+          {
+            id: "black",
+            name: "أسود",
+            usage: "للنصوص الأساسية والخلفيات والشعار على الأسطح الفاتحة.",
+          },
+          {
+            id: "white",
+            name: "أبيض",
+            usage:
+              "السطح الأساسي. يظهر الشعار باللون الأبيض على الخلفيات الداكنة.",
+          },
+          {
+            id: "orange-red",
+            name: "برتقالي",
+            usage:
+              "لون إبراز واحد يُستخدم باعتدال: للدعوات والإشارات والعناوين.",
+          },
+        ],
+      },
+      typography: {
+        display: "var(--font-arabic)",
+        text: "var(--font-arabic)",
+        families: [
+          {
+            id: "display",
+            name: "PP Neue Montreal Arabic",
+            note: "خط عربي متغير ومستضاف محلياً بجانب خط إنتر.",
+          },
+          {
+            id: "text",
+            name: "PP Neue Montreal Arabic",
+            note: "العائلة نفسها المستخدمة للعناوين والنصوص العربية.",
+          },
+        ],
+        weights: [
+          { weight: 300, name: "خفيف" },
+          { weight: 400, name: "عادي" },
+          { weight: 500, name: "متوسط" },
+          { weight: 600, name: "شبه عريض" },
+          { weight: 700, name: "عريض" },
+          { weight: 800, name: "ثقيل" },
+        ],
+        scale: [
+          {
+            id: "display-plus",
+            role: "النمط التعبيري الأكبر، ويُستخدم للأغلفة واللحظات الرئيسية.",
+            sample: "تقدّم",
+          },
+          {
+            id: "display-1",
+            role: "عناوين كبيرة لافتتاحيات الصفحات والأقسام.",
+            sample: "اجعلها مؤثرة",
+          },
+          {
+            id: "display-2",
+            role: "عناوين بارزة داخل القسم.",
+            sample: "صياغة هويات بصرية استراتيجية",
+          },
+          {
+            id: "display-3",
+            role: "عناوين قصيرة ولحظات عرض مدمجة.",
+            sample: "أشياء يحبها الناس",
+          },
+          {
+            id: "title-1",
+            role: "عناوين الصفحات والعناوين الرئيسية للكتل.",
+            sample: "وجهة نظر واضحة",
+          },
+          {
+            id: "title-2",
+            role: "عناوين الأقسام والتنبيهات والعناوين المساندة.",
+            sample: "مصمم للوضوح",
+          },
+          {
+            id: "title-3",
+            role: "العناوين الصغيرة وعناوين التنقل والكتل المدمجة.",
+            sample: "ابدأ من هنا",
+          },
+          {
+            id: "subtitle-1",
+            role: "نص مساند أكبر أسفل العنوان.",
+            sample: "نظام مدروس لكل نقطة تواصل.",
+          },
+          {
+            id: "subtitle-2",
+            role: "نص مساند لعناوين الأقسام ومقدماتها.",
+            sample: "التفاصيل الصغيرة تصنع كلاً متماسكاً.",
+          },
+          {
+            id: "body",
+            role: "النص الأساسي والأوصاف القصيرة.",
+            sample: "يجعل النظام المفيد الاختيار الصحيح بديهياً.",
+          },
+          {
+            id: "body-bold",
+            role: "للتأكيد داخل النصوص وتسميات الواجهة المدمجة.",
+            sample: "يجعل النظام المفيد الاختيار الصحيح بديهياً.",
+          },
+          {
+            id: "caption",
+            role: "الحواشي والتعليقات والنصوص القانونية والتذييل.",
+            sample: "للمرجع فقط.",
+          },
+          {
+            id: "caption-bold",
+            role: "التعليقات المؤكدة والبيانات الوصفية المدمجة.",
+            sample: "تم التحديث في أغسطس 2026",
+          },
+          {
+            id: "signal-1",
+            role: "الحالات والوسوم والإشارات المختصرة.",
+            sample: "ضمان الأصالة",
+          },
+          {
+            id: "signal-2",
+            role: "أصغر إشارة للعناوين المختصرة في الواجهة.",
+            sample: "جديد",
+          },
+        ],
+      },
+      logo: {
+        pronunciation: "فاي • لَنس",
+        clearspace: { unit: "ارتفاع الحرف الصغير «e»" },
+        colorways: [
+          { id: "primary", label: "أساسي" },
+          { id: "primary-reversed", label: "الأساسي المعكوس" },
+          { id: "accent", label: "إبراز" },
+        ],
+      },
+      contact: {
+        socials: [
+          { id: "instagram", label: "إنستغرام" },
+          { id: "behance", label: "بيهانس" },
+        ],
+      },
+      downloads: [
+        {
+          id: "logo-pack",
+          label: "حزمة الشعار",
+          note: "الشعار النصي والعلامة، بكل الألوان المعتمدة.",
+        },
+        {
+          id: "document",
+          label: "هذا المستند",
+          note: "استبدله بنسخة PDF مُصدّرة من الدليل.",
+        },
+      ],
+    },
+  },
 
   numbering: true,
 });

@@ -10,6 +10,11 @@
 export type BrandShadeStep =
   50 | 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900 | 950;
 
+/** Locales shipped by the template. Add translations without changing the
+ * invariant brand data model. */
+export const brandLocales = ["en", "ar"] as const;
+export type BrandLocale = (typeof brandLocales)[number];
+
 /** A colour stored in its source colour space. */
 export type BrandColorValue =
   | { space: "hex"; value: string }
@@ -117,6 +122,8 @@ export interface BrandTheme {
 
 /** A single step in the published type scale. */
 export interface TypeStyle {
+  /** Stable handle used by localized overlays. */
+  id: string;
   /** Name used in the guidelines, e.g. "Header 1.0". */
   name: string;
   /** Where this style is meant to be used. */
@@ -148,7 +155,8 @@ export interface BrandTypography {
   mono: string;
   /** Names as written in the document, plus licensing notes. */
   families: Array<{
-    label: "display" | "text" | "mono";
+    /** Stable semantic slot used by components and localized overlays. */
+    id: "display" | "text" | "mono";
     name: string;
     foundry?: string;
     url?: string;
@@ -187,6 +195,8 @@ export interface BrandLogo {
   };
   /** Approved foreground/background pairs, referenced by palette shade. */
   colorways: Array<{
+    /** Stable handle used by localized overlays. */
+    id: string;
     fg: BrandColorToken;
     bg: BrandColorToken;
     label?: string;
@@ -216,11 +226,13 @@ export interface BrandContact {
   website?: string;
   phone?: string;
   address?: string[];
-  socials?: Array<{ label: string; handle: string; url: string }>;
+  socials?: Array<{ id: string; label: string; handle: string; url: string }>;
 }
 
 /** A downloadable asset offered on the site. */
 export interface BrandDownload {
+  /** Stable handle used by localized overlays. */
+  id: string;
   label: string;
   /** Path under `public/`, or an external URL. */
   href: string;
@@ -228,6 +240,67 @@ export interface BrandDownload {
   size?: string;
   note?: string;
 }
+
+/** Locale-sensitive fields layered over the canonical, invariant brand config. */
+export interface BrandLocaleOverride {
+  meta?: Partial<
+    Pick<
+      BrandMeta,
+      "name" | "legalName" | "tagline" | "documentTitle" | "description"
+    >
+  >;
+  colors?: {
+    palette?: Array<
+      Pick<BrandColorFamily, "id"> & Partial<Pick<BrandColorFamily, "name">>
+    >;
+    swatches?: Array<
+      Pick<BrandSwatch, "id"> & Partial<Pick<BrandSwatch, "name" | "usage">>
+    >;
+  };
+  typography?: {
+    /** Locale-specific families for scripts with distinct type needs. */
+    display?: string;
+    text?: string;
+    mono?: string;
+    families?: Array<
+      Pick<BrandTypography["families"][number], "id"> &
+        Partial<Pick<BrandTypography["families"][number], "name" | "note">>
+    >;
+    scale?: Array<
+      Pick<TypeStyle, "id"> &
+        Partial<Pick<TypeStyle, "name" | "role" | "sample">>
+    >;
+    weights?: Array<
+      Pick<FontWeightSpec, "weight"> & Partial<Pick<FontWeightSpec, "name">>
+    >;
+  };
+  logo?: {
+    logotype?: Partial<Pick<LogoArtwork, "altText">>;
+    brandmark?: Partial<Pick<LogoArtwork, "altText">>;
+    pronunciation?: string;
+    clearspace?: Partial<Pick<BrandLogo["clearspace"], "unit">>;
+    colorways?: Array<
+      Pick<BrandLogo["colorways"][number], "id"> &
+        Partial<Pick<BrandLogo["colorways"][number], "label">>
+    >;
+  };
+  contact?: {
+    address?: string[];
+    socials?: Array<
+      Pick<NonNullable<BrandContact["socials"]>[number], "id"> &
+        Partial<Pick<NonNullable<BrandContact["socials"]>[number], "label">>
+    >;
+  };
+  downloads?: Array<
+    Pick<BrandDownload, "id"> & Partial<Pick<BrandDownload, "label" | "note">>
+  >;
+}
+
+/** Optional per-locale overlays. Missing fields intentionally fall back to the
+ * canonical root values, regardless of the language they were authored in. */
+export type BrandLocaleOverrides = Partial<
+  Record<BrandLocale, BrandLocaleOverride>
+>;
 
 export interface BrandConfig {
   meta: BrandMeta;
@@ -237,6 +310,8 @@ export interface BrandConfig {
   logo: BrandLogo;
   contact: BrandContact;
   downloads?: BrandDownload[];
+  /** Locale-sensitive typography and translated copy keyed by locale. */
+  locales?: BrandLocaleOverrides;
   /** Show the section number ("01") beside titles. */
   numbering?: boolean;
 }
