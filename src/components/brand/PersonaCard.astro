@@ -37,7 +37,7 @@ const ui = getUi(getLocaleFromPath(Astro.url.pathname));
           decoding="async"
         />
       ) : (
-        <span class="caption persona__placeholder">{ui.portraitPending}</span>
+        <span class="caption persona__placeholder">{ui.content.pending}</span>
       )
     }
   </div>

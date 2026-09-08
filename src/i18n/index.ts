@@ -1,5 +1,16 @@
 import { brand } from "../brand/config";
 import type { BrandConfig, BrandLocaleOverride } from "../brand/types";
+import { resolveUIStrings } from "../lib/i18n-ui";
+
+export {
+  EN_UI,
+  resolveUIStrings,
+  UI_PACKS,
+  uiStringsOverrideSchema,
+  uiStringsSchema,
+  type UIStrings,
+  type UIStringsOverride,
+} from "../lib/i18n-ui";
 
 type ConfiguredI18n = NonNullable<typeof brand.i18n>;
 const configuredI18n = brand.i18n;
@@ -12,9 +23,7 @@ if (!configuredI18n) {
 
 /** Locales configured for the site, in language-switcher display order. */
 export type Locale = ConfiguredI18n["locales"][number]["code"];
-export const supportedLocales = configuredI18n.locales.map(
-  ({ code }) => code,
-) as readonly Locale[];
+export const supportedLocales = configuredI18n.locales.map(({ code }) => code) as readonly Locale[];
 export const defaultLocale = configuredI18n.defaultLocale as Locale;
 export const LOCALE_COOKIE_NAME = "brand-locale";
 
@@ -27,10 +36,7 @@ export interface LocaleInfo {
 }
 
 export const localeInfo = Object.fromEntries(
-  configuredI18n.locales.map(({ code, label, dir }) => [
-    code,
-    { code, label, dir },
-  ]),
+  configuredI18n.locales.map(({ code, label, dir }) => [code, { code, label, dir }]),
 ) as Record<Locale, LocaleInfo>;
 
 const localeSet = new Set<string>(supportedLocales);
@@ -46,9 +52,7 @@ export function getLocaleFromPath(pathname: string): Locale {
   return getLocale(firstSegment);
 }
 
-export function getDirection(
-  locale: Locale | string | null | undefined,
-): LocaleDirection {
+export function getDirection(locale: Locale | string | null | undefined): LocaleDirection {
   return localeInfo[getLocale(locale)].dir;
 }
 
@@ -57,10 +61,7 @@ export function getDirection(
  * language switchers can safely pass the current pathname back through this
  * helper. Query strings and hashes are preserved.
  */
-export function getLocalizedPath(
-  pathname: string,
-  locale: Locale | string,
-): string {
+export function getLocalizedPath(pathname: string, locale: Locale | string): string {
   const resolvedLocale = getLocale(locale);
   const match = pathname.match(/^([^?#]*)([?#].*)?$/);
   const rawPath = match?.[1] || "/";
@@ -72,204 +73,15 @@ export function getLocalizedPath(
   return `/${resolvedLocale}/${rest}${suffix}`.replace(/\/$/, rest ? "" : "/");
 }
 
-export interface UiStrings {
-  brandGuidelines: string;
-  contents: string;
-  assets: string;
-  contact: string;
-  contactLead: string;
-  document: string;
-  sections: string;
-  previous: string;
-  next: string;
-  onThisPage: string;
-  light: string;
-  dark: string;
-  system: string;
-  close: string;
-  menu: string;
-  toggleSidebar: string;
-  copy: string;
-  copied: string;
-  copyFailed: string;
-  colourCopied: string;
-  copyToClipboard: string;
-  textOn: string;
-  sameColourNoContrast: string;
-  shade: string;
-  size: string;
-  leading: string;
-  tracking: string;
-  weight: string;
-  print: string;
-  hex: string;
-  rgb: string;
-  cmyk: string;
-  pantone: string;
-  section: string;
-  version: string;
-  minimumSize: string;
-  portraitPending: string;
-  language: string;
-  note: string;
-  do: string;
-  dont: string;
-  artworkPending: string;
-  switchToTheme: string;
-  display: string;
-  text: string;
-  licenceAndDownloads: string;
-  clearspaceInstruction: string;
-  uppercase: string;
-  lowercase: string;
-  letters: string;
-  numerals: string;
-  punctuation: string;
-}
-
-type BuiltInLocale = "en" | "ar";
-
-/** UI dictionaries shipped by the template. Brand locales are configured independently. */
-export const ui: Record<BuiltInLocale, UiStrings> = {
-  en: {
-    brandGuidelines: "Brand guidelines",
-    contents: "Contents",
-    assets: "Assets",
-    contact: "Contact",
-    contactLead:
-      "Anything this document does not answer, ask before you improvise.",
-    document: "Document",
-    sections: "Sections",
-    previous: "Previous",
-    next: "Next",
-    onThisPage: "On this page",
-    light: "Light",
-    dark: "Dark",
-    system: "System",
-    close: "Close",
-    menu: "Menu",
-    toggleSidebar: "Toggle sidebar",
-    copy: "Copy",
-    copied: "Copied",
-    copyFailed: "Copy failed",
-    colourCopied: "Colour copied",
-    copyToClipboard: "Copy to clipboard",
-    textOn: "Text on",
-    sameColourNoContrast: "Same colour, no contrast",
-    shade: "Shade",
-    size: "Size",
-    leading: "Leading",
-    tracking: "Tracking",
-    weight: "Weight",
-    print: "Print",
-    hex: "HEX",
-    rgb: "RGB",
-    cmyk: "CMYK",
-    pantone: "PMS",
-    section: "Section",
-    version: "Version",
-    minimumSize: "Minimum size",
-    portraitPending: "Portrait pending",
-    language: "Language",
-    note: "Note",
-    do: "Do",
-    dont: "Don't",
-    artworkPending: "Artwork pending",
-    switchToTheme: "Switch to",
-    display: "Display",
-    text: "Text",
-    licenceAndDownloads: "Licence and downloads",
-    uppercase: "Uppercase",
-    lowercase: "Lowercase",
-    letters: "Letters",
-    numerals: "Numerals",
-    punctuation: "Punctuation",
-    clearspaceInstruction:
-      "{unit} = x. Keep at least x of clear space on every side of the {mark}. No type, image or graphic element may enter this zone.",
-  },
-  ar: {
-    brandGuidelines: "دليل الهوية",
-    contents: "المحتويات",
-    assets: "الأصول",
-    contact: "التواصل",
-    contactLead: "إذا لم تجد الإجابة في هذا الدليل، فتواصل معنا قبل الاجتهاد.",
-    document: "المستند",
-    sections: "الأقسام",
-    previous: "السابق",
-    next: "التالي",
-    onThisPage: "في هذه الصفحة",
-    light: "فاتح",
-    dark: "داكن",
-    system: "النظام",
-    close: "إغلاق",
-    menu: "القائمة",
-    toggleSidebar: "تبديل الشريط الجانبي",
-    copy: "نسخ",
-    copied: "تم النسخ",
-    copyFailed: "تعذّر النسخ",
-    colourCopied: "تم نسخ اللون",
-    copyToClipboard: "نسخ إلى الحافظة",
-    textOn: "النص على",
-    sameColourNoContrast: "اللون نفسه، لا يوجد تباين",
-    shade: "درجة",
-    size: "الحجم",
-    leading: "التباعد الرأسي",
-    tracking: "التقارب",
-    weight: "السماكة",
-    print: "الطباعة",
-    hex: "HEX",
-    rgb: "RGB",
-    cmyk: "CMYK",
-    pantone: "PMS",
-    section: "القسم",
-    version: "الإصدار",
-    minimumSize: "الحد الأدنى للحجم",
-    portraitPending: "الصورة قيد الإعداد",
-    language: "اللغة",
-    note: "ملاحظة",
-    do: "افعل",
-    dont: "لا تفعل",
-    artworkPending: "العمل الفني قيد الإعداد",
-    switchToTheme: "التبديل إلى",
-    display: "عرض",
-    text: "نص",
-    licenceAndDownloads: "الترخيص والتنزيلات",
-    uppercase: "الأحرف الكبيرة",
-    lowercase: "الأحرف الصغيرة",
-    letters: "الأحرف",
-    numerals: "الأرقام",
-    punctuation: "علامات الترقيم",
-    clearspaceInstruction:
-      "{unit} = x. اترك مساحة فارغة لا تقل عن x حول {mark} من جميع الجهات. لا يجوز أن يدخل أي نص أو صورة أو عنصر رسومي إلى هذه المنطقة.",
-  },
-};
-
-/** Resolve a translated UI label. The key is typed against the complete UI catalog. */
-export function t(
-  locale: Locale | string | null | undefined,
-  key: keyof UiStrings,
-): string {
-  return getUi(locale)[key] ?? ui.en[key];
-}
-
 /**
- * Return the complete UI dictionary for a locale. Template copy resolves by
- * exact locale, then base language (for example `ar-SA` → `ar`), then English.
+ * Return the complete template UI dictionary for a locale, using the site's
+ * configured default locale as the resolver's intermediate fallback.
  */
-export function getUi(locale: Locale | string | null | undefined): UiStrings {
-  const requested = locale ?? defaultLocale;
-  if (Object.hasOwn(ui, requested)) return ui[requested as BuiltInLocale];
-
-  const base = requested.split("-", 1)[0].toLowerCase();
-  if (Object.hasOwn(ui, base)) return ui[base as BuiltInLocale];
-
-  return ui.en;
+export function getUi(locale: Locale | string | null | undefined) {
+  return resolveUIStrings(locale ?? defaultLocale, { defaultLocale });
 }
 
-function mergeLocalizedCollection<
-  T extends Record<K, string | number>,
-  K extends keyof T,
->(
+function mergeLocalizedCollection<T extends Record<K, string | number>, K extends keyof T>(
   canonical: T[],
   localized: Array<Pick<T, K> & Partial<T>> | undefined,
   identityKey: K,
@@ -293,10 +105,7 @@ function mergeLocalizedCollection<
  * config. Palette values, artwork paths, URLs, dimensions and all other
  * invariant brand facts remain sourced from the canonical config.
  */
-export function resolveBrand<T extends BrandConfig>(
-  brand: T,
-  locale: Locale | string,
-): T {
+export function resolveBrand<T extends BrandConfig>(brand: T, locale: Locale | string): T {
   const resolvedLocale = getLocale(locale);
   const override: BrandLocaleOverride = brand.locales?.[resolvedLocale] ?? {};
 

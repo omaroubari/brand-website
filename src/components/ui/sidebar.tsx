@@ -18,12 +18,8 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { Skeleton } from "@/components/ui/skeleton";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { PanelLeftIcon } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+
 import { defaultLocale, getUi, type Locale } from "@/i18n";
 
 const SIDEBAR_COOKIE_NAME = "sidebar_state";
@@ -97,10 +93,7 @@ function SidebarProvider({
   // Adds a keyboard shortcut to toggle the sidebar.
   React.useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (
-        event.key === SIDEBAR_KEYBOARD_SHORTCUT &&
-        (event.metaKey || event.ctrlKey)
-      ) {
+      if (event.key === SIDEBAR_KEYBOARD_SHORTCUT && (event.metaKey || event.ctrlKey)) {
         event.preventDefault();
         toggleSidebar();
       }
@@ -142,7 +135,8 @@ function SidebarProvider({
           "group/sidebar-wrapper has-data-[variant=inset]:bg-sidebar flex min-h-svh w-full",
           className,
         )}
-        {...props}>
+        {...props}
+      >
         {children}
       </div>
     </SidebarContext.Provider>
@@ -174,7 +168,8 @@ function Sidebar({
           "bg-sidebar text-sidebar-foreground flex h-full w-(--sidebar-width) flex-col",
           className,
         )}
-        {...props}>
+        {...props}
+      >
         {children}
       </div>
     );
@@ -195,10 +190,11 @@ function Sidebar({
               "--sidebar-width": SIDEBAR_WIDTH_MOBILE,
             } as React.CSSProperties
           }
-          side={side}>
+          side={side}
+        >
           <SheetHeader className="sr-only">
-            <SheetTitle>{getUi(locale).menu}</SheetTitle>
-            <SheetDescription>{getUi(locale).toggleSidebar}</SheetDescription>
+            <SheetTitle>{getUi(locale).nav.navigation}</SheetTitle>
+            <SheetDescription>{getUi(locale).nav.toggleSidebar}</SheetDescription>
           </SheetHeader>
           <div className="flex h-full w-full flex-col">{children}</div>
         </SheetContent>
@@ -213,7 +209,8 @@ function Sidebar({
       data-collapsible={state === "collapsed" ? collapsible : ""}
       data-variant={variant}
       data-side={side}
-      data-slot="sidebar">
+      data-slot="sidebar"
+    >
       {/* This is what handles the sidebar gap on desktop */}
       <div
         data-slot="sidebar-gap"
@@ -237,11 +234,13 @@ function Sidebar({
             : "group-data-[collapsible=icon]:w-(--sidebar-width-icon) group-data-[side=left]:border-r group-data-[side=right]:border-l",
           className,
         )}
-        {...props}>
+        {...props}
+      >
         <div
           data-sidebar="sidebar"
           data-slot="sidebar-inner"
-          className="bg-sidebar group-data-[variant=floating]:ring-sidebar-border flex size-full flex-col group-data-[variant=floating]:rounded-lg group-data-[variant=floating]:shadow-sm group-data-[variant=floating]:ring-1">
+          className="bg-sidebar group-data-[variant=floating]:ring-sidebar-border flex size-full flex-col group-data-[variant=floating]:rounded-lg group-data-[variant=floating]:shadow-sm group-data-[variant=floating]:ring-1"
+        >
           {children}
         </div>
       </div>
@@ -268,12 +267,14 @@ function SidebarTrigger({
         onClick?.(event);
         toggleSidebar();
       }}
-      {...props}>
+      {...props}
+    >
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 256 256"
         data-state={state}
-        className="data-[state=expanded]:[&_#sidebar-line]:translate-x-20">
+        className="data-[state=expanded]:[&_#sidebar-line]:translate-x-20"
+      >
         <rect width="256" height="256" fill="none" />
         <line
           id="sidebar-line"
@@ -302,7 +303,7 @@ function SidebarTrigger({
         />
       </svg>
 
-      <span className="sr-only">{getUi(locale).toggleSidebar}</span>
+      <span className="sr-only">{getUi(locale).nav.toggleSidebar}</span>
     </Button>
   );
 }
@@ -313,7 +314,7 @@ function SidebarRail({
   ...props
 }: React.ComponentProps<"button"> & { locale?: Locale }) {
   const { toggleSidebar } = useSidebar();
-  const label = getUi(locale).toggleSidebar;
+  const label = getUi(locale).nav.toggleSidebar;
 
   return (
     <button
@@ -350,10 +351,7 @@ function SidebarInset({ className, ...props }: React.ComponentProps<"main">) {
   );
 }
 
-function SidebarInput({
-  className,
-  ...props
-}: React.ComponentProps<typeof Input>) {
+function SidebarInput({ className, ...props }: React.ComponentProps<typeof Input>) {
   return (
     <Input
       data-slot="sidebar-input"
@@ -386,10 +384,7 @@ function SidebarFooter({ className, ...props }: React.ComponentProps<"div">) {
   );
 }
 
-function SidebarSeparator({
-  className,
-  ...props
-}: React.ComponentProps<typeof Separator>) {
+function SidebarSeparator({ className, ...props }: React.ComponentProps<typeof Separator>) {
   return (
     <Separator
       data-slot="sidebar-separator"
@@ -473,10 +468,7 @@ function SidebarGroupAction({
   });
 }
 
-function SidebarGroupContent({
-  className,
-  ...props
-}: React.ComponentProps<"div">) {
+function SidebarGroupContent({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="sidebar-group-content"
@@ -615,10 +607,7 @@ function SidebarMenuAction({
   });
 }
 
-function SidebarMenuBadge({
-  className,
-  ...props
-}: React.ComponentProps<"div">) {
+function SidebarMenuBadge({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="sidebar-menu-badge"
@@ -649,13 +638,9 @@ function SidebarMenuSkeleton({
       data-slot="sidebar-menu-skeleton"
       data-sidebar="menu-skeleton"
       className={cn("flex h-8 items-center gap-2 rounded-md px-2", className)}
-      {...props}>
-      {showIcon && (
-        <Skeleton
-          className="size-4 rounded-md"
-          data-sidebar="menu-skeleton-icon"
-        />
-      )}
+      {...props}
+    >
+      {showIcon && <Skeleton className="size-4 rounded-md" data-sidebar="menu-skeleton-icon" />}
       <Skeleton
         className="h-4 max-w-(--skeleton-width) flex-1"
         data-sidebar="menu-skeleton-text"
@@ -683,10 +668,7 @@ function SidebarMenuSub({ className, ...props }: React.ComponentProps<"ul">) {
   );
 }
 
-function SidebarMenuSubItem({
-  className,
-  ...props
-}: React.ComponentProps<"li">) {
+function SidebarMenuSubItem({ className, ...props }: React.ComponentProps<"li">) {
   return (
     <li
       data-slot="sidebar-menu-sub-item"

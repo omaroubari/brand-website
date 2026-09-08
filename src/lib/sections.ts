@@ -1,9 +1,5 @@
 import { getCollection, type CollectionEntry } from "astro:content";
-import {
-  defaultLocale,
-  supportedLocales,
-  type Locale,
-} from "../i18n";
+import { defaultLocale, supportedLocales, type Locale } from "../i18n";
 
 export { defaultLocale, supportedLocales };
 export type { Locale };

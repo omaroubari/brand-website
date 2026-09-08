@@ -36,10 +36,11 @@ describe("resolveBrand", () => {
   });
 
   it("resolves built-in UI copy by exact locale, base language, then English", () => {
-    expect(getUi("ar").language).toBe("اللغة");
-    expect(getUi("ar-SA").language).toBe("اللغة");
-    expect(getUi("fr-CA").language).toBe("Language");
-    expect(getUi("__proto__").language).toBe("Language");
+    expect(getUi("ar").languageSwitcher.label).toBe("اللغة");
+    expect(getUi("ar-SA").languageSwitcher.label).toBe("اللغة");
+    expect(getUi("AR-sa").languageSwitcher.label).toBe("اللغة");
+    expect(getUi("fr-CA").languageSwitcher.label).toBe("Language");
+    expect(getUi("__proto__").languageSwitcher.label).toBe("Language");
   });
 
   it("applies sparse array overlays by identity while preserving canonical collections", () => {

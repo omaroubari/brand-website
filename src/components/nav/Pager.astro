@@ -13,11 +13,11 @@ const labels = getUi(locale);
 const { prev, next } = await getSiblings(id, locale);
 ---
 
-<nav class="pager" aria-label={labels.section}>
+<nav class="pager" aria-label={labels.page.pagination}>
   {
     prev ? (
       <a class="pager__link pager__link--prev" href={prev.href} rel="prev">
-        <span class="label">{labels.previous}</span>
+        <span class="label">{labels.page.previous}</span>
         <span class="pager__title">
           <span class="pager__num">{prev.number}</span> {prev.title}
         </span>
@@ -30,7 +30,7 @@ const { prev, next } = await getSiblings(id, locale);
   {
     next && (
       <a class="pager__link pager__link--next" href={next.href} rel="next">
-        <span class="label">{labels.next}</span>
+        <span class="label">{labels.page.next}</span>
         <span class="pager__title">
           <span class="pager__num">{next.number}</span> {next.title}
         </span>

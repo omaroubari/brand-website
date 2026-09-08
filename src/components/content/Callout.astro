@@ -12,9 +12,9 @@ const { tone = "note", title, class: className } = Astro.props;
 const marks = { note: "—", do: "✓", dont: "✕" } as const;
 const labels = getUi(getLocaleFromPath(Astro.url.pathname));
 const toneLabels = {
-  note: labels.note,
-  do: labels.do,
-  dont: labels.dont,
+  note: labels.content.note,
+  do: labels.content.do,
+  dont: labels.content.dont,
 } as const;
 ---
 

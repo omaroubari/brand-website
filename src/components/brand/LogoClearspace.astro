@@ -12,7 +12,7 @@ const { mark = "logotype", class: className } = Astro.props;
 
 const { ratio, unit } = brand.logo.clearspace;
 const ui = getUi(getLocaleFromPath(Astro.url.pathname));
-const clearspaceCopy = ui.clearspaceInstruction
+const clearspaceCopy = ui.logo.clearspaceInstruction
   .replace("{unit}", unit)
   .replace("{mark}", mark);
 /** Clear space is expressed as a fraction of the logo's own height. */

@@ -15,15 +15,21 @@ const ui = getUi(locale);
 const defaultSets =
   getDirection(locale) === "rtl"
     ? [
-        { label: ui.letters, chars: "ابتثجحخدذرزسشصضطظعغفقكلمنهوي" },
-        { label: ui.numerals, chars: "٠١٢٣٤٥٦٧٨٩ 0123456789" },
-        { label: ui.punctuation, chars: "،؛؟.!:()[]{}«»/\\&@#٪%*+−=" },
+        { label: ui.typography.letters, chars: "ابتثجحخدذرزسشصضطظعغفقكلمنهوي" },
+        { label: ui.typography.numerals, chars: "٠١٢٣٤٥٦٧٨٩ 0123456789" },
+        {
+          label: ui.typography.punctuation,
+          chars: "،؛؟.!:()[]{}«»/\\&@#٪%*+−=",
+        },
       ]
     : [
-        { label: ui.uppercase, chars: "ABCDEFGHIJKLMNOPQRSTUVWXYZ" },
-        { label: ui.lowercase, chars: "abcdefghijklmnopqrstuvwxyz" },
-        { label: ui.numerals, chars: "0123456789" },
-        { label: ui.punctuation, chars: ".,;:!?‘’“”()[]{}/\\&@#%*+−=" },
+        { label: ui.typography.uppercase, chars: "ABCDEFGHIJKLMNOPQRSTUVWXYZ" },
+        { label: ui.typography.lowercase, chars: "abcdefghijklmnopqrstuvwxyz" },
+        { label: ui.typography.numerals, chars: "0123456789" },
+        {
+          label: ui.typography.punctuation,
+          chars: ".,;:!?‘’“”()[]{}/\\&@#%*+−=",
+        },
       ];
 const resolvedSets = sets ?? defaultSets;
 ---

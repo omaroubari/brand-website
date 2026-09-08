@@ -43,7 +43,9 @@ const canonical = new URL(
 const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
 const tokens = brandStyleSheet(brand);
 const initialTheme = getInitialThemeAttributes(brand.theme.default);
-const alternateLocales = supportedLocales.filter((candidate) => candidate !== locale);
+const alternateLocales = supportedLocales.filter(
+  (candidate) => candidate !== locale,
+);
 ---
 
 <!doctype html>
@@ -67,10 +69,12 @@ const alternateLocales = supportedLocales.filter((candidate) => candidate !== lo
         <link
           rel="alternate"
           hreflang={candidate}
-          href={new URL(
-            getLocalizedPath(Astro.url.pathname, candidate),
-            Astro.site ?? "https://localhost",
-          ).href}
+          href={
+            new URL(
+              getLocalizedPath(Astro.url.pathname, candidate),
+              Astro.site ?? "https://localhost",
+            ).href
+          }
         />
       ))
     }

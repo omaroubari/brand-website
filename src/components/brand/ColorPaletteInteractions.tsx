@@ -28,22 +28,14 @@ async function copyToClipboard(value: string): Promise<boolean> {
   }
 }
 
-export default function ColorPaletteInteractions({
-  locale = defaultLocale,
-}: {
-  locale?: Locale;
-}) {
+export default function ColorPaletteInteractions({ locale = defaultLocale }: { locale?: Locale }) {
   const labels = getUi(locale);
 
   React.useEffect(() => {
-    const palettes = document.querySelectorAll<HTMLElement>(
-      "[data-color-palette]",
-    );
+    const palettes = document.querySelectorAll<HTMLElement>("[data-color-palette]");
 
     const handleClick = (event: MouseEvent) => {
-      const target = (event.target as HTMLElement).closest<HTMLButtonElement>(
-        "[data-copy-color]",
-      );
+      const target = (event.target as HTMLElement).closest<HTMLButtonElement>("[data-copy-color]");
       const hex = target?.dataset.copyColor;
 
       if (!target || !hex) return;
@@ -51,10 +43,10 @@ export default function ColorPaletteInteractions({
       void copyToClipboard(hex).then((copied) => {
         toast.add({
           id: "color-copy",
-          title: copied ? labels.colourCopied : labels.copyFailed,
+          title: copied ? labels.color.copied : labels.actions.copyFailed,
           description: copied
-            ? `${hex} ${labels.copied.toLowerCase()}.`
-            : `${labels.copyFailed}: ${hex}`,
+            ? `${hex} ${labels.actions.copied.toLowerCase()}.`
+            : `${labels.actions.copyFailed}: ${hex}`,
           type: copied ? "success" : "error",
           timeout: 1800,
         });

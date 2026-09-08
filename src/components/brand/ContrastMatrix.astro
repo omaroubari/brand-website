@@ -48,11 +48,11 @@ const rows = colors.map((fg) => ({
 <div class:list={["matrix-wrap", "bleed", "escape", className]}>
   <table class="matrix">
     <caption class="visually-hidden">
-      {ui.textOn} — WCAG contrast ratios for every pairing in the palette.
+      {ui.color.textOn} — WCAG contrast ratios for every pairing in the palette.
     </caption>
     <thead>
       <tr>
-        <th scope="col"><span class="label">{ui.textOn} →</span></th>
+        <th scope="col"><span class="label">{ui.color.textOn} →</span></th>
         {
           colors.map((c) => (
             <th scope="col" class="label matrix__head">
@@ -75,7 +75,9 @@ const rows = colors.map((fg) => ({
                   <span class="matrix__ratio mono" aria-hidden="true">
                     —
                   </span>
-                  <span class="visually-hidden">{ui.sameColourNoContrast}</span>
+                  <span class="visually-hidden">
+                    {ui.color.sameColorNoContrast}
+                  </span>
                 </td>
               ) : (
                 <td

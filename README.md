@@ -113,9 +113,12 @@ locale lookup is by `code`. `defaultLocale` must match one configured code.
 The `dir` value defaults to `ltr`; set `rtl` explicitly for right-to-left
 locales. Omitting `i18n` is reserved for the future single-locale mode with no
 locale segment in routes. Template UI dictionaries are supplied by the
-template (English and Arabic initially), with exact-code, base-language, then
-English fallback. The client-authored `locales` block remains the exact-code
-brand-content override layer described in ADR 0003.
+template, not by client config. The English baseline is derived from the UI
+schema; the bundled Arabic UI pack is a sparse override. UI resolution layers
+English, the configured default locale's built-in pack, and the requested
+locale's built-in pack. Pack lookup tries exact code, case-insensitive exact
+code, then base language. The client-authored `locales` block remains the
+separate, exact-code brand-content override layer described in ADR 0003.
 
 `navigation.numbering` is presentational only: it adds ordinal labels without
 changing section order, route identity, filenames, or the future project tree.
@@ -246,6 +249,8 @@ application pages read correctly before the client's mockups exist.
 | `src/brand/schema.ts`                   | Strict Zod schemas and configuration invariants            |
 | `src/brand/types.ts`                    | Types inferred from the Zod schemas                        |
 | `src/brand/tokens.ts`                   | Config → CSS custom properties, contrast maths, tint ramps |
+| `src/i18n/ui.ts`                        | UI schema, English baseline, and pack resolution           |
+| `src/i18n/ui-packs/`                    | Sparse built-in UI packs (Arabic initially)                |
 | `src/lib/sections.ts`                   | Ordering, numbering, prev/next                             |
 | `src/styles/global.css`                 | The document's visual language — no brand values hardcoded |
 | `src/components/ui/SectionOpener.astro` | The full-bleed accent divider that opens each section      |

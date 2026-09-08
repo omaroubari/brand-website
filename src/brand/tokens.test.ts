@@ -102,7 +102,6 @@ describe("brandStyleSheet", () => {
     expect(css).toContain("--font-display: arabic-display;");
     expect(css).toContain("--font-text: arabic-text;");
   });
-
 });
 
 describe("colour formats", () => {

@@ -31,7 +31,9 @@ const ui = getUi(locale);
     {glyph}
   </p>
   <div class="specimen__meta">
-    <p class="label">{font === "display" ? ui.display : ui.text}</p>
+    <p class="label">
+      {font === "display" ? ui.typography.display : ui.typography.text}
+    </p>
     <p class="specimen__name" style={`font-family: var(--font-${font});`}>
       {family?.name}
     </p>
@@ -41,7 +43,7 @@ const ui = getUi(locale);
       family?.url && (
         <p class="caption">
           <a href={family.url} rel="noreferrer noopener" target="_blank">
-            {ui.licenceAndDownloads}
+            {ui.brand.licenceAndDownloads}
           </a>
         </p>
       )

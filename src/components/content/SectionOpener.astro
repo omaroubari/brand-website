@@ -25,12 +25,16 @@ const ui = getUi(locale);
   <p class="colophon opener__colophon">
     <span>{meta.name}</span>
     <span>{meta.documentTitle}</span>
-    <span>{ui.version} {meta.version}</span>
+    <span>{ui.brand.version} {meta.version}</span>
     <span>{meta.year}©</span>
   </p>
 
   <div class="opener__type">
-    {brand.navigation.numbering && number && <p class="opener__num">{number}</p>}
+    {
+      brand.navigation.numbering && number && (
+        <p class="opener__num">{number}</p>
+      )
+    }
     <h1 class="opener__title">{title}</h1>
   </div>
 
