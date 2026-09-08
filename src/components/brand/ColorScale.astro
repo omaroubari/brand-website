@@ -33,7 +33,9 @@ const colors = only
     <div class="colour-scale__steps colour-scale__markers">
       {
         shadeSteps.map((step) => (
-          <div class="colour-scale__step" aria-label={`${ui.shade} ${step}`}>
+          <div
+            class="colour-scale__step"
+            aria-label={`${ui.color.shade} ${step}`}>
             {step}
           </div>
         ))
@@ -53,7 +55,7 @@ const colors = only
                   type="button"
                   style={`background: var(--color-${color.id}-${step}); color: contrast-color(${css});`}
                   data-copy-color={css}
-                  aria-label={`${ui.copy} ${color.name} ${step}, ${ui.copyToClipboard}`}>
+                  aria-label={`${ui.actions.copy} ${color.name} ${step}, ${ui.actions.copyToClipboard}`}>
                   {/* <span class="colour-scale__value mono">
                     {formatColor(value).replace("#", "")}
                   </span> */}

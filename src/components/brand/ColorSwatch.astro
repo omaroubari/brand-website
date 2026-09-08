@@ -42,7 +42,7 @@ const sourceValue = formatColor(source).replace("#", "");
     class="swatch__field soft-outline"
     type="button"
     data-copy-color={sourceCss}
-    aria-label={`${ui.copy} ${localizedColor.name} ${sourceLabel} ${ui.copyToClipboard}`}>
+    aria-label={`${ui.actions.copy} ${localizedColor.name} ${sourceLabel} ${ui.actions.copyToClipboard}`}>
     <span class="swatch__copy-icon" aria-hidden="true">
       <svg
         viewBox="0 0 24 24"
@@ -63,28 +63,28 @@ const sourceValue = formatColor(source).replace("#", "");
       {
         print && source.space !== "hex" && (
           <p class="swatch__spec mono">
-            <span>{ui.hex}</span> {hex}
+            <span>{ui.color.hex}</span> {hex}
           </p>
         )
       }
       {
         print && (
           <p class="swatch__spec mono">
-            <span>{ui.rgb}</span> {r} {g} {b}
+            <span>{ui.color.rgb}</span> {r} {g} {b}
           </p>
         )
       }
       {
         print && localizedColor.cmyk && (
           <p class="swatch__spec mono">
-            <span>{ui.cmyk}</span> {localizedColor.cmyk.join(" ")}
+            <span>{ui.color.cmyk}</span> {localizedColor.cmyk.join(" ")}
           </p>
         )
       }
       {
         print && localizedColor.pantone && (
           <p class="swatch__spec mono">
-            <span>{ui.pantone}</span> {localizedColor.pantone}
+            <span>{ui.color.pantone}</span> {localizedColor.pantone}
           </p>
         )
       }

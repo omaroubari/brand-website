@@ -119,11 +119,33 @@ section metadata remain authoritative for navigation structure.
 
 ## Template UI dictionary
 
-Template-owned interface copy in `src/i18n/index.ts`, separate from
-client-authored brand data and `localeOverrides`. English and Arabic are
-provided initially. Lookup may fall back from an exact locale code to its base
-language and then English; users do not author these dictionaries in the brand
-config.
+The complete, resolved set of template-owned interface copy described by the
+grouped schema in `src/i18n/ui.ts`. It is separate from client-authored brand
+data and `config.brand.localeOverrides`. Users do not author template UI
+dictionaries.
+
+## English baseline
+
+The complete default Template UI dictionary produced by parsing `{}` through
+the Zod UI schema. Every leaf-level schema supplies its English string, so the
+runtime baseline and the `UIStrings` type share one source of truth. English
+does not have a separate UI pack.
+
+## UI pack
+
+A template-maintained, two-level sparse override containing interface copy for
+one built-in locale. Packs contain only known schema groups and keys and may
+omit leaves that should fall back. This template currently ships the Arabic
+pack; adding a built-in language requires one pack module and one registry
+entry.
+
+## UI resolution
+
+The operation performed by `resolveUIStrings`: layer the configured default
+locale's built-in pack and then the requested locale's built-in pack over the
+English baseline. Each lookup tries exact code, case-insensitive exact code,
+then base language. This policy applies only to template UI copy and never to
+client-authored brand locale overrides.
 
 ## Canonical identity
 
@@ -173,9 +195,3 @@ A prose section stored at
 `src/content/sections/{locale}/NN-slug.mdx`. The directory selects the locale,
 the numeric prefix determines order and section number, and the remaining slug
 defines the locale-prefixed route.
-
-## UI dictionary
-
-The complete template-owned set of interface labels for one supported locale
-in `src/i18n/index.ts`. UI dictionaries translate navigation and controls;
-they do not contain client-authored brand content.

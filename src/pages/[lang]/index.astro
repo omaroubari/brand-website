@@ -41,7 +41,9 @@ const ui = getUi(locale);
       <h1 class="cover__title">{meta.documentTitle}</h1>
       <p class="cover__foot">
         <span><strong>{meta.name}</strong> {meta.tagline}</span>
-        <span class="cover__foot-mid">{meta.documentTitle} {ui.document}</span>
+        <span class="cover__foot-mid"
+          >{meta.documentTitle} {ui.brand.document}</span
+        >
         <span class="cover__foot-end">{meta.year}©</span>
       </p>
     </section>
@@ -52,7 +54,7 @@ const ui = getUi(locale);
     }
     <section class="contents" aria-labelledby="contents-title">
       <h2 class="doc-title contents__heading" id="contents-title">
-        {ui.contents}
+        {ui.nav.contents}
       </h2>
       <ol class="contents__list">
         {
@@ -75,7 +77,7 @@ const ui = getUi(locale);
         (localizedBrand.downloads ?? []).length > 0 && (
           <section aria-labelledby="downloads-title">
             <h2 class="label" id="downloads-title">
-              {ui.assets}
+              {ui.brand.assets}
             </h2>
             <Downloads class="ends__block" />
           </section>
@@ -83,9 +85,9 @@ const ui = getUi(locale);
       }
 
       <section aria-labelledby="contact-title">
-        <h2 class="label" id="contact-title">{ui.contact}</h2>
+        <h2 class="label" id="contact-title">{ui.brand.contact}</h2>
         <div class="ends__block contact">
-          <p class="contact__lead">{ui.contactLead}</p>
+          <p class="contact__lead">{ui.brand.contactLead}</p>
           <ul class="contact__list">
             {
               contact.email && (

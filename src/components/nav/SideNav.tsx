@@ -14,7 +14,6 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarProvider,
-  SidebarSeparator,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import ThemeToggle from "@/components/theme-toggle";
@@ -62,12 +61,7 @@ function BrandLogo({ altText }: { altText?: string }) {
   );
 }
 
-export default function SideNav({
-  links,
-  currentPath,
-  locale,
-  children,
-}: Props) {
+export default function SideNav({ links, currentPath, locale, children }: Props) {
   const localizedBrand = resolveBrand(brand, locale);
   const ui = getUi(locale);
 
@@ -76,13 +70,15 @@ export default function SideNav({
       <Sidebar
         side={getDirection(locale) === "rtl" ? "right" : "left"}
         locale={locale}
-        className="h-full">
+        className="h-full"
+      >
         <SidebarHeader>
           <div className="flex items-center justify-between ps-2 pt-2">
             <a
               className=""
               href={`/${locale}/`}
-              aria-label={`${localizedBrand.meta.name} ${localizedBrand.meta.documentTitle}`}>
+              aria-label={`${localizedBrand.meta.name} ${localizedBrand.meta.documentTitle}`}
+            >
               <BrandLogo altText={localizedBrand.logo.logotype.altText} />
             </a>
           </div>
@@ -90,10 +86,10 @@ export default function SideNav({
         <SidebarContent>
           <SidebarGroup>
             <SidebarGroupLabel className="text-muted-foreground text-(length:--text-body) font-medium">
-              {ui.contents}
+              {ui.nav.contents}
             </SidebarGroupLabel>
             <SidebarGroupContent>
-              <nav aria-label={ui.sections}>
+              <nav aria-label={ui.nav.sections}>
                 <SidebarMenu>
                   {links.map((link) => {
                     const isActive = currentPath === link.href;
@@ -111,7 +107,8 @@ export default function SideNav({
                           }>
                           {config.navigation.numbering && (
                             <span
-                              className={`tnum font-normal text-[color-mix(in_srgb,currentColor_40%,transparent)]`}>
+                              className={`tnum font-normal text-[color-mix(in_srgb,currentColor_40%,transparent)]`}
+                            >
                               {link.number}
                             </span>
                           )}
@@ -130,13 +127,15 @@ export default function SideNav({
           <ThemeToggle defaultTheme={brand.theme.default} locale={locale} />
           <nav
             className="flex items-center gap-2 text-[length:var(--text-caption)]"
-            aria-label={ui.language}>
+            aria-label={ui.languageSwitcher.label}
+          >
             {supportedLocales.map((candidate, index) => (
               <Fragment key={candidate}>
                 {index > 0 && <span aria-hidden="true">/</span>}
                 <a
                   href={getLocalizedPath(currentPath, candidate)}
-                  aria-current={candidate === locale ? "page" : undefined}>
+                  aria-current={candidate === locale ? "page" : undefined}
+                >
                   {localeInfo[candidate].label}
                 </a>
               </Fragment>
@@ -145,7 +144,7 @@ export default function SideNav({
           <p className="text-[length:var(--text-caption)] leading-[var(--text-caption--line-height)] tracking-[var(--text-caption--letter-spacing)] text-[var(--muted-foreground)]">
             {localizedBrand.meta.name} © {localizedBrand.meta.year}
             <br />
-            {ui.version} {localizedBrand.meta.version}
+            {ui.brand.version} {localizedBrand.meta.version}
           </p>
         </SidebarFooter>
       </Sidebar>

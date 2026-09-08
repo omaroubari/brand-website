@@ -14,9 +14,9 @@ const ui = getUi(getLocaleFromPath(Astro.url.pathname));
   class="toggle"
   type="button"
   data-theme-toggle
-  data-label-light={ui.light}
-  data-label-dark={ui.dark}
-  data-label-switch-to={ui.switchToTheme}
+  data-label-light={ui.theme.light}
+  data-label-dark={ui.theme.dark}
+  data-label-switch-to={ui.theme.switchTo}
   aria-pressed="false">
   <svg
     viewBox="0 0 16 16"
@@ -34,7 +34,7 @@ const ui = getUi(getLocaleFromPath(Astro.url.pathname));
       d="M13 9.4A5.6 5.6 0 1 1 6.6 3a4.6 4.6 0 0 0 6.4 6.4Z"
       class="toggle__moon"></path>
   </svg>
-  <span class="toggle__label" data-theme-label>{ui.light}</span>
+  <span class="toggle__label" data-theme-label>{ui.theme.light}</span>
 </button>
 
 <style>
@@ -105,19 +105,21 @@ const ui = getUi(getLocaleFromPath(Astro.url.pathname));
     for (const button of document.querySelectorAll<HTMLButtonElement>(
       "[data-theme-toggle]",
     )) {
+      const lightLabel = button.dataset.labelLight;
+      const darkLabel = button.dataset.labelDark;
+      const switchToLabel = button.dataset.labelSwitchTo;
+      if (!lightLabel || !darkLabel || !switchToLabel) continue;
+
       button.setAttribute("aria-pressed", String(theme === "dark"));
       const label = button.querySelector("[data-theme-label]");
       if (label) {
-        label.textContent =
-          theme === "dark"
-            ? (button.dataset.labelDark ?? "Dark")
-            : (button.dataset.labelLight ?? "Light");
+        label.textContent = theme === "dark" ? darkLabel : lightLabel;
       }
       button.setAttribute(
         "aria-label",
         theme === "dark"
-          ? `${button.dataset.labelSwitchTo ?? "Switch to"} ${button.dataset.labelLight ?? "Light"}`
-          : `${button.dataset.labelSwitchTo ?? "Switch to"} ${button.dataset.labelDark ?? "Dark"}`,
+          ? `${switchToLabel} ${lightLabel}`
+          : `${switchToLabel} ${darkLabel}`,
       );
     }
   }

@@ -45,24 +45,24 @@ const steps = only
           {step.role && <p class="caption scale__role">{step.role}</p>}
           <dl class="scale__specs mono">
             <div>
-              <dt>{ui.size}</dt>
+              <dt>{ui.typography.size}</dt>
               <dd>{step.size}</dd>
             </div>
             <div>
-              <dt>{ui.leading}</dt>
+              <dt>{ui.typography.leading}</dt>
               <dd>{step.lineHeight}</dd>
             </div>
             <div>
-              <dt>{ui.tracking}</dt>
+              <dt>{ui.typography.tracking}</dt>
               <dd>{step.tracking}</dd>
             </div>
             <div>
-              <dt>{ui.weight}</dt>
+              <dt>{ui.typography.weight}</dt>
               <dd>{step.weight ?? 400}</dd>
             </div>
             {print && step.print && (
               <div class="scale__print">
-                <dt>{ui.print}</dt>
+                <dt>{ui.typography.print}</dt>
                 <dd>
                   {step.print.size} / {step.print.leading} /{" "}
                   {step.print.tracking}

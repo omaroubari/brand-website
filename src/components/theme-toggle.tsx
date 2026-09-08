@@ -26,7 +26,7 @@ export function ThemeToggle({
   const theme = useTheme({ defaultTheme });
   const mode = getSuggestedThemeSetting(theme);
   const labels = getUi(locale);
-  const actionLabel = `${labels.switchToTheme} ${labels[mode]} ${labels.language.toLowerCase()}`;
+  const actionLabel = `${labels.theme.switchTo} ${labels.theme[mode].toLowerCase()}`;
 
   return (
     <Button
