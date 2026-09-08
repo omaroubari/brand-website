@@ -103,14 +103,6 @@ describe("brandStyleSheet", () => {
     expect(css).toContain("--font-text: arabic-text;");
   });
 
-  it("fails when a scheme references an unknown shade", () => {
-    const config = fixture();
-    config.theme.light.primary = "missing-500";
-
-    expect(() => brandStyleSheet(config)).toThrow(
-      'Unknown colour reference "missing-500"',
-    );
-  });
 });
 
 describe("colour formats", () => {

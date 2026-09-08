@@ -425,6 +425,14 @@ export const brand = defineBrand({
     ],
   },
 
+  i18n: {
+    defaultLocale: "en",
+    locales: [
+      { code: "en", label: "English", dir: "ltr" },
+      { code: "ar", label: "العربية", dir: "rtl" },
+    ],
+  },
+
   /** Shown on the home page. Drop the real files into `public/brand/`. */
   downloads: [
     {
@@ -612,7 +620,9 @@ export const brand = defineBrand({
     },
   },
 
-  numbering: true,
+  navigation: {
+    numbering: true,
+  },
 });
 
 export type Brand = typeof brand;

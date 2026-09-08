@@ -71,9 +71,53 @@ describes UI intent and resolves to a raw swatch variable.
 
 ## Canonical brand config
 
-The complete root `BrandConfig` stored in `src/brand/config.ts`. It is the
-source of truth for brand facts and may be authored in any language. A resolved
-locale falls back directly to this config when its override omits a field.
+The complete flat root configuration authored in `src/brand/config.ts`. It is
+the source of truth for brand facts and may be authored in any language. Zod
+parses it at the configuration boundary; a resolved locale falls back directly
+to this config when its override omits a field.
+
+## Brand configuration
+
+The validated flat object returned by `defineBrand()`. It combines canonical
+brand data with optional `i18n` and `navigation` settings. It is the current
+configuration boundary; a future migration may introduce a nested
+`config.brand` aggregate.
+
+## Parsed configuration
+
+The Zod output type (`BrandConfig`) consumed by runtime code. It includes
+schema defaults, such as `navigation.numbering` and locale direction, and is
+distinct from the authored input type (`BrandConfigInput`).
+
+## I18n configuration
+
+The optional `i18n` block that declares ordered locale definitions and the
+required default locale when multilingual configuration is present. Locale
+codes identify behavior; array order controls only language-switcher display
+order. Omitting the block will eventually mean one unprefixed locale, but that
+runtime behavior is deferred to the project-tree/routing change.
+
+## Locale definition
+
+An entry in `i18n.locales`, consisting of a canonical locale `code`, a
+self-name `label` for the language switcher, and an optional `dir` (`ltr` by
+default or explicit `rtl`). Locale codes are unique and the `defaultLocale`
+must name one of them.
+
+## Navigation configuration
+
+The optional `navigation` block. It currently contains only `numbering`, a
+presentational switch for ordinal labels that does not control content order,
+routes, filenames, or the future project tree. The content filesystem and
+section metadata remain authoritative for navigation structure.
+
+## Template UI dictionary
+
+Template-owned interface copy in `src/i18n/index.ts`, separate from
+client-authored brand data and `locales` overrides. English and Arabic are
+provided initially. Lookup may fall back from an exact locale code to its base
+language and then English; users do not author these dictionaries in the brand
+config.
 
 ## Canonical identity
 

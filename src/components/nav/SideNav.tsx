@@ -1,6 +1,6 @@
 "use client";
 
-import type { ReactNode } from "react";
+import { Fragment, type ReactNode } from "react";
 
 import {
   Sidebar,
@@ -24,6 +24,8 @@ import {
   getLocalizedPath,
   getUi,
   localeInfo,
+  supportedLocales,
+  getDirection,
   resolveBrand,
   type Locale,
 } from "../../i18n";
@@ -68,12 +70,11 @@ export default function SideNav({
 }: Props) {
   const localizedBrand = resolveBrand(brand, locale);
   const ui = getUi(locale);
-  const otherLocale = locale === "en" ? "ar" : "en";
 
   return (
     <SidebarProvider className="min-w-0" defaultOpen>
       <Sidebar
-        side={locale === "ar" ? "right" : "left"}
+        side={getDirection(locale) === "rtl" ? "right" : "left"}
         locale={locale}
         className="h-full">
         <SidebarHeader>
@@ -108,7 +109,7 @@ export default function SideNav({
                               aria-current={isActive ? "page" : undefined}
                             />
                           }>
-                          {brand.numbering && (
+                          {brand.navigation.numbering && (
                             <span
                               className={`tnum font-normal text-[color-mix(in_srgb,currentColor_40%,transparent)]`}>
                               {link.number}
@@ -130,13 +131,16 @@ export default function SideNav({
           <nav
             className="flex items-center gap-2 text-[length:var(--text-caption)]"
             aria-label={ui.language}>
-            <a href={getLocalizedPath(currentPath, locale)} aria-current="page">
-              {localeInfo[locale].nativeLabel}
-            </a>
-            <span aria-hidden="true">/</span>
-            <a href={getLocalizedPath(currentPath, otherLocale)}>
-              {localeInfo[otherLocale].nativeLabel}
-            </a>
+            {supportedLocales.map((candidate, index) => (
+              <Fragment key={candidate}>
+                {index > 0 && <span aria-hidden="true">/</span>}
+                <a
+                  href={getLocalizedPath(currentPath, candidate)}
+                  aria-current={candidate === locale ? "page" : undefined}>
+                  {localeInfo[candidate].label}
+                </a>
+              </Fragment>
+            ))}
           </nav>
           <p className="text-[length:var(--text-caption)] leading-[var(--text-caption--line-height)] tracking-[var(--text-caption--letter-spacing)] text-[var(--muted-foreground)]">
             {localizedBrand.meta.name} © {localizedBrand.meta.year}

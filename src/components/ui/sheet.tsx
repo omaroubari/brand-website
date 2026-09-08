@@ -4,7 +4,7 @@ import { Dialog as SheetPrimitive } from "@base-ui/react/dialog";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { XIcon } from "lucide-react";
-import { getUi, type Locale } from "@/i18n";
+import { defaultLocale, getUi, type Locale } from "@/i18n";
 
 function Sheet({ ...props }: SheetPrimitive.Root.Props) {
   return <SheetPrimitive.Root data-slot="sheet" {...props} />;
@@ -40,7 +40,7 @@ function SheetContent({
   children,
   side = "right",
   showCloseButton = true,
-  locale = "en",
+  locale = defaultLocale,
   ...props
 }: SheetPrimitive.Popup.Props & {
   side?: "top" | "right" | "bottom" | "left";

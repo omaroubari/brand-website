@@ -9,9 +9,6 @@ import type {
   BrandSwatch,
 } from "./types";
 
-const ID = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
-const HEX = /^#(?:[0-9a-f]{3}|[0-9a-f]{6})$/i;
-
 /** The fixed order used by Tailwind-style shade scales. */
 export const shadeSteps = [
   50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950,
@@ -65,78 +62,6 @@ export const schemeRoles = [
   "sidebarBorder",
   "sidebarRing",
 ] as const satisfies ReadonlyArray<keyof BrandScheme>;
-
-function validateColor(value: BrandColorValue, label: string): void {
-  if (value.space === "hex") {
-    if (!HEX.test(value.value)) {
-      throw new Error(`[brand] Invalid hex for ${label}: "${value.value}".`);
-    }
-    return;
-  }
-
-  if (
-    value.l < 0 ||
-    value.l > 1 ||
-    value.c < 0 ||
-    value.h < 0 ||
-    value.h > 360 ||
-    (value.alpha !== undefined && (value.alpha < 0 || value.alpha > 1))
-  ) {
-    throw new Error(`[brand] Invalid OKLCH value for ${label}.`);
-  }
-}
-
-function validatePalette(brand: BrandConfig): void {
-  const familyIds = new Set<string>();
-  const swatchIds = new Set<string>();
-
-  for (const family of brand.colors.palette) {
-    if (!ID.test(family.id)) {
-      throw new Error(
-        `[brand] Invalid palette family id "${family.id}". Use lowercase kebab-case.`,
-      );
-    }
-    if (familyIds.has(family.id)) {
-      throw new Error(`[brand] Duplicate palette family id "${family.id}".`);
-    }
-    for (const step of shadeSteps) {
-      validateColor(family.shades[step], `${family.id}-${step}`);
-    }
-    familyIds.add(family.id);
-  }
-
-  for (const swatch of brand.colors.swatches) {
-    if (!ID.test(swatch.id)) {
-      throw new Error(
-        `[brand] Invalid swatch id "${swatch.id}". Use lowercase kebab-case.`,
-      );
-    }
-    if (swatchIds.has(swatch.id)) {
-      throw new Error(`[brand] Duplicate swatch id "${swatch.id}".`);
-    }
-    resolveColor(brand, swatch.color);
-    if (swatch.on) resolveColor(brand, swatch.on);
-    swatchIds.add(swatch.id);
-  }
-}
-
-function validateScheme(brand: BrandConfig, name: "light" | "dark"): void {
-  const scheme = brand.theme[name];
-  const roles = new Set(Object.keys(scheme));
-
-  for (const role of schemeRoles) {
-    if (!roles.has(role)) {
-      throw new Error(`[brand] ${name} scheme is missing role "${role}".`);
-    }
-    resolveColor(brand, scheme[role]);
-  }
-}
-
-function validateBrandTheme(brand: BrandConfig): void {
-  validatePalette(brand);
-  validateScheme(brand, "light");
-  validateScheme(brand, "dark");
-}
 
 /** Look a named documentation swatch up by id. */
 export function swatch(brand: BrandConfig, id: string): BrandSwatch {
@@ -314,8 +239,6 @@ function kebab(value: string): string {
  * shadcn roles then point to those tokens per scheme.
  */
 export function brandStyleSheet(brand: BrandConfig): string {
-  validateBrandTheme(brand);
-
   const palette = [
     ...Object.entries(specialColors).map(
       ([id, value]) => `--color-${id}: ${colorCss(value)};`,

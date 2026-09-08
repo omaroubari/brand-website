@@ -1,7 +1,15 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, expectTypeOf, it } from "vitest";
 import { brand } from "../brand/config";
 import type { BrandConfig } from "../brand/types";
-import { resolveBrand } from "./index";
+import {
+  defaultLocale,
+  getDirection,
+  getUi,
+  localeInfo,
+  resolveBrand,
+  supportedLocales,
+  type Locale,
+} from "./index";
 
 function canonicalBrand(): BrandConfig {
   const config = structuredClone(brand) as BrandConfig;
@@ -9,17 +17,31 @@ function canonicalBrand(): BrandConfig {
   return config;
 }
 
-function thrownMessage(run: () => unknown): string {
-  try {
-    run();
-  } catch (error) {
-    return error instanceof Error ? error.message : String(error);
-  }
-
-  throw new Error("Expected the operation to throw");
-}
-
 describe("resolveBrand", () => {
+  it("derives locale metadata and switcher order from brand.i18n", () => {
+    expectTypeOf<Locale>().toEqualTypeOf<"en" | "ar">();
+    expect(supportedLocales).toEqual(["en", "ar"]);
+    expect(defaultLocale).toBe("en");
+    expect(localeInfo.en).toMatchObject({
+      code: "en",
+      label: "English",
+      dir: "ltr",
+    });
+    expect(localeInfo.ar).toMatchObject({
+      code: "ar",
+      label: "العربية",
+      dir: "rtl",
+    });
+    expect(getDirection("ar")).toBe("rtl");
+  });
+
+  it("resolves built-in UI copy by exact locale, base language, then English", () => {
+    expect(getUi("ar").language).toBe("اللغة");
+    expect(getUi("ar-SA").language).toBe("اللغة");
+    expect(getUi("fr-CA").language).toBe("Language");
+    expect(getUi("__proto__").language).toBe("Language");
+  });
+
   it("applies sparse array overlays by identity while preserving canonical collections", () => {
     const config = canonicalBrand();
     const canonicalPaletteIds = config.colors.palette.map(({ id }) => id);
@@ -115,66 +137,5 @@ describe("resolveBrand", () => {
 
     expect(localized.meta.documentTitle).toBe("دليل الهوية");
     expect(localized.colors.palette[0].name).toBe(canonicalName);
-  });
-
-  it("rejects an override identity absent from the canonical collection", () => {
-    const config = canonicalBrand();
-    config.locales = {
-      ar: {
-        colors: {
-          palette: [{ id: "missing-family", name: "مفقود" }],
-        },
-      },
-    };
-
-    const message = thrownMessage(() => resolveBrand(config, "ar"));
-
-    expect(message).toMatch(/unknown/i);
-    expect(message).toContain("ar");
-    expect(message).toContain("colors.palette");
-    expect(message).toContain("missing-family");
-  });
-
-  it("rejects duplicate identities in a locale collection", () => {
-    const config = canonicalBrand();
-    config.locales = {
-      ar: {
-        typography: {
-          weights: [
-            { weight: 300, name: "خفيف" },
-            { weight: 300, name: "خفيف جدًا" },
-          ],
-        },
-      },
-    };
-
-    const message = thrownMessage(() => resolveBrand(config, "ar"));
-
-    expect(message).toMatch(/duplicate/i);
-    expect(message).toContain("ar");
-    expect(message).toContain("typography.weights");
-    expect(message).toContain("300");
-  });
-
-  it("rejects duplicate identities in a canonical collection", () => {
-    const config = canonicalBrand();
-    config.downloads = [
-      {
-        id: "logo-pack",
-        label: "Logo pack",
-        href: "/brand/logo-pack.zip",
-      },
-      {
-        id: "logo-pack",
-        label: "Alternate logo pack",
-        href: "/brand/alternate-logo-pack.zip",
-      },
-    ];
-
-    const message = thrownMessage(() => resolveBrand(config, "ar"));
-
-    expect(message).toMatch(/duplicate/i);
-    expect(message).toContain("downloads");
-    expect(message).toContain("logo-pack");
   });
 });

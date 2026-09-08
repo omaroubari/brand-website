@@ -1,8 +1,8 @@
 ---
 import { brand } from "../../brand/config";
 import {
-  DEFAULT_LOCALE,
-  SUPPORTED_LOCALES,
+  defaultLocale,
+  supportedLocales,
   getSectionLinks,
   type Locale,
 } from "../../lib/sections";
@@ -12,7 +12,7 @@ import Downloads from "../../components/brand/Downloads.astro";
 import { getUi, resolveBrand } from "../../i18n";
 
 export function getStaticPaths() {
-  return SUPPORTED_LOCALES.map((locale) => ({
+  return supportedLocales.map((locale) => ({
     params: { lang: locale },
     props: { locale },
   }));
@@ -20,7 +20,7 @@ export function getStaticPaths() {
 
 const locale = (Astro.props.locale ??
   Astro.params.lang ??
-  DEFAULT_LOCALE) as Locale;
+  defaultLocale) as Locale;
 
 const links = await getSectionLinks(locale);
 const localizedBrand = resolveBrand(brand, locale);
@@ -59,7 +59,7 @@ const ui = getUi(locale);
           links.map((link) => (
             <li>
               <a class="contents__link" href={link.href}>
-                {brand.numbering && (
+                {brand.navigation.numbering && (
                   <span class="contents__num tnum">{link.number}</span>
                 )}
                 <span class="contents__title">{link.title}</span>

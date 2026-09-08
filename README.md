@@ -4,9 +4,10 @@ A reusable brand guidelines website. Clone it per client, edit one config file
 and ten MDX sections, and hand over a living document instead of a PDF that
 nobody opens twice.
 
-Structured data (palette, type scale, logo artwork, contact details) lives in
-**one typed file**. Prose lives in **MDX**, with brand components you drop in
-where you need a specimen, a swatch grid or a misuse panel.
+Structured data (palette, type scale, logo artwork, contact details, locale
+settings and navigation presentation) lives in **one Zod-validated file**.
+Prose lives in **MDX**, with brand components you drop in where you need a
+specimen, a swatch grid or a misuse panel.
 
 ```
 /                  cover + contents
@@ -29,9 +30,11 @@ where you need a specimen, a swatch grid or a misuse panel.
 1. **Clone and rename.** Copy the repo, then set `name` in `package.json` and
    `wrangler.jsonc`.
 2. **Fill in [`src/brand/config.ts`](src/brand/config.ts).** Name, palette,
-   type scale, logo paths, contact. Everything else reads from here. Colour
-   `id`s become `--color-{id}` and are referenced by `theme` — keep them stable
-   while you change names and hex values.
+   type scale, logo paths, contact, and (when needed) `i18n` and `navigation`.
+   Everything else reads from this parsed configuration. Colour `id`s become
+   `--color-{id}` and are referenced by `theme` — keep them stable while you
+   change names and hex values. Unknown keys and invalid cross-references fail
+   validation at the configuration boundary.
 3. **Drop in the artwork.** Replace the four placeholder SVGs in
    [`public/brand/`](public/brand/) and `public/favicon.svg`. Convert wordmark
    type to outlines. Keep each file single-colour — `LogoColorways` recolours
@@ -58,9 +61,11 @@ where you need a specimen, a swatch grid or a misuse panel.
 
 ### `src/brand/config.ts`
 
-Fully typed against [`src/brand/types.ts`](src/brand/types.ts), so your editor
-tells you what a field is for and the build fails on a typo rather than
-rendering a blank swatch.
+Parsed with the strict Zod schemas in [`src/brand/schema.ts`](src/brand/schema.ts).
+The inferred types in [`src/brand/types.ts`](src/brand/types.ts) keep editor
+autocomplete aligned with the runtime model, and the build fails on unknown
+keys, duplicate identities, or unresolved references rather than rendering a
+blank swatch.
 
 ```ts
 colors: {
@@ -86,6 +91,36 @@ theme: {
   dark:  { background: 'black', foreground: 'white', primary: 'orange-500', /* … */ },
 },
 ```
+
+Optional publishing behavior lives alongside the flat brand data:
+
+```ts
+i18n: {
+  defaultLocale: "en",
+  locales: [
+    { code: "en", label: "English" },
+    { code: "ar", label: "العربية", dir: "rtl" },
+  ],
+},
+
+navigation: {
+  numbering: true,
+},
+```
+
+`i18n.locales` order controls only the language switcher's display order;
+locale lookup is by `code`. `defaultLocale` must match one configured code.
+The `dir` value defaults to `ltr`; set `rtl` explicitly for right-to-left
+locales. Omitting `i18n` is reserved for the future single-locale mode with no
+locale segment in routes. Template UI dictionaries are supplied by the
+template (English and Arabic initially), with exact-code, base-language, then
+English fallback. The client-authored `locales` block remains the exact-code
+brand-content override layer described in ADR 0003.
+
+`navigation.numbering` is presentational only: it adds ordinal labels without
+changing section order, route identity, filenames, or the future project tree.
+Navigation structure and ordering continue to come from the content tree and
+section metadata.
 
 Roles map onto stable shade references, and components only ever reference the
 role — so the underlying source values can be Hex or OKLCH without changing
@@ -207,8 +242,9 @@ application pages read correctly before the client's mockups exist.
 
 |                                         |                                                            |
 | --------------------------------------- | ---------------------------------------------------------- |
-| `src/brand/config.ts`                   | The client's brand, as data                                |
-| `src/brand/types.ts`                    | What that data must look like                              |
+| `src/brand/config.ts`                   | The client's authored configuration                        |
+| `src/brand/schema.ts`                   | Strict Zod schemas and configuration invariants            |
+| `src/brand/types.ts`                    | Types inferred from the Zod schemas                        |
 | `src/brand/tokens.ts`                   | Config → CSS custom properties, contrast maths, tint ramps |
 | `src/lib/sections.ts`                   | Ordering, numbering, prev/next                             |
 | `src/styles/global.css`                 | The document's visual language — no brand values hardcoded |

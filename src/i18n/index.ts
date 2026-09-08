@@ -1,51 +1,46 @@
-import type {
-  BrandConfig,
-  BrandLocale,
-  BrandLocaleOverride,
-} from "@/brand/types";
+import { brand } from "../brand/config";
+import type { BrandConfig, BrandLocaleOverride } from "../brand/types";
 
-/** Locales built by the site. Routes are always prefixed with one of these. */
-export const supportedLocales = ["en", "ar"] as const;
-export type Locale = BrandLocale;
-export const defaultLocale: Locale = "en";
+type ConfiguredI18n = NonNullable<typeof brand.i18n>;
+const configuredI18n = brand.i18n;
+
+if (!configuredI18n) {
+  throw new Error(
+    "The current runtime requires brand.i18n; single-locale routing is not implemented yet.",
+  );
+}
+
+/** Locales configured for the site, in language-switcher display order. */
+export type Locale = ConfiguredI18n["locales"][number]["code"];
+export const supportedLocales = configuredI18n.locales.map(
+  ({ code }) => code,
+) as readonly Locale[];
+export const defaultLocale = configuredI18n.defaultLocale as Locale;
 export const LOCALE_COOKIE_NAME = "brand-locale";
-
-/** Alias constants useful in Astro config and route generation. */
-export const SUPPORTED_LOCALES = supportedLocales;
-export const DEFAULT_LOCALE = defaultLocale;
 
 export type LocaleDirection = "ltr" | "rtl";
 
 export interface LocaleInfo {
   code: Locale;
   label: string;
-  nativeLabel: string;
-  direction: LocaleDirection;
+  dir: LocaleDirection;
 }
 
-export const localeInfo: Record<Locale, LocaleInfo> = {
-  en: {
-    code: "en",
-    label: "English",
-    nativeLabel: "English",
-    direction: "ltr",
-  },
-  ar: {
-    code: "ar",
-    label: "Arabic",
-    nativeLabel: "العربية",
-    direction: "rtl",
-  },
-};
+export const localeInfo = Object.fromEntries(
+  configuredI18n.locales.map(({ code, label, dir }) => [
+    code,
+    { code, label, dir },
+  ]),
+) as Record<Locale, LocaleInfo>;
 
 const localeSet = new Set<string>(supportedLocales);
 
-/** Return a supported locale, falling back to English for unknown input. */
+/** Return a supported locale, falling back to the configured default. */
 export function getLocale(value: string | null | undefined): Locale {
   return value && localeSet.has(value) ? (value as Locale) : defaultLocale;
 }
 
-/** Read the locale prefix from a pathname, with English as the safe fallback. */
+/** Read the locale prefix from a pathname, with the configured default as fallback. */
 export function getLocaleFromPath(pathname: string): Locale {
   const firstSegment = pathname.replace(/^\/+/, "").split(/[/?#]/, 1)[0];
   return getLocale(firstSegment);
@@ -54,7 +49,7 @@ export function getLocaleFromPath(pathname: string): Locale {
 export function getDirection(
   locale: Locale | string | null | undefined,
 ): LocaleDirection {
-  return localeInfo[getLocale(locale)].direction;
+  return localeInfo[getLocale(locale)].dir;
 }
 
 /**
@@ -75,14 +70,6 @@ export function getLocalizedPath(
   if (localeSet.has(segments[0] ?? "")) segments.shift();
   const rest = segments.filter(Boolean).join("/");
   return `/${resolvedLocale}/${rest}${suffix}`.replace(/\/$/, rest ? "" : "/");
-}
-
-/** Backwards-friendly alias with the locale-first argument order. */
-export function localizedPath(
-  locale: Locale | string,
-  pathname: string,
-): string {
-  return getLocalizedPath(pathname, locale);
 }
 
 export interface UiStrings {
@@ -140,7 +127,10 @@ export interface UiStrings {
   punctuation: string;
 }
 
-export const ui: Record<Locale, UiStrings> = {
+type BuiltInLocale = "en" | "ar";
+
+/** UI dictionaries shipped by the template. Brand locales are configured independently. */
+export const ui: Record<BuiltInLocale, UiStrings> = {
   en: {
     brandGuidelines: "Brand guidelines",
     contents: "Contents",
@@ -259,12 +249,21 @@ export function t(
   locale: Locale | string | null | undefined,
   key: keyof UiStrings,
 ): string {
-  return ui[getLocale(locale)][key] ?? ui[defaultLocale][key];
+  return getUi(locale)[key] ?? ui.en[key];
 }
 
-/** Return the complete UI dictionary for a locale. */
+/**
+ * Return the complete UI dictionary for a locale. Template copy resolves by
+ * exact locale, then base language (for example `ar-SA` → `ar`), then English.
+ */
 export function getUi(locale: Locale | string | null | undefined): UiStrings {
-  return ui[getLocale(locale)] ?? ui[defaultLocale];
+  const requested = locale ?? defaultLocale;
+  if (Object.hasOwn(ui, requested)) return ui[requested as BuiltInLocale];
+
+  const base = requested.split("-", 1)[0].toLowerCase();
+  if (Object.hasOwn(ui, base)) return ui[base as BuiltInLocale];
+
+  return ui.en;
 }
 
 function mergeLocalizedCollection<
@@ -274,32 +273,12 @@ function mergeLocalizedCollection<
   canonical: T[],
   localized: Array<Pick<T, K> & Partial<T>> | undefined,
   identityKey: K,
-  path: string,
-  locale: string,
+  _path: string,
+  _locale: string,
 ): T[] {
-  const canonicalByIdentity = new Map<string | number, T>();
-
-  for (const item of canonical) {
-    const identity = item[identityKey];
-    if (canonicalByIdentity.has(identity)) {
-      throw new Error(`Duplicate canonical identity "${identity}" in ${path}`);
-    }
-    canonicalByIdentity.set(identity, item);
-  }
-
   const localizedByIdentity = new Map<string | number, Partial<T>>();
   for (const item of localized ?? []) {
     const identity = item[identityKey];
-    if (localizedByIdentity.has(identity)) {
-      throw new Error(
-        `Duplicate locale identity "${identity}" in ${path} for locale "${locale}"`,
-      );
-    }
-    if (!canonicalByIdentity.has(identity)) {
-      throw new Error(
-        `Unknown locale identity "${identity}" in ${path} for locale "${locale}"`,
-      );
-    }
     localizedByIdentity.set(identity, item);
   }
 

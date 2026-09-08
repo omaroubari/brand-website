@@ -1,11 +1,11 @@
 import { getCollection, type CollectionEntry } from "astro:content";
 import {
-  defaultLocale as DEFAULT_LOCALE,
-  supportedLocales as SUPPORTED_LOCALES,
+  defaultLocale,
+  supportedLocales,
   type Locale,
 } from "../i18n";
 
-export { DEFAULT_LOCALE, SUPPORTED_LOCALES };
+export { defaultLocale, supportedLocales };
 export type { Locale };
 
 export type Section = CollectionEntry<"sections">;
@@ -21,13 +21,13 @@ export interface SectionLink {
 }
 
 function isLocale(value: string): value is Locale {
-  return (SUPPORTED_LOCALES as readonly string[]).includes(value);
+  return (supportedLocales as readonly string[]).includes(value);
 }
 
 /** Locale encoded by the content ID (`en/logo`). */
 export function sectionLocale(entry: Section): Locale {
   const candidate = entry.id.split("/", 1)[0];
-  return isLocale(candidate) ? candidate : DEFAULT_LOCALE;
+  return isLocale(candidate) ? candidate : defaultLocale;
 }
 
 /** Stable URL slug without the locale prefix (`en/logo` → `logo`). */
@@ -51,7 +51,7 @@ function orderOf(entry: Section): number {
  * can preview what you are writing.
  */
 export async function getSections(
-  locale: Locale = DEFAULT_LOCALE,
+  locale: Locale = defaultLocale,
 ): Promise<Section[]> {
   const entries = await getCollection(
     "sections",
@@ -86,7 +86,7 @@ export function toLink(entry: Section, index: number): SectionLink {
 
 /** Ordered nav entries — used by the rail, the contents list and the pager. */
 export async function getSectionLinks(
-  locale: Locale = DEFAULT_LOCALE,
+  locale: Locale = defaultLocale,
 ): Promise<SectionLink[]> {
   return (await getSections(locale)).map(toLink);
 }
@@ -94,7 +94,7 @@ export async function getSectionLinks(
 /** Previous and next sections relative to `id`, for the pager. */
 export async function getSiblings(
   id: string,
-  locale: Locale = DEFAULT_LOCALE,
+  locale: Locale = defaultLocale,
 ): Promise<{ prev?: SectionLink; next?: SectionLink }> {
   const links = await getSectionLinks(locale);
   const i = links.findIndex((l) => l.id === sectionSlug(id));

@@ -24,7 +24,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { PanelLeftIcon } from "lucide-react";
-import { getUi, type Locale } from "@/i18n";
+import { defaultLocale, getUi, type Locale } from "@/i18n";
 
 const SIDEBAR_COOKIE_NAME = "sidebar_state";
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
@@ -156,7 +156,7 @@ function Sidebar({
   className,
   children,
   dir,
-  locale = "en",
+  locale = defaultLocale,
   ...props
 }: React.ComponentProps<"div"> & {
   side?: "left" | "right";
@@ -252,7 +252,7 @@ function Sidebar({
 function SidebarTrigger({
   className,
   onClick,
-  locale = "en",
+  locale = defaultLocale,
   ...props
 }: React.ComponentProps<typeof Button> & { locale?: Locale }) {
   const { toggleSidebar, state } = useSidebar();
@@ -309,7 +309,7 @@ function SidebarTrigger({
 
 function SidebarRail({
   className,
-  locale = "en",
+  locale = defaultLocale,
   ...props
 }: React.ComponentProps<"button"> & { locale?: Locale }) {
   const { toggleSidebar } = useSidebar();

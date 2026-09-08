@@ -11,7 +11,7 @@ import {
   OctagonXIcon,
   Loader2Icon,
 } from "lucide-react";
-import { getLocale, getUi } from "@/i18n";
+import { defaultLocale, getLocale, getUi } from "@/i18n";
 
 const toast = ToastPrimitive.createToastManager();
 
@@ -126,7 +126,7 @@ function ToastClose({
       aria-label={
         getUi(
           typeof document === "undefined"
-            ? "en"
+            ? defaultLocale
             : getLocale(document.documentElement.lang),
         ).close
       }

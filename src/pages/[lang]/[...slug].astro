@@ -1,7 +1,7 @@
 ---
 import { render } from "astro:content";
 import {
-  SUPPORTED_LOCALES,
+  supportedLocales,
   getSections,
   sectionNumber,
   sectionSlug,
@@ -11,7 +11,7 @@ import SectionLayout from "../../layouts/SectionLayout.astro";
 
 export async function getStaticPaths() {
   const paths = [];
-  for (const locale of SUPPORTED_LOCALES) {
+  for (const locale of supportedLocales) {
     const sections = await getSections(locale);
     paths.push(
       ...sections.map((entry, index) => ({

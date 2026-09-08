@@ -1,5 +1,5 @@
 ---
-import { getLocaleFromPath, getUi } from "../../i18n";
+import { getDirection, getLocaleFromPath, getUi } from "../../i18n";
 
 interface Props {
   font?: "display" | "text";
@@ -13,7 +13,7 @@ const { font = "display", weight = 400, sets, class: className } = Astro.props;
 const locale = getLocaleFromPath(Astro.url.pathname);
 const ui = getUi(locale);
 const defaultSets =
-  locale === "ar"
+  getDirection(locale) === "rtl"
     ? [
         { label: ui.letters, chars: "ابتثجحخدذرزسشصضطظعغفقكلمنهوي" },
         { label: ui.numerals, chars: "٠١٢٣٤٥٦٧٨٩ 0123456789" },

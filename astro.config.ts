@@ -9,13 +9,20 @@ import react from "@astrojs/react";
 
 import tailwindcss from "@tailwindcss/vite";
 
+const siteI18n = brand.i18n;
+if (!siteI18n) {
+  throw new Error(
+    "The current Astro routing setup requires brand.i18n; single-locale routing is not implemented yet.",
+  );
+}
+
 // https://astro.build/config
 export default defineConfig({
   site: brand.meta.url,
   output: "static",
   i18n: {
-    locales: ["en", "ar"],
-    defaultLocale: "en",
+    locales: siteI18n.locales.map(({ code }) => code),
+    defaultLocale: siteI18n.defaultLocale,
     routing: {
       prefixDefaultLocale: true,
     },
