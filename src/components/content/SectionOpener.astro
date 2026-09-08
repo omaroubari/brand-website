@@ -1,5 +1,5 @@
 ---
-import { brand } from "../../brand/config";
+import { brand, config } from "../../brand/config";
 import { getLocaleFromPath, getUi, resolveBrand } from "../../i18n";
 
 /**
@@ -30,7 +30,11 @@ const ui = getUi(locale);
   </p>
 
   <div class="opener__type">
-    {brand.navigation.numbering && number && <p class="opener__num">{number}</p>}
+    {
+      config.navigation.numbering && number && (
+        <p class="opener__num">{number}</p>
+      )
+    }
     <h1 class="opener__title">{title}</h1>
   </div>
 

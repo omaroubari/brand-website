@@ -3,16 +3,17 @@ import { defineConfig, fontProviders } from "astro/config";
 import mdx from "@astrojs/mdx";
 import cloudflare from "@astrojs/cloudflare";
 
-import { brand } from "./src/brand/config";
+import { brand, config } from "./src/brand/config";
 
 import react from "@astrojs/react";
 
 import tailwindcss from "@tailwindcss/vite";
 
-const siteI18n = brand.i18n;
-if (!siteI18n) {
+const { i18n } = config;
+
+if (!i18n) {
   throw new Error(
-    "The current Astro routing setup requires brand.i18n; single-locale routing is not implemented yet.",
+    "The current Astro routing setup requires config.i18n; single-locale routing is not implemented yet.",
   );
 }
 
@@ -21,8 +22,8 @@ export default defineConfig({
   site: brand.meta.url,
   output: "static",
   i18n: {
-    locales: siteI18n.locales.map(({ code }) => code),
-    defaultLocale: siteI18n.defaultLocale,
+    locales: i18n.locales.map(({ code }) => code),
+    defaultLocale: i18n.defaultLocale,
     routing: {
       prefixDefaultLocale: true,
     },

@@ -7,7 +7,7 @@ The shape that matters: **structured brand data is typed and centralised, prose
 is MDX.** Keep it that way.
 
 - `src/brand/config.ts` — the only file that holds client-specific data. Typed
-  against `src/brand/types.ts`.
+  against `src/brand/schema.ts`.
 - `src/brand/tokens.ts` — derives CSS custom properties, contrast ratios and
   tint ramps from the config.
 - `src/content/sections/NN-slug.mdx` — one file per section. The `NN-` prefix

@@ -1,6 +1,6 @@
 import { describe, expect, expectTypeOf, it } from "vitest";
 import { brand } from "../brand/config";
-import type { BrandConfig } from "../brand/types";
+import type { BrandConfig } from "../brand/schema";
 import {
   defaultLocale,
   getDirection,
@@ -13,12 +13,12 @@ import {
 
 function canonicalBrand(): BrandConfig {
   const config = structuredClone(brand) as BrandConfig;
-  config.locales = undefined;
+  config.localeOverrides = undefined;
   return config;
 }
 
 describe("resolveBrand", () => {
-  it("derives locale metadata and switcher order from brand.i18n", () => {
+  it("derives locale metadata and switcher order from config.i18n", () => {
     expectTypeOf<Locale>().toEqualTypeOf<"en" | "ar">();
     expect(supportedLocales).toEqual(["en", "ar"]);
     expect(defaultLocale).toBe("en");
@@ -51,7 +51,7 @@ describe("resolveBrand", () => {
     );
     const canonicalScaleIds = config.typography.scale.map(({ id }) => id);
 
-    config.locales = {
+    config.localeOverrides = {
       ar: {
         colors: {
           palette: [
@@ -122,7 +122,7 @@ describe("resolveBrand", () => {
   it("resolves only the requested locale over the canonical config", () => {
     const config = canonicalBrand();
     const canonicalName = config.colors.palette[0].name;
-    config.locales = {
+    config.localeOverrides = {
       en: {
         colors: {
           palette: [{ id: "neutral", name: "English locale override" }],

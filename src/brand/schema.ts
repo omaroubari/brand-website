@@ -367,18 +367,19 @@ export const navigationConfigSchema = z
   .object({ numbering: z.boolean().default(false) })
   .strict();
 
-const localeInfoSchema = z
-  .object({
-    code: z.string(),
-    label: z.string(),
-    dir: z.enum(["ltr", "rtl"]).default("ltr"),
-  })
-  .strict();
+/** A configured locale: ISO-ish code plus display metadata for the switcher. */
+const localeSchema = z.strictObject({
+  code: z.string().min(1),
+  /** Text direction; drives `<html dir>` and a future RTL pass. */
+  dir: z.enum(["ltr", "rtl"]).default("ltr"),
+  label: z.string(),
+  style: z.string().optional(),
+});
 
 export const i18nConfigSchema = z
   .object({
     defaultLocale: z.string(),
-    locales: z.array(localeInfoSchema),
+    locales: z.array(localeSchema),
   })
   .strict()
   .superRefine((value, ctx) => {
@@ -415,7 +416,7 @@ export const i18nConfigSchema = z
     }
   });
 
-export const brandConfigSchema = z
+export const brandSchema = z
   .object({
     meta: metaSchema,
     colors: brandColorsSchema,
@@ -424,9 +425,7 @@ export const brandConfigSchema = z
     logo: logoSchema,
     contact: contactSchema,
     downloads: z.array(downloadSchema).optional(),
-    locales: z.record(z.string(), localeOverrideSchema).optional(),
-    i18n: i18nConfigSchema.optional(),
-    navigation: navigationConfigSchema.prefault({}),
+    localeOverrides: z.record(z.string(), localeOverrideSchema).optional(),
   })
   .strict()
   .superRefine((brand, ctx) => {
@@ -500,24 +499,9 @@ export const brandConfigSchema = z
       checkColor(colorway.bg, ["logo", "colorways", index, "bg"]);
     });
 
-    if (brand.locales && !brand.i18n) {
-      ctx.addIssue({
-        code: "custom",
-        path: ["locales"],
-        message: "Locale overrides require an i18n configuration.",
-      });
-    }
-    const configuredLocales = new Set(
-      brand.i18n?.locales.map((locale) => locale.code),
-    );
-    for (const [localeCode, override] of Object.entries(brand.locales ?? {})) {
-      if (!configuredLocales.has(localeCode)) {
-        ctx.addIssue({
-          code: "custom",
-          path: ["locales", localeCode],
-          message: `Locale override "${localeCode}" is not configured in i18n.locales.`,
-        });
-      }
+    for (const [localeCode, override] of Object.entries(
+      brand.localeOverrides ?? {},
+    )) {
       const checkOverrideIds = (
         values: readonly { id: string }[] | undefined,
         canonical: readonly { id: string }[],
@@ -537,13 +521,13 @@ export const brandConfigSchema = z
         });
       };
       checkOverrideIds(override.colors?.palette, brand.colors.palette, [
-        "locales",
+        "localeOverrides",
         localeCode,
         "colors",
         "palette",
       ]);
       checkOverrideIds(override.colors?.swatches, brand.colors.swatches, [
-        "locales",
+        "localeOverrides",
         localeCode,
         "colors",
         "swatches",
@@ -551,16 +535,16 @@ export const brandConfigSchema = z
       checkOverrideIds(
         override.typography?.families,
         brand.typography.families,
-        ["locales", localeCode, "typography", "families"],
+        ["localeOverrides", localeCode, "typography", "families"],
       );
       checkOverrideIds(override.typography?.scale, brand.typography.scale, [
-        "locales",
+        "localeOverrides",
         localeCode,
         "typography",
         "scale",
       ]);
       if (override.typography?.weights) {
-        const path = ["locales", localeCode, "typography", "weights"];
+        const path = ["localeOverrides", localeCode, "typography", "weights"];
         weights(override.typography.weights, path);
         const canonicalWeights = new Set(
           brand.typography.weights.map((item) => item.weight),
@@ -576,27 +560,61 @@ export const brandConfigSchema = z
         });
       }
       checkOverrideIds(override.logo?.colorways, brand.logo.colorways, [
-        "locales",
+        "localeOverrides",
         localeCode,
         "logo",
         "colorways",
       ]);
       checkOverrideIds(override.contact?.socials, brand.contact.socials ?? [], [
-        "locales",
+        "localeOverrides",
         localeCode,
         "contact",
         "socials",
       ]);
       checkOverrideIds(override.downloads, brand.downloads ?? [], [
-        "locales",
+        "localeOverrides",
         localeCode,
         "downloads",
       ]);
     }
   });
 
-export type BrandConfigInput = z.input<typeof brandConfigSchema>;
-export type BrandConfig = z.output<typeof brandConfigSchema>;
+export const brandtreeConfigSchema = z
+  .object({
+    brand: brandSchema,
+    i18n: i18nConfigSchema.optional(),
+    navigation: navigationConfigSchema.prefault({}),
+  })
+  .strict()
+  .superRefine((config, ctx) => {
+    const localeOverrides = config.brand.localeOverrides;
+    if (localeOverrides && !config.i18n) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["brand", "localeOverrides"],
+        message: "Locale overrides require an i18n configuration.",
+      });
+    }
+
+    const configuredLocales = new Set(
+      config.i18n?.locales.map((locale) => locale.code),
+    );
+    for (const localeCode of Object.keys(localeOverrides ?? {})) {
+      if (!configuredLocales.has(localeCode)) {
+        ctx.addIssue({
+          code: "custom",
+          path: ["brand", "localeOverrides", localeCode],
+          message: `Locale override "${localeCode}" is not configured in i18n.locales.`,
+        });
+      }
+    }
+  });
+
+export type ResolvedConfig = z.output<typeof brandtreeConfigSchema>;
+export type BrandtreeConfigInput = z.input<typeof brandtreeConfigSchema>;
+
+export type BrandConfigInput = z.input<typeof brandSchema>;
+export type BrandConfig = z.output<typeof brandSchema>;
 export type BrandColors = z.output<typeof brandColorsSchema>;
 export type BrandColorValue = z.output<typeof brandColorValueSchema>;
 export type BrandColorReference = string;
@@ -616,18 +634,17 @@ export type BrandMeta = BrandConfig["meta"];
 export type BrandContact = BrandConfig["contact"];
 export type BrandDownload = NonNullable<BrandConfig["downloads"]>[number];
 export type BrandLocaleOverride = z.output<typeof localeOverrideSchema>;
-export type BrandLocaleOverrides = Record<string, BrandLocaleOverride>;
-export type I18nConfigInput = z.input<typeof i18nConfigSchema>;
-export type I18nConfig = z.output<typeof i18nConfigSchema>;
-export type NavigationConfigInput = z.input<typeof navigationConfigSchema>;
-export type NavigationConfig = z.output<typeof navigationConfigSchema>;
+export type BrandLocaleOverrides = NonNullable<BrandConfig["localeOverrides"]>;
+
+export type ResolvedI18nConfig = z.infer<typeof i18nConfigSchema>;
+export type LocaleConfig = z.infer<typeof localeSchema>;
 
 /**
  * Parse once at the configuration boundary while preserving literal fields in
  * the caller's inferred type (notably the configured locale code union).
  */
-export function defineBrand<const T extends BrandConfigInput>(
+export function defineConfig<const T extends BrandtreeConfigInput>(
   config: T,
-): BrandConfig & T {
-  return brandConfigSchema.parse(config) as BrandConfig & T;
+): ResolvedConfig & T {
+  return brandtreeConfigSchema.parse(config) as ResolvedConfig & T;
 }

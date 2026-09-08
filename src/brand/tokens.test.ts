@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { BrandColorFamily, BrandConfig, BrandScheme } from "./types";
+import type { BrandColorFamily, BrandConfig, BrandScheme } from "./schema";
 import {
   brandStyleSheet,
   colorCss,
@@ -87,7 +87,7 @@ describe("brandStyleSheet", () => {
 
   it("emits locale typography from the root locale overlay", () => {
     const config = fixture();
-    config.locales = {
+    config.localeOverrides = {
       ar: {
         typography: {
           display: "arabic-display",
@@ -102,7 +102,6 @@ describe("brandStyleSheet", () => {
     expect(css).toContain("--font-display: arabic-display;");
     expect(css).toContain("--font-text: arabic-text;");
   });
-
 });
 
 describe("colour formats", () => {

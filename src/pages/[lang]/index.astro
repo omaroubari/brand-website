@@ -1,5 +1,5 @@
 ---
-import { brand } from "../../brand/config";
+import { brand, config } from "../../brand/config";
 import {
   defaultLocale,
   supportedLocales,
@@ -59,7 +59,7 @@ const ui = getUi(locale);
           links.map((link) => (
             <li>
               <a class="contents__link" href={link.href}>
-                {brand.navigation.numbering && (
+                {config.navigation.numbering && (
                   <span class="contents__num tnum">{link.number}</span>
                 )}
                 <span class="contents__title">{link.title}</span>

@@ -1,12 +1,12 @@
-import { brand } from "../brand/config";
-import type { BrandConfig, BrandLocaleOverride } from "../brand/types";
+import { config } from "../brand/config";
+import type { BrandConfig, BrandLocaleOverride } from "../brand/schema";
 
-type ConfiguredI18n = NonNullable<typeof brand.i18n>;
-const configuredI18n = brand.i18n;
+type ConfiguredI18n = NonNullable<typeof config.i18n>;
+const configuredI18n = config.i18n;
 
 if (!configuredI18n) {
   throw new Error(
-    "The current runtime requires brand.i18n; single-locale routing is not implemented yet.",
+    "The current runtime requires config.i18n; single-locale routing is not implemented yet.",
   );
 }
 
@@ -298,7 +298,8 @@ export function resolveBrand<T extends BrandConfig>(
   locale: Locale | string,
 ): T {
   const resolvedLocale = getLocale(locale);
-  const override: BrandLocaleOverride = brand.locales?.[resolvedLocale] ?? {};
+  const override: BrandLocaleOverride =
+    brand.localeOverrides?.[resolvedLocale] ?? {};
 
   const result: BrandConfig = {
     ...brand,

@@ -18,7 +18,7 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import ThemeToggle from "@/components/theme-toggle";
-import { brand } from "../../brand/config";
+import { brand, config } from "../../brand/config";
 import type { SectionLink } from "../../lib/sections";
 import {
   getLocalizedPath,
@@ -109,7 +109,7 @@ export default function SideNav({
                               aria-current={isActive ? "page" : undefined}
                             />
                           }>
-                          {brand.navigation.numbering && (
+                          {config.navigation.numbering && (
                             <span
                               className={`tnum font-normal text-[color-mix(in_srgb,currentColor_40%,transparent)]`}>
                               {link.number}

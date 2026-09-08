@@ -7,7 +7,7 @@ import type {
   BrandShadeStep,
   BrandSpecialColor,
   BrandSwatch,
-} from "./types";
+} from "./schema";
 
 /** The fixed order used by Tailwind-style shade scales. */
 export const shadeSteps = [
@@ -276,7 +276,7 @@ export function brandStyleSheet(brand: BrandConfig): string {
 \t}`
         : "";
 
-  const localeTypography = Object.entries(brand.locales ?? {})
+  const localeTypography = Object.entries(brand.localeOverrides ?? {})
     .map(([locale, override]) => {
       const typography = override?.typography;
       if (!typography) return "";

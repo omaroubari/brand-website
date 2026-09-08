@@ -18,8 +18,7 @@ of truth for section structure and ordering.
 
 Make Zod the authoritative runtime and type model. Add the schemas in
 `src/brand/schema.ts` and have `defineBrand()` parse the authored object at the
-configuration boundary. `src/brand/types.ts` re-exports inferred types rather
-than maintaining a second handwritten model:
+configuration boundary. `schema.ts` exports inferred types:
 
 - `BrandConfigInput = z.input<typeof brandConfigSchema>` describes authored
   data;

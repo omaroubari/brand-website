@@ -29,9 +29,10 @@ specimen, a swatch grid or a misuse panel.
 
 1. **Clone and rename.** Copy the repo, then set `name` in `package.json` and
    `wrangler.jsonc`.
-2. **Fill in [`src/brand/config.ts`](src/brand/config.ts).** Name, palette,
-   type scale, logo paths, contact, and (when needed) `i18n` and `navigation`.
-   Everything else reads from this parsed configuration. Colour `id`s become
+2. **Fill in [`src/brand/config.ts`](src/brand/config.ts).** Put name, palette,
+   type scale, logo paths, and contact under `config.brand`; configure site
+   behavior with `config.i18n` and `config.navigation`. Everything else reads
+   from this parsed configuration. Colour `id`s become
    `--color-{id}` and are referenced by `theme` — keep them stable while you
    change names and hex values. Unknown keys and invalid cross-references fail
    validation at the configuration boundary.
@@ -62,65 +63,80 @@ specimen, a swatch grid or a misuse panel.
 ### `src/brand/config.ts`
 
 Parsed with the strict Zod schemas in [`src/brand/schema.ts`](src/brand/schema.ts).
-The inferred types in [`src/brand/types.ts`](src/brand/types.ts) keep editor
+The inferred types in [`src/brand/schema.ts`](src/brand/schema.ts) keep editor
 autocomplete aligned with the runtime model, and the build fails on unknown
 keys, duplicate identities, or unresolved references rather than rendering a
 blank swatch.
 
 ```ts
-colors: {
-  palette: [
-    {
-      id: 'orange',
-      name: 'Orange',
-      shades: {
-        50: { space: 'hex', value: '#fff3ed' },
-        500: { space: 'hex', value: '#ef3800' },
-        950: { space: 'hex', value: '#3b1000' },
+export const config = defineConfig({
+  brand: {
+    colors: {
+      palette: [
+        {
+          id: "orange",
+          name: "Orange",
+          shades: {
+            50: { space: "hex", value: "#fff3ed" },
+            500: { space: "hex", value: "#ef3800" },
+            950: { space: "hex", value: "#3b1000" },
+          },
+        },
+      ],
+      swatches: [
+        {
+          id: "orange-red",
+          name: "Orange/Red",
+          color: "orange-500",
+          category: "secondary",
+        },
+      ],
+    },
+    theme: {
+      default: "system",
+      light: {
+        background: "white",
+        foreground: "black",
+        primary: "orange-500" /* … */,
+      },
+      dark: {
+        background: "black",
+        foreground: "white",
+        primary: "orange-500" /* … */,
       },
     },
-  ],
-  swatches: [
-    { id: 'orange-red', name: 'Orange/Red', color: 'orange-500', category: 'secondary' },
-  ],
-},
+    localeOverrides: {
+      ar: { meta: { documentTitle: "دليل الهوية" } },
+    },
+  },
+  i18n: {
+    defaultLocale: "en",
+    locales: [
+      { code: "en", label: "English" },
+      { code: "ar", label: "العربية", dir: "rtl" },
+    ],
+  },
+  navigation: {
+    numbering: true,
+  },
+});
 
-theme: {
-  default: 'system',
-  light: { background: 'white', foreground: 'black', primary: 'orange-500', /* … */ },
-  dark:  { background: 'black', foreground: 'white', primary: 'orange-500', /* … */ },
-},
+export const brand = config.brand;
 ```
 
-Optional publishing behavior lives alongside the flat brand data:
-
-```ts
-i18n: {
-  defaultLocale: "en",
-  locales: [
-    { code: "en", label: "English" },
-    { code: "ar", label: "العربية", dir: "rtl" },
-  ],
-},
-
-navigation: {
-  numbering: true,
-},
-```
-
-`i18n.locales` order controls only the language switcher's display order;
-locale lookup is by `code`. `defaultLocale` must match one configured code.
+`config.i18n.locales` order controls only the language switcher's display
+order; locale lookup is by `code`. `defaultLocale` must match one configured code.
 The `dir` value defaults to `ltr`; set `rtl` explicitly for right-to-left
 locales. Omitting `i18n` is reserved for the future single-locale mode with no
 locale segment in routes. Template UI dictionaries are supplied by the
 template (English and Arabic initially), with exact-code, base-language, then
-English fallback. The client-authored `locales` block remains the exact-code
-brand-content override layer described in ADR 0003.
+English fallback. The client-authored `config.brand.localeOverrides` block is
+the exact-code brand-content override layer described in ADR 0003 and ADR 0005.
 
-`navigation.numbering` is presentational only: it adds ordinal labels without
-changing section order, route identity, filenames, or the future project tree.
-Navigation structure and ordering continue to come from the content tree and
-section metadata.
+`config.navigation.numbering` is presentational only: it adds ordinal labels
+without changing section order, route identity, filenames, or the future
+project tree. Navigation structure and ordering continue to come from the
+content tree and section metadata.
 
 Roles map onto stable shade references, and components only ever reference the
 role — so the underlying source values can be Hex or OKLCH without changing

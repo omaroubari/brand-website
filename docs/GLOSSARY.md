@@ -71,27 +71,33 @@ describes UI intent and resolves to a raw swatch variable.
 
 ## Canonical brand config
 
-The complete flat root configuration authored in `src/brand/config.ts`. It is
+The complete `config.brand` object authored in `src/brand/config.ts`. It is
 the source of truth for brand facts and may be authored in any language. Zod
-parses it at the configuration boundary; a resolved locale falls back directly
-to this config when its override omits a field.
+parses it within the site configuration seam; a resolved locale falls back
+directly to this config when its override omits a field.
 
 ## Brand configuration
 
-The validated flat object returned by `defineBrand()`. It combines canonical
-brand data with optional `i18n` and `navigation` settings. It is the current
-configuration boundary; a future migration may introduce a nested
-`config.brand` aggregate.
+The brand-data-only object parsed by `brandSchema` and exposed as
+`config.brand`. The named `brand` export is a compatibility-facing alias for
+brand exhibit modules; site behavior does not live in this object.
+
+## Site configuration
+
+The validated aggregate returned by `defineConfig()`. It contains
+`config.brand`, optional `config.i18n`, and resolved `config.navigation`, and is
+the one parsing interface for client-authored structured configuration.
 
 ## Parsed configuration
 
-The Zod output type (`BrandConfig`) consumed by runtime code. It includes
-schema defaults, such as `navigation.numbering` and locale direction, and is
-distinct from the authored input type (`BrandConfigInput`).
+The Zod output types consumed by runtime code. `ResolvedConfig` includes aggregate
+defaults such as `navigation.numbering`; `BrandConfig` contains brand data
+only. They are distinct from the authored `BrandtreeConfigInput` and
+`BrandConfigInput` types.
 
 ## I18n configuration
 
-The optional `i18n` block that declares ordered locale definitions and the
+The optional `config.i18n` block that declares ordered locale definitions and the
 required default locale when multilingual configuration is present. Locale
 codes identify behavior; array order controls only language-switcher display
 order. Omitting the block will eventually mean one unprefixed locale, but that
@@ -99,14 +105,14 @@ runtime behavior is deferred to the project-tree/routing change.
 
 ## Locale definition
 
-An entry in `i18n.locales`, consisting of a canonical locale `code`, a
+An entry in `config.i18n.locales`, consisting of a canonical locale `code`, a
 self-name `label` for the language switcher, and an optional `dir` (`ltr` by
 default or explicit `rtl`). Locale codes are unique and the `defaultLocale`
 must name one of them.
 
 ## Navigation configuration
 
-The optional `navigation` block. It currently contains only `numbering`, a
+The optional `config.navigation` block. It currently contains only `numbering`, a
 presentational switch for ordinal labels that does not control content order,
 routes, filenames, or the future project tree. The content filesystem and
 section metadata remain authoritative for navigation structure.
@@ -114,7 +120,7 @@ section metadata remain authoritative for navigation structure.
 ## Template UI dictionary
 
 Template-owned interface copy in `src/i18n/index.ts`, separate from
-client-authored brand data and `locales` overrides. English and Arabic are
+client-authored brand data and `localeOverrides`. English and Arabic are
 provided initially. Lookup may fall back from an exact locale code to its base
 language and then English; users do not author these dictionaries in the brand
 config.
@@ -128,10 +134,11 @@ is translated.
 
 ## Locale override
 
-The optional structured brand data under `brand.locales[locale]`. It contains
-only language-sensitive differences for that requested locale and is layered
-directly onto the `Canonical brand config`. No locale, including English, is a
-privileged fallback layer.
+The optional structured brand data under
+`config.brand.localeOverrides[locale]`. It contains only language-sensitive
+differences for that requested locale and is layered directly onto the
+`Canonical brand config`. No locale, including English, is a privileged
+fallback layer.
 
 ## Localizable field
 
@@ -157,8 +164,8 @@ preserved; omitted items and fields retain their canonical values.
 
 The operation performed by `resolveBrand`: clone the canonical config and
 merge the requested locale override onto it field by field. Its only layers are
-`canonical root -> requested locale`; `locales.en` participates only when
-English is requested.
+`canonical brand config -> requested locale override`;
+`localeOverrides.en` participates only when English is requested.
 
 ## Locale-prefixed section
 
