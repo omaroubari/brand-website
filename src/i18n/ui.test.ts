@@ -57,9 +57,10 @@ describe("template UI language packs", () => {
 
       for (const [group, values] of Object.entries(pack)) {
         for (const [key, value] of Object.entries(values ?? {})) {
-          expect(typeof value, `${locale}.${group}.${key} is not a string`).toBe(
-            "string",
-          );
+          expect(
+            typeof value,
+            `${locale}.${group}.${key} is not a string`,
+          ).toBe("string");
           expect(
             String(value).trim(),
             `${locale}.${group}.${key} is blank`,

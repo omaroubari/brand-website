@@ -232,6 +232,46 @@ hr {
   flex: 1;
 }
 
+/* ── Content navigation ──────────────────────────────────────────────────── */
+
+.nav-sidebar__label {
+  display: flex;
+  min-height: 2rem;
+  width: 100%;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  font-size: var(--text-caption);
+  line-height: var(--text-caption--line-height);
+  letter-spacing: var(--text-caption--letter-spacing);
+  font-weight: var(--text-label--font-weight);
+}
+
+.nav-sidebar__title {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.nav-sidebar__number {
+  flex: 0 0 auto;
+  color: color-mix(in srgb, currentColor 40%, transparent);
+  font-weight: 400;
+}
+
+.nav-sidebar__badge {
+  flex: 0 0 auto;
+  margin-inline-start: auto;
+  border: var(--rule) solid var(--sidebar-border);
+  border-radius: 999px;
+  padding-inline: 0.35rem;
+  color: var(--muted-foreground);
+  font-size: var(--text-caption);
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
 /* Wide blocks may break the measure but never the page. */
 .bleed {
   overflow-x: auto;

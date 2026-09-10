@@ -1,5 +1,6 @@
 import { config } from "../brand/config";
 import type { BrandConfig, BrandLocaleOverride } from "../brand/schema";
+import { i18nEnabled, localizeRoute } from "../lib/core/i18n";
 import { resolveUIStrings } from "./ui";
 
 export {
@@ -13,17 +14,23 @@ export {
 } from "./ui";
 
 type ConfiguredI18n = NonNullable<typeof config.i18n>;
-const configuredI18n = config.i18n;
 
-if (!configuredI18n) {
-  throw new Error(
-    "The current runtime requires config.i18n; single-locale routing is not implemented yet.",
-  );
+let configuredI18n;
+
+if (config.i18n) {
+  configuredI18n = config.i18n;
+} else {
+  configuredI18n = {
+    locales: [{ code: "en", label: "English", dir: "ltr" }],
+    defaultLocale: "en",
+  };
 }
 
 /** Locales configured for the site, in language-switcher display order. */
 export type Locale = ConfiguredI18n["locales"][number]["code"];
-export const supportedLocales = configuredI18n.locales.map(({ code }) => code) as readonly Locale[];
+export const supportedLocales = configuredI18n.locales.map(
+  ({ code }) => code,
+) as readonly Locale[];
 export const defaultLocale = configuredI18n.defaultLocale as Locale;
 export const LOCALE_COOKIE_NAME = "brand-locale";
 
@@ -36,7 +43,10 @@ export interface LocaleInfo {
 }
 
 export const localeInfo = Object.fromEntries(
-  configuredI18n.locales.map(({ code, label, dir }) => [code, { code, label, dir }]),
+  configuredI18n.locales.map(({ code, label, dir }) => [
+    code,
+    { code, label, dir },
+  ]),
 ) as Record<Locale, LocaleInfo>;
 
 const localeSet = new Set<string>(supportedLocales);
@@ -52,16 +62,22 @@ export function getLocaleFromPath(pathname: string): Locale {
   return getLocale(firstSegment);
 }
 
-export function getDirection(locale: Locale | string | null | undefined): LocaleDirection {
+export function getDirection(
+  locale: Locale | string | null | undefined,
+): LocaleDirection {
   return localeInfo[getLocale(locale)].dir;
 }
 
 /**
- * Build a fully-prefixed locale URL. Existing locale prefixes are replaced so
- * language switchers can safely pass the current pathname back through this
- * helper. Query strings and hashes are preserved.
+ * Build a localized URL using the configured default-prefix policy. Existing
+ * locale prefixes are replaced so language switchers can safely pass the
+ * current pathname back through this helper. Query strings and hashes are
+ * preserved. Without i18n the logical route is returned unchanged.
  */
-export function getLocalizedPath(pathname: string, locale: Locale | string): string {
+export function getLocalizedPath(
+  pathname: string,
+  locale: Locale | string,
+): string {
   const resolvedLocale = getLocale(locale);
   const match = pathname.match(/^([^?#]*)([?#].*)?$/);
   const rawPath = match?.[1] || "/";
@@ -70,7 +86,11 @@ export function getLocalizedPath(pathname: string, locale: Locale | string): str
   const segments = withoutLeading.split("/");
   if (localeSet.has(segments[0] ?? "")) segments.shift();
   const rest = segments.filter(Boolean).join("/");
-  return `/${resolvedLocale}/${rest}${suffix}`.replace(/\/$/, rest ? "" : "/");
+  const logicalRoute = rest ? `/${rest}` : "/";
+  const localizedRoute = i18nEnabled(config)
+    ? localizeRoute(logicalRoute, resolvedLocale, config.i18n)
+    : logicalRoute;
+  return `${localizedRoute}${suffix}`;
 }
 
 /**
@@ -81,7 +101,10 @@ export function getUi(locale: Locale | string | null | undefined) {
   return resolveUIStrings(locale ?? defaultLocale, { defaultLocale });
 }
 
-function mergeLocalizedCollection<T extends Record<K, string | number>, K extends keyof T>(
+function mergeLocalizedCollection<
+  T extends Record<K, string | number>,
+  K extends keyof T,
+>(
   canonical: T[],
   localized: Array<Pick<T, K> & Partial<T>> | undefined,
   identityKey: K,
@@ -105,7 +128,10 @@ function mergeLocalizedCollection<T extends Record<K, string | number>, K extend
  * config. Palette values, artwork paths, URLs, dimensions and all other
  * invariant brand facts remain sourced from the canonical config.
  */
-export function resolveBrand<T extends BrandConfig>(brand: T, locale: Locale | string): T {
+export function resolveBrand<T extends BrandConfig>(
+  brand: T,
+  locale: Locale | string,
+): T {
   const resolvedLocale = getLocale(locale);
   const override: BrandLocaleOverride =
     brand.localeOverrides?.[resolvedLocale] ?? {};
