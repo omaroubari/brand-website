@@ -1,26 +1,24 @@
 ---
-import { getSiblings } from "../../lib/sections";
-import { getLocaleFromPath, getUi } from "../../i18n";
+import type { ContentPageProps } from "../../lib/core/rendering";
+import { flattenPages, getPagination } from "./nav-utils";
+import { getUi } from "../../i18n";
 
-interface Props {
-  /** Current section id. */
-  id: string;
-}
+type Props = ContentPageProps;
 
-const { id } = Astro.props;
-const locale = getLocaleFromPath(Astro.url.pathname);
-const labels = getUi(locale);
-const { prev, next } = await getSiblings(id, locale);
+const { page, navigation } = Astro.props;
+const labels = getUi(page.locale);
+const { prev, next } = getPagination(
+  flattenPages(navigation.sidebar),
+  page.route,
+);
 ---
 
 <nav class="pager" aria-label={labels.page.section}>
   {
     prev ? (
-      <a class="pager__link pager__link--prev" href={prev.href} rel="prev">
+      <a class="pager__link pager__link--prev" href={prev.route} rel="prev">
         <span class="label">{labels.page.previous}</span>
-        <span class="pager__title">
-          <span class="pager__num">{prev.number}</span> {prev.title}
-        </span>
+        <span class="pager__title">{prev.label}</span>
       </a>
     ) : (
       <span />
@@ -29,11 +27,9 @@ const { prev, next } = await getSiblings(id, locale);
 
   {
     next && (
-      <a class="pager__link pager__link--next" href={next.href} rel="next">
+      <a class="pager__link pager__link--next" href={next.route} rel="next">
         <span class="label">{labels.page.next}</span>
-        <span class="pager__title">
-          <span class="pager__num">{next.number}</span> {next.title}
-        </span>
+        <span class="pager__title">{next.label}</span>
       </a>
     )
   }
@@ -70,11 +66,5 @@ const { prev, next } = await getSiblings(id, locale);
 
   .pager__link:hover .pager__title {
     color: var(--primary);
-  }
-
-  .pager__num {
-    /* color: var(--muted-foreground); */
-    /*font-size: var(--text-caption);
-    line-height: var(--text-caption--line-height);*/
   }
 </style>

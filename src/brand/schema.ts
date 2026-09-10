@@ -1,4 +1,4 @@
-import { z } from "astro/zod";
+import { z } from "zod";
 
 /** The published stops used by every palette family. */
 export const shadeSteps = [
@@ -363,59 +363,6 @@ const localeOverrideSchema = z
   })
   .strict();
 
-export const navigationConfigSchema = z
-  .object({ numbering: z.boolean().default(false) })
-  .strict();
-
-/** A configured locale: ISO-ish code plus display metadata for the switcher. */
-const localeSchema = z.strictObject({
-  code: z.string().min(1),
-  /** Text direction; drives `<html dir>` and a future RTL pass. */
-  dir: z.enum(["ltr", "rtl"]).default("ltr"),
-  label: z.string(),
-  style: z.string().optional(),
-});
-
-export const i18nConfigSchema = z
-  .object({
-    defaultLocale: z.string(),
-    locales: z.array(localeSchema),
-  })
-  .strict()
-  .superRefine((value, ctx) => {
-    const seen = new Set<string>();
-    for (const [index, locale] of value.locales.entries()) {
-      let canonical: string | undefined;
-      try {
-        [canonical] = Intl.getCanonicalLocales(locale.code);
-      } catch {
-        // Reported below with the same stable configuration path.
-      }
-      if (canonical !== locale.code) {
-        ctx.addIssue({
-          code: "custom",
-          path: ["locales", index, "code"],
-          message: `Locale code "${locale.code}" must be a canonical BCP 47 tag.`,
-        });
-      }
-      if (seen.has(locale.code)) {
-        ctx.addIssue({
-          code: "custom",
-          path: ["locales", index, "code"],
-          message: `Duplicate locale code "${locale.code}".`,
-        });
-      }
-      seen.add(locale.code);
-    }
-    if (!seen.has(value.defaultLocale)) {
-      ctx.addIssue({
-        code: "custom",
-        path: ["defaultLocale"],
-        message: `Default locale "${value.defaultLocale}" is not configured.`,
-      });
-    }
-  });
-
 export const brandSchema = z
   .object({
     meta: metaSchema,
@@ -579,40 +526,6 @@ export const brandSchema = z
     }
   });
 
-export const brandtreeConfigSchema = z
-  .object({
-    brand: brandSchema,
-    i18n: i18nConfigSchema.optional(),
-    navigation: navigationConfigSchema.prefault({}),
-  })
-  .strict()
-  .superRefine((config, ctx) => {
-    const localeOverrides = config.brand.localeOverrides;
-    if (localeOverrides && !config.i18n) {
-      ctx.addIssue({
-        code: "custom",
-        path: ["brand", "localeOverrides"],
-        message: "Locale overrides require an i18n configuration.",
-      });
-    }
-
-    const configuredLocales = new Set(
-      config.i18n?.locales.map((locale) => locale.code),
-    );
-    for (const localeCode of Object.keys(localeOverrides ?? {})) {
-      if (!configuredLocales.has(localeCode)) {
-        ctx.addIssue({
-          code: "custom",
-          path: ["brand", "localeOverrides", localeCode],
-          message: `Locale override "${localeCode}" is not configured in i18n.locales.`,
-        });
-      }
-    }
-  });
-
-export type ResolvedConfig = z.output<typeof brandtreeConfigSchema>;
-export type BrandtreeConfigInput = z.input<typeof brandtreeConfigSchema>;
-
 export type BrandConfigInput = z.input<typeof brandSchema>;
 export type BrandConfig = z.output<typeof brandSchema>;
 export type BrandColors = z.output<typeof brandColorsSchema>;
@@ -635,16 +548,3 @@ export type BrandContact = BrandConfig["contact"];
 export type BrandDownload = NonNullable<BrandConfig["downloads"]>[number];
 export type BrandLocaleOverride = z.output<typeof localeOverrideSchema>;
 export type BrandLocaleOverrides = NonNullable<BrandConfig["localeOverrides"]>;
-
-export type ResolvedI18nConfig = z.infer<typeof i18nConfigSchema>;
-export type LocaleConfig = z.infer<typeof localeSchema>;
-
-/**
- * Parse once at the configuration boundary while preserving literal fields in
- * the caller's inferred type (notably the configured locale code union).
- */
-export function defineConfig<const T extends BrandtreeConfigInput>(
-  config: T,
-): ResolvedConfig & T {
-  return brandtreeConfigSchema.parse(config) as ResolvedConfig & T;
-}

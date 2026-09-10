@@ -1,0 +1,34 @@
+---
+import { getEntry, render, type CollectionKey } from "astro:content";
+import SectionLayout from "../layouts/SectionLayout.astro";
+import { getContentTree } from "../lib/core/tree";
+import {
+  getContentPagePaths,
+  type ContentPageProps,
+} from "../lib/core/rendering";
+
+export async function getStaticPaths() {
+  const tree = await getContentTree();
+  const paths = getContentPagePaths(tree);
+
+  return paths;
+}
+
+type Props = ContentPageProps;
+const { page, navigation } = Astro.props;
+
+const entry = await getEntry(
+  (page.collection ?? "sections") as CollectionKey,
+  page.entryId ?? page.source.ref,
+);
+
+if (!entry) {
+  return new Response(null, { status: 404 });
+}
+
+const { Content, headings } = await render(entry);
+---
+
+<SectionLayout page={page} navigation={navigation} headings={headings}>
+  <Content />
+</SectionLayout>

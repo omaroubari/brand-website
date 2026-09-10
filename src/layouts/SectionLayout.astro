@@ -6,20 +6,32 @@ import TableOfContents from "../components/content/TableOfContents.astro";
 import MobileTableOfContents from "../components/content/MobileTableOfContents.astro";
 import type { MarkdownHeading } from "astro";
 import { generateToC } from "../lib/generate-toc";
+import type { ContentPageProps } from "../lib/core/rendering";
+import { findBreadcrumbs } from "../components/nav/nav-utils";
 
-interface Props {
-  id: string;
-  title: string;
-  number?: string;
-  summary?: string;
-  seo?: { title?: string; description?: string };
+interface Props extends ContentPageProps {
   headings: MarkdownHeading[];
 }
 
-const { id, title, number, summary, seo, headings } = Astro.props;
+const { page, navigation, headings } = Astro.props;
+const {
+  title,
+  description,
+  meta: { seo },
+} = page;
+
+const crumbs = findBreadcrumbs(navigation.sidebar, page.route);
+// Index routes consist only of their group segments and have no eyebrow.
+const eyebrow =
+  page.segments.length === page.groups.length
+    ? undefined
+    : crumbs
+        .slice(0, -1)
+        .map((crumb) => crumb.label)
+        .join(" / ");
 
 const tocConfig = {
-  minHeadingLevel: 0,
+  minHeadingLevel: 2,
   maxHeadingLevel: 3,
 };
 
@@ -32,8 +44,10 @@ const tocItems = shouldRenderToc ? generateToC(headings, tocConfig) : [];
 ---
 
 <BaseLayout
+  locale={page.locale}
+  navigation={navigation}
   title={seo?.title ?? title}
-  description={seo?.description ?? summary}>
+  description={seo?.description ?? description}>
   <div class="page">
     {
       shouldRenderToc && (
@@ -46,7 +60,12 @@ const tocItems = shouldRenderToc ? generateToC(headings, tocConfig) : [];
         </div>
       )
     }
-    <SectionOpener number={number} title={title} summary={summary} />
+    <SectionOpener
+      locale={page.locale}
+      eyebrow={eyebrow}
+      title={title}
+      summary={description}
+    />
     <div class="section">
       <div class="section__content">
         <article class="prose section__body">
@@ -54,7 +73,7 @@ const tocItems = shouldRenderToc ? generateToC(headings, tocConfig) : [];
         </article>
 
         <div class="section__tail">
-          <Pager id={id} />
+          <Pager page={page} navigation={navigation} />
         </div>
       </div>
       {

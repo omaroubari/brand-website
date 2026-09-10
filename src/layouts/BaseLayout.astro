@@ -3,10 +3,11 @@ import "../styles/global.css";
 import { Font } from "astro:assets";
 import { brand } from "../brand/config";
 import { brandStyleSheet } from "../brand/tokens";
-import { getSectionLinks } from "../lib/sections";
+import type { Navigation } from "../lib/types";
 import { getInitialThemeAttributes } from "../lib/theme-state";
 import {
   getDirection,
+  getLocale,
   getLocaleFromPath,
   getLocalizedPath,
   LOCALE_COOKIE_NAME,
@@ -20,6 +21,8 @@ import "../styles/global.css";
 import ThemeScript from "@/components/theme-script.astro";
 
 interface Props {
+  locale?: string;
+  navigation?: Navigation;
   title?: string;
   description?: string;
   /** Drop the nav rail — used by the cover page. */
@@ -29,7 +32,9 @@ interface Props {
 
 const { title, description, bare = false, class: className } = Astro.props;
 
-const locale = getLocaleFromPath(Astro.url.pathname);
+const locale = getLocale(
+  Astro.props.locale ?? getLocaleFromPath(Astro.url.pathname),
+);
 const localizedBrand = resolveBrand(brand, locale);
 
 const pageTitle = title
@@ -40,10 +45,15 @@ const canonical = new URL(
   Astro.url.pathname,
   Astro.site ?? "https://localhost",
 );
-const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
+const currentRoute = Astro.url.pathname.replace(/\/$/, "") || "/";
 const tokens = brandStyleSheet(brand);
 const initialTheme = getInitialThemeAttributes(brand.theme.default);
-const alternateLocales = supportedLocales.filter((candidate) => candidate !== locale);
+const alternateLocales = supportedLocales.filter(
+  (candidate) => candidate !== locale,
+);
+
+const navigationItems = bare ? [] : (Astro.props.navigation?.sidebar ?? []);
+const navigationRoot = Astro.props.navigation?.root ?? "/";
 ---
 
 <!doctype html>
@@ -67,10 +77,12 @@ const alternateLocales = supportedLocales.filter((candidate) => candidate !== lo
         <link
           rel="alternate"
           hreflang={candidate}
-          href={new URL(
-            getLocalizedPath(Astro.url.pathname, candidate),
-            Astro.site ?? "https://localhost",
-          ).href}
+          href={
+            new URL(
+              getLocalizedPath(Astro.url.pathname, candidate),
+              Astro.site ?? "https://localhost",
+            ).href
+          }
         />
       ))
     }
@@ -128,9 +140,10 @@ const alternateLocales = supportedLocales.filter((candidate) => candidate !== lo
       ) : (
         <div class:list={["min-h-dvh", className]}>
           <SideNav
-            links={await getSectionLinks(locale)}
-            currentPath={currentPath}
+            items={navigationItems}
+            currentRoute={currentRoute}
             locale={locale}
+            navigationRoot={navigationRoot}
             client:load>
             <main class="main" id="content">
               <slot />

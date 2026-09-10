@@ -189,9 +189,52 @@ merge the requested locale override onto it field by field. Its only layers are
 `canonical brand config -> requested locale override`;
 `localeOverrides.en` participates only when English is requested.
 
-## Locale-prefixed section
+## Locale content root
 
-A prose section stored at
-`src/content/sections/{locale}/NN-slug.mdx`. The directory selects the locale,
-the numeric prefix determines order and section number, and the remaining slug
-defines the locale-prefixed route.
+The directory `src/content/sections/{locale}` whose descendants define one
+locale's prose pages, route hierarchy, and generated navigation. Locale content
+roots resolve independently and may contain localized `Folder metadata`.
+
+## ContentTree
+
+The locale-specific recursive hierarchy derived from a `Locale content root`.
+Its nodes are `ContentGroup`s and `ContentPage`s. The sidebar, cover contents,
+opener context, and pager are projections of this single model.
+
+## ContentGroup
+
+A directory beneath a `Locale content root`. Its normalized directory name
+creates a URL segment and its humanized name supplies the fallback label. A
+group may own `Folder metadata`, a `Group index`, child pages, and nested
+groups.
+
+## ContentPage
+
+A Markdown or MDX file that resolves to one routable guidelines page. Its label
+comes from `sidebar.label`, then frontmatter `title`, then the humanized
+filename. A numeric filename prefix controls sibling order but is not part of
+the URL.
+
+## Group index
+
+The `index.md` or `index.mdx` page inside a `ContentGroup`. It resolves to the
+group's own URL and is represented by the linked group label rather than as a
+duplicate child navigation item.
+
+## Folder metadata
+
+The optional static `meta.ts` module beside a group's pages. It can override
+the group title, select a curated Phosphor icon, set the group's sibling order,
+and explicitly order its non-index children. Metadata is locale-specific.
+
+## Reading order
+
+The depth-first page sequence derived from a `ContentTree`. A group index comes
+before that group's descendants; groups without an index are not destinations.
+Hidden pages do not participate. Previous/next pagination follows this order.
+
+## UI dictionary
+
+The complete template-owned set of interface labels for one supported locale
+in `src/i18n/index.ts`. UI dictionaries translate navigation and controls;
+they do not contain client-authored brand content.

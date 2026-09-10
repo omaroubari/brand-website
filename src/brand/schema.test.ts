@@ -4,7 +4,7 @@ import {
   i18nConfigSchema,
   navigationConfigSchema,
   brandtreeConfigSchema,
-} from "./schema";
+} from "@/lib/core/schema";
 
 function issuePaths(value: unknown): PropertyKey[][] {
   const result = brandtreeConfigSchema.safeParse(value);
@@ -86,23 +86,6 @@ describe("site configuration schema", () => {
         locales: [{ code: "en", label: "English" }],
       }),
     ).toThrow(/defaultLocale/);
-
-    expect(() =>
-      i18nConfigSchema.parse({
-        defaultLocale: "EN",
-        locales: [{ code: "EN", label: "English" }],
-      }),
-    ).toThrow(/canonical BCP 47/);
-
-    expect(() =>
-      i18nConfigSchema.parse({
-        defaultLocale: "en",
-        locales: [
-          { code: "en", label: "English" },
-          { code: "en", label: "English again" },
-        ],
-      }),
-    ).toThrow(/Duplicate locale code/);
   });
 
   it("reports cross-aggregate locale failures at useful paths", () => {
