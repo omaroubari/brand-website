@@ -191,7 +191,7 @@ merge the requested locale override onto it field by field. Its only layers are
 
 ## Locale content root
 
-The directory `src/content/sections/{locale}` whose descendants define one
+The directory `src/content/brand-guidelines/{locale}` whose descendants define one
 locale's prose pages, route hierarchy, and generated navigation. Locale content
 roots resolve independently and may contain localized `Folder metadata`.
 

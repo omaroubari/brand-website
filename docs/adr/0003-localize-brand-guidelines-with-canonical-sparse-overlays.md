@@ -28,7 +28,7 @@ another, so it cannot be a privileged intermediate fallback.
 Use three complementary localization mechanisms:
 
 - Store prose in locale-prefixed MDX files under
-  `src/content/sections/{locale}/NN-slug.mdx`. The locale prefix selects the
+  `src/content/brand-guidelines/{locale}/NN-slug.mdx`. The locale prefix selects the
   language, the numeric prefix controls order and section number, and the
   remaining slug is the localized route's stable section path.
 - Store complete, template-owned UI dictionaries in `src/i18n/index.ts`, keyed

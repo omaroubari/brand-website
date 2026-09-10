@@ -29,7 +29,7 @@ export async function loadContentTree(
 
   const source = {
     name: "filesystem",
-    root: "src/content/sections",
+    root: "src/content/brand-guidelines",
   };
   const sourceEntries = entries.map(toSourceEntry);
   const { pages } = normalizeSourceEntries(
@@ -51,7 +51,7 @@ export async function loadContentTree(
     }
   }
   const modules = import.meta.glob<unknown>(
-    "../../content/sections/**/meta{,.$}.{ts,js,mjs}",
+    "../../content/brand-guidelines/**/meta{,.$}.{ts,js,mjs}",
     { import: "default" },
   );
 
@@ -65,10 +65,10 @@ export async function loadContentTree(
   const { meta, shared } = await resolveFolderMeta(
     [
       {
-        root: "src/content/sections",
+        root: "src/content/brand-guidelines",
         modules: Object.fromEntries(
           Object.entries(modules).map(([path, load]) => [
-            path.replace("../../content/sections/", ""),
+            path.replace("../../content/brand-guidelines/", ""),
             load,
           ]),
         ),

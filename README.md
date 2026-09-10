@@ -49,7 +49,7 @@ specimen, a swatch grid or a misuse panel.
    drop `options`. Whatever `cssVariable` you use must match
    `typography.display` / `typography.text` in the brand config.
 5. **Rewrite the sections.** Content in
-   [`src/content/sections/`](src/content/sections/) is organized by locale. A
+   [`src/content/brand-guidelines/`](src/content/brand-guidelines/) is organized by locale. A
    numbered file is a top-level page; a numbered folder is a navigation group
    whose `index.mdx` is its overview and whose child files become nested pages.
    Delete a page or group and it disappears from the nav, contents list and
@@ -152,7 +152,7 @@ role — so the underlying source values can be Hex or OKLCH without changing
 the UI contract. `black` and `white` are built-in colour tokens, available to
 swatches and theme roles without palette entries.
 
-### `src/content/sections/{locale}/NN-slug.mdx`
+### `src/content/brand-guidelines/{locale}/NN-slug.mdx`
 
 The `NN-` prefix sets the order and the printed section number; the URL is the
 slug without the prefix (`03-logo.mdx` → `/logo`). Frontmatter is validated by
@@ -242,7 +242,7 @@ is the group landing page and `meta.ts` is optional localized navigation
 metadata:
 
 ```
-src/content/sections/en/03-logo/
+src/content/brand-guidelines/en/03-logo/
 ├── meta.ts
 ├── index.mdx
 ├── 01-logotype.mdx

@@ -61,7 +61,7 @@ describe("normalized content tree", () => {
     const { meta, shared } = await resolveFolderMeta(
       [
         {
-          root: "src/content/sections",
+          root: "src/content/brand-guidelines",
           modules: {
             "01-logo/meta.$.ts": async () => ({
               title: "Shared logo",
@@ -151,7 +151,7 @@ describe("normalized content tree", () => {
       const page = tree.pages.find((candidate) => candidate.route === route);
 
       expect(page).toBeDefined();
-      expect(tree.routes.get(route)).toBe(page.id);
+      expect(tree.routes.get(route)).toBe(page?.id);
     }
   });
 

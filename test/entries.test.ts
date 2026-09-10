@@ -172,8 +172,8 @@ describe("toSourceEntry", () => {
   it("uses the collection id as the source-local ref and copies frontmatter", () => {
     const contentEntry: ContentEntry = {
       id: "en/01-logo.mdx",
-      collection: "sections",
-      filePath: "/workspace/src/content/sections/en/01-logo.mdx",
+      collection: "brandGuidelines",
+      filePath: "/workspace/src/content/brand-guidelines/en/01-logo.mdx",
       data: pageMetaSchema.parse({ title: "Logo" }),
       body: "# Logo",
     };
@@ -190,7 +190,7 @@ describe("toSourceEntry", () => {
   it("uses Markdown and an empty body when loader data is absent", () => {
     const contentEntry: ContentEntry = {
       id: "guide.md",
-      collection: "sections",
+      collection: "brandGuidelines",
       data: pageMetaSchema.parse({}),
     };
     expect(toSourceEntry(contentEntry)).toEqual({

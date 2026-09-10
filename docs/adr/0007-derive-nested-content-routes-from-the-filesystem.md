@@ -19,7 +19,7 @@ produce its route and place it in navigation.
 ## Decision
 
 Build one locale-specific recursive `ContentTree` from
-`src/content/sections/{locale}`:
+`src/content/brand-guidelines/{locale}`:
 
 - directories become nested URL segments and always-expanded navigation
   groups;

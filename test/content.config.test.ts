@@ -24,7 +24,7 @@ it("preserves distinct loader IDs until normalized route collisions can be repor
   const ids = files.map((entry) => loader.generateId!({ entry }));
   expect(new Set(ids).size).toBe(files.length);
   const entries: ContentEntry[] = files.map((filePath, index) => ({
-    collection: "sections",
+    collection: "brandGuidelines",
     id: ids[index]!,
     filePath,
     data: pageMetaSchema.parse({}),
@@ -32,7 +32,7 @@ it("preserves distinct loader IDs until normalized route collisions can be repor
   const { pages } = normalizeSourceEntries(
     {
       entries: entries.map(toSourceEntry),
-      source: { name: "filesystem", root: "src/content/sections" },
+      source: { name: "filesystem", root: "src/content/brand-guidelines" },
     },
     {
       i18n: {

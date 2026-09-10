@@ -19,8 +19,8 @@ function entry(
 ): ContentEntry {
   return {
     id: filePath,
-    collection: "sections",
-    filePath: `src/content/sections/${filePath}`,
+    collection: "brandGuidelines",
+    filePath: `src/content/brandGuidelines/${filePath}`,
     data: pageMetaSchema.parse(data),
   };
 }
@@ -88,13 +88,12 @@ describe("getContentTree Astro boundary", () => {
       kind: "group",
       label: "Logo",
       route: "/en/logo",
-      icon: "shapes",
     });
     expect(tree.navigationByLocale.ar.sidebar[0].label).toBe("الشعار");
     expect(tree.navigationByLocale.fr).toBeUndefined();
 
     expect(tree.pages[0]).toMatchObject({
-      collection: "sections",
+      collection: "brandGuidelines",
       entryId: "en/03-logo/index.mdx",
       id: "filesystem:en/03-logo/index.mdx",
     });
