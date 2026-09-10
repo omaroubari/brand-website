@@ -23,7 +23,7 @@ export async function loadContentTree(
 ): Promise<ContentTree> {
   const { i18n } = config;
   const entries = await getCollection(
-    "sections",
+    "brandGuidelines",
     ({ data }) => import.meta.env.DEV || !data.draft,
   );
 

@@ -61,7 +61,7 @@ const titleCase = (value: string): string =>
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(" ");
 
-export type ContentEntry = CollectionEntry<"sections">;
+export type ContentEntry = CollectionEntry<"brandGuidelines">;
 
 /**
  * A single content item, normalized by a source adapter. Adapters lower their
