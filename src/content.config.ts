@@ -7,9 +7,9 @@ import { pageMetaSchema } from "./lib/core/schema";
  * `src/lib/core/tree.ts` derives groups, routes, navigation and reading order
  * from these entries and their sibling `meta.ts` files.
  */
-const sections = defineCollection({
+const brandGuidelines = defineCollection({
   loader: glob({
-    base: "./src/content/sections",
+    base: "./src/content/brand-guidelines",
     pattern: "**/[^_]*.{md,mdx}",
     // Preserve source identity, including extensions. Otherwise Astro can
     // overwrite entries before the pipeline detects normalized URL collisions.
@@ -19,4 +19,4 @@ const sections = defineCollection({
   schema: pageMetaSchema,
 });
 
-export const collections = { sections };
+export const collections = { brandGuidelines };
