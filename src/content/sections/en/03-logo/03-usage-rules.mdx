@@ -1,70 +1,15 @@
 ---
-title: Logo Usage
-summary: The logotype, the brandmark, and the rules that keep both intact.
+title: Usage rules
+description: Clear space, approved combinations, minimum sizes, and misuse to avoid.
 ---
 
 import {
-  Panel,
-  Grid,
-  Logo,
   LogoColorways,
-  LogoScaling,
   LogoClearspace,
   LogoMisuse,
-  ConstructionGrid,
   SpecList,
   Callout,
-} from "../../../components/mdx";
-
-## Logotype
-
-### Primary logo
-
-The primary logo is a logotype: the brand name set in the brand face, spaced and drawn as
-a single piece of artwork. It is the default in every context where there is room for it.
-
-Always place the supplied file. Never re-set the name in the typeface — the logotype
-carries custom spacing that live text will not reproduce.
-
-<Panel ratio="16 / 9">
-  <Logo mark="logotype" width="66%" />
-</Panel>
-
-### On black
-
-On dark surfaces the logotype reverses to white. There is no third version — the artwork
-is identical, only the colour changes.
-
-<Panel bg="black" ratio="16 / 9">
-  <Logo mark="logotype" on="dark" width="66%" />
-</Panel>
-
-## Brandmark
-
-### Monogram
-
-A monogram of the initials, unified into one shape. It stands in for the logotype where
-space is tight or the brand is already established in context: avatars, favicons, app
-icons, stamped and embroidered applications.
-
-<Grid cols={2}>
-
-<Panel bg="white" ratio="4 / 3">
-  <Logo mark="brandmark" on="light" width="7rem" />
-</Panel>
-
-<Panel bg="black" ratio="4 / 3">
-  <Logo mark="brandmark" on="dark" width="7rem" />
-</Panel>
-
-</Grid>
-
-### Grid
-
-The mark is built on a field grid so its proportions and alignment survive every
-application. Reproduce it from the supplied artwork — never redraw it.
-
-<ConstructionGrid mark="brandmark" cols={10} rows={10} />
+} from "../../../../components/mdx";
 
 ## Logo
 

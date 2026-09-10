@@ -1,0 +1,38 @@
+---
+title: Brandmark
+description: The monogram and construction grid for compact applications.
+---
+
+import {
+  Panel,
+  Grid,
+  Logo,
+  ConstructionGrid,
+} from "../../../../components/mdx";
+
+## Brandmark
+
+### Monogram
+
+A monogram of the initials, unified into one shape. It stands in for the logotype where
+space is tight or the brand is already established in context: avatars, favicons, app
+icons, stamped and embroidered applications.
+
+<Grid cols={2}>
+
+<Panel bg="white" ratio="4 / 3">
+  <Logo mark="brandmark" on="light" width="7rem" />
+</Panel>
+
+<Panel bg="black" ratio="4 / 3">
+  <Logo mark="brandmark" on="dark" width="7rem" />
+</Panel>
+
+</Grid>
+
+### Grid
+
+The mark is built on a field grid so its proportions and alignment survive every
+application. Reproduce it from the supplied artwork — never redraw it.
+
+<ConstructionGrid mark="brandmark" cols={10} rows={10} />
