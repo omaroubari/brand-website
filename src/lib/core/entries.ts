@@ -129,7 +129,7 @@ export type RouteContext = Pick<NormalizeContext, "i18n" | "versions"> & {
 export const toSourceEntry = (contentEntry: ContentEntry): SourceEntry => {
   // The collection id is source-local because the glob loader's generateId
   // preserves the path relative to its base. filePath may be project-relative
-  // or absolute, so using it as the ref would leak `src/content/sections` into
+  // or absolute, so using it as the ref would leak `src/content/brand-guidelines` into
   // routes and prevent locale placement from recognizing the first segment.
   const ref = contentEntry.id;
 

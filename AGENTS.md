@@ -10,7 +10,7 @@ is MDX.** Keep it that way.
   against `src/brand/schema.ts`.
 - `src/brand/tokens.ts` — derives CSS custom properties, contrast ratios and
   tint ramps from the config.
-- `src/content/sections/NN-slug.mdx` — one file per section. The `NN-` prefix
+- `src/content/brand-guidelines/NN-slug.mdx` — one file per section. The `NN-` prefix
   drives order and section number; the URL is the slug alone.
 - `src/components/mdx.ts` — the barrel every MDX file imports from.
 

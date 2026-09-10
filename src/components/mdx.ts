@@ -1,5 +1,5 @@
 /**
- * Barrel for everything usable inside `src/content/sections/*.mdx`.
+ * Barrel for everything usable inside `src/content/brand-guidelines/*.mdx`.
  *
  * One import line per section file:
  *

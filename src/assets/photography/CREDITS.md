@@ -15,5 +15,5 @@ Unsplash Licence, resized to 1400 px on the long edge.
 | `photo-07.jpg` | Gilles Lambert    |
 | `photo-08.jpg` | Oliver Pecker     |
 
-Referenced from `src/content/sections/07-photography.mdx` and
+Referenced from `src/content/brand-guidelines/07-photography.mdx` and
 `01-the-brand.mdx`. Delete this file once the real images are in.

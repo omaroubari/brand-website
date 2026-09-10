@@ -4,7 +4,7 @@ import {
   type FolderMetaModules,
 } from "../src/lib/core/meta";
 
-const root = "src/content/sections";
+const root = "src/content/brand-guidelines";
 
 describe("folder metadata resolution", () => {
   it("resolves plain defaults and synchronous/asynchronous factories from Vite's module map", async () => {
@@ -109,7 +109,7 @@ describe("folder metadata resolution", () => {
     async (_label, load) => {
       await expect(
         resolveFolderMeta([{ root, modules: { "03-logo/meta.ts": load } }]),
-      ).rejects.toThrow("src/content/sections/03-logo/meta.ts");
+      ).rejects.toThrow("src/content/brand-guidelines/03-logo/meta.ts");
     },
   );
 

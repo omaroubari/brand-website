@@ -6,7 +6,7 @@ import { defineConfig } from "@/lib/core/schema";
  * ─────────────────────────────────────────────────────────────────────────────
  *
  * Everything structured — palette, type scale, logo artwork, contact details —
- * lives here. Prose lives in `src/content/sections/*.mdx`.
+ * lives here. Prose lives in `src/content/brand-guidelines/*.mdx`.
  *
  * The values below are the sample brand the template ships with. Replace them,
  * drop new artwork into `public/brand/`, and rewrite the MDX sections.
