@@ -4,19 +4,22 @@ import { getLocaleFromPath, getUi, resolveBrand } from "../../i18n";
 
 /**
  * The divider page that opens every section of the printed document: a
- * full-bleed accent field, the section number stacked over the section title in
- * the bottom-left, and the colophon in the top-right.
+ * full-bleed accent field, the title set in the bottom-left, and the colophon
+ * in the top-right. Nested pages may add their ancestor group path as an
+ * eyebrow above the title.
  */
 interface Props {
-  number?: string;
+  locale?: string;
   title: string;
   summary?: string;
+  /** Ancestor group path for a nested page, omitted for indexes and root pages. */
+  eyebrow?: string;
   /** Palette id for the field. Defaults to the brand accent. */
   bg?: string;
 }
 
-const { number, title, summary, bg = "accent" } = Astro.props;
-const locale = getLocaleFromPath(Astro.url.pathname);
+const { title, summary, eyebrow, bg = "accent" } = Astro.props;
+const locale = Astro.props.locale ?? getLocaleFromPath(Astro.url.pathname);
 const { meta } = resolveBrand(brand, locale);
 const ui = getUi(locale);
 ---
@@ -30,11 +33,7 @@ const ui = getUi(locale);
   </p>
 
   <div class="opener__type">
-    {
-      config.navigation.numbering && number && (
-        <p class="opener__num">{number}</p>
-      )
-    }
+    {eyebrow && <p class="opener__eyebrow">{eyebrow}</p>}
     <h1 class="opener__title">{title}</h1>
   </div>
 
@@ -67,7 +66,6 @@ const ui = getUi(locale);
 
   /* A notch below Display+: section titles are two or three words, and at
 	   the full display size they wrap past the bottom of the field. */
-  .opener__num,
   .opener__title {
     font-family: var(--font-heading);
     font-size: var(--text-display);
@@ -75,6 +73,18 @@ const ui = getUi(locale);
     letter-spacing: var(--text-display--letter-spacing);
     font-weight: var(--text-display--font-weight);
     margin: 0;
+  }
+
+  .opener__eyebrow {
+    margin: 0 0 var(--space-l);
+    max-width: var(--measure);
+    font-family: var(--font-body);
+    font-size: var(--text-body-large);
+    line-height: var(--text-body-large--line-height);
+    letter-spacing: var(--text-body-large--letter-spacing);
+    font-weight: var(--text-body-large--font-weight);
+    /*text-transform: uppercase;*/
+    /*opacity: 0.78;*/
   }
 
   .opener__title {

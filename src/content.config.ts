@@ -1,49 +1,22 @@
-import { defineCollection, z } from "astro:content";
+import { defineCollection } from "astro:content";
 import { glob } from "astro/loaders";
+import { pageMetaSchema } from "./lib/core/schema";
 
 /**
- * One MDX file per section of the guidelines.
- *
- * Files are named `locale/NN-slug.mdx`. The numeric prefix sets the running
- * order and the printed section number; the URL is locale-prefixed (`en/03-logo.mdx`
- * → `/en/logo`).
- * Delete a file to drop the section — nav, numbering and prev/next follow.
+ * Markdown content is intentionally kept as files. The recursive tree in
+ * `src/lib/core/tree.ts` derives groups, routes, navigation and reading order
+ * from these entries and their sibling `meta.ts` files.
  */
 const sections = defineCollection({
   loader: glob({
     base: "./src/content/sections",
     pattern: "**/[^_]*.{md,mdx}",
-    // `en/03-logo.mdx` → `en/logo` (the locale is part of the content ID,
-    // while the numeric filename prefix remains an ordering concern).
-    generateId: ({ entry }) => {
-      const parts = entry.split("/");
-      const filename = parts.pop() ?? entry;
-      const slug = filename.replace(/\.mdx?$/, "").replace(/^\d+[-_]/, "");
-      return parts.length > 0 ? `${parts.join("/")}/${slug}` : slug;
-    },
+    // Preserve source identity, including extensions. Otherwise Astro can
+    // overwrite entries before the pipeline detects normalized URL collisions.
+    // Numeric prefixes are removed later by source-entry normalization.
+    generateId: ({ entry }) => entry.replaceAll("\\", "/"),
   }),
-  schema: z.object({
-    /** Section title, as printed. */
-    title: z.string(),
-    /** One line under the title on the section page and in the contents list. */
-    summary: z.string().optional(),
-    /**
-     * Running order and printed number. Falls back to the filename prefix,
-     * so you rarely need to set this by hand.
-     */
-    order: z.number().optional(),
-    /** Overrides the two-digit number shown beside the title. */
-    number: z.string().optional(),
-    /** Hidden from nav and excluded from the build. */
-    draft: z.boolean().default(false),
-    /** Override the `<title>` and meta description for this page. */
-    seo: z
-      .object({
-        title: z.string().optional(),
-        description: z.string().optional(),
-      })
-      .optional(),
-  }),
+  schema: pageMetaSchema,
 });
 
 export const collections = { sections };

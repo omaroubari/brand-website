@@ -1,4 +1,4 @@
-import { defineConfig } from "./schema";
+import { defineConfig } from "@/lib/core/schema";
 
 /**
  * ─────────────────────────────────────────────────────────────────────────────
@@ -614,16 +614,17 @@ export const config = defineConfig({
     },
   },
 
+  navigation: {
+    numbering: true,
+  },
   i18n: {
     defaultLocale: "en",
     locales: [
       { code: "en", label: "English", dir: "ltr" },
       { code: "ar", label: "العربية", dir: "rtl" },
     ],
-  },
-
-  navigation: {
-    numbering: true,
+    hideDefaultLocalePrefix: false,
+    parser: "dir",
   },
 });
 

@@ -13,7 +13,10 @@ specimen, a swatch grid or a misuse panel.
 /                  cover + contents
 /the-brand         purpose, mission, vision, values, audience
 /tone-and-voice    archetypes, tone position, writing rules
-/logo              logotype, brandmark, construction, clear space, scale, misuse
+/logo              logo system overview
+/logo/logotype     logotype artwork and applications
+/logo/brandmark    brandmark and construction grid
+/logo/usage-rules  clear space, colourways, scale and misuse
 /colour            palette, proportion, contrast matrix
 /typography        specimen, weights, glyphs, type scale
 /iconography       the icon set and its grid
@@ -45,10 +48,12 @@ specimen, a swatch grid or a misuse panel.
    `src/assets/fonts/`, or switch `provider` to `fontProviders.google()` and
    drop `options`. Whatever `cssVariable` you use must match
    `typography.display` / `typography.text` in the brand config.
-5. **Rewrite the sections.** Ten files in
-   [`src/content/sections/`](src/content/sections/). Delete one and it
-   disappears from the nav, the contents list and the prev/next pager — the
-   numbering closes up on its own.
+5. **Rewrite the sections.** Content in
+   [`src/content/sections/`](src/content/sections/) is organized by locale. A
+   numbered file is a top-level page; a numbered folder is a navigation group
+   whose `index.mdx` is its overview and whose child files become nested pages.
+   Delete a page or group and it disappears from the nav, contents list and
+   prev/next pager — sibling ordering follows numeric prefixes automatically.
 6. **Swap the imagery.** Replace `src/assets/photography/` (see its
    `CREDITS.md` — the samples are Unsplash placeholders) and
    `src/assets/icons/`. Every SVG in the icons folder is picked up
@@ -147,16 +152,16 @@ role — so the underlying source values can be Hex or OKLCH without changing
 the UI contract. `black` and `white` are built-in colour tokens, available to
 swatches and theme roles without palette entries.
 
-### `src/content/sections/NN-slug.mdx`
+### `src/content/sections/{locale}/NN-slug.mdx`
 
 The `NN-` prefix sets the order and the printed section number; the URL is the
-slug alone (`03-logo.mdx` → `/logo`). Frontmatter is validated by
+slug without the prefix (`03-logo.mdx` → `/logo`). Frontmatter is validated by
 [`src/content.config.ts`](src/content.config.ts):
 
 ```mdx
 ---
 title: Colour
-summary: Two colour families, one signal colour, and the ratios that hold them together.
+description: Two colour families, one signal colour, and the ratios that hold them together.
 ---
 
 import { Block, ColorPalette } from "../../components/mdx";
@@ -226,8 +231,43 @@ On dark surfaces the logotype reverses to white.
 </Panel>
 ```
 
-The frontmatter `summary` becomes the standfirst on the section divider. Set
-`draft: true` to keep a section visible in `dev` but out of the build.
+The frontmatter `description` becomes the standfirst on the section divider.
+Set `draft: true` to keep a page visible in `dev` but out of the build.
+
+### Nested groups
+
+Use a folder when one topic needs an overview and several related pages. The
+folder name and numeric prefix determine its URL and sibling order; `index.mdx`
+is the group landing page and `meta.ts` is optional localized navigation
+metadata:
+
+```
+src/content/sections/en/03-logo/
+├── meta.ts
+├── index.mdx
+├── 01-logotype.mdx
+├── 02-brandmark.mdx
+└── 03-usage-rules.mdx
+```
+
+`meta.ts` must use a static `defineMeta` call. Its `pages` array orders direct
+children by their normalized slugs, while the curated `icon` names are listed
+by the content metadata API:
+
+```ts
+import { defineMeta } from "../../../../lib/content-meta";
+
+export default defineMeta({
+  title: "Logo",
+  icon: "shapes",
+  order: 3,
+  pages: ["logotype", "brandmark", "usage-rules"],
+});
+```
+
+Metadata is locale-specific, so an Arabic group can translate its title and
+choose its own child ordering. Child MDX files import the shared barrel from
+their deeper location (for example, `../../../../components/mdx`).
 
 ---
 

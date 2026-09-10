@@ -9,25 +9,21 @@ import react from "@astrojs/react";
 
 import tailwindcss from "@tailwindcss/vite";
 
-const { i18n } = config;
-
-if (!i18n) {
-  throw new Error(
-    "The current Astro routing setup requires config.i18n; single-locale routing is not implemented yet.",
-  );
-}
+const i18n = config.i18n;
 
 // https://astro.build/config
 export default defineConfig({
   site: brand.meta.url,
   output: "static",
-  i18n: {
-    locales: i18n.locales.map(({ code }) => code),
-    defaultLocale: i18n.defaultLocale,
-    routing: {
-      prefixDefaultLocale: true,
-    },
-  },
+  i18n: i18n
+    ? {
+        locales: i18n.locales.map(({ code }) => code),
+        defaultLocale: i18n.defaultLocale,
+        routing: {
+          prefixDefaultLocale: !i18n.hideDefaultLocalePrefix,
+        },
+      }
+    : undefined,
   integrations: [mdx(), react()],
 
   // A guidelines site's imagery is fixed, so images are optimised at build
