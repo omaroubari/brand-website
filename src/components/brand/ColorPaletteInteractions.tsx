@@ -28,14 +28,22 @@ async function copyToClipboard(value: string): Promise<boolean> {
   }
 }
 
-export default function ColorPaletteInteractions({ locale = defaultLocale }: { locale?: Locale }) {
+export default function ColorPaletteInteractions({
+  locale = defaultLocale,
+}: {
+  locale?: Locale;
+}) {
   const labels = getUi(locale);
 
   React.useEffect(() => {
-    const palettes = document.querySelectorAll<HTMLElement>("[data-color-palette]");
+    const palettes = document.querySelectorAll<HTMLElement>(
+      "[data-color-palette]",
+    );
 
     const handleClick = (event: MouseEvent) => {
-      const target = (event.target as HTMLElement).closest<HTMLButtonElement>("[data-copy-color]");
+      const target = (event.target as HTMLElement).closest<HTMLButtonElement>(
+        "[data-copy-color]",
+      );
       const hex = target?.dataset.copyColor;
 
       if (!target || !hex) return;
