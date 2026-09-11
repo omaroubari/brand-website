@@ -1,0 +1,102 @@
+---
+import type { TocItem } from "./toc-utils";
+
+interface Props {
+  items: TocItem[];
+  depth?: number;
+  mobile?: boolean;
+}
+
+const { items, mobile = false, depth = 0 } = Astro.props;
+---
+
+<ul class:list={{ mobile }}>
+  {
+    items.map((heading) => (
+      <li>
+        <a href={`#${heading.slug}`}>
+          <span>{heading.text}</span>
+        </a>
+        {heading.children.length > 0 && (
+          <Astro.self
+            items={heading.children}
+            depth={depth + 1}
+            mobile={mobile}
+          />
+        )}
+      </li>
+    ))
+  }
+</ul>
+
+<style define:vars={{ depth }}>
+  ul {
+    padding: 0;
+    list-style: none;
+  }
+
+  a {
+    --pad-inline: 0.5rem;
+    display: block;
+    border-radius: 0.25rem;
+    padding-block: 0.25rem;
+    padding-inline: calc(1rem * var(--depth)) var(--pad-inline);
+    color: var(--muted-foreground);
+    font-size: var(--text-body);
+    line-height: 1.25;
+    transition: color 0.15s ease-out;
+  }
+
+  a:hover,
+  a:focus {
+    color: var(--foreground);
+  }
+
+  a[aria-current="true"] {
+    color: var(--primary);
+  }
+
+  a[aria-current="true"]:hover,
+  a[aria-current="true"]:focus {
+    color: var(--foreground);
+  }
+
+  .mobile a {
+    --pad-inline: 1rem;
+    display: flex;
+    justify-content: space-between;
+    gap: var(--pad-inline);
+    border-top: 1px solid var(--border);
+    border-radius: 0;
+    padding-block: 0.5rem;
+    padding-inline: calc(1rem * var(--depth) + var(--pad-inline))
+      var(--pad-inline);
+    color: var(--muted-foreground);
+    font-size: var(--text-sm);
+    text-decoration: none;
+    outline-offset: 2px;
+  }
+
+  .mobile:first-child > li:first-child > a {
+    border-top: 0;
+  }
+
+  .mobile a[aria-current="true"],
+  .mobile a[aria-current="true"]:hover,
+  .mobile a[aria-current="true"]:focus {
+    color: var(--foreground);
+    background-color: unset;
+  }
+
+  .mobile a[aria-current="true"]::after {
+    content: "";
+    width: 1rem;
+    flex-shrink: 0;
+    background-color: var(--foreground);
+    /* Check mark SVG icon */
+    -webkit-mask-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAxNCAxNCc+PHBhdGggZD0nTTEwLjkxNCA0LjIwNmEuNTgzLjU4MyAwIDAgMC0uODI4IDBMNS43NCA4LjU1NyAzLjkxNCA2LjcyNmEuNTk2LjU5NiAwIDAgMC0uODI4Ljg1N2wyLjI0IDIuMjRhLjU4My41ODMgMCAwIDAgLjgyOCAwbDQuNzYtNC43NmEuNTgzLjU4MyAwIDAgMCAwLS44NTdaJy8+PC9zdmc+Cg==");
+    mask-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAxNCAxNCc+PHBhdGggZD0nTTEwLjkxNCA0LjIwNmEuNTgzLjU4MyAwIDAgMC0uODI4IDBMNS43NCA4LjU1NyAzLjkxNCA2LjcyNmEuNTk2LjU5NiAwIDAgMC0uODI4Ljg1N2wyLjI0IDIuMjRhLjU4My41ODMgMCAwIDAgLjgyOCAwbDQuNzYtNC43NmEuNTgzLjU4MyAwIDAgMCAwLS44NTdaJy8+PC9zdmc+Cg==");
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+  }
+</style>

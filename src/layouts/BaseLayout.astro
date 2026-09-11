@@ -7,34 +7,26 @@ import type { Navigation } from "../lib/types";
 import { getInitialThemeAttributes } from "../lib/theme-state";
 import {
   getDirection,
-  getLocale,
-  getLocaleFromPath,
   getLocalizedPath,
   LOCALE_COOKIE_NAME,
   defaultLocale,
   supportedLocales,
   resolveBrand,
+  type Locale,
 } from "../i18n";
 import SideNav from "../components/nav/SideNav";
 import ColorPaletteInteractions from "../components/brand/ColorPaletteInteractions";
-import "../styles/global.css";
 import ThemeScript from "@/components/theme-script.astro";
 
 interface Props {
-  locale?: string;
-  navigation?: Navigation;
+  locale: Locale;
+  navigation: Navigation;
   title?: string;
   description?: string;
-  /** Drop the nav rail — used by the cover page. */
-  bare?: boolean;
-  class?: string;
 }
 
-const { title, description, bare = false, class: className } = Astro.props;
+const { locale, navigation, title, description } = Astro.props;
 
-const locale = getLocale(
-  Astro.props.locale ?? getLocaleFromPath(Astro.url.pathname),
-);
 const localizedBrand = resolveBrand(brand, locale);
 
 const pageTitle = title
@@ -52,8 +44,8 @@ const alternateLocales = supportedLocales.filter(
   (candidate) => candidate !== locale,
 );
 
-const navigationItems = bare ? [] : (Astro.props.navigation?.sidebar ?? []);
-const navigationRoot = Astro.props.navigation?.root ?? "/";
+const navigationItems = navigation.sidebar;
+const navigationRoot = navigation.root ?? "/";
 ---
 
 <!doctype html>
@@ -133,24 +125,18 @@ const navigationRoot = Astro.props.navigation?.root ?? "/";
   </head>
 
   <body>
+    <div class="min-h-dvh">
+      <SideNav
+        items={navigationItems}
+        currentRoute={currentRoute}
+        locale={locale}
+        navigationRoot={navigationRoot}
+        client:load>
+        <main class="main" id="content">
+          <slot />
+        </main>
+      </SideNav>
+    </div>
     <ColorPaletteInteractions locale={locale} client:load />
-    {
-      bare ? (
-        <slot />
-      ) : (
-        <div class:list={["min-h-dvh", className]}>
-          <SideNav
-            items={navigationItems}
-            currentRoute={currentRoute}
-            locale={locale}
-            navigationRoot={navigationRoot}
-            client:load>
-            <main class="main" id="content">
-              <slot />
-            </main>
-          </SideNav>
-        </div>
-      )
-    }
   </body>
 </html>
