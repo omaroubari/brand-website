@@ -2,12 +2,12 @@
 import BaseLayout from "./BaseLayout.astro";
 import Pager from "../components/nav/Pager.astro";
 import SectionOpener from "../components/content/SectionOpener.astro";
-import TableOfContents from "../components/content/TableOfContents.astro";
-import MobileTableOfContents from "../components/content/MobileTableOfContents.astro";
+import TocList from "../components/nav/TocList.astro";
 import type { MarkdownHeading } from "astro";
-import { generateToC } from "../lib/generate-toc";
+import { buildToc } from "../components/nav/toc-utils";
 import type { ContentPageProps } from "../lib/core/rendering";
 import { findBreadcrumbs } from "../components/nav/nav-utils";
+import { getUi } from "../i18n";
 
 interface Props extends ContentPageProps {
   headings: MarkdownHeading[];
@@ -30,17 +30,12 @@ const eyebrow =
         .map((crumb) => crumb.label)
         .join(" / ");
 
-const tocConfig = {
+const toc = buildToc(headings, {
   minHeadingLevel: 2,
   maxHeadingLevel: 3,
-};
-
-const tocHeadings = headings.filter(
-  ({ depth }) =>
-    depth >= tocConfig.minHeadingLevel && depth <= tocConfig.maxHeadingLevel,
-);
-const shouldRenderToc = tocHeadings.length >= 2;
-const tocItems = shouldRenderToc ? generateToC(headings, tocConfig) : [];
+});
+const shouldRenderToc = toc.count >= 2;
+const labels = getUi(page.locale);
 ---
 
 <BaseLayout
@@ -48,50 +43,72 @@ const tocItems = shouldRenderToc ? generateToC(headings, tocConfig) : [];
   navigation={navigation}
   title={seo?.title ?? title}
   description={seo?.description ?? description}>
-  <div class="page">
-    {
-      shouldRenderToc && (
-        <div class="section__mobile-toc lg:hidden">
-          <MobileTableOfContents
-            minHeadingLevel={tocConfig.minHeadingLevel}
-            maxHeadingLevel={tocConfig.maxHeadingLevel}
-            items={tocItems}
-          />
-        </div>
-      )
-    }
-    <SectionOpener
-      locale={page.locale}
-      eyebrow={eyebrow}
-      title={title}
-      summary={description}
-    />
-    <div class="section">
-      <div class="section__content">
-        <article class="prose section__body">
-          <slot />
-        </article>
-
-        <div class="section__tail">
-          <Pager page={page} navigation={navigation} />
-        </div>
-      </div>
+  <toc-root>
+    <div class="page">
       {
         shouldRenderToc && (
-          <aside class="scrollbar-thumb-border sticky top-0 hidden h-dvh scrollbar-thin scrollbar-track-transparent overflow-y-auto px-4 pt-(--page-gutter) pb-10 text-sm lg:block">
-            <TableOfContents
-              minHeadingLevel={tocConfig.minHeadingLevel}
-              maxHeadingLevel={tocConfig.maxHeadingLevel}
-              items={tocItems}
-            />
-          </aside>
+          <div class="section__mobile-toc lg:hidden" data-toc data-toc-mobile>
+            <nav aria-labelledby="toc-mobile-title">
+              <details>
+                <summary id="toc-mobile-title" class="mx-auto flex w-full">
+                  <div class="flex w-full items-center justify-between gap-2 py-3">
+                    <span class="toc__toggle text-muted-foreground ms-10 flex">
+                      {labels.toc.title}
+                    </span>
+                    <span class="toc__current" data-toc-current />
+                  </div>
+                </summary>
+                <div class="toc__dropdown">
+                  <TocList items={toc.items} mobile />
+                </div>
+              </details>
+            </nav>
+          </div>
         )
       }
+      <SectionOpener
+        locale={page.locale}
+        eyebrow={eyebrow}
+        title={title}
+        summary={description}
+      />
+      <div class="section">
+        <div class="section__content">
+          <article class="prose section__body">
+            <slot />
+          </article>
+
+          <div class="section__tail">
+            <Pager page={page} navigation={navigation} />
+          </div>
+        </div>
+        {
+          shouldRenderToc && (
+            <aside
+              class="scrollbar-thumb-border sticky top-0 hidden h-dvh scrollbar-thin scrollbar-track-transparent overflow-y-auto px-4 pt-(--page-gutter) pb-10 text-sm lg:block"
+              data-toc>
+              <nav aria-labelledby="toc-title">
+                <h2 id="toc-title">{labels.toc.title}</h2>
+                <TocList items={toc.items} />
+              </nav>
+            </aside>
+          )
+        }
+      </div>
     </div>
-  </div>
+  </toc-root>
 </BaseLayout>
 
+<script src="../components/nav/toc-root.ts"></script>
+
 <style>
+  toc-root {
+    display: flex;
+    flex: 1;
+    min-width: 0;
+    flex-direction: column;
+  }
+
   .section {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
@@ -109,6 +126,82 @@ const tocItems = shouldRenderToc ? generateToC(headings, tocConfig) : [];
     top: 0;
     z-index: 10;
     background-color: var(--color-background);
+  }
+
+  .section__mobile-toc nav {
+    z-index: 10;
+    border-bottom: var(--rule) solid var(--border);
+    background-color: var(--background);
+    color: var(--foreground);
+  }
+
+  .section__mobile-toc summary {
+    gap: 0.5rem;
+    align-items: center;
+    padding-inline: var(--page-gutter);
+    font-size: var(--text-sm);
+  }
+
+  .section__mobile-toc summary::marker,
+  .section__mobile-toc summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .toc__toggle {
+    flex-shrink: 0;
+    gap: 0.5rem;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid var(--color-border);
+    border-radius: 1rem;
+    padding-block: 0.5rem;
+    padding-inline: 0.75rem;
+    line-height: 1;
+    background-color: var(--background);
+    color: var(--muted-foreground);
+    user-select: none;
+    cursor: pointer;
+  }
+
+  details[open] .toc__toggle {
+    color: var(--foreground);
+    border-color: var(--primary);
+  }
+
+  details .toc__toggle:hover {
+    color: var(--foreground);
+    border-color: var(--border);
+  }
+
+  details[open] .toc__toggle:hover,
+  details[open] .toc__toggle:focus-visible {
+    border-color: var(--primary);
+  }
+
+  .toc__current {
+    overflow: hidden;
+    color: var(--foreground);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .toc__dropdown {
+    max-height: 85vh;
+    overflow-y: auto;
+    background-color: var(--popover);
+    color: var(--popover-foreground);
+    box-shadow: 0 0.5rem 1.5rem
+      color-mix(in srgb, var(--foreground) 12%, transparent);
+    overscroll-behavior: contain;
+  }
+
+  #toc-title {
+    margin-block-end: 0.5rem;
+    color: var(--foreground);
+    font-size: var(--text-body);
+    font-weight: var(--text-title-3--font-weight);
+    line-height: var(--text-body--line-height);
+    letter-spacing: var(--text-title-3--letter-spacing);
   }
 
   @media (max-width: 63.999rem) {
