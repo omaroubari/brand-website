@@ -1,5 +1,5 @@
 ---
-import BaseLayout from "./BaseLayout.astro";
+import RootLayout from "./RootLayout.astro";
 import Pager from "../components/nav/Pager.astro";
 import SectionOpener from "../components/content/SectionOpener.astro";
 import TocList from "../components/nav/TocList.astro";
@@ -38,7 +38,7 @@ const shouldRenderToc = toc.count >= 2;
 const labels = getUi(page.locale);
 ---
 
-<BaseLayout
+<RootLayout
   locale={page.locale}
   navigation={navigation}
   title={seo?.title ?? title}
@@ -97,7 +97,7 @@ const labels = getUi(page.locale);
       </div>
     </div>
   </toc-root>
-</BaseLayout>
+</RootLayout>
 
 <script src="../components/nav/toc-root.ts"></script>
 

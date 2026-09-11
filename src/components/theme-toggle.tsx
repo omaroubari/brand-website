@@ -4,7 +4,7 @@ import { useTheme } from "@/hooks/use-theme";
 import { getSuggestedThemeSetting, type ThemeSetting } from "@/lib/theme-state";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { defaultLocale, getUi, type Locale } from "@/i18n";
+import { defaultLocale, getUi } from "@/i18n";
 
 /**
  * Theme control driven by the shared theme state (@/lib/theme via useTheme).
@@ -21,7 +21,7 @@ export function ThemeToggle({
   ...props
 }: React.ComponentProps<typeof Button> & {
   defaultTheme?: ThemeSetting;
-  locale?: Locale;
+  locale?: string;
 }) {
   const theme = useTheme({ defaultTheme });
   const mode = getSuggestedThemeSetting(theme);

@@ -1,6 +1,6 @@
 ---
 import { getEntry, render, type CollectionKey } from "astro:content";
-import SectionLayout from "../layouts/SectionLayout.astro";
+import PageLayout from "../layouts/PageLayout.astro";
 import { getContentTree } from "../lib/core/tree";
 import {
   getContentPagePaths,
@@ -29,6 +29,6 @@ if (!entry) {
 const { Content, headings } = await render(entry);
 ---
 
-<SectionLayout page={page} navigation={navigation} headings={headings}>
+<PageLayout page={page} navigation={navigation} headings={headings}>
   <Content />
-</SectionLayout>
+</PageLayout>

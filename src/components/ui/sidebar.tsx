@@ -24,7 +24,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
-import { defaultLocale, getUi, type Locale } from "@/i18n";
+import { defaultLocale, getUi } from "@/i18n";
 
 const SIDEBAR_COOKIE_NAME = "sidebar_state";
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
@@ -162,7 +162,7 @@ function Sidebar({
   side?: "left" | "right";
   variant?: "sidebar" | "floating" | "inset";
   collapsible?: "offcanvas" | "icon" | "none";
-  locale?: Locale;
+  locale?: string;
 }) {
   const { isMobile, state, openMobile, setOpenMobile } = useSidebar();
 
@@ -256,7 +256,7 @@ function SidebarTrigger({
   onClick,
   locale = defaultLocale,
   ...props
-}: React.ComponentProps<typeof Button> & { locale?: Locale }) {
+}: React.ComponentProps<typeof Button> & { locale?: string }) {
   const { toggleSidebar, state } = useSidebar();
 
   return (
@@ -313,7 +313,7 @@ function SidebarRail({
   className,
   locale = defaultLocale,
   ...props
-}: React.ComponentProps<"button"> & { locale?: Locale }) {
+}: React.ComponentProps<"button"> & { locale?: string }) {
   const { toggleSidebar } = useSidebar();
   const label = getUi(locale).nav.toggleSidebar;
 
