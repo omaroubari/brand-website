@@ -27,7 +27,6 @@ import {
   supportedLocales,
   getDirection,
   resolveBrand,
-  type Locale,
 } from "../../i18n";
 
 import type { NavNode } from "@/lib/types";
@@ -35,7 +34,7 @@ import type { NavNode } from "@/lib/types";
 interface Props {
   items: NavNode[];
   currentRoute: string;
-  locale: Locale;
+  locale: string;
   navigationRoot: string;
   children?: ReactNode;
 }

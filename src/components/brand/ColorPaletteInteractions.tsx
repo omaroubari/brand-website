@@ -1,7 +1,7 @@
 import * as React from "react";
 
 import { Toaster, toast } from "../ui/toast";
-import { defaultLocale, getUi, type Locale } from "../../i18n";
+import { defaultLocale, getUi } from "../../i18n";
 
 async function copyToClipboard(value: string): Promise<boolean> {
   try {
@@ -31,7 +31,7 @@ async function copyToClipboard(value: string): Promise<boolean> {
 export default function ColorPaletteInteractions({
   locale = defaultLocale,
 }: {
-  locale?: Locale;
+  locale?: string;
 }) {
   const labels = getUi(locale);
 
