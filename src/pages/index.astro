@@ -1,14 +1,25 @@
 ---
-import { config } from "../brand/config";
+import { brand, config } from "../brand/config";
 import CoverPage from "../components/content/CoverPage.astro";
-import { defaultLocale, getLocale, LOCALE_COOKIE_NAME } from "../i18n";
+import {
+  getDirection,
+  getLocale,
+  getUi,
+  LOCALE_COOKIE_NAME,
+  resolveBrand,
+} from "../i18n";
+import { withBase } from "../components/islands/base-paths";
 import { i18nEnabled } from "../lib/core/i18n";
+import { getNavigation } from "../lib/core/navigation";
 import { getContentTree } from "../lib/core/tree";
+import type { BareRootLayoutProps } from "../lib/root-layout";
 import RootLayout from "../layouts/RootLayout.astro";
 
 // A prefixed multilingual site redirects this route on demand so the locale
 // cookie can choose the destination. Otherwise this is the default cover.
 export const prerender = false;
+
+const defaultLocale = config.i18n?.defaultLocale ?? "en";
 
 if (i18nEnabled(config) && !config.i18n.hideDefaultLocalePrefix) {
   return Astro.redirect(
@@ -18,8 +29,81 @@ if (i18nEnabled(config) && !config.i18n.hideDefaultLocalePrefix) {
 }
 
 const tree = await getContentTree();
+const localizedBrand = resolveBrand(brand, defaultLocale);
+const navigation = tree.navigation;
+const route = navigation.root ?? "/";
+const siteUrl = localizedBrand.meta.url.replace(/\/$/u, "");
+const absolute = (path: string) =>
+  path.startsWith("/") ? `${siteUrl}${withBase(path)}` : path;
+const ogImage = localizedBrand.meta.ogImage ?? null;
+const dir = getDirection(defaultLocale);
+const localeAlternates = config.i18n
+  ? config.i18n.locales.map(({ code }) => ({
+      hreflang: code,
+      href: absolute(getNavigation(tree, code).root ?? "/"),
+    }))
+  : [];
+const xDefault =
+  localeAlternates.find(({ hreflang }) => hreflang === defaultLocale)?.href ??
+  null;
+
+const layoutProps = {
+  contentLayout: "bare",
+  site: {
+    title: `${localizedBrand.meta.name} — ${localizedBrand.meta.documentTitle}`,
+    description: localizedBrand.meta.description,
+  },
+  logo: {
+    light: localizedBrand.logo.logotype.onLight,
+    dark: localizedBrand.logo.logotype.onDark,
+    alt: localizedBrand.logo.logotype.altText ?? localizedBrand.meta.name,
+    href: route,
+  },
+  favicon: localizedBrand.logo.favicon ?? "/favicon.svg",
+  appleIcon: null,
+  banner: null,
+  analytics: null,
+  navigation,
+  mcp: null,
+  page: {
+    title: "",
+    description: localizedBrand.meta.description,
+    route,
+  },
+  imageZoom: true,
+  codeWrap: false,
+  themeMode: localizedBrand.theme.default,
+  searchEnabled: false,
+  indexable: true,
+  ogImage: ogImage ? absolute(ogImage) : null,
+  ogGenerated: false,
+  x: undefined,
+  canonical: absolute(route),
+  editUrl: null,
+  askEnabled: false,
+  feedback: false,
+  exportPdf: false,
+  exportEpub: false,
+  openInChat: [],
+  feeds: [],
+  discovery: null,
+  siteUrl,
+  pageType: undefined,
+  published: null,
+  lastModified: null,
+  noindex: false,
+  structuredDataEnabled: false,
+  locale: defaultLocale,
+  dir,
+  contentDir: dir,
+  ui: getUi(defaultLocale),
+  localeAlternates,
+  xDefault,
+  versionNotice: null,
+  searchVersion: null,
+} satisfies BareRootLayoutProps;
 ---
 
-<RootLayout locale={defaultLocale} navigation={tree.navigation}>
-  <CoverPage locale={defaultLocale} navigation={tree.navigation} />
+<RootLayout {...layoutProps}>
+  <CoverPage locale={defaultLocale} navigation={navigation} />
 </RootLayout>

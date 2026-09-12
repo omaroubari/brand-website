@@ -12,7 +12,7 @@ describe("buildToc", () => {
         { depth: 2, slug: "second", text: "Second" },
         { depth: 3, slug: "second-detail", text: "Second detail" },
       ],
-      { minHeadingLevel: 2, maxHeadingLevel: 3 },
+      { minLevel: 2, maxLevel: 3 },
     );
 
     expect(toc.count).toBe(4);
@@ -52,7 +52,7 @@ describe("buildToc", () => {
         { depth: 3, slug: "orphan", text: "Orphan" },
         { depth: 2, slug: "parent", text: "Parent" },
       ],
-      { minHeadingLevel: 2, maxHeadingLevel: 3 },
+      { minLevel: 2, maxLevel: 3 },
     );
 
     expect(toc.items.map(({ slug }) => slug)).toEqual(["orphan", "parent"]);
@@ -66,7 +66,7 @@ describe("buildToc", () => {
         { depth: 4, slug: "detail", text: "Detail" },
         { depth: 5, slug: "also-excluded", text: "Also excluded" },
       ],
-      { minHeadingLevel: 3, maxHeadingLevel: 4 },
+      { minLevel: 3, maxLevel: 4 },
     );
 
     expect(toc).toEqual({

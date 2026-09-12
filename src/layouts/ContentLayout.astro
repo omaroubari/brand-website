@@ -1,24 +1,30 @@
 ---
-import RootLayout from "./RootLayout.astro";
-import Pager from "../components/nav/Pager.astro";
-import SectionOpener from "../components/content/SectionOpener.astro";
-import TocList from "../components/nav/TocList.astro";
 import type { MarkdownHeading } from "astro";
+import type { UIStrings } from "../i18n";
+import type { Navigation, PageRecord } from "../lib/types";
+import SectionOpener from "../components/content/SectionOpener.astro";
+import Pager from "../components/nav/Pager.astro";
+import TocList from "../components/nav/TocList.astro";
 import { buildToc } from "../components/nav/toc-utils";
-import type { ContentPageProps } from "../lib/core/rendering";
 import { findBreadcrumbs } from "../components/nav/nav-utils";
-import { getUi } from "../i18n";
 
-interface Props extends ContentPageProps {
+interface Props {
+  page: PageRecord;
+  locale?: string;
+  navigation: Navigation;
   headings: MarkdownHeading[];
+  toc?: { enabled: boolean; maxLevel: number; minLevel: number };
+  ui?: UIStrings;
 }
 
-const { page, navigation, headings } = Astro.props;
 const {
-  title,
-  description,
-  meta: { seo },
-} = page;
+  page,
+  locale,
+  navigation,
+  headings,
+  toc: tocSettings,
+  ui,
+} = Astro.props;
 
 const crumbs = findBreadcrumbs(navigation.sidebar, page.route);
 // Index routes consist only of their group segments and have no eyebrow.
@@ -30,74 +36,64 @@ const eyebrow =
         .map((crumb) => crumb.label)
         .join(" / ");
 
-const toc = buildToc(headings, {
-  minHeadingLevel: 2,
-  maxHeadingLevel: 3,
-});
-const shouldRenderToc = toc.count >= 2;
-const labels = getUi(page.locale);
+const toc = buildToc(headings, { ...tocSettings, minLevel: 2, maxLevel: 3 });
+const shouldRenderToc = (tocSettings?.enabled ?? true) && toc.count >= 2;
 ---
 
-<RootLayout
-  locale={page.locale}
-  navigation={navigation}
-  title={seo?.title ?? title}
-  description={seo?.description ?? description}>
-  <toc-root>
-    <div class="page">
+<toc-root>
+  <div class="page">
+    {
+      shouldRenderToc && (
+        <div class="section__mobile-toc lg:hidden" data-toc data-toc-mobile>
+          <nav aria-labelledby="toc-mobile-title">
+            <details>
+              <summary id="toc-mobile-title" class="mx-auto flex w-full">
+                <div class="flex w-full items-center justify-between gap-2 py-3">
+                  <span class="toc__toggle text-muted-foreground ms-10 flex">
+                    {ui?.toc.title}
+                  </span>
+                  <span class="toc__current" data-toc-current />
+                </div>
+              </summary>
+              <div class="toc__dropdown">
+                <TocList items={toc.items} mobile />
+              </div>
+            </details>
+          </nav>
+        </div>
+      )
+    }
+    <SectionOpener
+      locale={locale}
+      eyebrow={eyebrow}
+      title={page.title}
+      summary={page.description}
+    />
+    <div class="section">
+      <div class="section__content">
+        <article class="prose section__body">
+          <slot />
+        </article>
+
+        <div class="section__tail">
+          <Pager page={page} navigation={navigation} />
+        </div>
+      </div>
       {
         shouldRenderToc && (
-          <div class="section__mobile-toc lg:hidden" data-toc data-toc-mobile>
-            <nav aria-labelledby="toc-mobile-title">
-              <details>
-                <summary id="toc-mobile-title" class="mx-auto flex w-full">
-                  <div class="flex w-full items-center justify-between gap-2 py-3">
-                    <span class="toc__toggle text-muted-foreground ms-10 flex">
-                      {labels.toc.title}
-                    </span>
-                    <span class="toc__current" data-toc-current />
-                  </div>
-                </summary>
-                <div class="toc__dropdown">
-                  <TocList items={toc.items} mobile />
-                </div>
-              </details>
+          <aside
+            class="scrollbar-thumb-border sticky top-0 hidden h-dvh scrollbar-thin scrollbar-track-transparent overflow-y-auto px-4 pt-(--page-gutter) pb-10 text-sm lg:block"
+            data-toc>
+            <nav aria-labelledby="toc-title">
+              <h2 id="toc-title">{ui?.toc.title}</h2>
+              <TocList items={toc.items} />
             </nav>
-          </div>
+          </aside>
         )
       }
-      <SectionOpener
-        locale={page.locale}
-        eyebrow={eyebrow}
-        title={title}
-        summary={description}
-      />
-      <div class="section">
-        <div class="section__content">
-          <article class="prose section__body">
-            <slot />
-          </article>
-
-          <div class="section__tail">
-            <Pager page={page} navigation={navigation} />
-          </div>
-        </div>
-        {
-          shouldRenderToc && (
-            <aside
-              class="scrollbar-thumb-border sticky top-0 hidden h-dvh scrollbar-thin scrollbar-track-transparent overflow-y-auto px-4 pt-(--page-gutter) pb-10 text-sm lg:block"
-              data-toc>
-              <nav aria-labelledby="toc-title">
-                <h2 id="toc-title">{labels.toc.title}</h2>
-                <TocList items={toc.items} />
-              </nav>
-            </aside>
-          )
-        }
-      </div>
     </div>
-  </toc-root>
-</RootLayout>
+  </div>
+</toc-root>
 
 <script src="../components/nav/toc-root.ts"></script>
 
