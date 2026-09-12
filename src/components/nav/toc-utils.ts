@@ -1,6 +1,6 @@
-import type { MarkdownHeading } from "astro";
+import type { Heading } from "@/lib/types";
 
-export interface TocItem extends MarkdownHeading {
+export interface TocItem extends Heading {
   children: TocItem[];
 }
 
@@ -10,25 +10,21 @@ export interface Toc {
 }
 
 export interface TocConfig {
-  minHeadingLevel: number;
-  maxHeadingLevel: number;
+  minLevel: number;
+  maxLevel: number;
 }
 
 /** Build a table-of-contents outline for the configured heading range. */
 export function buildToc(
-  headings: readonly MarkdownHeading[],
-  { minHeadingLevel, maxHeadingLevel }: TocConfig,
+  headings: readonly Heading[],
+  { minLevel, maxLevel }: TocConfig,
 ): Toc {
   const items: TocItem[] = [];
   const ancestors: TocItem[] = [];
   let count = 0;
 
   for (const heading of headings) {
-    if (
-      heading.depth < minHeadingLevel ||
-      heading.depth > maxHeadingLevel
-    )
-      continue;
+    if (heading.depth < minLevel || heading.depth > maxLevel) continue;
 
     const item = { ...heading, children: [] };
     count += 1;

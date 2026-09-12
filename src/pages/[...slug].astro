@@ -1,20 +1,27 @@
 ---
 import { getEntry, render, type CollectionKey } from "astro:content";
-import PageLayout from "../layouts/PageLayout.astro";
 import { getContentTree } from "../lib/core/tree";
 import {
   getContentPagePaths,
   type ContentPageProps,
 } from "../lib/core/rendering";
+import { brand, config } from "../brand/config";
+import { getDirection, getUi, resolveBrand } from "../i18n";
+import { resolveFallbackLocale } from "../lib/core/i18n";
+import { withBase } from "../components/islands/base-paths";
+
+import RootLayout from "../layouts/RootLayout.astro";
+
+import type { ContentRootLayoutProps } from "../lib/root-layout";
 
 export async function getStaticPaths() {
   const tree = await getContentTree();
   const paths = getContentPagePaths(tree);
-
   return paths;
 }
 
 type Props = ContentPageProps;
+
 const { page, navigation } = Astro.props;
 
 const entry = await getEntry(
@@ -27,8 +34,91 @@ if (!entry) {
 }
 
 const { Content, headings } = await render(entry);
+
+const localizedBrand = resolveBrand(brand, page.locale);
+const siteUrl = localizedBrand.meta.url.replace(/\/$/u, "");
+const absolute = (path: string) =>
+  path.startsWith("/") ? `${siteUrl}${withBase(path)}` : path;
+const noindex = page.meta.noindex || page.meta.seo.noindex;
+const ogImage = page.meta.seo.image ?? localizedBrand.meta.ogImage ?? null;
+
+const tree = await getContentTree();
+const translations = tree.pages.filter(
+  (candidate) =>
+    candidate.translationKey === page.translationKey && !candidate.fallback,
+);
+const localeAlternates = translations.map((translation) => ({
+  hreflang: translation.locale,
+  href: absolute(translation.route),
+}));
+
+const fallbackLocale = config.i18n ? resolveFallbackLocale(config.i18n) : null;
+
+const xDefault =
+  localeAlternates.find(({ hreflang }) => hreflang === fallbackLocale)?.href ??
+  null;
+
+const layoutProps = {
+  site: {
+    title: `${localizedBrand.meta.name} ${localizedBrand.meta.documentTitle}`,
+    description: localizedBrand.meta.description,
+  },
+  contentLayout: "content",
+  logo: {
+    light: localizedBrand.logo.logotype.onLight,
+    dark: localizedBrand.logo.logotype.onDark,
+    alt: localizedBrand.logo.logotype.altText ?? localizedBrand.meta.name,
+    href: navigation.root ?? "/",
+  },
+  favicon: localizedBrand.logo.favicon ?? "/favicon.svg",
+  appleIcon: null,
+  banner: null,
+  analytics: null,
+  navigation,
+  mcp: null,
+  page: {
+    ...page,
+    title: page.meta.seo.title ?? page.title,
+    description: page.meta.seo.description ?? page.description,
+  },
+  headings,
+  imageZoom: true,
+  codeWrap: false,
+  themeMode: localizedBrand.theme.default,
+  searchEnabled: false,
+  indexable: !noindex,
+  ogImage: ogImage ? absolute(ogImage) : null,
+  ogGenerated: false,
+  x: undefined,
+  canonical: page.meta.seo.canonical ?? absolute(page.route),
+  editUrl: null,
+  askEnabled: false,
+  feedback: false,
+  exportPdf: false,
+  exportEpub: false,
+  openInChat: [],
+  feeds: [],
+  discovery: null,
+  siteUrl,
+  pageType: page.contentType,
+  published: null,
+  lastModified: page.lastModified ?? null,
+  noindex,
+  structuredDataEnabled: false,
+  locale: page.locale,
+  dir: getDirection(page.locale),
+  contentDir: getDirection(
+    page.fallback && fallbackLocale ? fallbackLocale : page.locale,
+  ),
+  ui: getUi(page.locale),
+  localeAlternates,
+  xDefault,
+  versionNotice: null,
+  searchVersion: page.version ?? null,
+  toc: { enabled: true, minLevel: 2, maxLevel: 3 },
+} satisfies ContentRootLayoutProps;
 ---
 
-<PageLayout page={page} navigation={navigation} headings={headings}>
+<RootLayout {...layoutProps}>
   <Content />
-</PageLayout>
+</RootLayout>
