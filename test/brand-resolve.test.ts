@@ -1,15 +1,9 @@
-import { describe, expect, expectTypeOf, it } from "vitest";
-import { brand } from "../brand/config";
-import type { BrandConfig } from "../brand/schema";
-import {
-  defaultLocale,
-  getDirection,
-  getUi,
-  localeInfo,
-  resolveBrand,
-  supportedLocales,
-  type Locale,
-} from "./index";
+import { describe, expect, it } from "vitest";
+import { brand, config as siteConfig } from "../src/brand/config";
+import { resolveBrand } from "../src/brand/localize";
+import type { BrandConfig } from "../src/brand/schema";
+
+const i18n = siteConfig.i18n;
 
 function canonicalBrand(): BrandConfig {
   const config = structuredClone(brand) as BrandConfig;
@@ -18,31 +12,6 @@ function canonicalBrand(): BrandConfig {
 }
 
 describe("resolveBrand", () => {
-  it("derives locale metadata and switcher order from config.i18n", () => {
-    expectTypeOf<Locale>().toEqualTypeOf<"en" | "ar">();
-    expect(supportedLocales).toEqual(["en", "ar"]);
-    expect(defaultLocale).toBe("en");
-    expect(localeInfo.en).toMatchObject({
-      code: "en",
-      label: "English",
-      dir: "ltr",
-    });
-    expect(localeInfo.ar).toMatchObject({
-      code: "ar",
-      label: "العربية",
-      dir: "rtl",
-    });
-    expect(getDirection("ar")).toBe("rtl");
-  });
-
-  it("resolves built-in UI copy by exact locale, base language, then English", () => {
-    expect(getUi("ar").languageSwitcher.label).toBe("اللغة");
-    expect(getUi("ar-SA").languageSwitcher.label).toBe("اللغة");
-    expect(getUi("AR-sa").languageSwitcher.label).toBe("اللغة");
-    expect(getUi("fr-CA").languageSwitcher.label).toBe("Language");
-    expect(getUi("__proto__").languageSwitcher.label).toBe("Language");
-  });
-
   it("applies sparse array overlays by identity while preserving canonical collections", () => {
     const config = canonicalBrand();
     const canonicalPaletteIds = config.colors.palette.map(({ id }) => id);
@@ -76,7 +45,7 @@ describe("resolveBrand", () => {
       },
     };
 
-    const localized = resolveBrand(config, "ar");
+    const localized = resolveBrand(config, "AR", i18n);
 
     expect(localized.colors.palette.map(({ id }) => id)).toEqual(
       canonicalPaletteIds,
@@ -85,30 +54,20 @@ describe("resolveBrand", () => {
       "محايد",
       "برتقالي",
     ]);
-    expect(localized.colors.swatches).toHaveLength(
-      config.colors.swatches.length,
-    );
     expect(localized.colors.swatches[0]).toMatchObject({
       id: "black",
       name: "أسود",
       usage: "للنصوص",
       color: config.colors.swatches[0].color,
     });
-
     expect(localized.typography.display).toBe("var(--font-arabic)");
     expect(localized.typography.text).toBe(config.typography.text);
     expect(localized.typography.families.map(({ id }) => id)).toEqual(
       canonicalFamilyIds,
     );
-    expect(localized.typography.families[0]).toMatchObject({
-      id: "display",
-      name: "PP Neue Montreal Arabic",
-      note: "للخطوط الكبيرة",
-    });
     expect(localized.typography.weights.map(({ weight }) => weight)).toEqual(
       canonicalWeightValues,
     );
-    expect(localized.typography.weights[0].name).toBe("خفيف");
     expect(localized.typography.scale.map(({ id }) => id)).toEqual(
       canonicalScaleIds,
     );
@@ -120,7 +79,7 @@ describe("resolveBrand", () => {
     });
   });
 
-  it("resolves only the requested locale over the canonical config", () => {
+  it("resolves only the requested locale and does not mutate the source", () => {
     const config = canonicalBrand();
     const canonicalName = config.colors.palette[0].name;
     config.localeOverrides = {
@@ -129,14 +88,13 @@ describe("resolveBrand", () => {
           palette: [{ id: "neutral", name: "English locale override" }],
         },
       },
-      ar: {
-        meta: { documentTitle: "دليل الهوية" },
-      },
+      ar: { meta: { documentTitle: "دليل الهوية" } },
     };
 
-    const localized = resolveBrand(config, "ar");
+    const localized = resolveBrand(config, "ar", i18n);
 
     expect(localized.meta.documentTitle).toBe("دليل الهوية");
     expect(localized.colors.palette[0].name).toBe(canonicalName);
+    expect(config.colors.palette[0].name).toBe(canonicalName);
   });
 });

@@ -4,12 +4,7 @@ import { Font } from "astro:assets";
 import { brandStyleSheet } from "../brand/tokens";
 import type { RootLayoutProps } from "../lib/root-layout";
 import { getInitialThemeAttributes } from "../lib/theme-state";
-import {
-  getLocalizedPath,
-  LOCALE_COOKIE_NAME,
-  localeInfo,
-  supportedLocales,
-} from "../i18n";
+import { LOCALE_COOKIE_NAME } from "../lib/core/i18n";
 import SideNav from "../components/nav/SideNav";
 import ColorPaletteInteractions from "../components/brand/ColorPaletteInteractions";
 import ThemeScript from "@/components/theme-script.astro";
@@ -66,7 +61,7 @@ const {
   ui,
   localeAlternates,
   xDefault,
-  // localeSwitch,
+  localeSwitch,
   // versionSelector,
   versionNotice,
   searchVersion = null,
@@ -108,11 +103,6 @@ const initialTheme = getInitialThemeAttributes(brand.theme.default);
 
 const navigationItems = navigation.sidebar;
 const navigationRoot = navigation.root ?? "/";
-const languageLinks = supportedLocales.map((code) => ({
-  code,
-  label: localeInfo[code].label,
-  href: getLocalizedPath(currentRoute, code),
-}));
 ---
 
 <!doctype html>
@@ -210,9 +200,8 @@ const languageLinks = supportedLocales.map((code) => ({
         items={navigationItems}
         numbering={navigationNumbering}
         currentRoute={currentRoute}
-        locale={locale}
         dir={dir}
-        languageLinks={languageLinks}
+        localeSwitch={localeSwitch}
         navigationRoot={navigationRoot}
         client:load>
         <main class="main" id="content">

@@ -19,8 +19,8 @@ import {
 import ThemeToggle from "@/components/theme-toggle";
 import { contentIcons } from "../../lib/core/icons";
 import type { BrandConfig } from "../../brand/schema";
-import type { UIStrings } from "../../i18n";
-import type { NavNode } from "@/lib/types";
+import type { UIStrings } from "../../lib/core/i18n-ui";
+import type { LocaleSwitchOption, NavNode } from "@/lib/types";
 
 interface SideNavBrand {
   meta: Pick<
@@ -44,9 +44,8 @@ interface Props {
   items: NavNode[];
   numbering: boolean;
   currentRoute: string;
-  locale: string;
   dir: "ltr" | "rtl";
-  languageLinks: Array<{ code: string; label: string; href: string }>;
+  localeSwitch: LocaleSwitchOption[];
   navigationRoot: string;
   children?: ReactNode;
 }
@@ -205,9 +204,8 @@ export default function SideNav({
   items,
   numbering,
   currentRoute,
-  locale,
   dir,
-  languageLinks,
+  localeSwitch,
   navigationRoot,
   children,
 }: Props) {
@@ -250,12 +248,14 @@ export default function SideNav({
           <nav
             className="flex items-center gap-2 text-[length:var(--text-caption)]"
             aria-label={ui.languageSwitcher.label}>
-            {languageLinks.map((candidate, index) => (
+            {localeSwitch.map((candidate, index) => (
               <Fragment key={candidate.code}>
                 {index > 0 && <span aria-hidden="true">/</span>}
                 <a
                   href={candidate.href}
-                  aria-current={candidate.code === locale ? "page" : undefined}>
+                  aria-current={candidate.isCurrent ? "page" : undefined}
+                  data-fallback={candidate.isFallback ? "true" : undefined}
+                  dir={candidate.dir}>
                   {candidate.label}
                 </a>
               </Fragment>

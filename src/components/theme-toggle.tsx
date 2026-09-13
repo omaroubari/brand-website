@@ -4,7 +4,7 @@ import { useTheme } from "@/hooks/use-theme";
 import { getSuggestedThemeSetting, type ThemeSetting } from "@/lib/theme-state";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import type { UIStrings } from "@/i18n";
+import type { UIStrings } from "@/lib/core/i18n-ui";
 
 /**
  * Theme control driven by the shared theme state (@/lib/theme via useTheme).

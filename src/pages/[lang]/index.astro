@@ -1,9 +1,10 @@
 ---
 import { brand, config } from "../../brand/config";
+import { resolveBrand } from "../../brand/localize";
 import CoverPage from "../../components/content/CoverPage.astro";
 import { withBase } from "../../components/islands/base-paths";
-import { getUi, resolveBrand } from "../../i18n";
 import { i18nEnabled, localeDir } from "../../lib/core/i18n";
+import { resolveUIStrings } from "../../lib/core/i18n-ui";
 import { getNavigation } from "../../lib/core/navigation";
 import { getContentTree } from "../../lib/core/tree";
 import type { BareRootLayoutProps } from "../../lib/root-layout";
@@ -35,8 +36,9 @@ export async function getStaticPaths() {
 }
 
 const { locale, navigation } = Astro.props;
-const localizedBrand = resolveBrand(brand, locale);
-const ui = getUi(locale);
+const localizedBrand = resolveBrand(brand, locale, config.i18n);
+const defaultLocale = config.i18n?.defaultLocale ?? "en";
+const ui = resolveUIStrings(locale, { defaultLocale });
 const dir = localeDir(locale, config.i18n);
 const route = navigation.root ?? "/";
 const siteUrl = localizedBrand.meta.url.replace(/\/$/u, "");
@@ -47,6 +49,16 @@ const ogGenerated = Boolean(config.seo.og.enabled ?? true);
 const ogImage = ogGenerated ? generatedOgImagePath(route) : null;
 
 const tree = await getContentTree();
+const localeSwitch = config.i18n
+  ? config.i18n.locales.map(({ code, label, dir }) => ({
+      code,
+      label,
+      dir,
+      href: getNavigation(tree, code).root ?? "/",
+      isCurrent: code === locale,
+      isFallback: false,
+    }))
+  : [];
 const localeAlternates = config.i18n.locales.map(({ code }) => ({
   hreflang: code,
   href: absolute(getNavigation(tree, code).root ?? "/"),
@@ -108,6 +120,7 @@ const layoutProps = {
   dir,
   contentDir: dir,
   ui,
+  localeSwitch,
   localeAlternates,
   xDefault,
   versionNotice: null,

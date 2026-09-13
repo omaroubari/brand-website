@@ -1,4 +1,3 @@
-import { UI_PACKS } from "@/i18n/ui-packs/index.ts";
 import type { ResolvedConfig, ResolvedI18nConfig } from "./schema.ts";
 
 /**
@@ -7,10 +6,7 @@ import type { ResolvedConfig, ResolvedI18nConfig } from "./schema.ts";
  * goes through these helpers so the routing rules live in exactly one place.
  */
 
-/** Locale codes Brandtree recognizes (those it ships a UI pack for, plus English). */
-const KNOWN_LOCALES = new Set(
-  [...Object.keys(UI_PACKS), "en"].map((code) => code.toLowerCase()),
-);
+export const LOCALE_COOKIE_NAME = "brand-locale";
 
 /** True when the project opts into i18n. */
 export const i18nEnabled = (
@@ -18,16 +14,18 @@ export const i18nEnabled = (
 ): config is ResolvedConfig & { i18n: ResolvedI18nConfig } =>
   config.i18n !== undefined;
 
-/** All configured locale codes, default first as authored. */
-export const localeCodes = (i18n: ResolvedI18nConfig): string[] =>
-  i18n.locales.map((locale) => locale.code);
+/** All configured locale codes. */
+export const localeCodes = (i18n: ResolvedI18nConfig) =>
+  new Set(i18n.locales.map((locale) => locale.code));
 
 /** Text direction for a locale (`ltr` when unknown). */
 export const localeDir = (
   code: string,
   i18n: ResolvedI18nConfig,
 ): "ltr" | "rtl" =>
-  i18n.locales.find((locale) => locale.code === code)?.dir ?? "ltr";
+  i18n.locales.find(
+    (locale) => locale.code.toLowerCase() === code.toLowerCase(),
+  )?.dir ?? "ltr";
 
 /**
  * The locale a missing translation falls back to: `fallbackLocale` when set,

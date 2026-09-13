@@ -1,7 +1,7 @@
 import * as React from "react";
 
 import { Toaster, toast } from "../ui/toast";
-import type { UIStrings } from "../../i18n";
+import type { UIStrings } from "../../lib/core/i18n-ui";
 
 export interface ColorPaletteLabels {
   close: UIStrings["nav"]["close"];

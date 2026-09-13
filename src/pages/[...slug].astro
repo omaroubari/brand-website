@@ -6,8 +6,13 @@ import {
   type ContentPageProps,
 } from "../lib/core/rendering";
 import { brand, config } from "../brand/config";
-import { getDirection, getUi, resolveBrand } from "../i18n";
-import { resolveFallbackLocale } from "../lib/core/i18n";
+import { resolveBrand } from "../brand/localize";
+import {
+  localeDir,
+  localizeRoute,
+  resolveFallbackLocale,
+} from "../lib/core/i18n";
+import { resolveUIStrings } from "../lib/core/i18n-ui";
 import { withBase } from "../components/islands/base-paths";
 
 import RootLayout from "../layouts/RootLayout.astro";
@@ -36,13 +41,14 @@ if (!entry) {
 
 const { Content, headings } = await render(entry);
 
-const localizedBrand = resolveBrand(brand, page.locale);
-const ui = getUi(page.locale);
+const localizedBrand = resolveBrand(brand, page.locale, config.i18n);
+const defaultLocale = config.i18n?.defaultLocale ?? "en";
+const ui = resolveUIStrings(page.locale, { defaultLocale });
 const fallbackLocale = config.i18n ? resolveFallbackLocale(config.i18n) : null;
-const dir = getDirection(page.locale);
-const contentDir = getDirection(
-  page.fallback && fallbackLocale ? fallbackLocale : page.locale,
-);
+const dir = config.i18n ? localeDir(page.locale, config.i18n) : "ltr";
+const contentLocale =
+  page.fallback && fallbackLocale ? fallbackLocale : page.locale;
+const contentDir = config.i18n ? localeDir(contentLocale, config.i18n) : "ltr";
 const siteUrl = localizedBrand.meta.url.replace(/\/$/u, "");
 const absolute = (path: string) =>
   path.startsWith("/") ? `${siteUrl}${withBase(path)}` : path;
@@ -63,6 +69,26 @@ const translations = tree.pages.filter(
   (candidate) =>
     candidate.translationKey === page.translationKey && !candidate.fallback,
 );
+const translationsByLocale = new Map(
+  tree.pages
+    .filter((candidate) => candidate.translationKey === page.translationKey)
+    .map((candidate) => [candidate.locale, candidate]),
+);
+const localeSwitch = config.i18n
+  ? config.i18n.locales.map(({ code, label, dir: localeDirection }) => {
+      const translation = translationsByLocale.get(code);
+      return {
+        code,
+        label,
+        dir: localeDirection,
+        href:
+          translation?.route ??
+          localizeRoute(page.translationKey, code, config.i18n),
+        isCurrent: code === page.locale,
+        isFallback: translation?.fallback === true,
+      };
+    })
+  : [];
 const localeAlternates = translations.map((translation) => ({
   hreflang: translation.locale,
   href: absolute(translation.route),
@@ -125,6 +151,7 @@ const layoutProps = {
   dir,
   contentDir,
   ui,
+  localeSwitch,
   localeAlternates,
   xDefault,
   versionNotice: null,
