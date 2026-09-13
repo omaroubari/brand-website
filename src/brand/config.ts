@@ -21,7 +21,7 @@ export const config = defineConfig({
       documentTitle: "Brand Guidelines",
       version: "1.1",
       year: 2026,
-      url: "https://brand.example.com",
+      url: "https://brand.byvalence.com",
       description:
         "The brand guidelines for Studio Valence — logo usage, colour, typography and application rules.",
     },
@@ -625,6 +625,22 @@ export const config = defineConfig({
     ],
     hideDefaultLocalePrefix: false,
     parser: "dir",
+  },
+  seo: {
+    og: {
+      logo: "/brand/logotype-dark.svg",
+      eyebrow: false,
+      fonts: [
+        {
+          name: "Brand Sans",
+          src: "src/assets/fonts/BrandSans-Variable.ttf",
+        },
+        {
+          name: "PP Neue Montreal Arabic",
+          src: "src/assets/fonts/PPNeueMontrealArabic-Variable.ttf",
+        },
+      ],
+    },
   },
 });
 

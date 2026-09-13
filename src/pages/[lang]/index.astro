@@ -9,6 +9,7 @@ import { getContentTree } from "../../lib/core/tree";
 import type { BareRootLayoutProps } from "../../lib/root-layout";
 import RootLayout from "../../layouts/RootLayout.astro";
 import type { Navigation } from "../../lib/types";
+import { generatedOgImagePath } from "../../lib/og/paths";
 
 interface Props {
   locale: string;
@@ -40,7 +41,10 @@ const route = navigation.root ?? "/";
 const siteUrl = localizedBrand.meta.url.replace(/\/$/u, "");
 const absolute = (path: string) =>
   path.startsWith("/") ? `${siteUrl}${withBase(path)}` : path;
-const ogImage = localizedBrand.meta.ogImage ?? null;
+
+const ogGenerated = Boolean(config.seo.og.enabled ?? true);
+const ogImage = ogGenerated ? generatedOgImagePath(route) : null;
+
 const tree = await getContentTree();
 const localeAlternates = config.i18n.locales.map(({ code }) => ({
   hreflang: code,
@@ -80,7 +84,7 @@ const layoutProps = {
   searchEnabled: false,
   indexable: true,
   ogImage: ogImage ? absolute(ogImage) : null,
-  ogGenerated: false,
+  ogGenerated,
   x: undefined,
   canonical: absolute(route),
   editUrl: null,
