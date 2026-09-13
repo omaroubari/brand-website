@@ -1,14 +1,14 @@
 import type { APIRoute, GetStaticPaths } from "astro";
 import { fontData, logo as bundledLogo } from "virtual:og-assets";
 
-import { brand, config } from "../../brand/config";
-import { resolveBrand } from "../../brand/localize";
-import { colorCss, resolveColor } from "../../brand/tokens";
-import { getNavigation } from "../../lib/core/navigation";
-import { getContentTree } from "../../lib/core/tree";
+import { brand, config } from "@/brand/config";
+import { resolveBrand } from "@/brand/localize";
+import { colorCss, resolveColor } from "@/brand/tokens";
+import { getNavigation } from "@/core/navigation";
+import { getContentTree } from "@/core/tree";
 import { renderOgImage } from "../../og/card";
 import { resolveOgLayer, resolveOgLogo } from "../../og/options";
-import { localeDir } from "@/lib/core/i18n";
+import { localeDir } from "@/core/i18n";
 
 export const prerender = true;
 

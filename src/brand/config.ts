@@ -1,4 +1,4 @@
-import { defineConfig } from "@/lib/core/schema";
+import { defineConfig } from "@/core/schema";
 
 /**
  * ─────────────────────────────────────────────────────────────────────────────

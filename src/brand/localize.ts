@@ -1,4 +1,4 @@
-import type { ResolvedI18nConfig } from "../lib/core/schema";
+import type { ResolvedI18nConfig } from "@/core/schema";
 import type { BrandConfig, BrandLocaleOverride } from "./schema";
 
 /**

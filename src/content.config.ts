@@ -1,6 +1,6 @@
 import { defineCollection } from "astro:content";
 import { glob } from "astro/loaders";
-import { pageMetaSchema } from "./lib/core/schema";
+import { pageMetaSchema } from "@/core/schema";
 
 /**
  * Markdown content is intentionally kept as files. The recursive tree in

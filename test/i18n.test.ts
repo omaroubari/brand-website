@@ -6,8 +6,8 @@ import {
   localeTargetPath,
   localizeRoute,
   resolveFallbackLocale,
-} from "../src/lib/core/i18n";
-import type { ResolvedI18nConfig } from "../src/lib/core/schema";
+} from "../src/core/i18n";
+import type { ResolvedI18nConfig } from "../src/core/schema";
 
 const i18n: ResolvedI18nConfig = {
   defaultLocale: "en",

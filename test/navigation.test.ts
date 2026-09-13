@@ -1,12 +1,12 @@
 import { describe, expect, it } from "vitest";
 
-import { buildNavigation } from "../src/lib/core/navigation.ts";
-import type { NavNode, PageRecord } from "../src/lib/types.ts";
+import { buildNavigation } from "../src/core/navigation.ts";
+import type { NavNode, PageRecord } from "../src/core/types.ts";
 import {
   pageMetaSchema,
   type FolderMeta,
   type PageMeta,
-} from "../src/lib/core/schema.ts";
+} from "../src/core/schema.ts";
 
 const page = (
   id: string,

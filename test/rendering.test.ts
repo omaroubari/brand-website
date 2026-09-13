@@ -3,13 +3,10 @@ import {
   normalizeEntry,
   type NormalizeContext,
   type SourceEntry,
-} from "../src/lib/core/entries";
-import {
-  pageMetaSchema,
-  type ResolvedI18nConfig,
-} from "../src/lib/core/schema";
-import { buildContentTree } from "../src/lib/core/tree";
-import { getContentPagePaths } from "../src/lib/core/rendering";
+} from "../src/core/entries";
+import { pageMetaSchema, type ResolvedI18nConfig } from "../src/core/schema";
+import { buildContentTree } from "../src/core/tree";
+import { getContentPagePaths } from "../src/core/rendering";
 
 const i18n: ResolvedI18nConfig = {
   defaultLocale: "en",

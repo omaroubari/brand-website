@@ -1,5 +1,10 @@
 import type { FolderMeta } from "./schema";
-import type { ContentTree, Navigation, NavNode, PageRecord } from "../types";
+import type {
+  ContentTree,
+  Navigation,
+  NavNode,
+  PageRecord,
+} from "@/core/types";
 import type { ContentIconName } from "./icons";
 
 import { extname } from "pathe";

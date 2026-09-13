@@ -5,12 +5,9 @@ import {
   type ContentEntry,
   type NormalizeContext,
   type SourceEntry,
-} from "../src/lib/core/entries";
-import { humanizePageName, normalizePageSlug } from "../src/lib/core/paths";
-import {
-  pageMetaSchema,
-  type ResolvedI18nConfig,
-} from "../src/lib/core/schema";
+} from "../src/core/entries";
+import { humanizePageName, normalizePageSlug } from "../src/core/paths";
+import { pageMetaSchema, type ResolvedI18nConfig } from "../src/core/schema";
 
 const i18n: ResolvedI18nConfig = {
   defaultLocale: "en",

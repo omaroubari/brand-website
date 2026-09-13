@@ -1,8 +1,5 @@
 import { describe, expect, it } from "vitest";
-import {
-  resolveFolderMeta,
-  type FolderMetaModules,
-} from "../src/lib/core/meta";
+import { resolveFolderMeta, type FolderMetaModules } from "../src/core/meta";
 
 const root = "src/content/brand-guidelines";
 

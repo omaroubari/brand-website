@@ -1,15 +1,12 @@
 import { describe, expect, it, vi } from "vitest";
-import { buildContentTree } from "../src/lib/core/tree";
+import { buildContentTree } from "../src/core/tree";
 import {
   normalizeEntry,
   type NormalizeContext,
   type SourceEntry,
-} from "../src/lib/core/entries";
-import { resolveFolderMeta } from "../src/lib/core/meta";
-import {
-  pageMetaSchema,
-  type ResolvedI18nConfig,
-} from "../src/lib/core/schema";
+} from "../src/core/entries";
+import { resolveFolderMeta } from "../src/core/meta";
+import { pageMetaSchema, type ResolvedI18nConfig } from "../src/core/schema";
 
 const i18n: ResolvedI18nConfig = {
   defaultLocale: "en",

@@ -1,4 +1,4 @@
-import type { ContentTree, Navigation, PageRecord } from "../types";
+import type { ContentTree, Navigation, PageRecord } from "@/core/types";
 import type { FolderMeta, ResolvedI18nConfig } from "./schema";
 import { buildNavigation } from "./navigation";
 import type { LoadContentTreeOptions } from "./loader";
@@ -6,7 +6,7 @@ import { localizeRoute, resolveFallbackLocale } from "./i18n";
 import { withBasePath } from "./paths";
 
 export type { ContentEntry } from "./entries";
-export type { ContentTree } from "../types";
+export type { ContentTree } from "@/core/types";
 export { humanizePageName, normalizePageSlug } from "./paths";
 
 interface BuildContentTreeOptions {

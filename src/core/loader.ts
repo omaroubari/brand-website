@@ -1,7 +1,7 @@
 import { getCollection } from "astro:content";
 
 import config from "@/brand/config";
-import type { ContentTree, PageRecord } from "../types";
+import type { ContentTree, PageRecord } from "@/core/types";
 import {
   normalizeEntry,
   toSourceEntry,

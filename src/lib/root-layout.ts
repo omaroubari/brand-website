@@ -1,11 +1,11 @@
-import type { UIStrings } from "./core/i18n-ui";
-import type { BrandConfig } from "../brand/schema";
+import type { UIStrings } from "@/core/i18n-ui";
+import type { BrandConfig } from "@/brand/schema";
 import type {
   Heading,
   LocaleSwitchOption,
   Navigation,
   PageRecord,
-} from "./types";
+} from "../core/types";
 
 /**
  * The complete page-shell contract. Route files prepare these values and

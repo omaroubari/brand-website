@@ -1,5 +1,5 @@
 import type { CollectionEntry } from "astro:content";
-import type { Heading, PageRecord } from "../types";
+import type { Heading, PageRecord } from "@/core/types";
 import {
   pageMetaSchema,
   type PageMeta,
