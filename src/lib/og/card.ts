@@ -61,7 +61,7 @@ const logoMark = (svg: string, foreground: string): Node => {
   } catch {
     // A dimensionless SVG remains a square rather than breaking the build.
   }
-  const width = Math.min(240, 32 * aspect);
+  const width = Math.min(240, 60 * aspect);
   const height = width / aspect;
   return image({
     width: Math.round(width),
