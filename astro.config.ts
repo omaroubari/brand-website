@@ -8,8 +8,51 @@ import { brand, config } from "./src/brand/config";
 import react from "@astrojs/react";
 
 import tailwindcss from "@tailwindcss/vite";
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 
 const i18n = config.i18n;
+
+const configuredOgLogo = (
+  value: string | false | undefined,
+  fallback: string,
+): string | false => (value === false ? false : (value ?? fallback));
+
+/** Bundle build-only OG assets so Cloudflare's prerender worker needs no disk access. */
+const ogAssets = () => ({
+  name: "brand-og-assets",
+  resolveId(id: string) {
+    return id === "virtual:og-assets" ? `\0${id}` : undefined;
+  },
+  load(id: string) {
+    if (id !== "\0virtual:og-assets") return undefined;
+    const og = config.seo.og;
+    const logoSource = configuredOgLogo(og.logo, brand.logo.logotype.onDark);
+    const logo =
+      typeof logoSource === "string" && logoSource.endsWith(".svg")
+        ? readFileSync(
+            logoSource.startsWith("/")
+              ? resolve("public", logoSource.slice(1))
+              : resolve(logoSource),
+            "utf8",
+          )
+        : logoSource === false
+          ? false
+          : undefined;
+    const fontData = Object.fromEntries(
+      (og.fonts ?? [])
+        .filter(
+          (font): font is Extract<typeof font, { src: string }> =>
+            typeof font === "object" && "src" in font,
+        )
+        .map((font) => [
+          font.src,
+          readFileSync(resolve(font.src)).toString("base64"),
+        ]),
+    );
+    return `export const logo = ${JSON.stringify(logo)}; export const fontData = ${JSON.stringify(fontData)};`;
+  },
+});
 
 // https://astro.build/config
 export default defineConfig({
@@ -94,6 +137,6 @@ export default defineConfig({
   ],
 
   vite: {
-    plugins: [tailwindcss()],
+    plugins: [ogAssets(), tailwindcss()],
   },
 });

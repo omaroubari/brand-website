@@ -209,7 +209,6 @@ const metaSchema = z
     year: z.number(),
     url: z.string(),
     description: z.string(),
-    ogImage: z.string().optional(),
   })
   .strict();
 

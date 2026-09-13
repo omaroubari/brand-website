@@ -47,7 +47,9 @@ specimen, a swatch grid or a misuse panel.
    [`astro.config.ts`](astro.config.ts). Self-host a licensed file from
    `src/assets/fonts/`, or switch `provider` to `fontProviders.google()` and
    drop `options`. Whatever `cssVariable` you use must match
-   `typography.display` / `typography.text` in the brand config.
+   `typography.display` / `typography.text` in the brand config. Keep the
+   matching build-time files and family names in `config.seo.og.fonts` so
+   generated social cards use the same typefaces, including non-Latin scripts.
 5. **Rewrite the sections.** Content in
    [`src/content/brand-guidelines/`](src/content/brand-guidelines/) is organized by locale. A
    numbered file is a top-level page; a numbered folder is a navigation group
@@ -151,6 +153,19 @@ Roles map onto stable shade references, and components only ever reference the
 role — so the underlying source values can be Hex or OKLCH without changing
 the UI contract. `black` and `white` are built-in colour tokens, available to
 swatches and theme roles without palette entries.
+
+Open Graph cards are generated at build time for every cover and content route
+using each page's title and resolved description (`seo.description` wins over
+`description`). Their eyebrow defaults to the localized site title, their
+subtitle falls back to the brand description, their footer uses the site host,
+and their palette comes from the configured light brand theme. Configure the
+outlined SVG and fonts under `config.seo.og`; `eyebrow`, `description`, `logo`,
+and `site` accept an override string or `false` to hide that layer. Set
+`enabled: false` to disable generated cards. A frontmatter `seo.image` still
+supplies that page's card—using either a file in `public/` or an external
+URL—even when generation is disabled. Generated cards are 1200×630 PNGs at
+`/og/<route>.png`, and their complete Open Graph and X metadata is emitted
+automatically.
 
 ### `src/content/brand-guidelines/{locale}/NN-slug.mdx`
 

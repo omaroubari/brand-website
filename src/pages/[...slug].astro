@@ -13,6 +13,7 @@ import { withBase } from "../components/islands/base-paths";
 import RootLayout from "../layouts/RootLayout.astro";
 
 import type { ContentRootLayoutProps } from "../lib/root-layout";
+import { resolveOgImage } from "../lib/og/paths";
 
 export async function getStaticPaths() {
   const tree = await getContentTree();
@@ -39,8 +40,17 @@ const localizedBrand = resolveBrand(brand, page.locale);
 const siteUrl = localizedBrand.meta.url.replace(/\/$/u, "");
 const absolute = (path: string) =>
   path.startsWith("/") ? `${siteUrl}${withBase(path)}` : path;
+
 const noindex = page.meta.noindex || page.meta.seo.noindex;
-const ogImage = page.meta.seo.image ?? localizedBrand.meta.ogImage ?? null;
+
+const customOgImage = page.meta.seo.image ?? null;
+const resolvedOgImage = resolveOgImage(
+  page.route,
+  customOgImage,
+  Boolean(config.seo.og.enabled ?? true),
+);
+const ogGenerated = resolvedOgImage.generated;
+const ogImage = resolvedOgImage.path;
 
 const tree = await getContentTree();
 const translations = tree.pages.filter(
@@ -88,7 +98,7 @@ const layoutProps = {
   searchEnabled: false,
   indexable: !noindex,
   ogImage: ogImage ? absolute(ogImage) : null,
-  ogGenerated: false,
+  ogGenerated,
   x: undefined,
   canonical: page.meta.seo.canonical ?? absolute(page.route),
   editUrl: null,

@@ -109,11 +109,107 @@ export const navigationConfigSchema = z
   .object({ numbering: z.boolean().default(false) })
   .strict();
 
+/**
+ * Any CSS color. Takumi parses the full grammar, so this stays unvalidated
+ * here and a bad value fails the OG prerender with a parse error naming it —
+ * the same fail-fast the card's accent relies on. Validating hex-only here
+ * would reject `oklch(…)`, which `theme.accent` (the card's default accent)
+ * already accepts.
+ */
+const ogColorSchema = z.string();
+
+const ogPaletteSchema = z.strictObject({
+  accent: ogColorSchema.optional(),
+  background: ogColorSchema.optional(),
+  border: ogColorSchema.optional(),
+  foreground: ogColorSchema.optional(),
+  muted: ogColorSchema.optional(),
+});
+
+/**
+ * A font to load into the OG card renderer. A bare string is a Google Fonts
+ * family name; the name-only object form pins the weight (a number, a list, or
+ * a variable range like `"100..900"`) and style, fetched from Google Fonts at
+ * build. The `src` form reads a local font file from the project instead.
+ * Either way Takumi does per-glyph fallback, so a family covering a script
+ * (e.g. Noto Sans JP for CJK) fixes tofu without touching how Latin renders.
+ */
+const ogFontWeightSchema = z.union([
+  z.number().int().positive(),
+  z.array(z.number().int().positive()),
+  z.string().regex(/^\d+\.\.\d+$/u),
+]);
+const ogFontStyleSchema = z.enum(["normal", "italic"]);
+const ogFontSchema = z.union([
+  z.string(),
+  z.strictObject({
+    name: z.string(),
+    style: z.union([ogFontStyleSchema, z.array(ogFontStyleSchema)]).optional(),
+    weight: ogFontWeightSchema.optional(),
+  }),
+  /** A local font file, read from the project at build. */
+  z.strictObject({
+    name: z.string(),
+    src: z.string().min(1),
+    style: ogFontStyleSchema.optional(),
+    weight: z.number().int().positive().optional(),
+  }),
+]);
+
+const ogConfigSchema = z.strictObject({
+  /**
+   * Small label above the headline. Defaults to the localized site title; a
+   * string overrides it, `false` hides it.
+   */
+  eyebrow: z.union([z.string(), z.literal(false)]).optional(),
+  /**
+   * Card subtitle. Defaults to the site description; a string overrides it,
+   * `false` renders the card without one.
+   */
+  description: z.union([z.string(), z.literal(false)]).optional(),
+  /**
+   * Generate a per-page Open Graph image. Defaults to on; an explicit custom
+   * `page.seo.image` still works when this is off.
+   */
+  enabled: z.boolean().default(true),
+  /**
+   * Fonts for the generated card. Local files are bundled into the prerender
+   * worker so card routes remain static under server adapters.
+   */
+  fonts: z.array(ogFontSchema).optional(),
+  /**
+   * Local SVG used in the generated card instead of the site logo; `false`
+   * renders the card without any brand mark.
+   */
+  logo: z.union([z.string(), z.literal(false)]).optional(),
+  /** Optional generated-card colors. */
+  palette: ogPaletteSchema.optional(),
+  /**
+   * Footer site text. Defaults to the deployment site's host plus
+   * `deployment.base` (`docs.acme.com`, `user.github.io/repo`); a string
+   * overrides it, `false` hides it.
+   */
+  site: z.union([z.string(), z.literal(false)]).optional(),
+  /**
+   * Card headlines for custom `.astro` pages, keyed by route (`"/"`, `"/cli"`).
+   * A custom page has no frontmatter to read, so its card is otherwise titled
+   * by humanizing its last URL segment (`/cli` → "Cli"); an entry here wins.
+   * Content pages always take their card headline from the page title.
+   */
+  titles: z.record(z.string(), z.string()).optional(),
+});
+
+/** Discoverability features: OG images, feeds, sitemap, structured data. */
+const seoConfigSchema = z.strictObject({
+  og: ogConfigSchema.default({ enabled: true }),
+});
+
 export const brandtreeConfigSchema = z
   .object({
     brand: brandSchema,
     i18n: i18nConfigSchema.optional(),
     navigation: navigationConfigSchema.prefault({}),
+    seo: seoConfigSchema.prefault({}),
   })
   .strict()
   .superRefine((config, ctx) => {
