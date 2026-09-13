@@ -2,10 +2,10 @@ import { describe, expect, it, vi } from "vitest";
 
 vi.mock("astro:content", () => ({ getCollection: vi.fn() }));
 
-import { buildContentTree } from "../src/lib/core/tree";
-import { getNavigation } from "../src/lib/core/navigation";
-import type { Navigation, NavNode, PageRecord } from "../src/lib/types";
-import type { FolderMeta, ResolvedI18nConfig } from "../src/lib/core/schema";
+import { buildContentTree } from "../src/core/tree";
+import { getNavigation } from "../src/core/navigation";
+import type { Navigation, NavNode, PageRecord } from "../src/core/types";
+import type { FolderMeta, ResolvedI18nConfig } from "../src/core/schema";
 
 function page(
   navPath: string,

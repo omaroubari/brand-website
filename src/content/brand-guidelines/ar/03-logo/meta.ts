@@ -1,4 +1,4 @@
-import { defineMeta } from "@/lib/core/define-meta";
+import { defineMeta } from "@/core/define-meta";
 
 export default defineMeta({
   title: "الشعار",

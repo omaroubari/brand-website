@@ -7,7 +7,7 @@ import {
   uiStringsOverrideSchema,
   uiStringsSchema,
   type UIStrings,
-} from "../src/lib/core/i18n-ui";
+} from "../src/core/i18n-ui";
 
 describe("template UI language packs", () => {
   it("derives a fully populated English baseline from nested schema defaults", () => {

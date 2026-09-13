@@ -1,4 +1,4 @@
-import type { ContentTree, Navigation, PageRecord } from "../types";
+import type { ContentTree, Navigation, PageRecord } from "@/core/types";
 
 import { getNavigation } from "./navigation";
 import { pathParts, routePath } from "./paths";

@@ -1,8 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { ContentEntry, SourceEntry } from "../src/lib/core/entries";
-import { pageMetaSchema } from "../src/lib/core/schema";
-import { getContentTree } from "../src/lib/core/tree";
-import { normalizeSourceEntries } from "../src/lib/core/loader";
+import type { ContentEntry, SourceEntry } from "../src/core/entries";
+import { pageMetaSchema } from "../src/core/schema";
+import { getContentTree } from "../src/core/tree";
+import { normalizeSourceEntries } from "../src/core/loader";
 
 const collection = vi.hoisted(() => ({ entries: [] as ContentEntry[] }));
 

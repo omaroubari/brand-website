@@ -4,7 +4,7 @@ import {
   i18nConfigSchema,
   navigationConfigSchema,
   brandtreeConfigSchema,
-} from "@/lib/core/schema";
+} from "@/core/schema";
 
 function issuePaths(value: unknown): PropertyKey[][] {
   const result = brandtreeConfigSchema.safeParse(value);

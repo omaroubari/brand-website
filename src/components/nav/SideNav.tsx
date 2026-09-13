@@ -17,10 +17,10 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import ThemeToggle from "@/components/theme-toggle";
-import { contentIcons } from "../../lib/core/icons";
-import type { BrandConfig } from "../../brand/schema";
-import type { UIStrings } from "../../lib/core/i18n-ui";
-import type { LocaleSwitchOption, NavNode } from "@/lib/types";
+import { contentIcons } from "@/core/icons";
+import type { BrandConfig } from "@/brand/schema";
+import type { UIStrings } from "@/core/i18n-ui";
+import type { LocaleSwitchOption, NavNode } from "@/core/types";
 
 interface SideNavBrand {
   meta: Pick<

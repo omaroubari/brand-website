@@ -1,10 +1,10 @@
 ---
 import "../styles/global.css";
 import { Font } from "astro:assets";
-import { brandStyleSheet } from "../brand/tokens";
+import { brandStyleSheet } from "@/brand/tokens";
 import type { RootLayoutProps } from "../lib/root-layout";
 import { getInitialThemeAttributes } from "../lib/theme-state";
-import { LOCALE_COOKIE_NAME } from "../lib/core/i18n";
+import { LOCALE_COOKIE_NAME } from "@/core/i18n";
 import SideNav from "../components/nav/SideNav";
 import ColorPaletteInteractions from "../components/brand/ColorPaletteInteractions";
 import ThemeScript from "@/components/theme-script.astro";

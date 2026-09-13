@@ -1,18 +1,11 @@
 ---
 import { getEntry, render, type CollectionKey } from "astro:content";
-import { getContentTree } from "../lib/core/tree";
-import {
-  getContentPagePaths,
-  type ContentPageProps,
-} from "../lib/core/rendering";
-import { brand, config } from "../brand/config";
-import { resolveBrand } from "../brand/localize";
-import {
-  localeDir,
-  localizeRoute,
-  resolveFallbackLocale,
-} from "../lib/core/i18n";
-import { resolveUIStrings } from "../lib/core/i18n-ui";
+import { getContentTree } from "@/core/tree";
+import { getContentPagePaths, type ContentPageProps } from "@/core/rendering";
+import { brand, config } from "@/brand/config";
+import { resolveBrand } from "@/brand/localize";
+import { localeDir, localizeRoute, resolveFallbackLocale } from "@/core/i18n";
+import { resolveUIStrings } from "@/core/i18n-ui";
 import { withBase } from "../components/islands/base-paths";
 
 import RootLayout from "../layouts/RootLayout.astro";

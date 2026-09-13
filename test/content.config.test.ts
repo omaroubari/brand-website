@@ -1,8 +1,8 @@
 import { expect, it, vi } from "vitest";
-import { toSourceEntry, type ContentEntry } from "../src/lib/core/entries";
-import { normalizeSourceEntries } from "../src/lib/core/loader";
-import { buildContentTree } from "../src/lib/core/tree";
-import { pageMetaSchema } from "../src/lib/core/schema";
+import { toSourceEntry, type ContentEntry } from "../src/core/entries";
+import { normalizeSourceEntries } from "../src/core/loader";
+import { buildContentTree } from "../src/core/tree";
+import { pageMetaSchema } from "../src/core/schema";
 
 const loader = vi.hoisted(() => ({
   generateId: undefined as undefined | ((options: { entry: string }) => string),
