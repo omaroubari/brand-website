@@ -1,7 +1,6 @@
 ---
 import "../styles/global.css";
 import { Font } from "astro:assets";
-import { brand } from "../brand/config";
 import { brandStyleSheet } from "../brand/tokens";
 import type { RootLayoutProps } from "../lib/root-layout";
 import { getInitialThemeAttributes } from "../lib/theme-state";
@@ -20,6 +19,7 @@ import {
 type Props = RootLayoutProps;
 
 const {
+  brand,
   site,
   logo,
   favicon,

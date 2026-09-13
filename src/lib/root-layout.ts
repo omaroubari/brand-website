@@ -1,4 +1,5 @@
 import type { UIStrings } from "../i18n";
+import type { BrandConfig } from "../brand/schema";
 import type { Heading, Navigation, PageRecord } from "./types";
 
 /**
@@ -6,6 +7,7 @@ import type { Heading, Navigation, PageRecord } from "./types";
  * intermediate layouts forward them unchanged to RootLayout.
  */
 interface RootLayoutBaseProps {
+  brand: BrandConfig;
   site: { title: string; description?: string };
   logo?: {
     svg?: string;
