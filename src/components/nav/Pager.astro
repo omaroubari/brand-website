@@ -1,23 +1,22 @@
 ---
 import type { ContentPageProps } from "../../lib/core/rendering";
+import type { UIStrings } from "../../i18n";
 import { flattenPages, getPagination } from "./nav-utils";
-import { getUi } from "../../i18n";
 
-type Props = ContentPageProps;
+type Props = ContentPageProps & { ui: UIStrings };
 
-const { page, navigation } = Astro.props;
-const labels = getUi(page.locale);
+const { page, navigation, ui } = Astro.props;
 const { prev, next } = getPagination(
   flattenPages(navigation.sidebar),
   page.route,
 );
 ---
 
-<nav class="pager" aria-label={labels.page.section}>
+<nav class="pager" aria-label={ui.page.section}>
   {
     prev ? (
       <a class="pager__link pager__link--prev" href={prev.route} rel="prev">
-        <span class="label">{labels.page.previous}</span>
+        <span class="label">{ui.page.previous}</span>
         <span class="pager__title">{prev.label}</span>
       </a>
     ) : (
@@ -28,7 +27,7 @@ const { prev, next } = getPagination(
   {
     next && (
       <a class="pager__link pager__link--next" href={next.route} rel="next">
-        <span class="label">{labels.page.next}</span>
+        <span class="label">{ui.page.next}</span>
         <span class="pager__title">{next.label}</span>
       </a>
     )

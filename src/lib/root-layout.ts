@@ -36,6 +36,7 @@ interface RootLayoutBaseProps {
     vercel?: boolean;
   } | null;
   navigation: Navigation;
+  navigationNumbering: boolean;
   mcp?: { name: string; route: string } | null;
   imageZoom?: boolean;
   codeWrap?: boolean;
@@ -63,7 +64,7 @@ interface RootLayoutBaseProps {
   locale?: string;
   dir?: "ltr" | "rtl";
   contentDir?: "ltr" | "rtl";
-  ui?: UIStrings;
+  ui: UIStrings;
   localeAlternates?: { hreflang: string; href: string }[];
   xDefault?: string | null;
   versionNotice?: {

@@ -1,8 +1,10 @@
 ---
-import { brand } from "../../brand/config";
-import { getLocaleFromPath, getUi, resolveBrand } from "../../i18n";
+import type { BrandConfig } from "../../brand/schema";
+import type { UIStrings } from "../../i18n";
 
 interface Props {
+  brand: BrandConfig;
+  ui: UIStrings;
   /** Which family to show. */
   font?: "display" | "text";
   /** The oversized characters. */
@@ -12,16 +14,15 @@ interface Props {
 }
 
 const {
+  brand,
+  ui,
   font = "display",
   glyph = "Aa",
   weight = 500,
   class: className,
 } = Astro.props;
 
-const locale = getLocaleFromPath(Astro.url.pathname);
-const localizedBrand = resolveBrand(brand, locale);
-const family = localizedBrand.typography.families.find((f) => f.id === font);
-const ui = getUi(locale);
+const family = brand.typography.families.find((f) => f.id === font);
 ---
 
 <div class:list={["specimen", "escape", className]}>

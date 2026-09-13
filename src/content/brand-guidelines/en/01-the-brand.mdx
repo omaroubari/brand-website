@@ -12,6 +12,8 @@ import {
 import portrait1 from "../../../assets/photography/photo-01.jpg";
 import portrait2 from "../../../assets/photography/photo-02.jpg";
 
+const props = Astro.props;
+
 <Block>
 
 <Fragment slot="copy">
@@ -115,6 +117,7 @@ visual one without a six-week detour. Reads the work before the words, so the fi
 matters more than the deck around it.
 
 <PersonaCard
+  ui={props.ui}
   name="Faisal Al-Harbi"
   role="Founders of small and medium companies"
   image={portrait1}
@@ -133,6 +136,7 @@ whether the system holds at small sizes. Talks about the work publicly, which is
 of our reputation travels.
 
 <PersonaCard
+  ui={props.ui}
   name="Noor Al-Mansouri"
   role="Designers and creative peers"
   image={portrait2}

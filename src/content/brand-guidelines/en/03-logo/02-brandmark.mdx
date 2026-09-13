@@ -10,6 +10,8 @@ import {
   ConstructionGrid,
 } from "../../../../components/mdx";
 
+const props = Astro.props;
+
 ## Brandmark
 
 ### Monogram
@@ -20,12 +22,12 @@ icons, stamped and embroidered applications.
 
 <Grid cols={2}>
 
-<Panel bg="white" ratio="4 / 3">
-  <Logo mark="brandmark" on="light" width="7rem" />
+<Panel brand={props.brand} bg="white" ratio="4 / 3">
+  <Logo brand={props.brand} mark="brandmark" on="light" width="7rem" />
 </Panel>
 
-<Panel bg="black" ratio="4 / 3">
-  <Logo mark="brandmark" on="dark" width="7rem" />
+<Panel brand={props.brand} bg="black" ratio="4 / 3">
+  <Logo brand={props.brand} mark="brandmark" on="dark" width="7rem" />
 </Panel>
 
 </Grid>
@@ -35,4 +37,4 @@ icons, stamped and embroidered applications.
 The mark is built on a field grid so its proportions and alignment survive every
 application. Reproduce it from the supplied artwork — never redraw it.
 
-<ConstructionGrid mark="brandmark" cols={10} rows={10} />
+<ConstructionGrid brand={props.brand} mark="brandmark" cols={10} rows={10} />

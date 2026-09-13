@@ -12,6 +12,8 @@ import {
 import portrait1 from "../../../assets/photography/photo-01.jpg";
 import portrait2 from "../../../assets/photography/photo-02.jpg";
 
+const props = Astro.props;
+
 <Block>
 
 <Fragment slot="copy">
@@ -115,6 +117,7 @@ import portrait2 from "../../../assets/photography/photo-02.jpg";
 أكثر من العرض التقديمي المحيط به.
 
 <PersonaCard
+  ui={props.ui}
   name="فيصل الحربي"
   role="مؤسسو الشركات الصغيرة والمتوسطة"
   image={portrait1}
@@ -136,6 +139,7 @@ import portrait2 from "../../../assets/photography/photo-02.jpg";
 ينتشر جزء كبير من سمعتنا.
 
 <PersonaCard
+  ui={props.ui}
   name="نور المنصوري"
   role="المصممون والأقران المبدعون"
   image={portrait2}

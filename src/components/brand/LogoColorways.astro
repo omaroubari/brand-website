@@ -1,16 +1,17 @@
 ---
-import { brand } from "../../brand/config";
+import type { BrandConfig } from "../../brand/schema";
 import { colorName } from "../../brand/tokens";
 import Logo from "./Logo.astro";
 
 interface Props {
+  brand: BrandConfig;
   mark?: "logotype" | "brandmark";
   /** Columns from the medium breakpoint up. */
   cols?: number;
   class?: string;
 }
 
-const { mark = "logotype", cols = 3, class: className } = Astro.props;
+const { brand, mark = "logotype", cols = 3, class: className } = Astro.props;
 
 const colorways = brand.logo.colorways.map((way) => ({
   ...way,
@@ -27,6 +28,7 @@ const colorways = brand.logo.colorways.map((way) => ({
           class="ways__field"
           style={`background: var(--color-${way.bg}); border-color: color-mix(in srgb, var(--color-${way.fg}) 18%, transparent);`}>
           <Logo
+            brand={brand}
             mark={mark}
             tint={`var(--color-${way.fg})`}
             width={mark === "brandmark" ? "4rem" : "70%"}

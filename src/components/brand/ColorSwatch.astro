@@ -1,5 +1,5 @@
 ---
-import type { BrandSwatch } from "../../brand/schema";
+import type { BrandConfig, BrandSwatch } from "../../brand/schema";
 import {
   colorCss,
   colorToHex,
@@ -7,27 +7,24 @@ import {
   formatColor,
   resolveColor,
 } from "../../brand/tokens";
-import { brand } from "../../brand/config";
-import { getLocaleFromPath, getUi, resolveBrand } from "../../i18n";
+import type { UIStrings } from "../../i18n";
 
 interface Props {
+  brand: BrandConfig;
+  ui: UIStrings;
   color: BrandSwatch;
   print?: boolean;
 }
 
-const { color, print = true } = Astro.props;
-const locale = getLocaleFromPath(Astro.url.pathname);
-const localizedBrand = resolveBrand(brand, locale);
+const { brand, ui, color, print = true } = Astro.props;
 const localizedColor =
-  localizedBrand.colors.swatches.find((swatch) => swatch.id === color.id) ??
-  color;
-const ui = getUi(locale);
+  brand.colors.swatches.find((swatch) => swatch.id === color.id) ?? color;
 
-const resolved = resolveColor(localizedBrand, localizedColor.color);
+const resolved = resolveColor(brand, localizedColor.color);
 const source = resolved.value;
 const sourceCss = colorCss(source);
 const fg = color.on
-  ? resolveColor(localizedBrand, localizedColor.on!).css
+  ? resolveColor(brand, localizedColor.on!).css
   : "contrast-color(var(--swatch-bg))";
 const [r, g, b] = colorToRgb(source);
 const hex = colorToHex(source).replace("#", "").toLowerCase();

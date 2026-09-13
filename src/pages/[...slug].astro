@@ -37,6 +37,12 @@ if (!entry) {
 const { Content, headings } = await render(entry);
 
 const localizedBrand = resolveBrand(brand, page.locale);
+const ui = getUi(page.locale);
+const fallbackLocale = config.i18n ? resolveFallbackLocale(config.i18n) : null;
+const dir = getDirection(page.locale);
+const contentDir = getDirection(
+  page.fallback && fallbackLocale ? fallbackLocale : page.locale,
+);
 const siteUrl = localizedBrand.meta.url.replace(/\/$/u, "");
 const absolute = (path: string) =>
   path.startsWith("/") ? `${siteUrl}${withBase(path)}` : path;
@@ -62,8 +68,6 @@ const localeAlternates = translations.map((translation) => ({
   href: absolute(translation.route),
 }));
 
-const fallbackLocale = config.i18n ? resolveFallbackLocale(config.i18n) : null;
-
 const xDefault =
   localeAlternates.find(({ hreflang }) => hreflang === fallbackLocale)?.href ??
   null;
@@ -86,6 +90,7 @@ const layoutProps = {
   banner: null,
   analytics: null,
   navigation,
+  navigationNumbering: config.navigation.numbering,
   mcp: null,
   page: {
     ...page,
@@ -117,11 +122,9 @@ const layoutProps = {
   noindex,
   structuredDataEnabled: false,
   locale: page.locale,
-  dir: getDirection(page.locale),
-  contentDir: getDirection(
-    page.fallback && fallbackLocale ? fallbackLocale : page.locale,
-  ),
-  ui: getUi(page.locale),
+  dir,
+  contentDir,
+  ui,
   localeAlternates,
   xDefault,
   versionNotice: null,
@@ -131,5 +134,5 @@ const layoutProps = {
 ---
 
 <RootLayout {...layoutProps}>
-  <Content />
+  <Content brand={localizedBrand} ui={ui} dir={contentDir} />
 </RootLayout>

@@ -12,6 +12,8 @@ import {
   Callout,
 } from "../../../components/mdx";
 
+const props = Astro.props;
+
 ## الموقع الإلكتروني
 
 ### سطح المكتب
@@ -21,7 +23,7 @@ import {
 
 يعود كل ما يليها إلى الأبيض والأسود ومقياس الأحجام المعتمد.
 
-<Callout tone="note">
+<Callout ui={props.ui} tone="note">
 
 استبدل هذه الإطارات بلقطات شاشة حقيقية: ضع الملفات في
 `src/assets/applications/`، واستوردها في أعلى هذا الملف، ومرّرها إلى
@@ -30,6 +32,7 @@ import {
 </Callout>
 
 <Figure
+  ui={props.ui}
   ratio="16 / 10"
   caption="سطح المكتب — ترويسة باللون المميّز، شعار كتابي، شبكة من 12 عمودًا."
 />
@@ -41,9 +44,9 @@ import {
 
 <Grid cols={3}>
 
-<Figure ratio="9 / 16" caption="الرئيسية" />
-<Figure ratio="9 / 16" caption="الأعمال" />
-<Figure ratio="9 / 16" caption="التواصل" />
+<Figure ui={props.ui} ratio="9 / 16" caption="الرئيسية" />
+<Figure ui={props.ui} ratio="9 / 16" caption="الأعمال" />
+<Figure ui={props.ui} ratio="9 / 16" caption="التواصل" />
 
 </Grid>
 
@@ -57,16 +60,25 @@ import {
 
 <Grid cols={3}>
 
-<Panel bg="white" ratio="1 / 1" caption="16 px" label="أيقونة الموقع">
-  <Logo mark="brandmark" on="light" width="1rem" />
+<Panel
+  brand={props.brand}
+  bg="white"
+  ratio="1 / 1"
+  caption="16 px"
+  label="أيقونة الموقع">
+  <Logo brand={props.brand} mark="brandmark" on="light" width="1rem" />
 </Panel>
 
-<Panel bg="white" ratio="1 / 1" caption="32 px">
-  <Logo mark="brandmark" on="light" width="2rem" />
+<Panel brand={props.brand} bg="white" ratio="1 / 1" caption="32 px">
+  <Logo brand={props.brand} mark="brandmark" on="light" width="2rem" />
 </Panel>
 
-<Panel bg="black" ratio="1 / 1" caption="على واجهة متصفح داكنة">
-  <Logo mark="brandmark" on="dark" width="2rem" />
+<Panel
+  brand={props.brand}
+  bg="black"
+  ratio="1 / 1"
+  caption="على واجهة متصفح داكنة">
+  <Logo brand={props.brand} mark="brandmark" on="dark" width="2rem" />
 </Panel>
 
 </Grid>
@@ -89,12 +101,16 @@ import {
 
 <Grid cols={2}>
 
-<Panel bg="black" ratio="1 / 1" caption="أبيض على أسود.">
-  <Logo mark="brandmark" on="dark" width="45%" />
+<Panel brand={props.brand} bg="black" ratio="1 / 1" caption="أبيض على أسود.">
+  <Logo brand={props.brand} mark="brandmark" on="dark" width="45%" />
 </Panel>
 
-<Panel bg="white" ratio="1 / 1" caption="أسود على أبيض. بلا تدرج أو ظل.">
-  <Logo mark="brandmark" on="light" width="45%" />
+<Panel
+  brand={props.brand}
+  bg="white"
+  ratio="1 / 1"
+  caption="أسود على أبيض. بلا تدرج أو ظل.">
+  <Logo brand={props.brand} mark="brandmark" on="light" width="45%" />
 </Panel>
 
 </Grid>
@@ -111,9 +127,9 @@ import {
 
 <Grid cols={3}>
 
-<Figure ratio="1 / 1" caption="عمل" />
-<Figure ratio="1 / 1" caption="اقتباس" />
-<Figure ratio="1 / 1" caption="الاستوديو" />
+<Figure ui={props.ui} ratio="1 / 1" caption="عمل" />
+<Figure ui={props.ui} ratio="1 / 1" caption="اقتباس" />
+<Figure ui={props.ui} ratio="1 / 1" caption="الاستوديو" />
 
 </Grid>
 
@@ -124,8 +140,8 @@ import {
 
 <Grid cols={3}>
 
-<Figure ratio="9 / 16" caption="إعلان" />
-<Figure ratio="9 / 16" caption="خلف الكواليس" />
-<Figure ratio="9 / 16" caption="إعادة نشر" />
+<Figure ui={props.ui} ratio="9 / 16" caption="إعلان" />
+<Figure ui={props.ui} ratio="9 / 16" caption="خلف الكواليس" />
+<Figure ui={props.ui} ratio="9 / 16" caption="إعادة نشر" />
 
 </Grid>

@@ -12,6 +12,8 @@ import {
   Callout,
 } from "../../../components/mdx";
 
+const props = Astro.props;
+
 ## Website
 
 ### Desktop
@@ -22,7 +24,7 @@ impression.
 
 Everything below returns to white, black and the type scale.
 
-<Callout tone="note">
+<Callout ui={props.ui} tone="note">
 
 Replace these frames with real screenshots: drop the files into
 `src/assets/applications/`, import them at the top of this file, and pass them as
@@ -31,6 +33,7 @@ Replace these frames with real screenshots: drop the files into
 </Callout>
 
 <Figure
+  ui={props.ui}
   ratio="16 / 10"
   caption="Desktop — accent header, logotype, 12-column grid."
 />
@@ -42,9 +45,9 @@ the logotype, making better use of the screen while staying recognisable.
 
 <Grid cols={3}>
 
-<Figure ratio="9 / 16" caption="Home" />
-<Figure ratio="9 / 16" caption="Work" />
-<Figure ratio="9 / 16" caption="Contact" />
+<Figure ui={props.ui} ratio="9 / 16" caption="Home" />
+<Figure ui={props.ui} ratio="9 / 16" caption="Work" />
+<Figure ui={props.ui} ratio="9 / 16" caption="Contact" />
 
 </Grid>
 
@@ -57,16 +60,25 @@ Ship SVG with a light/dark media query, plus a 180 px PNG for iOS.
 
 <Grid cols={3}>
 
-<Panel bg="white" ratio="1 / 1" caption="16 px" label="Favicon">
-  <Logo mark="brandmark" on="light" width="1rem" />
+<Panel
+  brand={props.brand}
+  bg="white"
+  ratio="1 / 1"
+  caption="16 px"
+  label="Favicon">
+  <Logo brand={props.brand} mark="brandmark" on="light" width="1rem" />
 </Panel>
 
-<Panel bg="white" ratio="1 / 1" caption="32 px">
-  <Logo mark="brandmark" on="light" width="2rem" />
+<Panel brand={props.brand} bg="white" ratio="1 / 1" caption="32 px">
+  <Logo brand={props.brand} mark="brandmark" on="light" width="2rem" />
 </Panel>
 
-<Panel bg="black" ratio="1 / 1" caption="On dark browser chrome">
-  <Logo mark="brandmark" on="dark" width="2rem" />
+<Panel
+  brand={props.brand}
+  bg="black"
+  ratio="1 / 1"
+  caption="On dark browser chrome">
+  <Logo brand={props.brand} mark="brandmark" on="dark" width="2rem" />
 </Panel>
 
 </Grid>
@@ -89,15 +101,16 @@ Nothing else.
 
 <Grid cols={2}>
 
-<Panel bg="black" ratio="1 / 1" caption="White on black.">
-  <Logo mark="brandmark" on="dark" width="45%" />
+<Panel brand={props.brand} bg="black" ratio="1 / 1" caption="White on black.">
+  <Logo brand={props.brand} mark="brandmark" on="dark" width="45%" />
 </Panel>
 
 <Panel
+  brand={props.brand}
   bg="white"
   ratio="1 / 1"
   caption="Black on white. No gradient, no shadow.">
-  <Logo mark="brandmark" on="light" width="45%" />
+  <Logo brand={props.brand} mark="brandmark" on="light" width="45%" />
 </Panel>
 
 </Grid>
@@ -113,9 +126,9 @@ Profile images use the brandmark, never the logotype — it will be cropped to a
 
 <Grid cols={3}>
 
-<Figure ratio="1 / 1" caption="Work" />
-<Figure ratio="1 / 1" caption="Quote" />
-<Figure ratio="1 / 1" caption="Studio" />
+<Figure ui={props.ui} ratio="1 / 1" caption="Work" />
+<Figure ui={props.ui} ratio="1 / 1" caption="Quote" />
+<Figure ui={props.ui} ratio="1 / 1" caption="Studio" />
 
 </Grid>
 
@@ -126,8 +139,8 @@ project updates. Ephemeral, but held to the same grid.
 
 <Grid cols={3}>
 
-<Figure ratio="9 / 16" caption="Announcement" />
-<Figure ratio="9 / 16" caption="Behind the work" />
-<Figure ratio="9 / 16" caption="Repost" />
+<Figure ui={props.ui} ratio="9 / 16" caption="Announcement" />
+<Figure ui={props.ui} ratio="9 / 16" caption="Behind the work" />
+<Figure ui={props.ui} ratio="9 / 16" caption="Repost" />
 
 </Grid>

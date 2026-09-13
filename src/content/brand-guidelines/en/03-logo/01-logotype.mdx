@@ -5,6 +5,8 @@ description: The primary logo artwork and its light and dark applications.
 
 import { Panel, Logo } from "../../../../components/mdx";
 
+const props = Astro.props;
+
 ## Logotype
 
 ### Primary logo
@@ -15,8 +17,8 @@ a single piece of artwork. It is the default in every context where there is roo
 Always place the supplied file. Never re-set the name in the typeface — the logotype
 carries custom spacing that live text will not reproduce.
 
-<Panel ratio="16 / 9">
-  <Logo mark="logotype" width="66%" />
+<Panel brand={props.brand} ratio="16 / 9">
+  <Logo brand={props.brand} mark="logotype" width="66%" />
 </Panel>
 
 ### On black
@@ -24,6 +26,6 @@ carries custom spacing that live text will not reproduce.
 On dark surfaces the logotype reverses to white. There is no third version — the artwork
 is identical, only the colour changes.
 
-<Panel bg="black" ratio="16 / 9">
-  <Logo mark="logotype" on="dark" width="66%" />
+<Panel brand={props.brand} bg="black" ratio="16 / 9">
+  <Logo brand={props.brand} mark="logotype" on="dark" width="66%" />
 </Panel>

@@ -1,7 +1,14 @@
 import * as React from "react";
 
 import { Toaster, toast } from "../ui/toast";
-import { defaultLocale, getUi } from "../../i18n";
+import type { UIStrings } from "../../i18n";
+
+export interface ColorPaletteLabels {
+  close: UIStrings["nav"]["close"];
+  copied: UIStrings["actions"]["copied"];
+  copyFailed: UIStrings["actions"]["copyFailed"];
+  colorCopied: UIStrings["color"]["copied"];
+}
 
 async function copyToClipboard(value: string): Promise<boolean> {
   try {
@@ -29,11 +36,11 @@ async function copyToClipboard(value: string): Promise<boolean> {
 }
 
 export default function ColorPaletteInteractions({
-  locale = defaultLocale,
+  labels,
 }: {
-  locale?: string;
+  labels: ColorPaletteLabels;
 }) {
-  const labels = getUi(locale);
+  const { close, copied, copyFailed, colorCopied } = labels;
 
   React.useEffect(() => {
     const palettes = document.querySelectorAll<HTMLElement>(
@@ -48,14 +55,14 @@ export default function ColorPaletteInteractions({
 
       if (!target || !hex) return;
 
-      void copyToClipboard(hex).then((copied) => {
+      void copyToClipboard(hex).then((didCopy) => {
         toast.add({
           id: "color-copy",
-          title: copied ? labels.color.copied : labels.actions.copyFailed,
-          description: copied
-            ? `${hex} ${labels.actions.copied.toLowerCase()}.`
-            : `${labels.actions.copyFailed}: ${hex}`,
-          type: copied ? "success" : "error",
+          title: didCopy ? colorCopied : copyFailed,
+          description: didCopy
+            ? `${hex} ${copied.toLowerCase()}.`
+            : `${copyFailed}: ${hex}`,
+          type: didCopy ? "success" : "error",
           timeout: 1800,
         });
       });
@@ -70,7 +77,7 @@ export default function ColorPaletteInteractions({
         palette.removeEventListener("click", handleClick);
       });
     };
-  }, [labels]);
+  }, [copied, copyFailed, colorCopied]);
 
-  return <Toaster />;
+  return <Toaster closeLabel={close} />;
 }

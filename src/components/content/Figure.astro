@@ -1,9 +1,10 @@
 ---
 import { Image } from "astro:assets";
 import type { ImageMetadata } from "astro";
-import { getLocaleFromPath, getUi } from "../../i18n";
+import type { UIStrings } from "../../i18n";
 
 interface Props {
+  ui: UIStrings;
   /**
    * An imported image (optimised, responsive) or a path under `public/`.
    * Leave it out to get a labelled placeholder frame — useful while the
@@ -22,6 +23,7 @@ interface Props {
 }
 
 const {
+  ui,
   src,
   alt = "",
   caption,
@@ -30,7 +32,6 @@ const {
   bg,
   class: className,
 } = Astro.props;
-const ui = getUi(getLocaleFromPath(Astro.url.pathname));
 
 const style = [
   `--ratio: ${ratio};`,

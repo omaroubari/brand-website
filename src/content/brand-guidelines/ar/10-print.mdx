@@ -35,10 +35,12 @@ import {
 <Grid cols={2}>
 
 <Figure
+  ui={props.ui}
   ratio="85 / 55"
   caption="الوجه الأمامي — مساحة باللون المميّز، والشعار الكتابي في المنتصف."
 />
 <Figure
+  ui={props.ui}
   ratio="85 / 55"
   caption="الوجه الخلفي — أبيض، والاسم وبيانات الاتصال."
 />
@@ -66,8 +68,13 @@ import {
 
 <Grid cols={2}>
 
-<Figure ratio="210 / 297" caption="ورق مراسلات A4 — الوجه الأمامي." />
 <Figure
+  ui={props.ui}
+  ratio="210 / 297"
+  caption="ورق مراسلات A4 — الوجه الأمامي."
+/>
+<Figure
+  ui={props.ui}
   ratio="210 / 297"
   caption="الوجه الخلفي — تغطية كاملة باللون المميّز."
 />
@@ -98,10 +105,15 @@ import {
 <Grid cols={2}>
 
 <Figure
+  ui={props.ui}
   ratio="2 / 3"
   caption="A1 — نص Display، صورة واحدة، وعنصر واحد باللون المميّز."
 />
-<Figure ratio="2 / 3" caption="A1 — تغطية باللون المميّز، وشعار كتابي معكوس." />
+<Figure
+  ui={props.ui}
+  ratio="2 / 3"
+  caption="A1 — تغطية باللون المميّز، وشعار كتابي معكوس."
+/>
 
 </Grid>
 
@@ -120,7 +132,7 @@ import {
 أغراض يومية تحمل الرمز: كوب، وقبعة، وحقيبة قماشية، وقميص. جريئة حيث يسمح الغرض،
 ومتزنة حيث لا يسمح.
 
-<Callout tone="note" title="التطبيقات الصغيرة">
+<Callout ui={props.ui} tone="note" title="التطبيقات الصغيرة">
 
 يفقد التطريز والحفر والطباعة بالشاشة الحريرية التفاصيل الدقيقة. عند مقاس أقل من 20 mm،
 استخدم رمز العلامة بلون واحد، من دون محاولة إعادة إنتاج الخطوط فائقة الدقة.
@@ -133,13 +145,18 @@ import {
 
 <Grid cols={4}>
 
-<Figure ratio="1 / 1" caption="كوب — رمز العلامة، بحجم كبير" />
-<Figure ratio="1 / 1" caption="قبعة — الشعار الكتابي، أبيض على أسود" />
+<Figure ui={props.ui} ratio="1 / 1" caption="كوب — رمز العلامة، بحجم كبير" />
 <Figure
+  ui={props.ui}
+  ratio="1 / 1"
+  caption="قبعة — الشعار الكتابي، أبيض على أسود"
+/>
+<Figure
+  ui={props.ui}
   ratio="1 / 1"
   caption="حقيبة قماشية — اللون المميّز، والشعار الكتابي مكررًا"
 />
-<Figure ratio="1 / 1" caption="قميص — رمز العلامة عند الصدر" />
+<Figure ui={props.ui} ratio="1 / 1" caption="قميص — رمز العلامة عند الصدر" />
 
 </Grid>
 
@@ -165,10 +182,12 @@ import {
 <Grid cols={2}>
 
 <Figure
+  ui={props.ui}
   ratio="4 / 3"
   caption="لافتة مضيئة — وجه باللون المميّز، وشعار كتابي بالأسود."
 />
 <Figure
+  ui={props.ui}
   ratio="4 / 3"
   caption="لافتة مبنى — مثبتة بمحاذاة السطح، بلا لوح خلفي."
 />

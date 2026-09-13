@@ -24,7 +24,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
-import { defaultLocale, getUi } from "@/i18n";
+import type { UIStrings } from "@/i18n";
 
 const SIDEBAR_COOKIE_NAME = "sidebar_state";
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
@@ -42,6 +42,8 @@ type SidebarContextProps = {
   isMobile: boolean;
   toggleSidebar: () => void;
 };
+
+type SidebarLabels = Pick<UIStrings["nav"], "close" | "menu" | "toggleSidebar">;
 
 const SidebarContext = React.createContext<SidebarContextProps | null>(null);
 
@@ -156,13 +158,13 @@ function Sidebar({
   className,
   children,
   dir,
-  locale = defaultLocale,
+  labels,
   ...props
 }: React.ComponentProps<"div"> & {
   side?: "left" | "right";
   variant?: "sidebar" | "floating" | "inset";
   collapsible?: "offcanvas" | "icon" | "none";
-  locale?: string;
+  labels: SidebarLabels;
 }) {
   const { isMobile, state, openMobile, setOpenMobile } = useSidebar();
 
@@ -188,7 +190,7 @@ function Sidebar({
           data-sidebar="sidebar"
           data-slot="sidebar"
           data-mobile="true"
-          locale={locale}
+          closeLabel={labels.close}
           className="bg-sidebar text-sidebar-foreground w-(--sidebar-width) p-0 [&>button]:hidden"
           style={
             {
@@ -197,10 +199,8 @@ function Sidebar({
           }
           side={side}>
           <SheetHeader className="sr-only">
-            <SheetTitle>{getUi(locale).nav.menu}</SheetTitle>
-            <SheetDescription>
-              {getUi(locale).nav.toggleSidebar}
-            </SheetDescription>
+            <SheetTitle>{labels.menu}</SheetTitle>
+            <SheetDescription>{labels.toggleSidebar}</SheetDescription>
           </SheetHeader>
           <div className="flex h-full w-full flex-col">{children}</div>
         </SheetContent>
@@ -254,9 +254,9 @@ function Sidebar({
 function SidebarTrigger({
   className,
   onClick,
-  locale = defaultLocale,
+  label,
   ...props
-}: React.ComponentProps<typeof Button> & { locale?: string }) {
+}: React.ComponentProps<typeof Button> & { label: string }) {
   const { toggleSidebar, state } = useSidebar();
 
   return (
@@ -304,18 +304,17 @@ function SidebarTrigger({
         />
       </svg>
 
-      <span className="sr-only">{getUi(locale).nav.toggleSidebar}</span>
+      <span className="sr-only">{label}</span>
     </Button>
   );
 }
 
 function SidebarRail({
   className,
-  locale = defaultLocale,
+  label,
   ...props
-}: React.ComponentProps<"button"> & { locale?: string }) {
+}: React.ComponentProps<"button"> & { label: string }) {
   const { toggleSidebar } = useSidebar();
-  const label = getUi(locale).nav.toggleSidebar;
 
   return (
     <button

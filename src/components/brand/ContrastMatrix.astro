@@ -1,14 +1,16 @@
 ---
-import { brand } from "../../brand/config";
+import type { BrandConfig } from "../../brand/schema";
 import {
   colorCss,
   contrastGrade,
   contrastRatio,
   resolveColor,
 } from "../../brand/tokens";
-import { getLocaleFromPath, getUi, resolveBrand } from "../../i18n";
+import type { UIStrings } from "../../i18n";
 
 interface Props {
+  brand: BrandConfig;
+  ui: UIStrings;
   /** Restrict the matrix to these palette ids. */
   only?: string[];
   /** Ratio for normal body text. WCAG AA is 4.5. */
@@ -16,20 +18,17 @@ interface Props {
   class?: string;
 }
 
-const { only, threshold = 4.5, class: className } = Astro.props;
-const locale = getLocaleFromPath(Astro.url.pathname);
-const localizedBrand = resolveBrand(brand, locale);
-const ui = getUi(locale);
+const { brand, ui, only, threshold = 4.5, class: className } = Astro.props;
 
 const colors = only
-  ? localizedBrand.colors.swatches.filter((c) => only.includes(c.id))
-  : localizedBrand.colors.swatches;
+  ? brand.colors.swatches.filter((c) => only.includes(c.id))
+  : brand.colors.swatches;
 
 const rows = colors.map((fg) => ({
   fg,
   cells: colors.map((bg) => {
-    const foreground = resolveColor(localizedBrand, fg.color);
-    const background = resolveColor(localizedBrand, bg.color);
+    const foreground = resolveColor(brand, fg.color);
+    const background = resolveColor(brand, bg.color);
     const ratio = contrastRatio(foreground.value, background.value);
     return {
       bg,

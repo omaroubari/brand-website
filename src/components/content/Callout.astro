@@ -1,20 +1,21 @@
 ---
+import type { UIStrings } from "../../i18n";
+
 interface Props {
+  ui: UIStrings;
   /** `do` and `dont` are the ones you will reach for on usage pages. */
   tone?: "note" | "do" | "dont";
   title?: string;
   class?: string;
 }
-import { getLocaleFromPath, getUi } from "../../i18n";
 
-const { tone = "note", title, class: className } = Astro.props;
+const { ui, tone = "note", title, class: className } = Astro.props;
 
 const marks = { note: "—", do: "✓", dont: "✕" } as const;
-const labels = getUi(getLocaleFromPath(Astro.url.pathname));
 const toneLabels = {
-  note: labels.content.note,
-  do: labels.content.do,
-  dont: labels.content.dont,
+  note: ui.content.note,
+  do: ui.content.do,
+  dont: ui.content.dont,
 } as const;
 ---
 

@@ -1,8 +1,10 @@
 ---
-import { brand } from "../../brand/config";
-import { getLocaleFromPath, getUi, resolveBrand } from "../../i18n";
+import type { BrandConfig } from "../../brand/schema";
+import type { UIStrings } from "../../i18n";
 
 interface Props {
+  brand: BrandConfig;
+  ui: UIStrings;
   /** Restrict to these style names, in this order. */
   only?: string[];
   /** Show the original print spec beside each step. */
@@ -13,27 +15,23 @@ interface Props {
 }
 
 const {
+  brand,
+  ui,
   only,
   print = true,
   sample = "Crafting strategic visual brand identities",
   class: className,
 } = Astro.props;
-const locale = getLocaleFromPath(Astro.url.pathname);
-const localizedBrand = resolveBrand(brand, locale);
-const ui = getUi(locale);
 
 const steps = only
   ? only.map((name) => {
-      const baseMatch = brand.typography.scale.find((s) => s.name === name);
-      if (!baseMatch)
-        throw new Error(`[TypeScale] Unknown type style "${name}"`);
-      return (
-        localizedBrand.typography.scale.find((s) =>
-          baseMatch.id ? s.id === baseMatch.id : s.name === baseMatch.name,
-        ) ?? baseMatch
+      const match = brand.typography.scale.find(
+        (s) => s.name === name || s.id === name,
       );
+      if (!match) throw new Error(`[TypeScale] Unknown type style "${name}"`);
+      return match;
     })
-  : localizedBrand.typography.scale;
+  : brand.typography.scale;
 ---
 
 <div class:list={["scale", "escape", className]}>

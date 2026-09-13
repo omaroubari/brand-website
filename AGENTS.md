@@ -20,8 +20,11 @@ is MDX.** Keep it that way.
   through `--ink` / `--surface` / `--accent` and friends; type goes through the
   `--type-*` properties. If something is not reachable from the config, add it
   to the config.
-- Components read `brand` from `src/brand/config.ts` directly rather than taking
-  it as a prop.
+- Route and layout composition roots resolve the active `brand`, UI strings and
+  navigation settings once. Brand, content, navigation and UI components
+  receive the values they use through required props and forward them to
+  nested components; they do not import `src/brand/config.ts` or resolve
+  locale-owned values themselves.
 - Light and dark must both work **without JavaScript**. Any theme-dependent rule
   needs both a `:root[data-theme='dark']` selector and a
   `@media (prefers-color-scheme: dark)` fallback scoped to

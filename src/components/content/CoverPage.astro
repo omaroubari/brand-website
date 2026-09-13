@@ -1,26 +1,26 @@
 ---
-import { brand } from "../../brand/config";
+import type { BrandConfig } from "../../brand/schema";
 import type { Navigation } from "../../lib/types";
-import { getUi, resolveBrand } from "../../i18n";
+import type { UIStrings } from "../../i18n";
 import Downloads from "../brand/Downloads.astro";
 import Logo from "../brand/Logo.astro";
 import ContentTree from "../nav/ContentTree.astro";
 
 interface Props {
-  locale: string;
+  brand: BrandConfig;
+  ui: UIStrings;
   navigation: Navigation;
+  numbering: boolean;
 }
 
-const { locale, navigation } = Astro.props;
-const localizedBrand = resolveBrand(brand, locale);
-const { meta, contact } = localizedBrand;
-const ui = getUi(locale);
+const { brand, ui, navigation, numbering } = Astro.props;
+const { meta, contact } = brand;
 ---
 
 <div class="page">
   <section class="cover">
     <div class="cover__mark">
-      <Logo mark="brandmark" on="dark" width="2.75rem" />
+      <Logo brand={brand} mark="brandmark" on="dark" width="2.75rem" />
     </div>
     <h1 class="cover__title">{meta.documentTitle}</h1>
     <p class="cover__foot">
@@ -36,17 +36,21 @@ const ui = getUi(locale);
     <h2 class="doc-title contents__heading" id="contents-title">
       {ui.nav.contents}
     </h2>
-    <ContentTree items={navigation.sidebar} />
+    <ContentTree items={navigation.sidebar} numbering={numbering} />
   </section>
 
   <div class="ends">
     {
-      (localizedBrand.downloads ?? []).length > 0 && (
+      (brand.downloads ?? []).length > 0 && (
         <section aria-labelledby="downloads-title">
           <h2 class="label" id="downloads-title">
             {ui.brand.assets}
           </h2>
-          <Downloads class="ends__block" items={localizedBrand.downloads} />
+          <Downloads
+            brand={brand}
+            class="ends__block"
+            items={brand.downloads}
+          />
         </section>
       )
     }

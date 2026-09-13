@@ -1,4 +1,5 @@
 ---
+import type { BrandConfig } from "../../brand/schema";
 import Logo from "./Logo.astro";
 
 /** Each effect is a deliberate mistake, drawn so the rule is obvious at a glance. */
@@ -14,13 +15,20 @@ export type MisuseEffect =
   | "pattern";
 
 interface Props {
+  brand: BrandConfig;
   items: Array<{ effect: MisuseEffect; title: string; note: string }>;
   mark?: "logotype" | "brandmark";
   cols?: number;
   class?: string;
 }
 
-const { items, mark = "logotype", cols = 3, class: className } = Astro.props;
+const {
+  brand,
+  items,
+  mark = "logotype",
+  cols = 3,
+  class: className,
+} = Astro.props;
 ---
 
 <div class:list={["misuse", "escape", className]} style={`--cols: ${cols};`}>
@@ -40,7 +48,7 @@ const { items, mark = "logotype", cols = 3, class: className } = Astro.props;
             </svg>
           </span>
           <span class="misuse__art">
-            <Logo mark={mark} on="light" width="72%" />
+            <Logo brand={brand} mark={mark} on="light" width="72%" />
           </span>
         </div>
         <figcaption class="caption misuse__caption">

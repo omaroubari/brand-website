@@ -17,24 +17,36 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import ThemeToggle from "@/components/theme-toggle";
-import config, { brand } from "../../brand/config";
 import { contentIcons } from "../../lib/core/icons";
-
-import {
-  getLocalizedPath,
-  getUi,
-  localeInfo,
-  supportedLocales,
-  getDirection,
-  resolveBrand,
-} from "../../i18n";
-
+import type { BrandConfig } from "../../brand/schema";
+import type { UIStrings } from "../../i18n";
 import type { NavNode } from "@/lib/types";
 
+interface SideNavBrand {
+  meta: Pick<
+    BrandConfig["meta"],
+    "name" | "documentTitle" | "year" | "version"
+  >;
+  logotype: BrandConfig["logo"]["logotype"];
+  defaultTheme: BrandConfig["theme"]["default"];
+}
+
+interface SideNavUi {
+  brand: Pick<UIStrings["brand"], "version">;
+  languageSwitcher: UIStrings["languageSwitcher"];
+  nav: UIStrings["nav"];
+  theme: UIStrings["theme"];
+}
+
 interface Props {
+  brand: SideNavBrand;
+  ui: SideNavUi;
   items: NavNode[];
+  numbering: boolean;
   currentRoute: string;
   locale: string;
+  dir: "ltr" | "rtl";
+  languageLinks: Array<{ code: string; label: string; href: string }>;
   navigationRoot: string;
   children?: ReactNode;
 }
@@ -55,6 +67,7 @@ function NavTree({
   depth = 0,
   idPrefix = "n",
   root = depth === 0,
+  numbering,
 }: {
   items: NavNode[];
   currentRoute: string;
@@ -63,6 +76,7 @@ function NavTree({
   idPrefix?: string;
   /** Identifies the top-level menu for styling and numbering. */
   root?: boolean;
+  numbering: boolean;
 }) {
   return (
     <SidebarMenu
@@ -97,7 +111,7 @@ function NavTree({
                     />
                   }>
                   <NavIcon name={item.icon} />
-                  {number && config.navigation.numbering && (
+                  {number && numbering && (
                     <span className="tnum nav-sidebar__number">{number}</span>
                   )}
                   <span className="nav-sidebar__title">{title}</span>
@@ -105,7 +119,7 @@ function NavTree({
               ) : (
                 <div className="nav-sidebar__label text-muted-foreground">
                   <NavIcon name={item.icon} />
-                  {number && config.navigation.numbering && (
+                  {number && numbering && (
                     <span className="tnum nav-sidebar__number">{number}</span>
                   )}
                   <span className="nav-sidebar__title">{title}</span>
@@ -118,6 +132,7 @@ function NavTree({
                   depth={depth + 1}
                   idPrefix={id}
                   root={false}
+                  numbering={numbering}
                 />
               )}
             </SidebarMenuItem>
@@ -139,7 +154,7 @@ function NavTree({
                 />
               }>
               <NavIcon name={item.icon} />
-              {number && config.navigation.numbering && (
+              {number && numbering && (
                 <span className="tnum nav-sidebar__number">{number}</span>
               )}
               <span className="nav-sidebar__title">{title}</span>
@@ -154,9 +169,14 @@ function NavTree({
   );
 }
 
-function BrandLogo({ altText }: { altText?: string }) {
-  const artwork = brand.logo.logotype;
-  const alt = altText ?? artwork.altText ?? `${brand.meta.name} logotype`;
+function BrandLogo({
+  artwork,
+  brandName,
+}: {
+  artwork: SideNavBrand["logotype"];
+  brandName: string;
+}) {
+  const alt = artwork.altText ?? `${brandName} logotype`;
 
   return (
     <span className="">
@@ -180,28 +200,30 @@ function BrandLogo({ altText }: { altText?: string }) {
 }
 
 export default function SideNav({
+  brand,
+  ui,
   items,
+  numbering,
   currentRoute,
   locale,
+  dir,
+  languageLinks,
   navigationRoot,
   children,
 }: Props) {
-  const localizedBrand = resolveBrand(brand, locale);
-  const ui = getUi(locale);
-
   return (
     <SidebarProvider className="min-w-0" defaultOpen>
       <Sidebar
-        side={getDirection(locale) === "rtl" ? "right" : "left"}
-        locale={locale}
+        side={dir === "rtl" ? "right" : "left"}
+        labels={ui.nav}
         className="h-full">
         <SidebarHeader>
           <div className="flex items-center justify-between ps-2 pt-2">
             <a
               className=""
               href={navigationRoot}
-              aria-label={`${localizedBrand.meta.name} ${localizedBrand.meta.documentTitle}`}>
-              <BrandLogo altText={localizedBrand.logo.logotype.altText} />
+              aria-label={`${brand.meta.name} ${brand.meta.documentTitle}`}>
+              <BrandLogo artwork={brand.logotype} brandName={brand.meta.name} />
             </a>
           </div>
         </SidebarHeader>
@@ -216,6 +238,7 @@ export default function SideNav({
                   items={items}
                   currentRoute={currentRoute}
                   root={true}
+                  numbering={numbering}
                 />
               </nav>
             </SidebarGroupContent>
@@ -223,32 +246,32 @@ export default function SideNav({
         </SidebarContent>
 
         <SidebarFooter className="gap-[var(--space-m)] p-[var(--space-m)]">
-          <ThemeToggle defaultTheme={brand.theme.default} locale={locale} />
+          <ThemeToggle defaultTheme={brand.defaultTheme} labels={ui.theme} />
           <nav
             className="flex items-center gap-2 text-[length:var(--text-caption)]"
             aria-label={ui.languageSwitcher.label}>
-            {supportedLocales.map((candidate, index) => (
-              <Fragment key={candidate}>
+            {languageLinks.map((candidate, index) => (
+              <Fragment key={candidate.code}>
                 {index > 0 && <span aria-hidden="true">/</span>}
                 <a
-                  href={getLocalizedPath(currentRoute, candidate)}
-                  aria-current={candidate === locale ? "page" : undefined}>
-                  {localeInfo[candidate].label}
+                  href={candidate.href}
+                  aria-current={candidate.code === locale ? "page" : undefined}>
+                  {candidate.label}
                 </a>
               </Fragment>
             ))}
           </nav>
           <p className="text-[length:var(--text-caption)] leading-[var(--text-caption--line-height)] tracking-[var(--text-caption--letter-spacing)] text-[var(--muted-foreground)]">
-            {localizedBrand.meta.name} © {localizedBrand.meta.year}
+            {brand.meta.name} © {brand.meta.year}
             <br />
-            {ui.brand.version} {localizedBrand.meta.version}
+            {ui.brand.version} {brand.meta.version}
           </p>
         </SidebarFooter>
       </Sidebar>
 
       <div className="relative min-w-0 flex-1" data-page-shell>
         <SidebarTrigger
-          locale={locale}
+          label={ui.nav.toggleSidebar}
           className="text-primary-foreground hover:bg-primary-foreground hover:text-primary border-primary-foreground absolute inset-s-(--page-gutter) top-(--space-m) z-30 rounded-full"
           variant="outline"
           size="icon"

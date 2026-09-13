@@ -1,9 +1,9 @@
 ---
-import { brand } from "../../brand/config";
-import type { BrandColorToken } from "../../brand/schema";
+import type { BrandColorToken, BrandConfig } from "../../brand/schema";
 import { resolveColor } from "../../brand/tokens";
 
 interface Props {
+  brand: BrandConfig;
   /** Palette shade reference for the background. Defaults to the page surface. */
   bg?: BrandColorToken;
   /** Palette shade reference for the contents. Defaults to whatever is legible on `bg`. */
@@ -20,6 +20,7 @@ interface Props {
 }
 
 const {
+  brand,
   bg,
   fg,
   ratio,

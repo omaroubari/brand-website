@@ -36,6 +36,7 @@ export async function getStaticPaths() {
 
 const { locale, navigation } = Astro.props;
 const localizedBrand = resolveBrand(brand, locale);
+const ui = getUi(locale);
 const dir = localeDir(locale, config.i18n);
 const route = navigation.root ?? "/";
 const siteUrl = localizedBrand.meta.url.replace(/\/$/u, "");
@@ -73,6 +74,7 @@ const layoutProps = {
   banner: null,
   analytics: null,
   navigation,
+  navigationNumbering: config.navigation.numbering,
   mcp: null,
   page: {
     title: "",
@@ -105,7 +107,7 @@ const layoutProps = {
   locale,
   dir,
   contentDir: dir,
-  ui: getUi(locale),
+  ui,
   localeAlternates,
   xDefault,
   versionNotice: null,
@@ -114,5 +116,10 @@ const layoutProps = {
 ---
 
 <RootLayout {...layoutProps}>
-  <CoverPage locale={locale} navigation={navigation} />
+  <CoverPage
+    brand={localizedBrand}
+    ui={ui}
+    navigation={navigation}
+    numbering={config.navigation.numbering}
+  />
 </RootLayout>
