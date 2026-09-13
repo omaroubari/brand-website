@@ -628,7 +628,7 @@ export const config = defineConfig({
   },
   seo: {
     og: {
-      logo: "/brand/logotype-dark.svg",
+      logo: "/favicon.svg",
       eyebrow: false,
       fonts: [
         {
