@@ -18,7 +18,7 @@ import { withBase } from "../components/islands/base-paths";
 import RootLayout from "../layouts/RootLayout.astro";
 
 import type { ContentRootLayoutProps } from "../lib/root-layout";
-import { resolveOgImage } from "../lib/og/paths";
+import { resolveOgImage } from "../og/paths";
 
 export async function getStaticPaths() {
   const tree = await getContentTree();

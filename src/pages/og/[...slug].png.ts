@@ -6,8 +6,8 @@ import { resolveBrand } from "../../brand/localize";
 import { colorCss, resolveColor } from "../../brand/tokens";
 import { getNavigation } from "../../lib/core/navigation";
 import { getContentTree } from "../../lib/core/tree";
-import { renderOgImage } from "../../lib/og/card";
-import { resolveOgLayer, resolveOgLogo } from "../../lib/og/options";
+import { renderOgImage } from "../../og/card";
+import { resolveOgLayer, resolveOgLogo } from "../../og/options";
 import { localeDir } from "@/lib/core/i18n";
 
 export const prerender = true;
