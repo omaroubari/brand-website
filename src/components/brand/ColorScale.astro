@@ -1,28 +1,25 @@
 ---
-import { brand } from "../../brand/config";
+import type { BrandConfig } from "../../brand/schema";
 import { colorCss, shadeSteps } from "../../brand/tokens";
-import { getLocaleFromPath, getUi, resolveBrand } from "../../i18n";
+import type { UIStrings } from "../../i18n";
 
 interface Props {
+  brand: BrandConfig;
+  ui: UIStrings;
   /** Limit and order shade families by id. Defaults to every configured scale. */
   only?: string[];
   class?: string;
 }
 
-const { only, class: className } = Astro.props;
-const locale = getLocaleFromPath(Astro.url.pathname);
-const localizedBrand = resolveBrand(brand, locale);
-const ui = getUi(locale);
+const { brand, ui, only, class: className } = Astro.props;
 
 const colors = only
   ? only.map((id) => {
-      const color = localizedBrand.colors.palette.find(
-        (family) => family.id === id,
-      );
+      const color = brand.colors.palette.find((family) => family.id === id);
       if (!color) throw new Error(`[ColorScale] Unknown colour id "${id}"`);
       return color;
     })
-  : localizedBrand.colors.palette;
+  : brand.colors.palette;
 ---
 
 <div

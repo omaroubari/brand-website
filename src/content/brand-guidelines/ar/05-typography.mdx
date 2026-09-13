@@ -11,6 +11,8 @@ import {
   Callout,
 } from "../../../components/mdx";
 
+const props = Astro.props;
+
 ## الخط
 
 يوضح المثال المعروض "Aa" الطابع النظيف والحديث لخط العلامة، ويبرز وضوحه وتنوّعه عبر
@@ -19,7 +21,7 @@ import {
 استخدام عائلة واحدة في كل المواضع قيد مقصود؛ فهو يجعل التسلسل الهرمي نابعاً من الحجم
 والوزن والمساحة، لا من خط ثانٍ.
 
-<TypeSpecimen font="display" glyph="أبجد" />
+<TypeSpecimen brand={props.brand} ui={props.ui} font="display" glyph="أبجد" />
 
 ## الأوزان
 
@@ -27,11 +29,11 @@ import {
 للنص المتدفق، إذ يبدو هادئاً لا نحيفاً. أما الأوزان الوسطية فمخصّصة لأعمال الواجهة —
 التسميات، والأزرار، ورؤوس الجداول.
 
-<FontWeights font="display" />
+<FontWeights brand={props.brand} font="display" />
 
 ## مجموعة المحارف
 
-<Glyphs font="display" weight={400} />
+<Glyphs ui={props.ui} dir={props.dir} font="display" weight={400} />
 
 ## مقياس الأحجام
 
@@ -41,14 +43,14 @@ import {
 
 لكل درجة وظيفة. وإذا احتاج التصميم إلى حجم بين درجتين، فهو يحتاج إلى إحدى الدرجتين.
 
-<Callout tone="note" title="على الويب">
+<Callout ui={props.ui} tone="note" title="على الويب">
 
 تستخدم أحجام العرض والعناوين `clamp()`، لذا تتدرج مع إطار العرض بين حد أدنى وسقف أعلى.
 أما أنماط النص الأساسي والتعليقات فتبقى ثابتة لضمان الوضوح والاتساق عبر الواجهة.
 
 </Callout>
 
-<TypeScale />
+<TypeScale brand={props.brand} ui={props.ui} />
 
 ## قواعد التنضيد
 
@@ -60,4 +62,9 @@ import {
 استخدم صيغة الجملة في جميع المواضع. ويُحجز استخدام الأحرف الكبيرة للتسميات الصغيرة،
 حيث تُوسّع المسافات بينها للحفاظ على وضوحها.
 
-<TypeScale only={["Display 2", "Title 1", "Body"]} print={false} />
+<TypeScale
+  brand={props.brand}
+  ui={props.ui}
+  only={["Display 2", "Title 1", "Body"]}
+  print={false}
+/>

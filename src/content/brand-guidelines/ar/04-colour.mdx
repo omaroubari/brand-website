@@ -12,19 +12,21 @@ import {
   Panel,
 } from "../../../components/mdx";
 
+const props = Astro.props;
+
 ## الألوان الأساسية
 
 الأسود والأبيض هما الأساس. يحملان الشعار الكتابي، والطباعة، والأسطح، واللحظات عالية
 التباين في الهوية.
 
-<ColorPalette category="primary" />
+<ColorPalette brand={props.brand} ui={props.ui} category="primary" />
 
 ## الألوان الثانوية
 
 البرتقالي/الأحمر يلفت الانتباه. ويوفّر المقياس المحايد البنية الأكثر هدوءاً من حوله؛
 لذلك استخدم لون الإشارة بوعي، ودع الألوان الأساسية تنجز معظم المهمة.
 
-<ColorPalette category="secondary" />
+<ColorPalette brand={props.brand} ui={props.ui} category="secondary" />
 
 ## لوحة الألوان
 
@@ -32,7 +34,7 @@ import {
 ثابتتان؛ والألوان المسماة أعلاه نقاطهما المرجعية. استخدم درجة مرقمة فقط عندما تحتاج
 الواجهة إلى تدرّج محسوب أفتح أو أغمق.
 
-<ColorScale />
+<ColorScale brand={props.brand} ui={props.ui} />
 
 ## التناسب
 
@@ -45,6 +47,7 @@ import {
 <Grid cols={3}>
 
 <Panel
+  brand={props.brand}
   bg="white"
   ratio="4 / 3"
   caption="أبيض — السطح الافتراضي للمستندات والمنتج.">
@@ -52,6 +55,7 @@ import {
 </Panel>
 
 <Panel
+  brand={props.brand}
   bg="black"
   ratio="4 / 3"
   caption="أسود — للحملات والتغليف وكل ما ينبغي أن يحمل رسالة واضحة.">
@@ -59,6 +63,7 @@ import {
 </Panel>
 
 <Panel
+  brand={props.brand}
   bg="orange-500"
   ratio="4 / 3"
   caption="لون مميّز — ومضات قصيرة فقط، لا صفحة كاملة من النص المتدفق.">
@@ -72,11 +77,11 @@ import {
 كل اقتران ألوان مُقاس. وأي قيمة أقل من 4.5:1 لا تحقق المتطلبات للنص الأساسي بالمقاسات
 المعتادة؛ والقيم المشطوبة غير متاحة للاستخدام.
 
-<Callout tone="note">
+<Callout ui={props.ui} tone="note">
 
 النص الكبير — 24 px فأعلى، أو 19 px عريضاً — يحتاج فقط إلى 3:1. وتحتاج الأيقونات
 وحدود حقول الإدخال أيضاً إلى 3:1 مقابل الخلفية الواقعة خلفها.
 
 </Callout>
 
-<ContrastMatrix />
+<ContrastMatrix brand={props.brand} ui={props.ui} />

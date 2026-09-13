@@ -5,6 +5,8 @@ description: العمل الفني للشعار الأساسي وتطبيقات�
 
 import { Panel, Logo } from "../../../../components/mdx";
 
+const props = Astro.props;
+
 ## الشعار الكتابي
 
 ### الشعار الأساسي
@@ -15,8 +17,8 @@ import { Panel, Logo } from "../../../../components/mdx";
 استخدم الملف المرفق دائماً. لا تعِد كتابة الاسم بخط العلامة — فالشعار الكتابي
 يحمل مسافات مخصّصة لا يستطيع النص المكتوب مباشرةً إعادة إنتاجها.
 
-<Panel ratio="16 / 9">
-  <Logo mark="logotype" width="66%" />
+<Panel brand={props.brand} ratio="16 / 9">
+  <Logo brand={props.brand} mark="logotype" width="66%" />
 </Panel>
 
 ### على الأسود
@@ -24,6 +26,6 @@ import { Panel, Logo } from "../../../../components/mdx";
 على الأسطح الداكنة يُعكس الشعار الكتابي إلى الأبيض. لا توجد نسخة ثالثة — العمل
 الفني متطابق، واللون وحده هو الذي يتغيّر.
 
-<Panel bg="black" ratio="16 / 9">
-  <Logo mark="logotype" on="dark" width="66%" />
+<Panel brand={props.brand} bg="black" ratio="16 / 9">
+  <Logo brand={props.brand} mark="logotype" on="dark" width="66%" />
 </Panel>

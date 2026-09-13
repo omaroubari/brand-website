@@ -1,9 +1,11 @@
 ---
-import { brand } from "../../brand/config";
-import type { BrandSwatch } from "../../brand/schema";
+import type { BrandConfig, BrandSwatch } from "../../brand/schema";
+import type { UIStrings } from "../../i18n";
 import ColorSwatch from "./ColorSwatch.astro";
 
 interface Props {
+  brand: BrandConfig;
+  ui: UIStrings;
   /** Limit and order named swatches by id. Defaults to every configured swatch. */
   only?: string[];
   /** Limit the palette to a named group from the brand configuration. */
@@ -13,7 +15,14 @@ interface Props {
   class?: string;
 }
 
-const { only, category, print = true, class: className } = Astro.props;
+const {
+  brand,
+  ui,
+  only,
+  category,
+  print = true,
+  class: className,
+} = Astro.props;
 
 const colors = only
   ? only.map((id) => {
@@ -27,7 +36,11 @@ const colors = only
 ---
 
 <div class:list={["palette", "escape", className]} data-color-palette>
-  {colors.map((c) => <ColorSwatch color={c} print={print} />)}
+  {
+    colors.map((c) => (
+      <ColorSwatch brand={brand} ui={ui} color={c} print={print} />
+    ))
+  }
 </div>
 
 <style>

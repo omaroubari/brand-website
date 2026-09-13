@@ -1,6 +1,6 @@
 ---
-import { brand, config } from "../../brand/config";
-import { getLocaleFromPath, getUi, resolveBrand } from "../../i18n";
+import type { BrandConfig } from "../../brand/schema";
+import type { UIStrings } from "../../i18n";
 
 /**
  * The divider page that opens every section of the printed document: a
@@ -9,7 +9,8 @@ import { getLocaleFromPath, getUi, resolveBrand } from "../../i18n";
  * eyebrow above the title.
  */
 interface Props {
-  locale?: string;
+  brand: BrandConfig;
+  ui: UIStrings;
   title: string;
   summary?: string;
   /** Ancestor group path for a nested page, omitted for indexes and root pages. */
@@ -18,10 +19,8 @@ interface Props {
   bg?: string;
 }
 
-const { title, summary, eyebrow, bg = "accent" } = Astro.props;
-const locale = Astro.props.locale ?? getLocaleFromPath(Astro.url.pathname);
-const { meta } = resolveBrand(brand, locale);
-const ui = getUi(locale);
+const { brand, ui, title, summary, eyebrow, bg = "accent" } = Astro.props;
+const { meta } = brand;
 ---
 
 <header class="opener" style={`--opener-bg: var(--color-${bg});`}>

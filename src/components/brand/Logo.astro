@@ -1,7 +1,8 @@
 ---
-import { brand } from "../../brand/config";
+import type { BrandConfig } from "../../brand/schema";
 
 interface Props {
+  brand: BrandConfig;
   /** Which piece of artwork to draw. */
   mark?: "logotype" | "brandmark";
   /**
@@ -20,6 +21,7 @@ interface Props {
 }
 
 const {
+  brand,
   mark = "logotype",
   on = "auto",
   tint,

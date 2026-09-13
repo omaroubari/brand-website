@@ -34,8 +34,16 @@ impression. The reverse stays white and holds the details.
 
 <Grid cols={2}>
 
-<Figure ratio="85 / 55" caption="Front — accent field, logotype centred." />
-<Figure ratio="85 / 55" caption="Back — white, name and contact details." />
+<Figure
+  ui={props.ui}
+  ratio="85 / 55"
+  caption="Front — accent field, logotype centred."
+/>
+<Figure
+  ui={props.ui}
+  ratio="85 / 55"
+  caption="Back — white, name and contact details."
+/>
 
 </Grid>
 
@@ -60,8 +68,12 @@ printed in full accent, so correspondence arrives recognisable before it is read
 
 <Grid cols={2}>
 
-<Figure ratio="210 / 297" caption="A4 letterhead — front." />
-<Figure ratio="210 / 297" caption="Reverse — full accent flood." />
+<Figure ui={props.ui} ratio="210 / 297" caption="A4 letterhead — front." />
+<Figure
+  ui={props.ui}
+  ratio="210 / 297"
+  caption="Reverse — full accent flood."
+/>
 
 </Grid>
 
@@ -90,10 +102,15 @@ paragraph.
 <Grid cols={2}>
 
 <Figure
+  ui={props.ui}
   ratio="2 / 3"
   caption="A1 — display type, one image, one accent element."
 />
-<Figure ratio="2 / 3" caption="A1 — accent flood, reversed logotype." />
+<Figure
+  ui={props.ui}
+  ratio="2 / 3"
+  caption="A1 — accent flood, reversed logotype."
+/>
 
 </Grid>
 
@@ -112,7 +129,7 @@ paragraph.
 Everyday objects that carry the mark: mug, cap, tote, T-shirt. Bold where the object
 allows it, restrained where it does not.
 
-<Callout tone="note" title="Small applications">
+<Callout ui={props.ui} tone="note" title="Small applications">
 
 Embroidery, engraving and screen print all lose fine detail. Below 20 mm use the
 brandmark, single colour, with no attempt to reproduce hairlines.
@@ -125,10 +142,18 @@ brandmark, single colour, with no attempt to reproduce hairlines.
 
 <Grid cols={4}>
 
-<Figure ratio="1 / 1" caption="Mug — brandmark, oversized" />
-<Figure ratio="1 / 1" caption="Cap — logotype, white on black" />
-<Figure ratio="1 / 1" caption="Tote — accent, logotype repeated" />
-<Figure ratio="1 / 1" caption="T-shirt — brandmark at the chest" />
+<Figure ui={props.ui} ratio="1 / 1" caption="Mug — brandmark, oversized" />
+<Figure ui={props.ui} ratio="1 / 1" caption="Cap — logotype, white on black" />
+<Figure
+  ui={props.ui}
+  ratio="1 / 1"
+  caption="Tote — accent, logotype repeated"
+/>
+<Figure
+  ui={props.ui}
+  ratio="1 / 1"
+  caption="T-shirt — brandmark at the chest"
+/>
 
 </Grid>
 
@@ -154,10 +179,12 @@ and check contrast against the actual wall colour, not a rendering of it.
 <Grid cols={2}>
 
 <Figure
+  ui={props.ui}
   ratio="4 / 3"
   caption="Illuminated sign — accent face, logotype in black."
 />
 <Figure
+  ui={props.ui}
   ratio="4 / 3"
   caption="Building signage — flush-mounted, no backing panel."
 />

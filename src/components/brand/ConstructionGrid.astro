@@ -1,7 +1,9 @@
 ---
+import type { BrandConfig } from "../../brand/schema";
 import Logo from "./Logo.astro";
 
 interface Props {
+  brand: BrandConfig;
   mark?: "logotype" | "brandmark";
   /** Grid divisions across. */
   cols?: number;
@@ -12,6 +14,7 @@ interface Props {
 }
 
 const {
+  brand,
   mark = "brandmark",
   cols = 10,
   rows = 10,
@@ -26,7 +29,7 @@ const {
     style={`--cols: ${cols}; --rows: ${rows}; aspect-ratio: ${cols} / ${rows};`}>
     <div class="construction__grid" aria-hidden="true"></div>
     <div class="construction__art">
-      <Logo mark={mark} width="100%" />
+      <Logo brand={brand} mark={mark} width="100%" />
     </div>
   </div>
   <figcaption class="caption construction__caption">

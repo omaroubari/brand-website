@@ -1,8 +1,9 @@
 ---
-import { brand } from "../../brand/config";
+import type { BrandConfig } from "../../brand/schema";
 import Logo from "./Logo.astro";
 
 interface Props {
+  brand: BrandConfig;
   mark?: "logotype" | "brandmark";
   /**
    * Sizes to show, largest first. `width` is any CSS length; `label` is the
@@ -13,6 +14,7 @@ interface Props {
 }
 
 const {
+  brand,
   mark = "logotype",
   sizes = [
     { width: "18rem", label: "288 px / 49 mm" },
@@ -30,7 +32,7 @@ const {
     {
       sizes.map((size) => (
         <li class="scaling__item">
-          <Logo mark={mark} width={size.width} />
+          <Logo brand={brand} mark={mark} width={size.width} />
           <span class="caption scaling__label">{size.label}</span>
         </li>
       ))

@@ -4,7 +4,12 @@ import { Font } from "astro:assets";
 import { brandStyleSheet } from "../brand/tokens";
 import type { RootLayoutProps } from "../lib/root-layout";
 import { getInitialThemeAttributes } from "../lib/theme-state";
-import { LOCALE_COOKIE_NAME } from "../i18n";
+import {
+  getLocalizedPath,
+  LOCALE_COOKIE_NAME,
+  localeInfo,
+  supportedLocales,
+} from "../i18n";
 import SideNav from "../components/nav/SideNav";
 import ColorPaletteInteractions from "../components/brand/ColorPaletteInteractions";
 import ThemeScript from "@/components/theme-script.astro";
@@ -27,6 +32,7 @@ const {
   banner,
   analytics,
   navigation,
+  navigationNumbering,
   mcp,
   page,
   headings,
@@ -76,10 +82,10 @@ const contentProps =
     ? null
     : {
         page: Astro.props.page,
+        brand: Astro.props.brand,
         navigation: Astro.props.navigation,
         headings: Astro.props.headings,
         toc: Astro.props.toc,
-        locale: Astro.props.locale,
         ui: Astro.props.ui,
       };
 
@@ -102,6 +108,11 @@ const initialTheme = getInitialThemeAttributes(brand.theme.default);
 
 const navigationItems = navigation.sidebar;
 const navigationRoot = navigation.root ?? "/";
+const languageLinks = supportedLocales.map((code) => ({
+  code,
+  label: localeInfo[code].label,
+  href: getLocalizedPath(currentRoute, code),
+}));
 ---
 
 <!doctype html>
@@ -185,9 +196,23 @@ const navigationRoot = navigation.root ?? "/";
   <body>
     <div class="min-h-dvh">
       <SideNav
+        brand={{
+          meta: brand.meta,
+          logotype: brand.logo.logotype,
+          defaultTheme: brand.theme.default,
+        }}
+        ui={{
+          brand: { version: ui.brand.version },
+          languageSwitcher: ui.languageSwitcher,
+          nav: ui.nav,
+          theme: ui.theme,
+        }}
         items={navigationItems}
+        numbering={navigationNumbering}
         currentRoute={currentRoute}
         locale={locale}
+        dir={dir}
+        languageLinks={languageLinks}
         navigationRoot={navigationRoot}
         client:load>
         <main class="main" id="content">
@@ -203,6 +228,14 @@ const navigationRoot = navigation.root ?? "/";
         </main>
       </SideNav>
     </div>
-    <ColorPaletteInteractions locale={locale} client:load />
+    <ColorPaletteInteractions
+      labels={{
+        close: ui.nav.close,
+        copied: ui.actions.copied,
+        copyFailed: ui.actions.copyFailed,
+        colorCopied: ui.color.copied,
+      }}
+      client:load
+    />
   </body>
 </html>

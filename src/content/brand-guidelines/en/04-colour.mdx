@@ -12,19 +12,21 @@ import {
   Panel,
 } from "../../../components/mdx";
 
+const props = Astro.props;
+
 ## Primary colours
 
 Black and white are the foundation. They carry the logotype, typography, surfaces and
 the high-contrast moments of the identity.
 
-<ColorPalette category="primary" />
+<ColorPalette brand={props.brand} ui={props.ui} category="primary" />
 
 ## Secondary colours
 
 Orange/Red creates focus. The neutral scale provides the quieter structure around it;
 use the signal colour deliberately, and let the primary colours do most of the work.
 
-<ColorPalette category="secondary" />
+<ColorPalette brand={props.brand} ui={props.ui} category="secondary" />
 
 ## Palette
 
@@ -32,7 +34,7 @@ These are the approved digital shades for interface work. `neutral` and `orange`
 stable token families; the named colours above are their reference points. Use a numbered
 shade only where a UI needs a measured step lighter or darker.
 
-<ColorScale />
+<ColorScale brand={props.brand} ui={props.ui} />
 
 ## Proportion
 
@@ -45,6 +47,7 @@ If a layout needs more accent to feel finished, the layout is the problem.
 <Grid cols={3}>
 
 <Panel
+  brand={props.brand}
   bg="white"
   ratio="4 / 3"
   caption="White — the default surface for documents and product.">
@@ -52,6 +55,7 @@ If a layout needs more accent to feel finished, the layout is the problem.
 </Panel>
 
 <Panel
+  brand={props.brand}
   bg="black"
   ratio="4 / 3"
   caption="Black — campaign, packaging, anything that should feel like a statement.">
@@ -59,6 +63,7 @@ If a layout needs more accent to feel finished, the layout is the problem.
 </Panel>
 
 <Panel
+  brand={props.brand}
   bg="orange-500"
   ratio="4 / 3"
   caption="Accent — short bursts only. Never a page of running text.">
@@ -72,11 +77,11 @@ If a layout needs more accent to feel finished, the layout is the problem.
 Every pairing, measured. Anything under 4.5:1 fails for body copy at normal sizes; the
 struck-through values are not available to you.
 
-<Callout tone="note">
+<Callout ui={props.ui} tone="note">
 
 Large text — 24 px and up, or 19 px bold — only needs 3:1. Icons and input borders also
 need 3:1 against what is behind them.
 
 </Callout>
 
-<ContrastMatrix />
+<ContrastMatrix brand={props.brand} ui={props.ui} />

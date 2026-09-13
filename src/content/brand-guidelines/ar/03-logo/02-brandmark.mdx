@@ -10,6 +10,8 @@ import {
   ConstructionGrid,
 } from "../../../../components/mdx";
 
+const props = Astro.props;
+
 ## رمز العلامة
 
 ### المونوغرام
@@ -20,12 +22,12 @@ import {
 
 <Grid cols={2}>
 
-<Panel bg="white" ratio="4 / 3">
-  <Logo mark="brandmark" on="light" width="7rem" />
+<Panel brand={props.brand} bg="white" ratio="4 / 3">
+  <Logo brand={props.brand} mark="brandmark" on="light" width="7rem" />
 </Panel>
 
-<Panel bg="black" ratio="4 / 3">
-  <Logo mark="brandmark" on="dark" width="7rem" />
+<Panel brand={props.brand} bg="black" ratio="4 / 3">
+  <Logo brand={props.brand} mark="brandmark" on="dark" width="7rem" />
 </Panel>
 
 </Grid>
@@ -35,4 +37,4 @@ import {
 بُني الرمز على شبكة مرجعية كي تحافظ نسبه ومحاذاته على سلامته في كل تطبيق.
 أعد إنتاجه من العمل الفني المرفق — ولا تعِد رسمه أبداً.
 
-<ConstructionGrid mark="brandmark" cols={10} rows={10} />
+<ConstructionGrid brand={props.brand} mark="brandmark" cols={10} rows={10} />

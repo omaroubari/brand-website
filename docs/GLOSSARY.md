@@ -80,7 +80,9 @@ directly to this config when its override omits a field.
 
 The brand-data-only object parsed by `brandSchema` and exposed as
 `config.brand`. The named `brand` export is a compatibility-facing alias for
-brand exhibit modules; site behavior does not live in this object.
+composition roots and transitional callers; site behavior does not live in
+this object. Presentation modules receive the locale-resolved value through
+their props rather than importing this alias directly.
 
 ## Site configuration
 

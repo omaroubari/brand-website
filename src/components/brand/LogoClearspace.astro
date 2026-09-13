@@ -1,17 +1,18 @@
 ---
-import { brand } from "../../brand/config";
+import type { BrandConfig } from "../../brand/schema";
 import Logo from "./Logo.astro";
-import { getLocaleFromPath, getUi } from "../../i18n";
+import type { UIStrings } from "../../i18n";
 
 interface Props {
+  brand: BrandConfig;
+  ui: UIStrings;
   mark?: "logotype" | "brandmark";
   class?: string;
 }
 
-const { mark = "logotype", class: className } = Astro.props;
+const { brand, ui, mark = "logotype", class: className } = Astro.props;
 
 const { ratio, unit } = brand.logo.clearspace;
-const ui = getUi(getLocaleFromPath(Astro.url.pathname));
 const clearspaceCopy = ui.logo.clearspaceInstruction
   .replace("{unit}", unit)
   .replace("{mark}", mark);
@@ -23,7 +24,11 @@ const pad = `calc(var(--logo-h) * ${ratio})`;
   <div class="clear__stage" style={`--pad: ${pad};`}>
     <div class="clear__zone">
       <div class="clear__logo">
-        <Logo mark={mark} width={mark === "brandmark" ? "5rem" : "18rem"} />
+        <Logo
+          brand={brand}
+          mark={mark}
+          width={mark === "brandmark" ? "5rem" : "18rem"}
+        />
       </div>
     </div>
     <span class="clear__tick clear__tick--top" aria-hidden="true"

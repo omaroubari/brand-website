@@ -31,6 +31,7 @@ if (i18nEnabled(config) && !config.i18n.hideDefaultLocalePrefix) {
 
 const tree = await getContentTree();
 const localizedBrand = resolveBrand(brand, defaultLocale);
+const ui = getUi(defaultLocale);
 const navigation = tree.navigation;
 const route = navigation.root ?? "/";
 const siteUrl = localizedBrand.meta.url.replace(/\/$/u, "");
@@ -69,6 +70,7 @@ const layoutProps = {
   banner: null,
   analytics: null,
   navigation,
+  navigationNumbering: config.navigation.numbering,
   mcp: null,
   page: {
     title: "",
@@ -101,7 +103,7 @@ const layoutProps = {
   locale: defaultLocale,
   dir,
   contentDir: dir,
-  ui: getUi(defaultLocale),
+  ui,
   localeAlternates,
   xDefault,
   versionNotice: null,
@@ -110,5 +112,10 @@ const layoutProps = {
 ---
 
 <RootLayout {...layoutProps}>
-  <CoverPage locale={defaultLocale} navigation={navigation} />
+  <CoverPage
+    brand={localizedBrand}
+    ui={ui}
+    navigation={navigation}
+    numbering={config.navigation.numbering}
+  />
 </RootLayout>

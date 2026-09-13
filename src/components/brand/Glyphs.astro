@@ -1,7 +1,9 @@
 ---
-import { getDirection, getLocaleFromPath, getUi } from "../../i18n";
+import type { UIStrings } from "../../i18n";
 
 interface Props {
+  ui: UIStrings;
+  dir: "ltr" | "rtl";
   font?: "display" | "text";
   weight?: number;
   /** Character sets to print. */
@@ -9,11 +11,16 @@ interface Props {
   class?: string;
 }
 
-const { font = "display", weight = 400, sets, class: className } = Astro.props;
-const locale = getLocaleFromPath(Astro.url.pathname);
-const ui = getUi(locale);
+const {
+  ui,
+  dir,
+  font = "display",
+  weight = 400,
+  sets,
+  class: className,
+} = Astro.props;
 const defaultSets =
-  getDirection(locale) === "rtl"
+  dir === "rtl"
     ? [
         { label: ui.typography.letters, chars: "ابتثجحخدذرزسشصضطظعغفقكلمنهوي" },
         { label: ui.typography.numerals, chars: "٠١٢٣٤٥٦٧٨٩ 0123456789" },

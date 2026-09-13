@@ -11,7 +11,6 @@ import {
   OctagonXIcon,
   Loader2Icon,
 } from "lucide-react";
-import { defaultLocale, getLocale, getUi } from "@/i18n";
 
 const toast = ToastPrimitive.createToastManager();
 
@@ -115,21 +114,16 @@ function ToastAction({
 }
 
 function ToastClose({
+  label,
   className,
   children,
   render = <Button variant="ghost" size="icon-sm" />,
   ...props
-}: ToastPrimitive.Close.Props) {
+}: ToastPrimitive.Close.Props & { label: string }) {
   return (
     <ToastPrimitive.Close
       data-slot="toast-close"
-      aria-label={
-        getUi(
-          typeof document === "undefined"
-            ? defaultLocale
-            : getLocale(document.documentElement.lang),
-        ).nav.close
-      }
+      aria-label={label}
       render={render}
       className={cn(
         "text-muted-foreground hover:text-foreground relative shrink-0 after:absolute after:-inset-2 after:content-['']",
@@ -177,7 +171,7 @@ function ToastIcon({ type }: { type: string | undefined }) {
   );
 }
 
-function ToastList() {
+function ToastList({ closeLabel }: { closeLabel: string }) {
   const { toasts } = ToastPrimitive.useToastManager();
 
   return toasts.map((toastItem) => (
@@ -189,23 +183,24 @@ function ToastList() {
           <ToastDescription />
         </div>
         <ToastAction />
-        <ToastClose />
+        <ToastClose label={closeLabel} />
       </ToastContent>
     </Toast>
   ));
 }
 
 function Toaster({
+  closeLabel,
   children,
   toastManager = toast,
   ...props
-}: ToastPrimitive.Provider.Props) {
+}: ToastPrimitive.Provider.Props & { closeLabel: string }) {
   return (
     <ToastProvider toastManager={toastManager} {...props}>
       {children}
       <ToastPortal>
         <ToastViewport>
-          <ToastList />
+          <ToastList closeLabel={closeLabel} />
         </ToastViewport>
       </ToastPortal>
     </ToastProvider>

@@ -11,6 +11,8 @@ import {
   Callout,
 } from "../../../components/mdx";
 
+const props = Astro.props;
+
 ## Typeface
 
 The showcased "Aa" demonstrates the clean, modern aesthetic of the brand face,
@@ -19,7 +21,7 @@ highlighting its clarity and versatility across applications.
 One family across everything is a deliberate constraint — it forces hierarchy to come from
 size, weight and space rather than from a second typeface.
 
-<TypeSpecimen font="display" glyph="Aa" />
+<TypeSpecimen brand={props.brand} ui={props.ui} font="display" glyph="Aa" />
 
 ## Weights
 
@@ -27,11 +29,11 @@ Two weights do most of the work. **Bold** for headlines and anything that must b
 first; **Light** for running text, where it reads as calm rather than thin. The weights in
 between exist for interface work — labels, buttons, table headers.
 
-<FontWeights font="display" />
+<FontWeights brand={props.brand} font="display" />
 
 ## Character set
 
-<Glyphs font="display" weight={400} />
+<Glyphs ui={props.ui} dir={props.dir} font="display" weight={400} />
 
 ## Typescale
 
@@ -42,14 +44,14 @@ light weight for easy reading.
 Every step has a job. If a design needs something between two steps, it needs one of the
 two steps.
 
-<Callout tone="note" title="On the web">
+<Callout ui={props.ui} tone="note" title="On the web">
 
 Display and title sizes use `clamp()`, so they scale with the viewport between a floor and
 a ceiling. Body and caption styles stay fixed for legibility and consistency across the UI.
 
 </Callout>
 
-<TypeScale />
+<TypeScale brand={props.brand} ui={props.ui} />
 
 ## Setting rules
 
@@ -61,4 +63,9 @@ body copy is never tracked.
 Sentence case everywhere. Uppercase is reserved for small labels, where it is tracked out
 to stay legible.
 
-<TypeScale only={["Display 2", "Title 1", "Body"]} print={false} />
+<TypeScale
+  brand={props.brand}
+  ui={props.ui}
+  only={["Display 2", "Title 1", "Body"]}
+  print={false}
+/>
