@@ -2,8 +2,8 @@ import type { APIRoute, GetStaticPaths } from "astro";
 import { fontData, logo as bundledLogo } from "virtual:og-assets";
 
 import { brand, config } from "../../brand/config";
+import { resolveBrand } from "../../brand/localize";
 import { colorCss, resolveColor } from "../../brand/tokens";
-import { resolveBrand } from "../../i18n";
 import { getNavigation } from "../../lib/core/navigation";
 import { getContentTree } from "../../lib/core/tree";
 import { renderOgImage } from "../../lib/og/card";
@@ -42,7 +42,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
   };
 
   for (const page of tree.pages) {
-    const localizedBrand = resolveBrand(brand, page.locale);
+    const localizedBrand = resolveBrand(brand, page.locale, config.i18n);
     if (page.meta.seo.image) continue;
     add(page.route, {
       title: page.meta.seo.title ?? page.title,
@@ -56,7 +56,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
   const locales = config.i18n?.locales.map(({ code }) => code) ?? ["en"];
   for (const locale of locales) {
-    const localizedBrand = resolveBrand(brand, locale);
+    const localizedBrand = resolveBrand(brand, locale, config.i18n);
     add(getNavigation(tree, locale).root ?? "/", {
       title: localizedBrand.meta.documentTitle,
       description: localizedBrand.meta.description,
@@ -68,7 +68,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 };
 
 export const GET: APIRoute<OgPageProps> = async ({ props }) => {
-  const localizedBrand = resolveBrand(brand, props.locale);
+  const localizedBrand = resolveBrand(brand, props.locale, config.i18n);
   const og = config.seo.og;
   const light = localizedBrand.theme.light;
   const siteTitle = localizedBrand.meta.documentTitle;

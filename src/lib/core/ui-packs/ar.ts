@@ -1,4 +1,4 @@
-import type { UIStringsOverride } from "../ui";
+import type { UIStringsOverride } from "../i18n-ui";
 
 /** Arabic template UI strings. Omitted leaves fall back through the resolver. */
 export const ar = {

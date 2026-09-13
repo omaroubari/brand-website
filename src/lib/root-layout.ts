@@ -1,6 +1,11 @@
-import type { UIStrings } from "../i18n";
+import type { UIStrings } from "./core/i18n-ui";
 import type { BrandConfig } from "../brand/schema";
-import type { Heading, Navigation, PageRecord } from "./types";
+import type {
+  Heading,
+  LocaleSwitchOption,
+  Navigation,
+  PageRecord,
+} from "./types";
 
 /**
  * The complete page-shell contract. Route files prepare these values and
@@ -65,6 +70,8 @@ interface RootLayoutBaseProps {
   dir?: "ltr" | "rtl";
   contentDir?: "ltr" | "rtl";
   ui: UIStrings;
+  /** Resolved locale links for the current page, prepared by the route. */
+  localeSwitch: LocaleSwitchOption[];
   localeAlternates?: { hreflang: string; href: string }[];
   xDefault?: string | null;
   versionNotice?: {

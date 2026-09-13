@@ -145,3 +145,15 @@ export interface ContentTree {
   /** Map of route -> pageId for fast lookup and duplicate detection. */
   routes: Map<string, string>;
 }
+
+/** A resolved language-switcher entry for the current page. */
+export interface LocaleSwitchOption {
+  code: string;
+  label: string;
+  dir: "ltr" | "rtl";
+  /** Target URL: the real translation, or the localized fallback URL. */
+  href: string;
+  isCurrent: boolean;
+  /** True when this locale has no real translation (renders fallback content). */
+  isFallback: boolean;
+}

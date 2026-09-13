@@ -1,15 +1,15 @@
 ---
 import { brand, config } from "../brand/config";
 import CoverPage from "../components/content/CoverPage.astro";
-import {
-  getDirection,
-  getLocale,
-  getUi,
-  LOCALE_COOKIE_NAME,
-  resolveBrand,
-} from "../i18n";
+import { resolveBrand } from "../brand/localize";
 import { withBase } from "../components/islands/base-paths";
-import { i18nEnabled } from "../lib/core/i18n";
+import {
+  i18nEnabled,
+  localeCodes,
+  localeDir,
+  LOCALE_COOKIE_NAME,
+} from "../lib/core/i18n";
+import { resolveUIStrings } from "../lib/core/i18n-ui";
 import { getNavigation } from "../lib/core/navigation";
 import { getContentTree } from "../lib/core/tree";
 import type { BareRootLayoutProps } from "../lib/root-layout";
@@ -23,15 +23,16 @@ export const prerender = false;
 const defaultLocale = config.i18n?.defaultLocale ?? "en";
 
 if (i18nEnabled(config) && !config.i18n.hideDefaultLocalePrefix) {
-  return Astro.redirect(
-    `/${getLocale(Astro.cookies.get(LOCALE_COOKIE_NAME)?.value ?? defaultLocale)}/`,
-    302,
-  );
+  const savedLocale = Astro.cookies.get(LOCALE_COOKIE_NAME)?.value;
+  const locale = localeCodes(config.i18n).has(savedLocale ?? "")
+    ? savedLocale
+    : defaultLocale;
+  return Astro.redirect(`/${locale}`, 302);
 }
 
 const tree = await getContentTree();
-const localizedBrand = resolveBrand(brand, defaultLocale);
-const ui = getUi(defaultLocale);
+const localizedBrand = resolveBrand(brand, defaultLocale, config.i18n);
+const ui = resolveUIStrings(defaultLocale, { defaultLocale });
 const navigation = tree.navigation;
 const route = navigation.root ?? "/";
 const siteUrl = localizedBrand.meta.url.replace(/\/$/u, "");
@@ -41,7 +42,17 @@ const absolute = (path: string) =>
 const ogGenerated = Boolean(config.seo.og.enabled ?? true);
 const ogImage = ogGenerated ? generatedOgImagePath(route) : null;
 
-const dir = getDirection(defaultLocale);
+const dir = config.i18n ? localeDir(defaultLocale, config.i18n) : "ltr";
+const localeSwitch = config.i18n
+  ? config.i18n.locales.map(({ code, label, dir }) => ({
+      code,
+      label,
+      dir,
+      href: getNavigation(tree, code).root ?? "/",
+      isCurrent: code === defaultLocale,
+      isFallback: false,
+    }))
+  : [];
 const localeAlternates = config.i18n
   ? config.i18n.locales.map(({ code }) => ({
       hreflang: code,
@@ -104,6 +115,7 @@ const layoutProps = {
   dir,
   contentDir: dir,
   ui,
+  localeSwitch,
   localeAlternates,
   xDefault,
   versionNotice: null,
