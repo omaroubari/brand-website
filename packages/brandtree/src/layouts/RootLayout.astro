@@ -1,0 +1,230 @@
+---
+import "../styles/global.css";
+import { Font } from "astro:assets";
+import { brandStyleSheet } from "../brand/tokens";
+import type { RootLayoutProps } from "../lib/root-layout";
+import { getInitialThemeAttributes } from "../lib/theme-state";
+import { LOCALE_COOKIE_NAME } from "../core/i18n";
+import SideNav from "../components/nav/SideNav";
+import ColorPaletteInteractions from "../components/brand/ColorPaletteInteractions";
+import ThemeScript from "../components/theme-script.astro";
+import { withBase } from "../components/islands/base-paths.ts";
+import ContentLayout from "./ContentLayout.astro";
+import {
+  OG_IMAGE_HEIGHT,
+  OG_IMAGE_TYPE,
+  OG_IMAGE_WIDTH,
+} from "../og/dimensions";
+
+type Props = RootLayoutProps;
+
+const {
+  brand,
+  site,
+  logo,
+  favicon,
+  appleIcon,
+  banner,
+  analytics,
+  navigation,
+  navigationNumbering,
+  mcp,
+  page,
+  headings,
+  imageZoom = true,
+  codeWrap = false,
+  themeMode,
+  // fontCssVars,
+  searchEnabled,
+  indexable,
+  ogImage,
+  ogGenerated = false,
+  x,
+  canonical,
+  editUrl,
+  askEnabled,
+  feedback = false,
+  exportPdf,
+  exportEpub,
+  openInChat,
+  feeds,
+  discovery,
+  siteUrl,
+  pageType,
+  published,
+  lastModified,
+  noindex,
+  structuredDataEnabled,
+  locale = "en",
+  dir = "ltr",
+  contentDir,
+  ui,
+  localeAlternates,
+  xDefault,
+  localeSwitch,
+  // versionSelector,
+  versionNotice,
+  searchVersion = null,
+  // layout = {},
+  // clientData,
+  toc = { enabled: true, maxLevel: 3, minLevel: 2 },
+  // dateFormat,
+  contentLayout = "content",
+} = Astro.props;
+
+const contentProps =
+  Astro.props.contentLayout === "bare"
+    ? null
+    : {
+        page: Astro.props.page,
+        brand: Astro.props.brand,
+        navigation: Astro.props.navigation,
+        headings: Astro.props.headings,
+        toc: Astro.props.toc,
+        ui: Astro.props.ui,
+      };
+
+const pageTitle = page.title ? `${page.title} — ${site.title}` : site.title;
+const description = page.description ?? site.description;
+// Blog posts and changelog entries are dated writing, so they take `og:type:
+// article` — the same split JSON-LD makes when it picks an article @type. Docs
+// pages (and the changelog index, which has no `type`) stay `website`.
+const ogType =
+  pageType === "blog" || pageType === "changelog" ? "article" : "website";
+
+// X sizes the card from `twitter:card`: a large image needs the wide variant,
+// and a page with no image still gets a card (the compact `summary`) rather
+// than rendering as a bare link.
+const twitterCard = ogImage ? "summary_large_image" : "summary";
+
+const currentRoute = Astro.url.pathname.replace(/\/$/, "") || "/";
+const tokens = brandStyleSheet(brand);
+const initialTheme = getInitialThemeAttributes(brand.theme.default);
+
+const navigationItems = navigation.sidebar;
+const navigationRoot = navigation.root ?? "/";
+---
+
+<!doctype html>
+<html
+  lang={locale}
+  dir={dir}
+  data-theme={initialTheme.theme}
+  data-theme-preference={initialTheme.preference}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    {description && <meta name="description" content={description} />}
+    {
+      /* Google warns against pairing a canonical with noindex — the canonical
+        says "index that URL", the robots meta says "distrust this page". */
+    }
+    {canonical && !noindex && <link rel="canonical" href={canonical} />}
+    {
+      localeAlternates?.map((alt) => (
+        <link href={alt.href} hreflang={alt.hreflang} rel="alternate" />
+      ))
+    }
+    {xDefault && <link href={xDefault} hreflang="x-default" rel="alternate" />}
+    {noindex && <meta name="robots" content="noindex" />}
+    <meta property="og:type" content={ogType} />
+    <meta property="og:site_name" content={site.title} />
+    <meta property="og:title" content={pageTitle} />
+    {description && <meta property="og:description" content={description} />}
+    {canonical && <meta property="og:url" content={canonical} />}
+    {
+      ogImage && (
+        <>
+          <meta property="og:image" content={ogImage} />
+          {ogGenerated && (
+            <>
+              <meta property="og:image:type" content={OG_IMAGE_TYPE} />
+              <meta
+                property="og:image:width"
+                content={String(OG_IMAGE_WIDTH)}
+              />
+              <meta
+                property="og:image:height"
+                content={String(OG_IMAGE_HEIGHT)}
+              />
+              <meta property="og:image:alt" content={pageTitle} />
+            </>
+          )}
+        </>
+      )
+    }
+
+    <meta name="twitter:card" content={twitterCard} />
+    <meta name="twitter:title" content={pageTitle} />
+    {description && <meta name="twitter:description" content={description} />}
+    {ogImage && <meta name="twitter:image" content={ogImage} />}
+
+    {
+      feeds?.map((feed) => (
+        <link
+          href={withBase(feed.href)}
+          rel="alternate"
+          title={feed.title}
+          type="application/rss+xml"
+        />
+      ))
+    }
+
+    <Font cssVariable="--font-brand" preload />
+    <Font cssVariable="--font-arabic" preload />
+    <style is:global set:html={tokens}></style>
+    <ThemeScript defaultTheme={brand.theme.default} />
+    <script
+      is:inline
+      define:vars={{ locale, localeCookieName: LOCALE_COOKIE_NAME }}
+    >
+      document.cookie = `${localeCookieName}=${encodeURIComponent(locale)}; Path=/; Max-Age=31536000; SameSite=Lax`;
+    </script>
+  </head>
+
+  <body>
+    <div class="min-h-dvh">
+      <SideNav
+        brand={{
+          meta: brand.meta,
+          logotype: brand.logo.logotype,
+          defaultTheme: brand.theme.default,
+        }}
+        ui={{
+          brand: { version: ui.brand.version },
+          languageSwitcher: ui.languageSwitcher,
+          nav: ui.nav,
+          theme: ui.theme,
+        }}
+        items={navigationItems}
+        numbering={navigationNumbering}
+        currentRoute={currentRoute}
+        dir={dir}
+        localeSwitch={localeSwitch}
+        navigationRoot={navigationRoot}
+        client:load>
+        <main class="main" id="content">
+          {
+            contentLayout === "bare" || !contentProps ? (
+              <slot />
+            ) : (
+              <ContentLayout {...contentProps}>
+                <slot />
+              </ContentLayout>
+            )
+          }
+        </main>
+      </SideNav>
+    </div>
+    <ColorPaletteInteractions
+      labels={{
+        close: ui.nav.close,
+        copied: ui.actions.copied,
+        copyFailed: ui.actions.copyFailed,
+        colorCopied: ui.color.copied,
+      }}
+      client:load
+    />
+  </body>
+</html>

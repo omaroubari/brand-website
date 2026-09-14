@@ -1,0 +1,19 @@
+---
+import { IconGrid as BrandtreeIconGrid } from "brandtree/components";
+
+const modules = import.meta.glob<string>("../assets/icons/*.svg", {
+  query: "?raw",
+  import: "default",
+  eager: true,
+});
+
+const icons = Object.entries(modules).map(([path, svg]) => ({
+  name: path
+    .split("/")
+    .pop()!
+    .replace(/\.svg$/, ""),
+  svg,
+}));
+---
+
+<BrandtreeIconGrid icons={icons} {...Astro.props} />

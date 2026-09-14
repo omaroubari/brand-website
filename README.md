@@ -1,4 +1,4 @@
-# Brand Guidelines — Astro template
+# Brandtree
 
 A reusable brand guidelines website. Clone it per client, edit one config file
 and ten MDX sections, and hand over a living document instead of a PDF that
@@ -8,6 +8,35 @@ Structured data (palette, type scale, logo artwork, contact details, locale
 settings and navigation presentation) lives in **one Zod-validated file**.
 Prose lives in **MDX**, with brand components you drop in where you need a
 specimen, a swatch grid or a misuse panel.
+
+## Workspace
+
+Brandtree is a pnpm monorepo with one reusable framework package and one
+dogfood site:
+
+- `packages/brandtree` owns the typed brand/content model, components, layouts,
+  styles, and rendering helpers. It is private and source-consumed for now.
+- `apps/web` owns the current brand config, content, assets, public files, and
+  the Astro composition layer that makes the example site runnable.
+
+The current Astro-native app is an intentional transition state. A later CLI
+phase may replace its composition layer with a disposable generated app:
+
+```text
+apps/web content + config + custom pages
+                    │
+                    ▼
+             brandtree package/CLI
+                    │
+                    ▼
+       generated hidden .brandtree Astro app
+                    │
+              ┌─────┴─────┐
+              ▼           ▼
+         dev server   production build
+```
+
+That generator and `.brandtree` directory are not implemented yet.
 
 ```
 /                  cover + contents
@@ -30,9 +59,9 @@ specimen, a swatch grid or a misuse panel.
 
 ## New client in eight steps
 
-1. **Clone and rename.** Copy the repo, then set `name` in `package.json` and
-   `wrangler.jsonc`.
-2. **Fill in [`src/brand/config.ts`](src/brand/config.ts).** Put name, palette,
+1. **Clone and rename.** Copy the repo, then set the Cloudflare Worker `name` in
+   `apps/web/wrangler.jsonc`; workspace package names remain stable.
+2. **Fill in [`apps/web/src/brand/config.ts`](apps/web/src/brand/config.ts).** Put name, palette,
    type scale, logo paths, and contact under `config.brand`; configure site
    behavior with `config.i18n` and `config.navigation`. Everything else reads
    from this parsed configuration. Colour `id`s become
@@ -40,25 +69,25 @@ specimen, a swatch grid or a misuse panel.
    change names and hex values. Unknown keys and invalid cross-references fail
    validation at the configuration boundary.
 3. **Drop in the artwork.** Replace the four placeholder SVGs in
-   [`public/brand/`](public/brand/) and `public/favicon.svg`. Convert wordmark
+   [`apps/web/public/brand/`](apps/web/public/brand/) and `apps/web/public/favicon.svg`. Convert wordmark
    type to outlines. Keep each file single-colour — `LogoColorways` recolours
    the mark with a CSS mask, which only works on flat artwork.
 4. **Set the typefaces.** Edit the `fonts` block in
-   [`astro.config.ts`](astro.config.ts). Self-host a licensed file from
-   `src/assets/fonts/`, or switch `provider` to `fontProviders.google()` and
+   [`apps/web/astro.config.ts`](apps/web/astro.config.ts). Self-host a licensed file from
+   `apps/web/src/assets/fonts/`, or switch `provider` to `fontProviders.google()` and
    drop `options`. Whatever `cssVariable` you use must match
    `typography.display` / `typography.text` in the brand config. Keep the
    matching build-time files and family names in `config.seo.og.fonts` so
    generated social cards use the same typefaces, including non-Latin scripts.
 5. **Rewrite the sections.** Content in
-   [`src/content/brand-guidelines/`](src/content/brand-guidelines/) is organized by locale. A
+   [`apps/web/src/content/brand-guidelines/`](apps/web/src/content/brand-guidelines/) is organized by locale. A
    numbered file is a top-level page; a numbered folder is a navigation group
    whose `index.mdx` is its overview and whose child files become nested pages.
    Delete a page or group and it disappears from the nav, contents list and
    prev/next pager — sibling ordering follows numeric prefixes automatically.
-6. **Swap the imagery.** Replace `src/assets/photography/` (see its
+6. **Swap the imagery.** Replace `apps/web/src/assets/photography/` (see its
    `CREDITS.md` — the samples are Unsplash placeholders) and
-   `src/assets/icons/`. Every SVG in the icons folder is picked up
+   `apps/web/src/assets/icons/`. Every SVG in the icons folder is picked up
    automatically.
 7. **Check it.** `pnpm check` for types, `pnpm build` for the real thing.
 8. **Ship it.** `pnpm deploy`.
@@ -67,10 +96,10 @@ specimen, a swatch grid or a misuse panel.
 
 ## The two files you edit
 
-### `src/brand/config.ts`
+### `apps/web/src/brand/config.ts`
 
-Parsed with the strict Zod schemas in [`src/brand/schema.ts`](src/brand/schema.ts).
-The inferred types in [`src/brand/schema.ts`](src/brand/schema.ts) keep editor
+Parsed with the strict Zod schemas in [`packages/brandtree/src/brand/schema.ts`](packages/brandtree/src/brand/schema.ts).
+The inferred types in [`packages/brandtree/src/brand/schema.ts`](packages/brandtree/src/brand/schema.ts) keep editor
 autocomplete aligned with the runtime model, and the build fails on unknown
 keys, duplicate identities, or unresolved references rather than rendering a
 blank swatch.
@@ -162,16 +191,16 @@ and their palette comes from the configured light brand theme. Configure the
 outlined SVG and fonts under `config.seo.og`; `eyebrow`, `description`, `logo`,
 and `site` accept an override string or `false` to hide that layer. Set
 `enabled: false` to disable generated cards. A frontmatter `seo.image` still
-supplies that page's card—using either a file in `public/` or an external
+supplies that page's card—using either a file in `apps/web/public/` or an external
 URL—even when generation is disabled. Generated cards are 1200×630 PNGs at
 `/og/<route>.png`, and their complete Open Graph and X metadata is emitted
 automatically.
 
-### `src/content/brand-guidelines/{locale}/NN-slug.mdx`
+### `apps/web/src/content/brand-guidelines/{locale}/NN-slug.mdx`
 
 The `NN-` prefix sets the order and the printed section number; the URL is the
 slug without the prefix (`03-logo.mdx` → `/logo`). Frontmatter is validated by
-[`src/content.config.ts`](src/content.config.ts):
+[`apps/web/src/content.config.ts`](apps/web/src/content.config.ts):
 
 ```mdx
 ---
@@ -253,7 +282,7 @@ is the group landing page and `meta.ts` is optional localized navigation
 metadata:
 
 ```
-src/content/brand-guidelines/en/03-logo/
+apps/web/src/content/brand-guidelines/en/03-logo/
 ├── meta.ts
 ├── index.mdx
 ├── 01-logotype.mdx
@@ -286,8 +315,8 @@ availability.
 ## Components
 
 Brand guideline MDX files can use the components below directly—do not import
-them in each file. [`src/pages/[...slug].astro`](src/pages/[...slug].astro)
-imports the shared [`src/components/mdx.ts`](src/components/mdx.ts) barrel once
+them in each file. [`apps/web/src/pages/[...slug].astro`](apps/web/src/pages/[...slug].astro)
+imports the shared [`apps/web/src/components/mdx.ts`](apps/web/src/components/mdx.ts) barrel once
 and passes it to every rendered content entry through the MDX `components`
 prop. To expose another component to all guideline pages, export it from that
 barrel.
@@ -317,17 +346,17 @@ application pages read correctly before the client's mockups exist.
 
 ## How it hangs together
 
-|                                         |                                                            |
-| --------------------------------------- | ---------------------------------------------------------- |
-| `src/brand/config.ts`                   | The client's authored configuration                        |
-| `src/brand/schema.ts`                   | Strict Zod schemas and configuration invariants            |
-| `src/brand/types.ts`                    | Types inferred from the Zod schemas                        |
-| `src/brand/tokens.ts`                   | Config → CSS custom properties, contrast maths, tint ramps |
-| `src/i18n/ui.ts`                        | UI schema, English baseline, and pack resolution           |
-| `src/i18n/ui-packs/`                    | Sparse built-in UI packs (Arabic initially)                |
-| `src/lib/sections.ts`                   | Ordering, numbering, prev/next                             |
-| `src/styles/global.css`                 | The document's visual language — no brand values hardcoded |
-| `src/components/ui/SectionOpener.astro` | The full-bleed accent divider that opens each section      |
+| Path                                       | Ownership                                               |
+| ------------------------------------------ | ------------------------------------------------------- |
+| `apps/web/src/brand/config.ts`             | The client's authored configuration                     |
+| `apps/web/src/content/brand-guidelines/`   | Client prose and content hierarchy                      |
+| `apps/web/src/core/loader.ts`              | Temporary app-specific Astro acquisition boundary       |
+| `apps/web/src/components/mdx.ts`           | App composition barrel and asset-bound adapters         |
+| `packages/brandtree/src/brand/schema.ts`   | Strict Zod schemas and configuration invariants         |
+| `packages/brandtree/src/brand/tokens.ts`   | Config → CSS custom properties and contrast maths       |
+| `packages/brandtree/src/core/`             | Source-neutral content, routing, and navigation model   |
+| `packages/brandtree/src/components/`       | Reusable MDX, navigation, brand, and UI components      |
+| `packages/brandtree/src/styles/global.css` | Template visual language with no hardcoded brand values |
 
 Colour resolves twice: a raw `--color-{id}` per palette entry, then canonical
 shadcn roles (`--background`, `--foreground`, `--primary`) pointing at them per
@@ -342,12 +371,13 @@ pre-paint script only persist a preference.
 | -------------- | -------------------------------------------------- |
 | `pnpm install` | Install dependencies                               |
 | `pnpm dev`     | Dev server on `localhost:4321`                     |
+| `pnpm test`    | Run the Brandtree package test suite               |
 | `pnpm check`   | Type-check `.astro`, `.ts` and content collections |
-| `pnpm build`   | Build to `./dist/`                                 |
+| `pnpm build`   | Build the web app to `apps/web/dist/`              |
 | `pnpm preview` | Preview the build locally                          |
 | `pnpm deploy`  | Build and deploy to Cloudflare Workers             |
 
-Images are optimised at build time, so `dist/` is plain static output — deploy
+Images are optimised at build time, so `apps/web/dist/` is plain static output — deploy
 it to Cloudflare, or anywhere else.
 
 ---

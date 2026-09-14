@@ -1,0 +1,36 @@
+{
+  "name": "web",
+  "type": "module",
+  "version": "0.0.1",
+  "private": true,
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "deploy": "astro build && wrangler deploy",
+    "astro": "astro",
+    "generate-types": "wrangler types"
+  },
+  "dependencies": {
+    "@astrojs/cloudflare": "^14.1.7",
+    "@astrojs/mdx": "^7.0.5",
+    "@astrojs/react": "^6.0.2",
+    "@tailwindcss/vite": "^4.3.3",
+    "astro": "^7.1.6",
+    "brandtree": "workspace:*",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "wrangler": "^4.118.0"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "@types/node": "^22.20.1",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.4",
+    "typescript": "^6.0.3"
+  }
+}

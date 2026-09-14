@@ -3,6 +3,8 @@ dist/
 # generated types
 .astro/
 worker-configuration.d.ts
+.pnpm-store/
+.brandtree/
 # wrangler local state
 .wrangler/
 

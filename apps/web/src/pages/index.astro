@@ -1,0 +1,135 @@
+---
+import { brand, config } from "@/brand/config";
+import { resolveBrand } from "brandtree";
+import { withBase } from "brandtree/runtime";
+import {
+  i18nEnabled,
+  localeCodes,
+  localeDir,
+  LOCALE_COOKIE_NAME,
+} from "brandtree";
+import { resolveUIStrings } from "brandtree";
+import { getNavigation } from "brandtree";
+import { getContentTree } from "@/core/loader";
+import {
+  CoverPage,
+  generatedOgImagePath,
+  RootLayout,
+  type BareRootLayoutProps,
+} from "brandtree/runtime";
+
+// A prefixed multilingual site redirects this route on demand so the locale
+// cookie can choose the destination. Otherwise this is the default cover.
+export const prerender = false;
+
+const defaultLocale = config.i18n?.defaultLocale ?? "en";
+
+if (i18nEnabled(config) && !config.i18n.hideDefaultLocalePrefix) {
+  const savedLocale = Astro.cookies.get(LOCALE_COOKIE_NAME)?.value;
+  const locale = localeCodes(config.i18n).has(savedLocale ?? "")
+    ? savedLocale
+    : defaultLocale;
+  return Astro.redirect(`/${locale}`, 302);
+}
+
+const tree = await getContentTree();
+const localizedBrand = resolveBrand(brand, defaultLocale, config.i18n);
+const ui = resolveUIStrings(defaultLocale, { defaultLocale });
+const navigation = tree.navigation;
+const route = navigation.root ?? "/";
+const siteUrl = localizedBrand.meta.url.replace(/\/$/u, "");
+const absolute = (path: string) =>
+  path.startsWith("/") ? `${siteUrl}${withBase(path)}` : path;
+
+const ogGenerated = Boolean(config.seo.og.enabled ?? true);
+const ogImage = ogGenerated ? generatedOgImagePath(route) : null;
+
+const dir = config.i18n ? localeDir(defaultLocale, config.i18n) : "ltr";
+const localeSwitch = config.i18n
+  ? config.i18n.locales.map(({ code, label, dir }) => ({
+      code,
+      label,
+      dir,
+      href: getNavigation(tree, code).root ?? "/",
+      isCurrent: code === defaultLocale,
+      isFallback: false,
+    }))
+  : [];
+const localeAlternates = config.i18n
+  ? config.i18n.locales.map(({ code }) => ({
+      hreflang: code,
+      href: absolute(getNavigation(tree, code).root ?? "/"),
+    }))
+  : [];
+const xDefault =
+  localeAlternates.find(({ hreflang }) => hreflang === defaultLocale)?.href ??
+  null;
+
+const layoutProps = {
+  brand: localizedBrand,
+  contentLayout: "bare",
+  site: {
+    title: `${localizedBrand.meta.name} — ${localizedBrand.meta.documentTitle}`,
+    description: localizedBrand.meta.description,
+  },
+  logo: {
+    light: localizedBrand.logo.logotype.onLight,
+    dark: localizedBrand.logo.logotype.onDark,
+    alt: localizedBrand.logo.logotype.altText ?? localizedBrand.meta.name,
+    href: route,
+  },
+  favicon: localizedBrand.logo.favicon ?? "/favicon.svg",
+  appleIcon: null,
+  banner: null,
+  analytics: null,
+  navigation,
+  navigationNumbering: config.navigation.numbering,
+  mcp: null,
+  page: {
+    title: "",
+    description: localizedBrand.meta.description,
+    route,
+  },
+  imageZoom: true,
+  codeWrap: false,
+  themeMode: localizedBrand.theme.default,
+  searchEnabled: false,
+  indexable: true,
+  ogImage: ogImage ? absolute(ogImage) : null,
+  ogGenerated,
+  x: undefined,
+  canonical: absolute(route),
+  editUrl: null,
+  askEnabled: false,
+  feedback: false,
+  exportPdf: false,
+  exportEpub: false,
+  openInChat: [],
+  feeds: [],
+  discovery: null,
+  siteUrl,
+  pageType: undefined,
+  published: null,
+  lastModified: null,
+  noindex: false,
+  structuredDataEnabled: false,
+  locale: defaultLocale,
+  dir,
+  contentDir: dir,
+  ui,
+  localeSwitch,
+  localeAlternates,
+  xDefault,
+  versionNotice: null,
+  searchVersion: null,
+} satisfies BareRootLayoutProps;
+---
+
+<RootLayout {...layoutProps}>
+  <CoverPage
+    brand={localizedBrand}
+    ui={ui}
+    navigation={navigation}
+    numbering={config.navigation.numbering}
+  />
+</RootLayout>

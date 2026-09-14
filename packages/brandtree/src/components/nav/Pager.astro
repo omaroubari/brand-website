@@ -1,0 +1,69 @@
+---
+import type { ContentPageProps } from "../../core/rendering";
+import type { UIStrings } from "../../core/i18n-ui";
+import { flattenPages, getPagination } from "./nav-utils";
+
+type Props = ContentPageProps & { ui: UIStrings };
+
+const { page, navigation, ui } = Astro.props;
+const { prev, next } = getPagination(
+  flattenPages(navigation.sidebar),
+  page.route,
+);
+---
+
+<nav class="pager" aria-label={ui.page.section}>
+  {
+    prev ? (
+      <a class="pager__link pager__link--prev" href={prev.route} rel="prev">
+        <span class="label">{ui.page.previous}</span>
+        <span class="pager__title">{prev.label}</span>
+      </a>
+    ) : (
+      <span />
+    )
+  }
+
+  {
+    next && (
+      <a class="pager__link pager__link--next" href={next.route} rel="next">
+        <span class="label">{ui.page.next}</span>
+        <span class="pager__title">{next.label}</span>
+      </a>
+    )
+  }
+</nav>
+
+<style>
+  .pager {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-m);
+    border-block-start: var(--rule) solid var(--border);
+    padding-block-start: var(--space-m);
+  }
+
+  .pager__link {
+    display: grid;
+    gap: var(--space-2xs);
+    text-decoration: none;
+    align-content: start;
+  }
+
+  .pager__link--next {
+    text-align: end;
+  }
+
+  .pager__title {
+    font-family: var(--font-heading);
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
+    letter-spacing: var(--text-body--letter-spacing);
+    font-weight: var(--text-body--font-weight);
+    text-wrap: balance;
+  }
+
+  .pager__link:hover .pager__title {
+    color: var(--primary);
+  }
+</style>
