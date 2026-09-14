@@ -12,7 +12,7 @@ import { defineConfig } from "brandtree";
  * drop new artwork into `public/brand/`, and rewrite the MDX sections.
  * See README.md for the full checklist.
  */
-export const config = defineConfig({
+export default defineConfig({
   brand: {
     meta: {
       name: "Valence",
@@ -643,7 +643,3 @@ export const config = defineConfig({
     },
   },
 });
-
-export const brand = config.brand;
-export type Brand = typeof brand;
-export default config;

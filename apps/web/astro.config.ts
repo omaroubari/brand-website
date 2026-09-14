@@ -3,7 +3,7 @@ import { defineConfig, fontProviders } from "astro/config";
 import mdx from "@astrojs/mdx";
 import cloudflare from "@astrojs/cloudflare";
 
-import { brand, config } from "./src/brand/config";
+import config from "./brandtree.config";
 
 import react from "@astrojs/react";
 
@@ -12,6 +12,7 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 
 const i18n = config.i18n;
+const brand = config.brand;
 
 const configuredOgLogo = (
   value: string | false | undefined,
@@ -80,7 +81,7 @@ export default defineConfig({
    * request.
    *
    * `cssVariable` is what `typography.display` / `typography.text` in
-   * src/brand/config.ts point at — change one, change the other.
+   * brandtree.config.ts point at — change one, change the other.
    *
    * The template ships a single variable family so there is one download. Most
    * brands want two: add a second entry with its own `cssVariable`, then set
