@@ -61,10 +61,10 @@ That generator and `.brandtree` directory are not implemented yet.
 
 1. **Clone and rename.** Copy the repo, then set the Cloudflare Worker `name` in
    `apps/web/wrangler.jsonc`; workspace package names remain stable.
-2. **Fill in [`apps/web/src/brand/config.ts`](apps/web/src/brand/config.ts).** Put name, palette,
-   type scale, logo paths, and contact under `config.brand`; configure site
-   behavior with `config.i18n` and `config.navigation`. Everything else reads
-   from this parsed configuration. Colour `id`s become
+2. **Fill in [`apps/web/brandtree.config.ts`](apps/web/brandtree.config.ts).**
+   Put name, palette, type scale, logo paths, and contact under `config.brand`;
+   configure site behavior with `config.i18n` and `config.navigation`.
+   Everything else reads from this parsed configuration. Colour `id`s become
    `--color-{id}` and are referenced by `theme` — keep them stable while you
    change names and hex values. Unknown keys and invalid cross-references fail
    validation at the configuration boundary.
@@ -96,7 +96,7 @@ That generator and `.brandtree` directory are not implemented yet.
 
 ## The two files you edit
 
-### `apps/web/src/brand/config.ts`
+### `apps/web/brandtree.config.ts`
 
 Parsed with the strict Zod schemas in [`packages/brandtree/src/brand/schema.ts`](packages/brandtree/src/brand/schema.ts).
 The inferred types in [`packages/brandtree/src/brand/schema.ts`](packages/brandtree/src/brand/schema.ts) keep editor
@@ -105,7 +105,9 @@ keys, duplicate identities, or unresolved references rather than rendering a
 blank swatch.
 
 ```ts
-export const config = defineConfig({
+import { defineConfig } from "brandtree";
+
+export default defineConfig({
   brand: {
     colors: {
       palette: [
@@ -156,8 +158,6 @@ export const config = defineConfig({
     numbering: true,
   },
 });
-
-export const brand = config.brand;
 ```
 
 `config.i18n.locales` order controls only the language switcher's display
@@ -348,7 +348,7 @@ application pages read correctly before the client's mockups exist.
 
 | Path                                       | Ownership                                               |
 | ------------------------------------------ | ------------------------------------------------------- |
-| `apps/web/src/brand/config.ts`             | The client's authored configuration                     |
+| `apps/web/brandtree.config.ts`             | The client's authored site configuration                |
 | `apps/web/src/content/brand-guidelines/`   | Client prose and content hierarchy                      |
 | `apps/web/src/core/loader.ts`              | Temporary app-specific Astro acquisition boundary       |
 | `apps/web/src/components/mdx.ts`           | App composition barrel and asset-bound adapters         |

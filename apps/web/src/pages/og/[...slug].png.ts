@@ -1,7 +1,7 @@
 import type { APIRoute, GetStaticPaths } from "astro";
 import { fontData, logo as bundledLogo } from "virtual:og-assets";
 
-import { brand, config } from "@/brand/config";
+import config from "@config";
 import { resolveBrand } from "brandtree";
 import { colorCss, resolveColor } from "brandtree";
 import { getNavigation } from "brandtree";
@@ -11,6 +11,7 @@ import { resolveOgLayer, resolveOgLogo } from "brandtree/runtime";
 import { localeDir } from "brandtree";
 
 export const prerender = true;
+const brand = config.brand;
 
 interface OgPageProps extends Record<string, unknown> {
   title: string;

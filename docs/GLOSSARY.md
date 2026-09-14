@@ -114,7 +114,7 @@ describes UI intent and resolves to a raw swatch variable.
 ## Canonical brand config
 
 The complete `config.brand` object authored in
-`apps/web/src/brand/config.ts`. It is
+`apps/web/brandtree.config.ts`. It is
 the source of truth for brand facts and may be authored in any language. Zod
 parses it within the site configuration seam; a resolved locale falls back
 directly to this config when its override omits a field.

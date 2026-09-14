@@ -2,7 +2,7 @@
 import { getEntry, render, type CollectionKey } from "astro:content";
 import { getContentTree } from "@/core/loader";
 import { getContentPagePaths, type ContentPageProps } from "brandtree";
-import { brand, config } from "@/brand/config";
+import config from "@config";
 import { resolveBrand } from "brandtree";
 import { localeDir, localizeRoute, resolveFallbackLocale } from "brandtree";
 import { resolveUIStrings } from "brandtree";
@@ -23,6 +23,7 @@ export async function getStaticPaths() {
 type Props = ContentPageProps;
 
 const { page, navigation } = Astro.props;
+const brand = config.brand;
 
 const entry = await getEntry(
   (page.collection ?? "sections") as CollectionKey,
