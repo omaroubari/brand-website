@@ -7,6 +7,7 @@ import { resolveBrand } from "@/brand/localize";
 import { localeDir, localizeRoute, resolveFallbackLocale } from "@/core/i18n";
 import { resolveUIStrings } from "@/core/i18n-ui";
 import { withBase } from "../components/islands/base-paths";
+import * as components from "@/components/mdx";
 
 import RootLayout from "../layouts/RootLayout.astro";
 
@@ -154,5 +155,10 @@ const layoutProps = {
 ---
 
 <RootLayout {...layoutProps}>
-  <Content brand={localizedBrand} ui={ui} dir={contentDir} />
+  <Content
+    brand={localizedBrand}
+    ui={ui}
+    dir={contentDir}
+    components={components}
+  />
 </RootLayout>

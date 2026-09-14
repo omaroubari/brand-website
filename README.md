@@ -179,8 +179,6 @@ title: Colour
 description: Two colour families, one signal colour, and the ratios that hold them together.
 ---
 
-import { Block, ColorPalette } from "../../components/mdx";
-
 <Block>
 <Fragment slot="copy">
 
@@ -225,8 +223,6 @@ in the MDX flow. This keeps one subject together without creating multiple
 split blocks:
 
 ```mdx
-import { Logo, Panel } from "../../components/mdx";
-
 ## Logotype
 
 ### Primary logo
@@ -281,14 +277,20 @@ export default defineMeta({
 ```
 
 Metadata is locale-specific, so an Arabic group can translate its title and
-choose its own child ordering. Child MDX files import the shared barrel from
-their deeper location (for example, `../../../../components/mdx`).
+choose its own child ordering. Nested MDX files use the same centrally provided
+components as top-level pages; their directory depth does not affect component
+availability.
 
 ---
 
 ## Components
 
-One import line per file, from [`src/components/mdx.ts`](src/components/mdx.ts).
+Brand guideline MDX files can use the components below directly—do not import
+them in each file. [`src/pages/[...slug].astro`](src/pages/[...slug].astro)
+imports the shared [`src/components/mdx.ts`](src/components/mdx.ts) barrel once
+and passes it to every rendered content entry through the MDX `components`
+prop. To expose another component to all guideline pages, export it from that
+barrel.
 
 **Layout** — `Block` (split layouts with `copy`, `note`, and `content` slots),
 `Statement` (the one oversized paragraph that carries a page), `Grid`, `Panel`,
