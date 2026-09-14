@@ -1,6 +1,6 @@
 import { getCollection } from "astro:content";
 
-import config from "@/brand/config";
+import config from "@config";
 import type { ContentTree, PageRecord } from "brandtree";
 import {
   buildContentTree,

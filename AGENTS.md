@@ -6,8 +6,9 @@ site. See README.md for the per-client setup checklist.
 The shape that matters: **structured brand data is typed and centralised, prose
 is MDX.** Keep it that way.
 
-- `apps/web/src/brand/config.ts` — the only file that holds client-specific
-  structured data. Typed against `packages/brandtree/src/brand/schema.ts`.
+- `apps/web/brandtree.config.ts` — the only file that holds client-specific
+  structured brand data and site-wide settings. Typed against the schemas in
+  `packages/brandtree/src/`.
 - `packages/brandtree/src/brand/tokens.ts` — derives CSS custom properties,
   contrast ratios and tint ramps from the config.
 - `apps/web/src/content/brand-guidelines/NN-slug.mdx` — one file per section. The `NN-` prefix
@@ -26,7 +27,7 @@ is MDX.** Keep it that way.
 - Route and layout composition roots resolve the active `brand`, UI strings and
   navigation settings once. Brand, content, navigation and UI components
   receive the values they use through required props and forward them to
-  nested components; they do not import `apps/web/src/brand/config.ts` or resolve
+  nested components; they do not import `apps/web/brandtree.config.ts` or resolve
   locale-owned values themselves.
 - Light and dark must both work **without JavaScript**. Any theme-dependent rule
   needs both a `:root[data-theme='dark']` selector and a
