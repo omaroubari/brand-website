@@ -1,0 +1,79 @@
+---
+import type { UIStrings } from "../../core/i18n-ui";
+
+interface Props {
+  ui: UIStrings;
+  dir: "ltr" | "rtl";
+  font?: "display" | "text";
+  weight?: number;
+  /** Character sets to print. */
+  sets?: Array<{ label: string; chars: string }>;
+  class?: string;
+}
+
+const {
+  ui,
+  dir,
+  font = "display",
+  weight = 400,
+  sets,
+  class: className,
+} = Astro.props;
+const defaultSets =
+  dir === "rtl"
+    ? [
+        { label: ui.typography.letters, chars: "ابتثجحخدذرزسشصضطظعغفقكلمنهوي" },
+        { label: ui.typography.numerals, chars: "٠١٢٣٤٥٦٧٨٩ 0123456789" },
+        {
+          label: ui.typography.punctuation,
+          chars: "،؛؟.!:()[]{}«»/\\&@#٪%*+−=",
+        },
+      ]
+    : [
+        { label: ui.typography.uppercase, chars: "ABCDEFGHIJKLMNOPQRSTUVWXYZ" },
+        { label: ui.typography.lowercase, chars: "abcdefghijklmnopqrstuvwxyz" },
+        { label: ui.typography.numerals, chars: "0123456789" },
+        {
+          label: ui.typography.punctuation,
+          chars: ".,;:!?‘’“”()[]{}/\\&@#%*+−=",
+        },
+      ];
+const resolvedSets = sets ?? defaultSets;
+---
+
+<div class:list={["glyphs", "escape", className]}>
+  {
+    resolvedSets.map((set) => (
+      <div class="glyphs__set">
+        <p class="label">{set.label}</p>
+        <p
+          class="glyphs__chars"
+          style={`font-family: var(--font-${font}); font-weight: ${weight};`}>
+          {set.chars}
+        </p>
+      </div>
+    ))
+  }
+</div>
+
+<style>
+  .glyphs {
+    display: grid;
+    gap: var(--space-l);
+  }
+
+  .glyphs__set {
+    display: grid;
+    gap: var(--space-xs);
+    border-block-start: var(--rule) solid var(--border);
+    padding-block-start: var(--space-s);
+  }
+
+  .glyphs__chars {
+    margin: 0;
+    font-size: clamp(1.25rem, 3.4vw, 2.25rem);
+    line-height: 1.25;
+    letter-spacing: 0.01em;
+    word-break: break-all;
+  }
+</style>

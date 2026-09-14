@@ -1,5 +1,47 @@
 # Glossary
 
+## Brandtree monorepo
+
+The repository containing the reusable `brandtree` package and the runnable
+`web` dogfood application. The repository root owns workspace orchestration and
+architecture documentation, not site runtime behavior.
+
+## Brandtree package
+
+The single framework workspace at `packages/brandtree`. It owns reusable brand
+schemas and derivations, the source-neutral content model, components, layouts,
+styles, and rendering helpers. It is private and consumed as source in the
+current phase; publishing and package compilation are deferred.
+
+## Web app
+
+The runnable Astro application at `apps/web`. It owns the current client's
+configuration, MDX prose, assets, public files, custom pages, deployment setup,
+and temporary Astro composition glue. It consumes Brandtree through package
+exports and may not deep-import package internals.
+
+## Astro composition glue
+
+The app-owned modules that acquire Astro collection entries and folder
+metadata, bind the client configuration, and compose framework layouts into
+routes. This is a temporary architectural role intended to move into a future
+generated Brandtree app.
+
+## App adapter
+
+A web-app component or module that resolves app-specific resources and passes
+normalized values into a reusable Brandtree component. For example, the web
+app discovers its SVG icon files while the package `IconGrid` only renders the
+supplied icon data.
+
+## Generated Brandtree app
+
+A planned thin, disposable Astro project under `.brandtree` that will be
+created and driven by a future Brandtree CLI. It will contain generated Astro
+configuration, routes, normalized data, and source adapters while importing
+reusable implementation from the Brandtree package. It does not exist in the
+current phase and will never be an authoring surface.
+
 ## BrandTypography
 
 The client-authored typography specification stored in `brand.typography`. It
@@ -71,7 +113,8 @@ describes UI intent and resolves to a raw swatch variable.
 
 ## Canonical brand config
 
-The complete `config.brand` object authored in `src/brand/config.ts`. It is
+The complete `config.brand` object authored in
+`apps/web/src/brand/config.ts`. It is
 the source of truth for brand facts and may be authored in any language. Zod
 parses it within the site configuration seam; a resolved locale falls back
 directly to this config when its override omits a field.
@@ -193,7 +236,7 @@ merge the requested locale override onto it field by field. Its only layers are
 
 ## Locale content root
 
-The directory `src/content/brand-guidelines/{locale}` whose descendants define one
+The directory `apps/web/src/content/brand-guidelines/{locale}` whose descendants define one
 locale's prose pages, route hierarchy, and generated navigation. Locale content
 roots resolve independently and may contain localized `Folder metadata`.
 

@@ -1,0 +1,89 @@
+---
+import type { BrandColorToken, BrandConfig } from "../../brand/schema";
+import { resolveColor } from "../../brand/tokens";
+
+interface Props {
+  brand: BrandConfig;
+  /** Palette shade reference for the background. Defaults to the page surface. */
+  bg?: BrandColorToken;
+  /** Palette shade reference for the contents. Defaults to whatever is legible on `bg`. */
+  fg?: BrandColorToken;
+  /** width / height. Use to hold a consistent shape across a row. */
+  ratio?: string;
+  /** Remove the internal padding — for artwork that should bleed. */
+  flush?: boolean;
+  /** Caption under the panel. */
+  caption?: string;
+  /** Small label in the panel's top-left corner. */
+  label?: string;
+  class?: string;
+}
+
+const {
+  brand,
+  bg,
+  fg,
+  ratio,
+  flush = false,
+  caption,
+  label,
+  class: className,
+} = Astro.props;
+
+const background = bg ? resolveColor(brand, bg) : undefined;
+const foreground = fg ? resolveColor(brand, fg) : undefined;
+const foregroundCss = fg
+  ? foreground?.css
+  : background
+    ? `contrast-color(${background.css})`
+    : "black"; // fall-back to black foreground
+
+const style = [
+  background && `background: ${background.css};`,
+  `color: ${foregroundCss};`,
+  ratio && `aspect-ratio: ${ratio};`,
+]
+  .filter(Boolean)
+  .join(" ");
+---
+
+<figure class:list={["panel-wrap", className]}>
+  <div
+    class:list={["panel", flush && "panel--flush", "soft-outline"]}
+    style={style}>
+    {label && <span class="panel__label">{label}</span>}
+    <slot />
+  </div>
+  {
+    caption && (
+      <figcaption class="caption panel__caption">
+        <slot name="caption">{caption}</slot>
+      </figcaption>
+    )
+  }
+</figure>
+
+<style>
+  .panel-wrap {
+    display: grid;
+    gap: var(--space-xs);
+    align-content: start;
+    min-width: 0;
+  }
+
+  .panel__label {
+    position: absolute;
+    inset-block-start: var(--space-s);
+    inset-inline-start: var(--space-s);
+    font-size: var(--text-label);
+    line-height: var(--text-label--line-height);
+    letter-spacing: var(--text-label--letter-spacing);
+    text-transform: uppercase;
+    font-weight: var(--text-label--font-weight);
+    opacity: 0.6;
+  }
+
+  .panel__caption {
+    text-wrap: pretty;
+  }
+</style>

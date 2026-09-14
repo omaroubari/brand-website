@@ -1,18 +1,21 @@
 ## What this is
 
-A reusable Astro template for client brand guidelines sites. See README.md for
-the per-client setup checklist.
+A pnpm monorepo for a reusable Astro brand-guidelines framework and its dogfood
+site. See README.md for the per-client setup checklist.
 
 The shape that matters: **structured brand data is typed and centralised, prose
 is MDX.** Keep it that way.
 
-- `src/brand/config.ts` — the only file that holds client-specific data. Typed
-  against `src/brand/schema.ts`.
-- `src/brand/tokens.ts` — derives CSS custom properties, contrast ratios and
-  tint ramps from the config.
-- `src/content/brand-guidelines/NN-slug.mdx` — one file per section. The `NN-` prefix
+- `apps/web/src/brand/config.ts` — the only file that holds client-specific
+  structured data. Typed against `packages/brandtree/src/brand/schema.ts`.
+- `packages/brandtree/src/brand/tokens.ts` — derives CSS custom properties,
+  contrast ratios and tint ramps from the config.
+- `apps/web/src/content/brand-guidelines/NN-slug.mdx` — one file per section. The `NN-` prefix
   drives order and section number; the URL is the slug alone.
-- `src/components/mdx.ts` — the barrel every MDX file imports from.
+- `apps/web/src/components/mdx.ts` — the composition barrel supplied to every
+  MDX file.
+- `packages/brandtree` — reusable framework code. It must never import from
+  `apps/web`.
 
 ### Rules
 
@@ -23,7 +26,7 @@ is MDX.** Keep it that way.
 - Route and layout composition roots resolve the active `brand`, UI strings and
   navigation settings once. Brand, content, navigation and UI components
   receive the values they use through required props and forward them to
-  nested components; they do not import `src/brand/config.ts` or resolve
+  nested components; they do not import `apps/web/src/brand/config.ts` or resolve
   locale-owned values themselves.
 - Light and dark must both work **without JavaScript**. Any theme-dependent rule
   needs both a `:root[data-theme='dark']` selector and a
@@ -38,10 +41,11 @@ is MDX.** Keep it that way.
 When starting the dev server, use background mode:
 
 ```
-astro dev --background
+pnpm --filter web exec astro dev --background
 ```
 
-Manage the background server with `astro dev stop`, `astro dev status`, and `astro dev logs`.
+Manage the background server from the web workspace with `astro dev stop`,
+`astro dev status`, and `astro dev logs`.
 
 Run `pnpm check` before considering a change done — it catches config/component
 drift that the build alone will not.

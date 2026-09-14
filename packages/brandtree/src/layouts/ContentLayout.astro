@@ -1,0 +1,237 @@
+---
+import type { MarkdownHeading } from "astro";
+import type { UIStrings } from "../core/i18n-ui";
+import type { BrandConfig } from "../brand/schema";
+import type { Navigation, PageRecord } from "../core/types";
+import SectionOpener from "../components/content/SectionOpener.astro";
+import Pager from "../components/nav/Pager.astro";
+import TocList from "../components/nav/TocList.astro";
+import { buildToc } from "../components/nav/toc-utils";
+import { findBreadcrumbs } from "../components/nav/nav-utils";
+
+interface Props {
+  brand: BrandConfig;
+  page: PageRecord;
+  navigation: Navigation;
+  headings: MarkdownHeading[];
+  toc?: { enabled: boolean; maxLevel: number; minLevel: number };
+  ui: UIStrings;
+}
+
+const { page, brand, navigation, headings, toc: tocSettings, ui } = Astro.props;
+
+const crumbs = findBreadcrumbs(navigation.sidebar, page.route);
+// Index routes consist only of their group segments and have no eyebrow.
+const eyebrow =
+  page.segments.length === page.groups.length
+    ? undefined
+    : crumbs
+        .slice(0, -1)
+        .map((crumb) => crumb.label)
+        .join(" / ");
+
+const toc = buildToc(headings, { ...tocSettings, minLevel: 2, maxLevel: 3 });
+const shouldRenderToc = (tocSettings?.enabled ?? true) && toc.count >= 2;
+---
+
+<toc-root>
+  <div class="page">
+    {
+      shouldRenderToc && (
+        <div class="section__mobile-toc lg:hidden" data-toc data-toc-mobile>
+          <nav aria-labelledby="toc-mobile-title">
+            <details>
+              <summary id="toc-mobile-title" class="mx-auto flex w-full">
+                <div class="flex w-full items-center justify-between gap-2 py-3">
+                  <span class="toc__toggle text-muted-foreground ms-10 flex">
+                    {ui.toc.title}
+                  </span>
+                  <span class="toc__current" data-toc-current />
+                </div>
+              </summary>
+              <div class="toc__dropdown">
+                <TocList items={toc.items} mobile />
+              </div>
+            </details>
+          </nav>
+        </div>
+      )
+    }
+    <SectionOpener
+      brand={brand}
+      ui={ui}
+      eyebrow={eyebrow}
+      title={page.title}
+      summary={page.description}
+    />
+    <div class="section">
+      <div class="section__content">
+        <article class="prose section__body">
+          <slot />
+        </article>
+
+        <div class="section__tail">
+          <Pager page={page} navigation={navigation} ui={ui} />
+        </div>
+      </div>
+      {
+        shouldRenderToc && (
+          <aside
+            class="scrollbar-thumb-border sticky top-0 hidden h-dvh scrollbar-thin scrollbar-track-transparent overflow-y-auto px-4 pt-(--page-gutter) pb-10 text-sm lg:block"
+            data-toc>
+            <nav aria-labelledby="toc-title">
+              <h2 id="toc-title">{ui.toc.title}</h2>
+              <TocList items={toc.items} />
+            </nav>
+          </aside>
+        )
+      }
+    </div>
+  </div>
+</toc-root>
+
+<script src="../components/nav/toc-root.ts"></script>
+
+<style>
+  toc-root {
+    display: flex;
+    flex: 1;
+    min-width: 0;
+    flex-direction: column;
+  }
+
+  .section {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-items: stretch;
+  }
+
+  @media (min-width: 64rem) {
+    .section {
+      grid-template-columns: minmax(0, 1fr) 16rem;
+    }
+  }
+
+  .section__mobile-toc {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: var(--color-background);
+  }
+
+  .section__mobile-toc nav {
+    z-index: 10;
+    border-bottom: var(--rule) solid var(--border);
+    background-color: var(--background);
+    color: var(--foreground);
+  }
+
+  .section__mobile-toc summary {
+    gap: 0.5rem;
+    align-items: center;
+    padding-inline: var(--page-gutter);
+    font-size: var(--text-sm);
+  }
+
+  .section__mobile-toc summary::marker,
+  .section__mobile-toc summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .toc__toggle {
+    flex-shrink: 0;
+    gap: 0.5rem;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid var(--color-border);
+    border-radius: 1rem;
+    padding-block: 0.5rem;
+    padding-inline: 0.75rem;
+    line-height: 1;
+    background-color: var(--background);
+    color: var(--muted-foreground);
+    user-select: none;
+    cursor: pointer;
+  }
+
+  details[open] .toc__toggle {
+    color: var(--foreground);
+    border-color: var(--primary);
+  }
+
+  details .toc__toggle:hover {
+    color: var(--foreground);
+    border-color: var(--border);
+  }
+
+  details[open] .toc__toggle:hover,
+  details[open] .toc__toggle:focus-visible {
+    border-color: var(--primary);
+  }
+
+  .toc__current {
+    overflow: hidden;
+    color: var(--foreground);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .toc__dropdown {
+    max-height: 85vh;
+    overflow-y: auto;
+    background-color: var(--popover);
+    color: var(--popover-foreground);
+    box-shadow: 0 0.5rem 1.5rem
+      color-mix(in srgb, var(--foreground) 12%, transparent);
+    overscroll-behavior: contain;
+  }
+
+  #toc-title {
+    margin-block-end: 0.5rem;
+    color: var(--foreground);
+    font-size: var(--text-body);
+    font-weight: var(--text-title-3--font-weight);
+    line-height: var(--text-body--line-height);
+    letter-spacing: var(--text-title-3--letter-spacing);
+  }
+
+  @media (max-width: 63.999rem) {
+    :global(
+      [data-page-shell]:has(.section__mobile-toc)
+        > [data-slot="sidebar-trigger"]
+    ) {
+      position: fixed;
+      inset-block-start: 0.75rem;
+      inset-inline-start: var(--page-gutter);
+      color: var(--foreground);
+      border-color: var(--border);
+    }
+
+    :global(
+      [data-page-shell]:has(.section__mobile-toc)
+        > [data-slot="sidebar-trigger"]:hover
+    ) {
+      background-color: var(--muted);
+      color: var(--foreground);
+    }
+  }
+
+  .section__content {
+    min-width: 0;
+    padding-inline: var(--page-gutter);
+    padding-bottom: var(--space-4xl);
+  }
+
+  .section__body {
+    padding-block: var(--page-gutter);
+  }
+
+  .section__body > :global(h2:first-of-type) {
+    margin-block-start: 0;
+  }
+
+  /* Spreads sit far apart, the way pages do in the printed document. */
+  .section__body > :global(.block + .block) {
+    margin-block-start: var(--space-4xl);
+  }
+</style>
