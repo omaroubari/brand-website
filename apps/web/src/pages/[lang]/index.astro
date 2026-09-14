@@ -1,5 +1,5 @@
 ---
-import { brand, config } from "@/brand/config";
+import config from "@config";
 import { resolveBrand } from "brandtree";
 import { withBase } from "brandtree/runtime";
 import { i18nEnabled, localeDir } from "brandtree";
@@ -38,6 +38,7 @@ export async function getStaticPaths() {
 }
 
 const { locale, navigation } = Astro.props;
+const brand = config.brand;
 const localizedBrand = resolveBrand(brand, locale, config.i18n);
 const defaultLocale = config.i18n?.defaultLocale ?? "en";
 const ui = resolveUIStrings(locale, { defaultLocale });

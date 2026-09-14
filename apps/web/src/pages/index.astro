@@ -1,5 +1,5 @@
 ---
-import { brand, config } from "@/brand/config";
+import config from "@config";
 import { resolveBrand } from "brandtree";
 import { withBase } from "brandtree/runtime";
 import {
@@ -23,6 +23,7 @@ import {
 export const prerender = false;
 
 const defaultLocale = config.i18n?.defaultLocale ?? "en";
+const brand = config.brand;
 
 if (i18nEnabled(config) && !config.i18n.hideDefaultLocalePrefix) {
   const savedLocale = Astro.cookies.get(LOCALE_COOKIE_NAME)?.value;
