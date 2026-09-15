@@ -5,6 +5,9 @@ dist/
 worker-configuration.d.ts
 .pnpm-store/
 .brandtree/
+
+# temporary workspaces
+/tmp/
 # wrangler local state
 .wrangler/
 
