@@ -1,0 +1,12 @@
+---
+interface Props {
+  heading: string;
+}
+
+const { heading } = Astro.props;
+---
+
+<aside>
+  <strong>{heading}</strong>
+  <slot />
+</aside>
