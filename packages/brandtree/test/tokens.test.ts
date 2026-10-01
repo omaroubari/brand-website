@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import type { BrandColorFamily, BrandConfig, BrandScheme } from "./schema";
+import type {
+  BrandColorFamily,
+  BrandConfig,
+  BrandScheme,
+} from "../src/brand/schema";
 import {
   brandStyleSheet,
   colorCss,
@@ -7,7 +11,7 @@ import {
   resolveColor,
   schemeRoles,
   shadeSteps,
-} from "./tokens";
+} from "../src/brand/tokens";
 
 function family(id: string, value: BrandColorFamily["shades"][50]) {
   return {

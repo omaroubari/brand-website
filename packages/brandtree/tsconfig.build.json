@@ -11,6 +11,6 @@
     "rootDir": "src",
     "rewriteRelativeImportExtensions": true,
     "sourceMap": false,
-    "types": ["node"]
-  }
+    "types": ["node"],
+  },
 }
