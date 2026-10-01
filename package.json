@@ -7,14 +7,14 @@
     "node": ">=22.12.0"
   },
   "scripts": {
-    "dev": "pnpm --filter web dev",
-    "build": "pnpm --filter web build",
+    "dev": "pnpm --filter brandtree build && pnpm --filter web dev",
+    "build": "pnpm --filter brandtree build && pnpm --filter web build",
     "test": "pnpm --filter brandtree test",
     "preview": "pnpm --filter web preview",
-    "check": "pnpm -r --if-present check",
+    "check": "pnpm --filter brandtree build && pnpm -r --if-present check",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "deploy": "pnpm --filter web deploy",
+    "deploy": "pnpm --filter brandtree build && pnpm --filter web deploy",
     "astro": "pnpm --filter web astro",
     "generate-types": "pnpm --filter web generate-types"
   },
