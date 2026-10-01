@@ -4,10 +4,6 @@ import { buildNavigation } from "./navigation.ts";
 import { localizeRoute, resolveFallbackLocale } from "./i18n.ts";
 import { withBasePath } from "./paths.ts";
 
-export type { ContentEntry } from "./entries.ts";
-export type { ContentTree } from "./types.ts";
-export { humanizePageName, normalizePageSlug } from "./paths.ts";
-
 interface BuildContentTreeOptions {
   /** Site-wide route mount point (`""` or `/seg`); invisible to the nav tree. */
   basePath?: string;
