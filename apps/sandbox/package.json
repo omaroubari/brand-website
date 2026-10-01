@@ -1,0 +1,14 @@
+{
+  "name": "brandtree-sandbox",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "brandtree dev",
+    "build": "brandtree build",
+    "check": "brandtree check",
+    "preview": "brandtree preview"
+  },
+  "dependencies": {
+    "brandtree": "0.0.1"
+  }
+}

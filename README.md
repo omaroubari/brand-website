@@ -38,6 +38,14 @@ apps/web content + config + custom pages
 
 That generator and `.brandtree` directory are not implemented yet.
 
+The agreed consumer contract is consolidated in
+[ADR 0017](docs/adr/0017-define-the-brandtree-consumer-project-contract.md), with a
+[feature sandbox](apps/sandbox/README.md) adopting the Valence brand from the current web
+app. The sandbox starts with minimal consumer inputs and grows to exercise
+framework features as they are implemented. Package consumption and CLI
+generation are later implementation gates. Track the work
+in the [Framework alpha milestone](https://github.com/omaroubari/brand-website/milestone/9).
+
 ```
 /                  cover + contents
 /the-brand         purpose, mission, vision, values, audience

@@ -1,5 +1,14 @@
 # Glossary
 
+The consumer project contract is consolidated in
+[ADR 0017](adr/0017-define-the-brandtree-consumer-project-contract.md), with a
+[Valence feature sandbox](../apps/sandbox/README.md).
+
+## Framework sandbox
+
+The app at `apps/sandbox` that adopts the Valence brand and exercises framework
+features as they are implemented, using the external consumer authoring contract.
+
 ## Brandtree monorepo
 
 The repository containing the reusable `brandtree` package and the runnable
@@ -32,15 +41,87 @@ generated Brandtree app.
 A web-app component or module that resolves app-specific resources and passes
 normalized values into a reusable Brandtree component. For example, the web
 app discovers its SVG icon files while the package `IconGrid` only renders the
-supplied icon data.
+supplied icon data. ADR 0017 replaces that icon-discovery example in the future
+CLI contract with explicitly supplied icon props; the current template adapter
+has not yet been migrated.
+
+## Icon set
+
+An author-supplied ordered array of named SVG records passed to IconGrid,
+without automatic framework asset discovery.
 
 ## Generated Brandtree app
 
 A planned thin, disposable Astro project under `.brandtree` that will be
-created and driven by a future Brandtree CLI. It will contain generated Astro
+created, owned, and driven by a future Brandtree CLI. It will contain generated Astro
 configuration, routes, normalized data, and source adapters while importing
 reusable implementation from the Brandtree package. It does not exist in the
-current phase and will never be an authoring surface.
+current phase and is not an authoring surface. Brandtree may replace generated
+files; author-owned source remains separate.
+
+## Author project root
+
+The author-owned directory containing `brandtree.config.ts`, `content/`,
+`components/`, `assets/`, `public/`, and `package.json`, with the generated `.brandtree/` app
+nested beneath it.
+For `brandtree dev`, `brandtree build`, and `brandtree check`, this directory is `process.cwd()`;
+the CLI does not search ancestor directories.
+
+## Production output
+
+The deployable static website written by `brandtree build` to `dist/` at the
+author project root, separate from the generated `.brandtree/` app.
+
+## Configured file path
+
+A filesystem path in `brandtree.config.ts` resolved from the author project
+root, independently of the invocation directory and generated app location.
+
+## Public asset URL
+
+A URL such as `/brand/logo.svg` corresponding to a file under the author
+project's `public/` directory, distinct from a filesystem path.
+
+## Imported asset
+
+An author-owned file explicitly imported by MDX or a component and processed
+by Astro, conventionally stored in `assets/` without automatic discovery.
+
+## Author content directory
+
+The `content/` directory in the author project root, scanned recursively for
+pages and read in place by the generated Astro collection.
+
+## Author components directory
+
+The root-level `components/` directory beside `content/`, recommended for
+author-owned custom components imported by MDX.
+
+## Framework dependency
+
+A package owned by Brandtree to run its CLI, generated Astro application, or
+built-in UI without requiring an author declaration solely for those uses.
+
+## Author code dependency
+
+A package imported by author-owned code and explicitly declared in the author
+project manifest, even when Brandtree also uses that package internally.
+
+## Content partial
+
+An importable Markdown or MDX source excluded from page discovery by an
+underscore-prefixed filename or ancestor directory.
+
+## Colocated component
+
+An author-owned component imported relative to an MDX source file, without
+copying it into the generated app or rewriting its import.
+
+## Ejection
+
+A future transition that hands maintenance of the generated Astro project to
+the author. Ejection is out of scope for the current phase, and its mechanics
+and maintenance contract remain undecided.
 
 ## BrandTypography
 
@@ -55,6 +136,12 @@ The font-family and font-weight information inside `BrandTypography` that the
 website is allowed to use at runtime. The website maps the `text` family to
 body/UI content and the `display` family to large editorial headings. The
 documented weights remain available for font specimens.
+
+## Font loading configuration
+
+The top-level `fonts` block in `brandtree.config.ts` describing local or Google
+font sources and loading settings, separate from documented brand typography.
+Website loading and generated social cards reuse these declarations.
 
 ## TemplateDesignSystem
 
