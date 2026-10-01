@@ -15,7 +15,8 @@ Brandtree is a pnpm monorepo with one reusable framework package and one
 dogfood site:
 
 - `packages/brandtree` owns the typed brand/content model, components, layouts,
-  styles, and rendering helpers. It is private and source-consumed for now.
+  styles, and rendering helpers. It remains private; public entry points are
+  consumed from source, with generated root API declarations for consumers.
 - `apps/web` owns the current brand config, content, assets, public files, and
   the Astro composition layer that makes the example site runnable.
 
@@ -37,6 +38,16 @@ apps/web content + config + custom pages
 ```
 
 That generator and `.brandtree` directory are not implemented yet.
+
+Brandtree owns Astro, React, React DOM, the MDX/React integrations, styling
+integration, and type-check tooling as runtime dependencies. Standard consumers
+declare Brandtree and any packages imported by their own code.
+
+Build the package declarations with `pnpm --filter brandtree build`. The public
+entry points are `brandtree`, `brandtree/components`, `brandtree/runtime`, and
+`brandtree/styles.css`. Packing and the root dev, build, check, and deploy
+commands prepare the declarations automatically. Astro and React source files
+are compiled by the consuming Astro app.
 
 The agreed consumer contract is consolidated in
 [ADR 0017](docs/adr/0017-define-the-brandtree-consumer-project-contract.md), with a
