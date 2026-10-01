@@ -1,6 +1,6 @@
-import { brandSchema } from "../brand/schema";
+import { brandSchema } from "../brand/schema.ts";
 import { z } from "astro/zod";
-import { contentIcons, type ContentIconName } from "./icons";
+import { contentIcons, type ContentIconName } from "./icons.ts";
 
 /** Icon inputs in serializable contexts (frontmatter, meta files). */
 const iconName = z.enum(

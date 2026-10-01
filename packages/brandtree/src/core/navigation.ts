@@ -1,8 +1,8 @@
-import type { FolderMeta } from "./schema";
-import type { ContentTree, Navigation, NavNode, PageRecord } from "./types";
-import type { ContentIconName } from "./icons";
-
 import { extname } from "pathe";
+
+import type { FolderMeta } from "./schema.ts";
+import type { ContentTree, Navigation, NavNode, PageRecord } from "./types.ts";
+import type { ContentIconName } from "./icons.ts";
 
 const NUMERIC_PREFIX = /^(?<order>\d+)[-_.]/u;
 const GROUP_FOLDER = /^\((?<label>.+)\)$/u;

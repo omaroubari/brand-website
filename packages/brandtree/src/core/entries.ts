@@ -1,13 +1,14 @@
-import type { Heading, PageRecord } from "./types";
+import { extname } from "pathe";
+
 import {
   pageMetaSchema,
   type PageMeta,
   type ResolvedI18nConfig,
-} from "./schema";
-import { pathParts, withBasePath } from "./paths";
-import { localePlacement, localizeRoute } from "./i18n";
-import { trimChar } from "./trim";
-import { extname } from "pathe";
+} from "./schema.ts";
+import { pathParts, withBasePath } from "./paths.ts";
+import { localePlacement, localizeRoute } from "./i18n.ts";
+import { trimChar } from "./trim.ts";
+import type { Heading, PageRecord } from "./types.ts";
 
 const NUMERIC_PREFIX = /^\d+[-_.]/u;
 const GROUP_FOLDER = /^\((?<label>.+)\)$/u;

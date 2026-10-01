@@ -1,5 +1,5 @@
-import type { ContentIconName } from "./icons";
-import type { PageMeta } from "./schema";
+import type { ContentIconName } from "./icons.ts";
+import type { PageMeta } from "./schema.ts";
 
 /** A heading extracted from page content, used for the TOC and search. */
 export interface Heading {

@@ -1,7 +1,7 @@
-import type { ContentTree, Navigation, PageRecord } from "./types";
+import type { ContentTree, Navigation, PageRecord } from "./types.ts";
 
-import { getNavigation } from "./navigation";
-import { pathParts, routePath } from "./paths";
+import { getNavigation } from "./navigation.ts";
+import { pathParts, routePath } from "./paths.ts";
 
 export interface ContentPageProps {
   page: PageRecord;
