@@ -1,4 +1,4 @@
-import type { FolderMeta } from "./schema";
+import type { FolderMeta } from "./schema.ts";
 
 /** A function that computes folder meta, optionally asynchronously. */
 export type FolderMetaFactory = () => FolderMeta | Promise<FolderMeta>;

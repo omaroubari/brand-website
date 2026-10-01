@@ -1,5 +1,5 @@
-import { folderMetaSchema, type FolderMeta } from "./schema";
-import { pathParts, splitContentScope } from "./paths";
+import { pathParts, splitContentScope } from "./paths.ts";
+import { folderMetaSchema, type FolderMeta } from "./schema.ts";
 
 /** Source-relative filenames mapped to loaders of their default export.
  * Astro supplies a Vite glob so metadata is bundled and watched, and never
