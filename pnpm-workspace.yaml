@@ -1,7 +1,5 @@
 packages:
   - "apps/*"
-  # Feature sandbox: its CLI scripts become runnable in later milestones.
-  - "!apps/sandbox"
   - "packages/*"
 
 allowBuilds:
