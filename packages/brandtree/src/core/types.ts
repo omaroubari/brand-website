@@ -1,6 +1,32 @@
 import type { ContentIconName } from "./icons.ts";
 import type { PageMeta } from "./schema.ts";
 
+/** Severity levels for Brandtree diagnostics. */
+export type DiagnosticSeverity = "error" | "warning" | "info";
+
+/**
+ * A single actionable diagnostic. Diagnostics are printable in the CLI, the
+ * Astro/Vite overlay, and as JSON for editor integrations.
+ */
+export interface Diagnostic {
+  code: string;
+  severity: DiagnosticSeverity;
+  message: string;
+  file?: string;
+  line?: number;
+  column?: number;
+  /**
+   * The built URL this diagnostic is about, for findings that are a property of
+   * the output rather than of a source file (`brandtree audit`). Set alongside
+   * `file`/`line` where the page maps back to authored content, so a finding can
+   * name both the URL that's wrong and the frontmatter line that fixes it.
+   */
+  url?: string;
+  schemaPath?: string;
+  suggestion?: string;
+  docsUrl?: string;
+}
+
 /** A heading extracted from page content, used for the TOC and search. */
 export interface Heading {
   depth: number;
@@ -24,6 +50,32 @@ export interface PageLink {
    * page's own source — a link inside an included partial. Diagnostics point
    * here so authors fix the partial, not the page that spliced it. */
   file?: string;
+}
+
+/**
+ * Resolved project paths. Computed once per CLI invocation and threaded
+ * through the core pipeline.
+ */
+export interface ProjectContext {
+  /** Absolute path to the user project root. */
+  root: string;
+  /** Absolute path to the content root (e.g. `<root>/docs`). */
+  contentRoot: string;
+  /** Absolute path to the generated runtime (`<root>/.blume`). */
+  outDir: string;
+  /**
+   * Absolute path to the Astro build output. `<root>/dist` normally; for a
+   * relocated runtime (isolated verify build) it lives under the runtime dir so
+   * it never empties the real `dist/`. Optional so hand-built test contexts and
+   * older callers still typecheck; `resolveProjectContext` always sets it.
+   */
+  distDir?: string;
+  /** Absolute path to the user `theme.css`, if present. */
+  themeFile: string | null;
+  /** Absolute path to the user `components.ts`/`.tsx`, if present. */
+  componentsFile: string | null;
+  /** Absolute path to the resolved config file, if any was found. */
+  configFile: string | null;
 }
 
 /**
@@ -144,6 +196,7 @@ export interface ContentTree {
   navigationByLocale: Record<string, Navigation>;
   /** Map of route -> pageId for fast lookup and duplicate detection. */
   routes: Map<string, string>;
+  diagnostics?: Diagnostic[];
 }
 
 /** A resolved language-switcher entry for the current page. */

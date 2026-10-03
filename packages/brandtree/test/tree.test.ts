@@ -1,11 +1,14 @@
-import { describe, expect, it, vi } from "vitest";
+import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { dirname, join } from "node:path";
+import { afterAll, describe, expect, it, vi } from "vitest";
 import { buildContentTree } from "../src/core/tree";
 import {
   normalizeEntry,
   type NormalizeContext,
   type SourceEntry,
 } from "../src/core/entries";
-import { resolveFolderMeta } from "../src/core/meta";
+import { discoverFolderMeta } from "../src/core/meta";
 import { pageMetaSchema, type ResolvedI18nConfig } from "../src/core/schema";
 
 const i18n: ResolvedI18nConfig = {
@@ -36,6 +39,29 @@ const normalizeEntries = (
   options: NormalizeContext = {},
 ) => entries.flatMap((entry) => normalizeEntry(entry, options).pages);
 
+const directories: string[] = [];
+
+const makeMetaSource = async (files: Record<string, string>) => {
+  const root = await mkdtemp(join(tmpdir(), "brandtree-tree-"));
+  directories.push(root);
+  await Promise.all(
+    Object.entries(files).map(async ([filename, contents]) => {
+      const file = join(root, filename);
+      await mkdir(dirname(file), { recursive: true });
+      await writeFile(file, contents);
+    }),
+  );
+  return { root };
+};
+
+afterAll(async () => {
+  await Promise.all(
+    directories.map((directory) =>
+      rm(directory, { recursive: true, force: true }),
+    ),
+  );
+});
+
 describe("normalized content tree", () => {
   it("connects source metadata, localized groups, indexes, routes, and reading order", async () => {
     const entries = [
@@ -55,32 +81,26 @@ describe("normalized content tree", () => {
       versionDirs: ["v1.0"],
       basePath: "/brand",
     });
-    const { meta, shared } = await resolveFolderMeta(
-      [
-        {
-          root: "src/content/brand-guidelines",
-          modules: {
-            "01-logo/meta.$.ts": async () => ({
-              title: "Shared logo",
-              icon: "shapes",
-              collapsed: true,
-              pages: ["mark", "word"],
-            }),
-            "en/01-logo/meta.ts": async () => ({
-              title: "Logo system",
-              pages: ["word", "mark"],
-              collapsed: false,
-            }),
-            "ar/01-logo/meta.ts": async () => async () => ({ title: "الشعار" }),
-            "meta.$.ts": async () => ({ pages: ["logo"] }),
-          },
-        },
-      ],
-      {
-        localeDirs: i18n.locales.map((locale) => locale.code),
-        versionDirs: ["v1.0"],
-      },
-    );
+    const source = await makeMetaSource({
+      "01-logo/meta.$.ts": `export default {
+        title: "Shared logo",
+        icon: "shapes",
+        collapsed: true,
+        pages: ["mark", "word"],
+      };`,
+      "en/01-logo/meta.ts": `export default {
+        title: "Logo system",
+        pages: ["word", "mark"],
+        collapsed: false,
+      };`,
+      "ar/01-logo/meta.ts": 'export default async () => ({ title: "الشعار" });',
+      "meta.$.ts": 'export default { pages: ["logo"] };',
+    });
+    const { meta, shared, diagnostics } = await discoverFolderMeta([source], {
+      localeDirs: i18n.locales.map((locale) => locale.code),
+      versionDirs: ["v1.0"],
+    });
+    expect(diagnostics).toEqual([]);
     const tree = buildContentTree(pages, {
       i18n,
       basePath: "/brand",

@@ -160,18 +160,3 @@ export function humanizePageName(value: string): string {
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(" ");
 }
-
-/** Version directories precede locale directories in filesystem sources. */
-export function splitContentScope(
-  parts: readonly string[],
-  options: { localeDirs?: readonly string[]; versionDirs?: readonly string[] },
-): { version: string; locale?: string; parts: string[] } {
-  const rest = [...parts];
-  const version = options.versionDirs?.includes(rest[0] ?? "")
-    ? rest.shift()!
-    : "";
-  const locale = options.localeDirs?.includes(rest[0] ?? "")
-    ? rest.shift()
-    : undefined;
-  return { version, locale, parts: rest };
-}
