@@ -104,7 +104,7 @@ describe("normalizeEntry", () => {
   it("applies source prefixes and base paths at their respective layers", () => {
     const [page] = pagesFor(sourceEntry("ar/03-logo/index.md"), {
       i18n,
-      source: { name: "manual", root: "/work/manual", prefix: "guides" },
+      source: { name: "manual", prefix: "guides" },
       basePath: "/brand",
     });
     expect(page).toMatchObject({

@@ -15,13 +15,16 @@ export {
   schemeRoles,
   swatch,
 } from "./brand/tokens.ts";
+export * from "./core/config.ts";
 export * from "./core/define-meta.ts";
+export * from "./core/diagnostics.ts";
 export * from "./core/entries.ts";
 export * from "./core/i18n.ts";
 export * from "./core/i18n-ui.ts";
 export * from "./core/meta.ts";
 export * from "./core/navigation.ts";
 export * from "./core/paths.ts";
+export * from "./core/project-tree.ts";
 export * from "./core/rendering.ts";
 export * from "./core/schema.ts";
 export { buildContentTree } from "./core/tree.ts";

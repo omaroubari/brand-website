@@ -17,10 +17,22 @@ beforeAll(() => {
   execFileSync(process.execPath, ["scripts/build.mjs"], { cwd: root });
 }, 60_000);
 
-test("the source API exposes configuration helpers", async () => {
-  const { defineConfig, defineMeta } = await import("brandtree");
-  expect(typeof defineConfig).toBe("function");
-  expect(typeof defineMeta).toBe("function");
+test("the source API loads through the config loader", () => {
+  const output = execFileSync(
+    process.execPath,
+    [
+      "--input-type=module",
+      "-e",
+      `
+    import { createJiti } from 'jiti';
+    const { defineConfig, defineMeta } = await createJiti(import.meta.url).import('brandtree');
+    if (typeof defineConfig !== 'function' || typeof defineMeta !== 'function') process.exit(1);
+    console.log('resolved');
+  `,
+    ],
+    { cwd: root, encoding: "utf8" },
+  );
+  expect(output.trim()).toBe("resolved");
 });
 
 test("public API declarations resolve outside the workspace", () => {
@@ -32,7 +44,10 @@ test("public API declarations resolve outside the workspace", () => {
     writeFileSync(
       join(directory, "index.ts"),
       `
-      import { defineConfig, type BrandtreeConfigInput } from 'brandtree';
+      import { defineConfig, BrandtreeError, type Diagnostic, type DiagnosticSeverity, type BrandtreeConfigInput } from 'brandtree';
+      const severity: DiagnosticSeverity = 'warning';
+      const diagnostic: Diagnostic = { code: 'EXAMPLE', severity, message: 'Example' };
+      new BrandtreeError(diagnostic);
       const configure: typeof defineConfig = defineConfig;
       declare const input: BrandtreeConfigInput;
       configure(input);
