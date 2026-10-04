@@ -9,6 +9,6 @@
     "preview": "brandtree preview"
   },
   "dependencies": {
-    "brandtree": "workspace:*"
+    "brandtree": "file:brandtree.tgz"
   }
 }

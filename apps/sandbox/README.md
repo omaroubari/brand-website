@@ -10,13 +10,24 @@ brand data in the config and prose in MDX, and use the same authoring contract
 as an external consumer. Feature coverage should grow beyond this initial
 minimal content set.
 
-This milestone documents the intended consumer contract. The package is still
-private/source-consumed and the CLI does not exist yet. The manifest's `0.0.1`
-matches the current package version; it does not assert that a compatible npm
-release exists. The sandbox is not yet installation/build proof. Later
-packed-package tests must install the actual tarball in an external directory.
-The sandbox is excluded from pnpm workspace execution until the CLI exists;
-it does not change the current web app.
+The sandbox installs `brandtree.tgz`, a packed snapshot of the framework, rather
+than linking the workspace package. Keep the tarball with the sandbox so a fresh
+checkout can install it. Framework source edits only reach the sandbox after
+repacking and updating its dependency. The web app continues to use the
+workspace package.
+
+From the repository root, refresh the snapshot and build:
+
+```sh
+pnpm sandbox:pack
+pnpm --filter brandtree-sandbox update brandtree
+pnpm --filter brandtree-sandbox build
+```
+
+Include both `apps/sandbox/brandtree.tgz` and `pnpm-lock.yaml` when committing a
+snapshot update. This checks packed files and exports inside the monorepo; an
+external consumer test is still needed to prove independence from workspace
+dependency resolution.
 
 ## Files authors maintain
 
@@ -115,19 +126,14 @@ The linked `/brand/logotype-dark.svg` is served from `public/brand/`, not resolv
 as a filesystem-absolute path. Other locale modes remain supported by the
 contract; this small example demonstrates the existing app's directory mode.
 
-## Intended commands once implemented
+## Commands
 
 Run from the consumer root, since Brandtree uses the current directory and does
-not search ancestors. After installing an available compatible package:
+not search ancestors. The implemented build command can run through the workspace:
 
 ```sh
-pnpm dev
-pnpm check
-pnpm build
-pnpm preview
+pnpm --filter brandtree-sandbox build
 ```
 
-These scripts document the contract; they cannot run against today's package.
-Initialization generates this shape for an empty target without installing
-dependencies. Its eventual command arguments and starter details are decided
-in the initialization issue, not implemented by this example.
+The `dev`, `check`, and `preview` scripts describe planned commands and remain
+unimplemented. The root check therefore still excludes the sandbox.

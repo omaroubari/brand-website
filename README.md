@@ -61,8 +61,10 @@ The agreed consumer contract is consolidated in
 [ADR 0017](docs/adr/0017-define-the-brandtree-consumer-project-contract.md), with a
 [feature sandbox](apps/sandbox/README.md) adopting the Valence brand from the current web
 app. The sandbox starts with minimal consumer inputs and grows to exercise
-framework features as they are implemented. Package consumption and CLI
-generation are later implementation gates. Track the work
+framework features as they are implemented. It installs a committed local tarball;
+refresh it with `pnpm sandbox:pack` followed by
+`pnpm --filter brandtree-sandbox update brandtree`. The build CLI generates its
+disposable Astro runtime. Track the work
 in the [Framework alpha milestone](https://github.com/omaroubari/brand-website/milestone/9).
 
 ```
