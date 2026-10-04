@@ -98,7 +98,6 @@ export const normalizeSourceEntries = (
       source: {
         name: source.name,
         prefix: source.prefix,
-        root: source.root,
       },
     });
 

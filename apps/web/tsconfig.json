@@ -7,7 +7,7 @@
     "jsxImportSource": "react",
     "paths": {
       "@/*": ["./src/*"],
-      "@config": ["./src/core/config.ts"]
-    }
-  }
+      "@config": ["./src/core/config.ts"],
+    },
+  },
 }
