@@ -99,7 +99,7 @@ export const GET: APIRoute<OgPageProps> = async ({ props }) => {
       foreground: og.palette?.foreground ?? color(light.foreground),
       muted: og.palette?.muted ?? color(light.mutedForeground),
     },
-    dir: localeDir(props.locale, config.i18n),
+    dir: config.i18n ? localeDir(props.locale, config.i18n) : "ltr",
   });
 
   return new Response(new Uint8Array(png), {
