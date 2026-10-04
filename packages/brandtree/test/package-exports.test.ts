@@ -17,7 +17,7 @@ beforeAll(() => {
   execFileSync(process.execPath, ["scripts/build.mjs"], { cwd: root });
 }, 60_000);
 
-test("the source API loads through the config loader", () => {
+test("the source API loads through the config loader and the compiled CLI runs", () => {
   const output = execFileSync(
     process.execPath,
     [
@@ -33,6 +33,12 @@ test("the source API loads through the config loader", () => {
     { cwd: root, encoding: "utf8" },
   );
   expect(output.trim()).toBe("resolved");
+  expect(
+    execFileSync(process.execPath, ["dist/cli/index.js", "--version"], {
+      cwd: root,
+      encoding: "utf8",
+    }).trim(),
+  ).toBe("0.0.1");
 });
 
 test("public API declarations resolve outside the workspace", () => {

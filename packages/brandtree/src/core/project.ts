@@ -32,12 +32,11 @@ export const findConfigFile = (root: string): string | null =>
 
 /**
  * Resolve the generated runtime directory for a project. Defaults to
- * `<root>/.blume`; an override (e.g. `.blume-verify` for an isolated build that
- * runs alongside a live `blume dev`) may be relative to the root or absolute.
+ * `<root>/.brandtree`; an override may be relative to the root or absolute.
  */
 export const resolveRuntimeDir = (
   root: string,
-  runtimeDir = ".blume",
+  runtimeDir = ".brandtree",
 ): string =>
   isAbsolute(runtimeDir) ? runtimeDir : join(resolve(root), runtimeDir);
 
@@ -45,7 +44,7 @@ export const resolveRuntimeDir = (
  * Resolve every path Blume needs from a project root and its resolved config.
  * Paths are absolute and normalized. `options.runtimeDir` relocates the whole
  * generated runtime (and its build output) so a verify build/check can run
- * without touching a live dev server's `.blume/` or the real `dist/`.
+ * without touching a live dev server's `.brandtree/` or the real `dist/`.
  */
 export const resolveProjectContext = (
   root: string,
