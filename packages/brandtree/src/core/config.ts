@@ -23,7 +23,7 @@ export interface ConfigLoadResult {
   diagnostics: Diagnostic[];
 }
 
-const importConfigModule = createModuleLoader();
+let importConfigModule: ReturnType<typeof createModuleLoader> | undefined;
 
 /**
  * Load and validate the project config. When no config file exists, schema
@@ -35,6 +35,7 @@ export const loadConfig = async (root: string): Promise<ConfigLoadResult> => {
   let raw: unknown;
   if (configFile) {
     try {
+      importConfigModule ??= createModuleLoader();
       raw = await importConfigModule(configFile);
     } catch (error) {
       // SAFETY: the module loader rejects with the thrown load/parse failure,
