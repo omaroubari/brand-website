@@ -1,5 +1,5 @@
 import type { ContentIconName } from "./icons.ts";
-import type { PageMeta } from "./schema.ts";
+import type { PageMeta, ResolvedConfig } from "./schema.ts";
 
 /** Severity levels for Brandtree diagnostics. */
 export type DiagnosticSeverity = "error" | "warning" | "info";
@@ -197,6 +197,18 @@ export interface ContentTree {
   /** Map of route -> pageId for fast lookup and duplicate detection. */
   routes: Map<string, string>;
   diagnostics?: Diagnostic[];
+}
+
+/** JSON representation shared by the runtime data writer and its consumers. */
+export interface RuntimeData {
+  config: ResolvedConfig;
+  tree: Omit<ContentTree, "routes"> & { routes: [string, string][] };
+}
+
+/** Local OG assets bundled from the author project during runtime generation. */
+export interface RuntimeOgAssets {
+  logos: Record<string, string>;
+  fontData: Record<string, string>;
 }
 
 /** A resolved language-switcher entry for the current page. */

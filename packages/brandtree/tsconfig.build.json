@@ -1,16 +1,16 @@
 {
   "extends": "./tsconfig.json",
-  "include": ["src/index.ts"],
+  "include": ["src/index.ts", "src/cli/**/*.ts", "src/astro/prerender-deps.ts"],
   "exclude": [],
   "compilerOptions": {
     "declaration": true,
     "declarationMap": false,
-    "emitDeclarationOnly": true,
+    "emitDeclarationOnly": false,
     "noEmit": false,
     "outDir": "dist",
     "rootDir": "src",
     "rewriteRelativeImportExtensions": true,
     "sourceMap": false,
-    "types": ["node"],
-  },
+    "types": ["node"]
+  }
 }

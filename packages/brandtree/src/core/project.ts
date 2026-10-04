@@ -32,8 +32,7 @@ export const findConfigFile = (root: string): string | null =>
 
 /**
  * Resolve the generated runtime directory for a project. Defaults to
- * `<root>/.brandtree`; an override (e.g. `.brandtree-verify` for an isolated build that
- * runs alongside a live `brandtree dev`) may be relative to the root or absolute.
+ * `<root>/.brandtree`; an override may be relative to the root or absolute.
  */
 export const resolveRuntimeDir = (
   root: string,

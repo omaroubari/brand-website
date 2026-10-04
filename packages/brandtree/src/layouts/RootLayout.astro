@@ -34,6 +34,7 @@ const {
   imageZoom = true,
   codeWrap = false,
   themeMode,
+  fontCssVariables = ["--font-brand", "--font-arabic"],
   // fontCssVars,
   searchEnabled,
   indexable,
@@ -171,8 +172,11 @@ const navigationRoot = navigation.root ?? "/";
       ))
     }
 
-    <Font cssVariable="--font-brand" preload />
-    <Font cssVariable="--font-arabic" preload />
+    {
+      fontCssVariables.map((cssVariable) => (
+        <Font cssVariable={cssVariable} preload />
+      ))
+    }
     <style is:global set:html={tokens}></style>
     <ThemeScript defaultTheme={brand.theme.default} />
     <script
