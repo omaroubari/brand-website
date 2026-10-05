@@ -2,7 +2,7 @@ import type { ContentTree, Navigation, PageRecord } from "./types.ts";
 import type { FolderMeta, ResolvedI18nConfig } from "./schema.ts";
 import { buildNavigation } from "./navigation.ts";
 import { localizeRoute, resolveFallbackLocale } from "./i18n.ts";
-import { withBasePath } from "./paths.ts";
+import { mountRoute } from "./paths.ts";
 
 interface BuildContentTreeOptions {
   /** Site-wide route mount point (`""` or `/seg`); invisible to the nav tree. */
@@ -65,11 +65,19 @@ const localePagesFor = (
   const filled: PageRecord[] = [];
   for (const [key, source] of fallbackByKey) {
     if (!present.has(key)) {
+      // Translation identity excludes URL overrides. A fallback still uses the
+      // source's public slug, including its namespace and archive version.
+      const route =
+        source.versionKey === undefined
+          ? key
+          : source.version
+            ? `/${source.version}${source.versionKey === "/" ? "" : source.versionKey}`
+            : source.versionKey;
       filled.push({
         ...source,
         fallback: true,
         locale: code,
-        route: withBasePath(basePath, localizeRoute(key, code, i18n)),
+        route: mountRoute(basePath, localizeRoute(route, code, i18n)),
       });
     }
   }

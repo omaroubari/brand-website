@@ -89,6 +89,14 @@ export const withBasePath = (basePath: string, route: string): string => {
 };
 
 /**
+ * Mount an unmounted logical route. Unlike link prefixing, route construction
+ * must retain every segment even when the content path starts with the mount.
+ * Both inputs are canonical: the base is empty or /seg, the route starts at /.
+ */
+export const mountRoute = (basePath: string, route: string): string =>
+  !basePath ? route : route === "/" ? basePath : `${basePath}${route}`;
+
+/**
  * {@link withBasePath} for the composed `deployment.base` + `basePath` stack
  * (`/base` + `/docs` serves pages at `/base/docs/x`). The hand-written-base
  * promise applies per layer: authors write `basePath` by hand (see

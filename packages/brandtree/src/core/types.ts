@@ -102,6 +102,7 @@ export interface PageRecord {
    * `/guides/x`, or `/v1.0/guides/x` under versioning — the key is
    * version-specific, so translations group within their version).
    * Pages with the same key are translations of each other.
+   * Frontmatter slug overrides change the public URL, not this identity.
    */
   translationKey: string;
   /**
