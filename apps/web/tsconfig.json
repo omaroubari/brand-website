@@ -7,7 +7,7 @@
     "jsxImportSource": "react",
     "paths": {
       "@/*": ["./src/*"],
-      "@config": ["./brandtree.config.ts"]
-    }
-  }
+      "@config": ["./src/core/config.ts"],
+    },
+  },
 }

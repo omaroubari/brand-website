@@ -1,13 +1,14 @@
-import type { Heading, PageRecord } from "./types";
+import { extname } from "pathe";
+
 import {
   pageMetaSchema,
   type PageMeta,
   type ResolvedI18nConfig,
-} from "./schema";
-import { pathParts, withBasePath } from "./paths";
-import { localePlacement, localizeRoute } from "./i18n";
-import { trimChar } from "./trim";
-import { extname } from "pathe";
+} from "./schema.ts";
+import { pathParts, withBasePath } from "./paths.ts";
+import { localePlacement, localizeRoute } from "./i18n.ts";
+import { trimChar } from "./trim.ts";
+import type { Diagnostic, Heading, PageRecord } from "./types.ts";
 
 const NUMERIC_PREFIX = /^\d+[-_.]/u;
 const GROUP_FOLDER = /^\((?<label>.+)\)$/u;
@@ -154,7 +155,7 @@ export const toSourceEntry = (contentEntry: ContentEntry): SourceEntry => {
 };
 
 export interface NormalizeContext {
-  source?: { name: string; root: string; prefix?: string };
+  source?: { name: string; prefix?: string };
   /** Site-wide route mount point (`""` or `/seg`), prepended to every route. */
   basePath?: string;
   // defaultType: string;
@@ -373,7 +374,7 @@ const safeSlug = /^[\p{L}\p{N}]+(?:-[\p{L}\p{N}]+)*$/u;
 export function normalizeEntry(
   entry: SourceEntry,
   ctx: NormalizeContext = {},
-): { pages: PageRecord[] } {
+): { pages: PageRecord[]; diagnostics: Diagnostic[] } {
   const refParts = pathParts(entry.ref);
   if (refParts.includes("..") || /^(?:[/\\]|[a-z]:[/\\])/i.test(entry.ref)) {
     throw new Error(`Unsafe content source path: ${entry.ref}.`);
@@ -452,5 +453,5 @@ export function normalizeEntry(
     ),
   }));
 
-  return { pages };
+  return { pages, diagnostics: [] };
 }

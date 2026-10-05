@@ -25,11 +25,11 @@ export async function getStaticPaths() {
   }
 
   const tree = await getContentTree();
-  return config.i18n.locales
+  const i18n = config.i18n;
+  return i18n.locales
     .filter(
       ({ code }) =>
-        !config.i18n.hideDefaultLocalePrefix ||
-        code !== config.i18n.defaultLocale,
+        !i18n.hideDefaultLocalePrefix || code !== i18n.defaultLocale,
     )
     .map(({ code }) => ({
       params: { lang: code },
@@ -38,11 +38,15 @@ export async function getStaticPaths() {
 }
 
 const { locale, navigation } = Astro.props;
+const i18n = config.i18n;
+if (!i18n) {
+  throw new Error("A localized cover requires an i18n configuration.");
+}
 const brand = config.brand;
-const localizedBrand = resolveBrand(brand, locale, config.i18n);
-const defaultLocale = config.i18n?.defaultLocale ?? "en";
+const localizedBrand = resolveBrand(brand, locale, i18n);
+const defaultLocale = i18n.defaultLocale;
 const ui = resolveUIStrings(locale, { defaultLocale });
-const dir = localeDir(locale, config.i18n);
+const dir = localeDir(locale, i18n);
 const route = navigation.root ?? "/";
 const siteUrl = localizedBrand.meta.url.replace(/\/$/u, "");
 const absolute = (path: string) =>
@@ -52,24 +56,21 @@ const ogGenerated = Boolean(config.seo.og.enabled ?? true);
 const ogImage = ogGenerated ? generatedOgImagePath(route) : null;
 
 const tree = await getContentTree();
-const localeSwitch = config.i18n
-  ? config.i18n.locales.map(({ code, label, dir }) => ({
-      code,
-      label,
-      dir,
-      href: getNavigation(tree, code).root ?? "/",
-      isCurrent: code === locale,
-      isFallback: false,
-    }))
-  : [];
-const localeAlternates = config.i18n.locales.map(({ code }) => ({
+const localeSwitch = i18n.locales.map(({ code, label, dir }) => ({
+  code,
+  label,
+  dir,
+  href: getNavigation(tree, code).root ?? "/",
+  isCurrent: code === locale,
+  isFallback: false,
+}));
+const localeAlternates = i18n.locales.map(({ code }) => ({
   hreflang: code,
   href: absolute(getNavigation(tree, code).root ?? "/"),
 }));
 const xDefault =
-  localeAlternates.find(
-    ({ hreflang }) => hreflang === config.i18n.defaultLocale,
-  )?.href ?? null;
+  localeAlternates.find(({ hreflang }) => hreflang === i18n.defaultLocale)
+    ?.href ?? null;
 
 const layoutProps = {
   brand: localizedBrand,

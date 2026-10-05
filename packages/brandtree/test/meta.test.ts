@@ -1,175 +1,280 @@
-import { describe, expect, it } from "vitest";
-import { resolveFolderMeta, type FolderMetaModules } from "../src/core/meta";
+import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { dirname, join } from "node:path";
+import { afterAll, describe, expect, it } from "vitest";
+import { discoverFolderMeta } from "../src/core/meta";
 
-const root = "src/content/brand-guidelines";
+const directories: string[] = [];
 
-describe("folder metadata resolution", () => {
-  it("resolves plain defaults and synchronous/asynchronous factories from Vite's module map", async () => {
-    const result = await resolveFolderMeta(
-      [
-        {
-          root,
-          modules: {
-            "meta.ts": async () => ({ title: "Root" }),
-            "en/03-logo/meta.js": async () => () => ({
-              title: "Logo",
-              pages: ["mark"],
-            }),
-            "ar/03-logo/meta.mjs": async () => async () => ({
-              title: "الشعار",
-              collapsed: true,
-            }),
-            "03-logo/meta.$.ts": async () => async () => ({
-              icon: "shapes",
-              order: 3,
-            }),
-            "ignored.ts": async () => {
-              throw new Error("not metadata");
-            },
-          },
-        },
-      ],
-      { localeDirs: ["en", "ar"] },
+const makeSource = async (files: Record<string, string>) => {
+  const root = await mkdtemp(join(tmpdir(), "brandtree-meta-"));
+  directories.push(root);
+  await Promise.all(
+    Object.entries(files).map(async ([filename, contents]) => {
+      const file = join(root, filename);
+      await mkdir(dirname(file), { recursive: true });
+      await writeFile(file, contents);
+    }),
+  );
+  return { root };
+};
+
+afterAll(async () => {
+  await Promise.all(
+    directories.map((directory) =>
+      rm(directory, { recursive: true, force: true }),
+    ),
+  );
+});
+
+describe("folder metadata discovery", () => {
+  it("loads plain defaults and synchronous/asynchronous factories from disk", async () => {
+    const source = await makeSource({
+      "meta.ts": 'export default { title: "Root" };',
+      "en/03-logo/meta.js":
+        'export default () => ({ title: "Logo", pages: ["mark"] });',
+      "ar/03-logo/meta.mjs":
+        'export default async () => ({ title: "الشعار", collapsed: true });',
+      "03-logo/meta.$.ts":
+        'export default async () => ({ icon: "shapes", order: 3 });',
+      "ignored.ts": 'throw new Error("not metadata");',
+    });
+    const result = await discoverFolderMeta([source], {
+      localeDirs: ["en", "ar"],
+    });
+    expect(result.meta).toEqual(
+      new Map([
+        ["ar/03-logo", { title: "الشعار", collapsed: true }],
+        ["en/03-logo", { title: "Logo", pages: ["mark"] }],
+        ["", { title: "Root" }],
+      ]),
     );
-    expect([...result.meta]).toEqual([
-      ["ar/03-logo", { title: "الشعار", collapsed: true }],
-      ["en/03-logo", { title: "Logo", pages: ["mark"] }],
-      ["", { title: "Root" }],
-    ]);
-    expect([...result.shared]).toEqual([
-      ["03-logo", { icon: "shapes", order: 3 }],
-    ]);
+    expect(result.shared).toEqual(
+      new Map([["03-logo", { icon: "shapes", order: 3 }]]),
+    );
+    expect(result.diagnostics).toEqual([]);
   });
 
-  it("hoists version and locale before source prefixes, preserving raw folder names", async () => {
+  it("hoists leading scope directories before the prefix and preserves nested folder names", async () => {
     const source = {
-      root,
+      ...(await makeSource({
+        "meta.$.js": 'export default { title: "Shared root" };',
+        "fr/meta.ts": 'export default { title: "French root" };',
+        "v1.0/fr/03-logo/meta.ts": 'export default { title: "Old logo" };',
+        "v1.0/03-logo/meta.$.mjs": 'export default { icon: "book-open" };',
+      })),
       prefix: "/docs/",
-      modules: {
-        "meta.$.js": async () => ({ title: "Shared root" }),
-        "fr/meta.ts": async () => ({ title: "French root" }),
-        "v1.0/fr/03-logo/meta.ts": async () => ({ title: "Old logo" }),
-        "v1.0/03-logo/meta.$.mjs": async () => ({ icon: "book-open" }),
-      },
     };
-    const result = await resolveFolderMeta([source], {
+    const result = await discoverFolderMeta([source], {
       localeDirs: ["fr"],
       versionDirs: ["v1.0"],
     });
-    expect([...result.meta.keys()]).toEqual([
-      "fr/docs",
-      "v1.0/fr/docs/03-logo",
-    ]);
-    expect([...result.shared.keys()]).toEqual(["docs", "v1.0/docs/03-logo"]);
-    expect((await resolveFolderMeta([source])).meta.has("docs/fr")).toBe(true);
-  });
-
-  it("normalizes module-path separators", async () => {
-    const result = await resolveFolderMeta(
-      [
-        {
-          root,
-          prefix: "docs",
-          modules: {
-            "fr\\03-logo\\meta.ts": async () => ({ title: "Logo" }),
-            "03-logo/meta.$.js": async () => ({ icon: "shapes" }),
-          },
-        },
-      ],
-      { localeDirs: ["fr"] },
+    expect(result.meta).toEqual(
+      new Map([
+        ["fr/docs", { title: "French root" }],
+        ["v1.0/docs/fr/03-logo", { title: "Old logo" }],
+      ]),
     );
-    expect(result.meta.get("fr/docs/03-logo")).toEqual({ title: "Logo" });
-    expect(result.shared.get("docs/03-logo")).toEqual({ icon: "shapes" });
+    expect(result.shared).toEqual(
+      new Map([
+        ["docs", { title: "Shared root" }],
+        ["v1.0/docs/03-logo", { icon: "book-open" }],
+      ]),
+    );
+    expect(result.diagnostics).toEqual([]);
+    expect((await discoverFolderMeta([source])).meta.has("docs/fr")).toBe(true);
   });
 
   it.each([
-    ["unknown field", async () => ({ typo: "unknown" })],
-    ["unknown icon", async () => ({ icon: "unknown-icon" })],
-    ["invalid factory icon", async () => async () => ({ icon: " " })],
-    ["invalid factory result", async () => () => ({ order: "first" })],
-    ["null async result", async () => async () => null],
-    ["missing default export", async () => undefined],
-    [
-      "module failure",
-      async () => {
-        throw new Error("module failed");
-      },
-    ],
-    [
-      "factory failure",
-      async () => async () => {
-        throw new Error("factory failed");
-      },
-    ],
-  ] satisfies Array<[string, FolderMetaModules[string]]>)(
-    "reports the source path for %s",
-    async (_label, load) => {
-      await expect(
-        resolveFolderMeta([{ root, modules: { "03-logo/meta.ts": load } }]),
-      ).rejects.toThrow("src/content/brand-guidelines/03-logo/meta.ts");
+    ["unknown field", 'export default { typo: "unknown" };'],
+    ["unknown icon", 'export default { icon: "unknown-icon" };'],
+    ["invalid factory icon", 'export default async () => ({ icon: " " });'],
+    ["invalid factory result", 'export default () => ({ order: "first" });'],
+    ["null async result", "export default async () => null;"],
+  ])(
+    "reports validation diagnostics for %s and retains valid metadata",
+    async (_label, contents) => {
+      const source = await makeSource({
+        "03-logo/meta.ts": contents,
+        "meta.ts": 'export default { title: "Root" };',
+      });
+      const result = await discoverFolderMeta([source]);
+      expect(result.diagnostics.length).toBeGreaterThan(0);
+      expect(result.diagnostics).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            code: "BLUME_META_INVALID",
+            file: join(source.root, "03-logo/meta.ts"),
+            severity: "error",
+            message: expect.any(String),
+          }),
+        ]),
+      );
+      expect(result.meta).toEqual(new Map([["", { title: "Root" }]]));
+      expect(result.shared.size).toBe(0);
     },
   );
 
-  it("rejects duplicate keys across extensions and sources", async () => {
-    await expect(
-      resolveFolderMeta([
+  it("accepts a module without exports as empty metadata", async () => {
+    const source = await makeSource({ "meta.ts": "export {};" });
+    expect(await discoverFolderMeta([source])).toEqual({
+      meta: new Map([["", {}]]),
+      shared: new Map(),
+      diagnostics: [],
+    });
+  });
+
+  it.each([
+    ["module", 'throw new Error("module failed");'],
+    [
+      "factory",
+      'export default async () => { throw new Error("factory failed"); };',
+    ],
+  ])(
+    "reports %s load failures without discarding valid metadata",
+    async (label, contents) => {
+      const source = await makeSource({
+        "03-logo/meta.ts": contents,
+        "meta.ts": 'export default { title: "Root" };',
+      });
+      const result = await discoverFolderMeta([source]);
+      expect(result.diagnostics).toEqual([
         {
-          root,
-          modules: {
-            "meta.ts": async () => ({}),
-            "meta.js": async () => ({}),
-          },
+          code: "BLUME_META_LOAD_FAILED",
+          file: join(source.root, "03-logo/meta.ts"),
+          message: `Could not load meta file: ${label} failed`,
+          severity: "error",
         },
-      ]),
-    ).rejects.toThrow(/Duplicate folder metadata/);
-    const first = { root: "first", modules: { "meta.ts": async () => ({}) } };
-    const second = { root: "second", modules: { "meta.ts": async () => ({}) } };
-    await expect(resolveFolderMeta([first, second])).rejects.toThrow(
-      /Duplicate folder metadata/,
+      ]);
+      expect(result.meta).toEqual(new Map([["", { title: "Root" }]]));
+    },
+  );
+
+  it("preserves all schema issues for invalid metadata", async () => {
+    const source = await makeSource({
+      "meta.ts": 'export default { title: 42, order: "first" };',
+    });
+    const result = await discoverFolderMeta([source]);
+    expect(result.diagnostics).toEqual([
+      expect.objectContaining({
+        code: "BLUME_META_INVALID",
+        severity: "error",
+        file: join(source.root, "meta.ts"),
+        schemaPath: "order",
+      }),
+      expect.objectContaining({
+        code: "BLUME_META_INVALID",
+        severity: "error",
+        file: join(source.root, "meta.ts"),
+        schemaPath: "title",
+      }),
+    ]);
+    expect(result.meta.size).toBe(0);
+  });
+
+  it.each([
+    "meta.ts",
+    "meta.js",
+    "meta.mjs",
+    "meta.$.ts",
+    "meta.$.js",
+    "meta.$.mjs",
+  ])("accepts duplicate keys across extensions for %s", async (filename) => {
+    const alternate = filename.endsWith(".ts")
+      ? filename.replace(/\.ts$/, ".js")
+      : filename.replace(/\.(?:js|mjs)$/, ".ts");
+    const source = await makeSource({
+      [filename]: 'export default { title: "First" };',
+      [alternate]: 'export default { title: "Second" };',
+    });
+    const result = await discoverFolderMeta([source]);
+    const target = filename.startsWith("meta.$.") ? result.shared : result.meta;
+    const other = filename.startsWith("meta.$.") ? result.meta : result.shared;
+    expect(target.size).toBe(1);
+    // File discovery order is unspecified; either valid definition can win.
+    expect([{ title: "First" }, { title: "Second" }]).toContainEqual(
+      target.get(""),
     );
-    expect(
-      (
-        await resolveFolderMeta([
-          { ...first, prefix: "a" },
-          { ...second, prefix: "b" },
-        ])
-      ).meta.size,
-    ).toBe(2);
+    expect(other.size).toBe(0);
+    expect(result.diagnostics).toEqual([]);
   });
 
-  it("rejects ambiguous shared metadata inside a locale directory", async () => {
-    await expect(
-      resolveFolderMeta(
-        [
-          {
-            root,
-            modules: {
-              "fr/meta.$.ts": async () => ({}),
-            },
-          },
-        ],
-        { localeDirs: ["fr"] },
-      ),
-    ).rejects.toThrow(/outside locale directories/);
+  it("lets later sources overwrite duplicate keys", async () => {
+    const first = await makeSource({
+      "meta.ts": 'export default { title: "First" };',
+    });
+    const second = await makeSource({
+      "meta.ts": 'export default { title: "Second" };',
+    });
+    const result = await discoverFolderMeta([first, second]);
+    expect(result.meta).toEqual(new Map([["", { title: "Second" }]]));
+    expect(result.shared.size).toBe(0);
+    expect(result.diagnostics).toEqual([]);
   });
 
-  it("rejects module paths that escape the source", async () => {
-    await expect(
-      resolveFolderMeta([
-        {
-          root,
-          modules: {
-            "../meta.ts": async () => ({}),
-          },
-        },
+  it("allows distinct prefixes across sources", async () => {
+    const first = await makeSource({
+      "meta.ts": 'export default { title: "First" };',
+    });
+    const second = await makeSource({
+      "meta.ts": 'export default { title: "Second" };',
+    });
+    const distinct = await discoverFolderMeta([
+      { ...first, prefix: "a" },
+      { ...second, prefix: "b" },
+    ]);
+    expect(distinct.meta).toEqual(
+      new Map([
+        ["a", { title: "First" }],
+        ["b", { title: "Second" }],
       ]),
-    ).rejects.toThrow(/Unsafe folder metadata path/);
+    );
+    expect(distinct.diagnostics).toEqual([]);
   });
 
-  it("returns empty maps when Vite discovers no metadata", async () => {
-    expect(await resolveFolderMeta([{ root, modules: {} }])).toEqual({
+  it.each([
+    ["fr", "fr/docs"],
+    ["v1.0/fr", "v1.0/docs/fr"],
+  ])("accepts shared metadata inside %s", async (directory, key) => {
+    const source = await makeSource({
+      [`${directory}/meta.$.ts`]: "export default {};",
+    });
+    const result = await discoverFolderMeta([{ ...source, prefix: "docs" }], {
+      localeDirs: ["fr"],
+      versionDirs: ["v1.0"],
+    });
+    expect(result.shared).toEqual(new Map([[key, {}]]));
+    expect(result.meta.size).toBe(0);
+    expect(result.diagnostics).toEqual([]);
+  });
+
+  it("ignores dependencies, build output and unrelated filenames", async () => {
+    const source = await makeSource({
+      "node_modules/dependency/meta.ts": 'throw new Error("dependency");',
+      ".blume/meta.js": 'throw new Error("generated");',
+      "dist/meta.mjs": 'throw new Error("build output");',
+      "nested/dist/meta.$.ts": 'throw new Error("nested build output");',
+      "meta.json": "{}",
+      "meta.ts.bak": 'throw new Error("backup");',
+    });
+    expect(await discoverFolderMeta([source])).toEqual({
       meta: new Map(),
       shared: new Map(),
+      diagnostics: [],
+    });
+  });
+
+  it("returns empty maps and diagnostics when no metadata is discovered", async () => {
+    const source = await makeSource({});
+    expect(await discoverFolderMeta([source])).toEqual({
+      meta: new Map(),
+      shared: new Map(),
+      diagnostics: [],
+    });
+    expect(await discoverFolderMeta([])).toEqual({
+      meta: new Map(),
+      shared: new Map(),
+      diagnostics: [],
     });
   });
 });

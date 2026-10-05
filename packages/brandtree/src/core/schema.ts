@@ -1,6 +1,7 @@
-import { brandSchema } from "../brand/schema";
+import { brandSchema } from "../brand/schema.ts";
 import { z } from "astro/zod";
-import { contentIcons, type ContentIconName } from "./icons";
+import { contentIcons, type ContentIconName } from "./icons.ts";
+import { normalizeBasePath } from "./paths.ts";
 
 /** Icon inputs in serializable contexts (frontmatter, meta files). */
 const iconName = z.enum(
@@ -207,6 +208,16 @@ const seoConfigSchema = z.strictObject({
 export const brandtreeConfigSchema = z
   .object({
     brand: brandSchema,
+    /**
+     * Site-wide mount point prepended to every generated route (e.g. `/docs`),
+     * while staying invisible to the sidebar/nav tree. Distinct from a per-source
+     * `prefix` (which creates a group) and from `deployment.base` (Astro's
+     * host-subdirectory base); the two compose. Normalized to `""` or `/seg`.
+     */
+    basePath: z
+      .string()
+      .optional()
+      .transform((value) => normalizeBasePath(value)),
     i18n: i18nConfigSchema.optional(),
     navigation: navigationConfigSchema.prefault({}),
     seo: seoConfigSchema.prefault({}),
@@ -242,13 +253,3 @@ export type BrandtreeConfigInput = z.input<typeof brandtreeConfigSchema>;
 export type ResolvedI18nConfig = z.infer<typeof i18nConfigSchema>;
 /** A configured locale with display metadata. */
 export type LocaleConfig = z.infer<typeof localeSchema>;
-
-/**
- * Parse once at the configuration boundary while preserving literal fields in
- * the caller's inferred type (notably the configured locale code union).
- */
-export function defineConfig<const T extends BrandtreeConfigInput>(
-  config: T,
-): ResolvedConfig & T {
-  return brandtreeConfigSchema.parse(config) as ResolvedConfig & T;
-}

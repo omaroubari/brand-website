@@ -1,5 +1,5 @@
-export * from "./brand/schema";
-export { resolveBrand } from "./brand/localize";
+export * from "./brand/schema.ts";
+export { resolveBrand } from "./brand/localize.ts";
 export {
   brandStyleSheet,
   colorCss,
@@ -14,15 +14,18 @@ export {
   resolveColor,
   schemeRoles,
   swatch,
-} from "./brand/tokens";
-export * from "./core/define-meta";
-export * from "./core/entries";
-export * from "./core/i18n";
-export * from "./core/i18n-ui";
-export * from "./core/meta";
-export * from "./core/navigation";
-export * from "./core/paths";
-export * from "./core/rendering";
-export * from "./core/schema";
-export { buildContentTree } from "./core/tree";
-export * from "./core/types";
+} from "./brand/tokens.ts";
+export * from "./core/config.ts";
+export * from "./core/define-meta.ts";
+export * from "./core/diagnostics.ts";
+export * from "./core/entries.ts";
+export * from "./core/i18n.ts";
+export * from "./core/i18n-ui.ts";
+export * from "./core/meta.ts";
+export * from "./core/navigation.ts";
+export * from "./core/paths.ts";
+export * from "./core/project-tree.ts";
+export * from "./core/rendering.ts";
+export * from "./core/schema.ts";
+export { buildContentTree } from "./core/tree.ts";
+export * from "./core/types.ts";
