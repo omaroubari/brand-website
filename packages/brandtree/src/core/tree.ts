@@ -1,12 +1,8 @@
-import type { ContentTree, Navigation, PageRecord } from "./types";
-import type { FolderMeta, ResolvedI18nConfig } from "./schema";
-import { buildNavigation } from "./navigation";
-import { localizeRoute, resolveFallbackLocale } from "./i18n";
-import { withBasePath } from "./paths";
-
-export type { ContentEntry } from "./entries";
-export type { ContentTree } from "./types";
-export { humanizePageName, normalizePageSlug } from "./paths";
+import type { ContentTree, Navigation, PageRecord } from "./types.ts";
+import type { FolderMeta, ResolvedI18nConfig } from "./schema.ts";
+import { buildNavigation } from "./navigation.ts";
+import { localizeRoute, resolveFallbackLocale } from "./i18n.ts";
+import { withBasePath } from "./paths.ts";
 
 interface BuildContentTreeOptions {
   /** Site-wide route mount point (`""` or `/seg`); invisible to the nav tree. */

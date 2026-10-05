@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { UI_PACKS } from "./ui-packs";
+import { UI_PACKS } from "./ui-packs/index.ts";
 
 const actionsSchema = z
   .object({

@@ -1,12 +1,12 @@
 import { getCollection } from "astro:content";
 
 import config from "@config";
+import { discoverFolderMeta } from "./folder-meta";
 import type { ContentTree, PageRecord } from "brandtree";
 import {
   buildContentTree,
   normalizeBasePath,
   normalizeEntry,
-  resolveFolderMeta,
   toSourceEntry,
   type NormalizeContext,
   type SourceEntry,
@@ -50,10 +50,6 @@ export async function loadContentTree(
       page.entryId = contentEntry.id;
     }
   }
-  const modules = import.meta.glob<unknown>(
-    "../content/brand-guidelines/**/meta{,.$}.{ts,js,mjs}",
-    { import: "default" },
-  );
 
   const localeDirs =
     config.i18n && config.i18n.parser === "dir"
@@ -62,16 +58,10 @@ export async function loadContentTree(
         )
       : undefined;
 
-  const { meta, shared } = await resolveFolderMeta(
+  const { meta, shared } = await discoverFolderMeta(
     [
       {
         root: "src/content/brand-guidelines",
-        modules: Object.fromEntries(
-          Object.entries(modules).map(([path, load]) => [
-            path.replace("../content/brand-guidelines/", ""),
-            load,
-          ]),
-        ),
       },
     ],
     { localeDirs: i18n ? localeDirs : [], versionDirs: options.versionDirs },
@@ -108,7 +98,6 @@ export const normalizeSourceEntries = (
       source: {
         name: source.name,
         prefix: source.prefix,
-        root: source.root,
       },
     });
 

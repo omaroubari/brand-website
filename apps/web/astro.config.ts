@@ -3,7 +3,7 @@ import { defineConfig, fontProviders } from "astro/config";
 import mdx from "@astrojs/mdx";
 import cloudflare from "@astrojs/cloudflare";
 
-import config from "./brandtree.config";
+import config from "./src/core/config";
 
 import react from "@astrojs/react";
 

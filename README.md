@@ -15,7 +15,9 @@ Brandtree is a pnpm monorepo with one reusable framework package and one
 dogfood site:
 
 - `packages/brandtree` owns the typed brand/content model, components, layouts,
-  styles, and rendering helpers. It is private and source-consumed for now.
+  styles, and rendering helpers. It remains private; public entry points are
+  consumed directly from source. The package emits root API declarations and a
+  compiled CLI with its supporting modules.
 - `apps/web` owns the current brand config, content, assets, public files, and
   the Astro composition layer that makes the example site runnable.
 
@@ -36,14 +38,44 @@ apps/web content + config + custom pages
          dev server   production build
 ```
 
-That generator and `.brandtree` directory are not implemented yet.
+The minimal `brandtree build` command now scans the consumer project, generates
+`.brandtree/`, and invokes Astro's JavaScript build API with that runtime as its
+root. Run it from the consumer root; production output is written to `dist/`.
+The other CLI commands remain unimplemented.
+
+The generated config includes `prerenderDeps()` from
+`brandtree/astro/prerender-deps`. It preserves external dependency locations in
+Astro's temporary prerender bundle, including framework-private dependencies
+under pnpm or Bun's isolated linker. Native dependencies stay external; client
+and development builds are unaffected. The temporary paths are removed with
+Astro's prerender output and are not part of the final static site.
+
+Brandtree owns Astro, React, React DOM, the MDX/React integrations, styling
+integration, and type-check tooling as runtime dependencies. Standard consumers
+declare only Brandtree; dependencies imported by custom author code remain the
+author's responsibility. The maintained `apps/web` composition still declares
+the packages its Astro configuration imports directly.
+
+Build the package with `pnpm --filter brandtree build`. Its public entry points
+are `brandtree`, `brandtree/components`, `brandtree/runtime`, and
+`brandtree/styles.css`. Node-facing build output lives in `packages/brandtree/dist/` and is
+prepared automatically before packing and by the root dev, build, check, and
+deploy commands. Direct web-workspace commands require building the package
+first. Astro and React components are compiled by the consuming Astro app.
+The package export tests check source API loading, the compiled CLI, and public
+API declarations with bundler resolution.
+
+The root check currently excludes the sandbox's placeholder `brandtree check`
+command; enable it when the generated-app commands are implemented.
 
 The agreed consumer contract is consolidated in
 [ADR 0017](docs/adr/0017-define-the-brandtree-consumer-project-contract.md), with a
 [feature sandbox](apps/sandbox/README.md) adopting the Valence brand from the current web
 app. The sandbox starts with minimal consumer inputs and grows to exercise
-framework features as they are implemented. Package consumption and CLI
-generation are later implementation gates. Track the work
+framework features as they are implemented. It installs a committed local tarball;
+refresh it with `pnpm sandbox:pack` followed by
+`pnpm --filter brandtree-sandbox update brandtree`. The build CLI generates its
+disposable Astro runtime. Track the work
 in the [Framework alpha milestone](https://github.com/omaroubari/brand-website/milestone/9).
 
 ```

@@ -9,6 +9,6 @@
     "preview": "brandtree preview"
   },
   "dependencies": {
-    "brandtree": "0.0.1"
+    "brandtree": "file:brandtree.tgz"
   }
 }

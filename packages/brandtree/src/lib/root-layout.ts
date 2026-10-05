@@ -46,6 +46,8 @@ interface RootLayoutBaseProps {
   imageZoom?: boolean;
   codeWrap?: boolean;
   themeMode: "system" | "light" | "dark";
+  /** Loaded Astro font variables to preload in this shell. */
+  fontCssVariables?: string[];
   searchEnabled: boolean;
   indexable: boolean;
   ogImage?: string | null;
