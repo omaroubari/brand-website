@@ -35,7 +35,7 @@ export async function loadContentTree(
   const { pages } = normalizeSourceEntries(
     { entries: sourceEntries, source },
     {
-      basePath: normalizeBasePath(),
+      basePath: normalizeBasePath(config.basePath),
       i18n,
       versionDirs: options.versionDirs,
     },
@@ -69,6 +69,7 @@ export async function loadContentTree(
 
   const contentTree = buildContentTree(pages, {
     i18n,
+    basePath: normalizeBasePath(config.basePath),
     folderMeta: meta,
     sharedFolderMeta: shared,
     navigation: {},
