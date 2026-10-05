@@ -44,9 +44,25 @@ export const prepareProject = async (
     process.exit(1);
   }
 
+  const hadErrors = reportDiagnostics(project.diagnostics, options.root);
+
+  if (hadErrors) {
+    if (options.strict) {
+      logger.error(
+        "Preparation aborted: diagnostics contain errors and strict mode is enabled.",
+      );
+      process.exit(1);
+    }
+    logger.warn(
+      "Continuing preparation with errors because strict mode is disabled.",
+    );
+  }
+
   const { warnings } = await generateRuntime(project);
+
   for (const warning of warnings) {
     logger.warn(warning);
   }
+
   return project;
 };
