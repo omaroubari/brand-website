@@ -5,7 +5,7 @@ import {
   type PageMeta,
   type ResolvedI18nConfig,
 } from "./schema.ts";
-import { pathParts, withBasePath } from "./paths.ts";
+import { pathParts, mountRoute } from "./paths.ts";
 import { localePlacement, localizeRoute } from "./i18n.ts";
 import { trimChar } from "./trim.ts";
 import type { Diagnostic, Heading, PageRecord } from "./types.ts";
@@ -235,10 +235,12 @@ export interface EntryRoute extends Pick<
 > {
   groups: string[];
   /**
-   * The version-prefixed, locale-agnostic route — the translation key. Pass it
+   * The version-prefixed, locale-agnostic public route. Pass it
    * through {@link localizedRoute} for the route one locale publishes at.
    */
   logicalRoute: string;
+  /** Source-derived identity, unaffected by a frontmatter URL override. */
+  translationKey: string;
   /** The prefixed, locale- and version-stripped nav path. */
   navPath: string;
   segments: string[];
@@ -329,8 +331,10 @@ const mapRoute = (relativePath: string): MappedRoute => {
  * prefixes the mapped route *after* `mapRoute` runs: the mapped route is the
  * version-agnostic key, the config id is prepended verbatim (never
  * numeric-prefix-stripped), a frontmatter `slug` gets versionized so snapshots
- * can't collide with the live page, and `translationKey` becomes
- * version-specific for free. `basePath` is not applied here — it is outermost,
+ * can't collide with the live page. Translation identity uses the route input
+ * before the frontmatter override, so translated URL spellings remain paired;
+ * the version still keeps archived translations separate. `basePath` is not
+ * applied here — it is outermost,
  * after locale prefixing — so the result reads `{locale?}/{prefix?}/…`.
  */
 export const resolveEntryRoute = (
@@ -350,10 +354,19 @@ export const resolveEntryRoute = (
   );
   const { segments, groups, route } = mapRoute(routeInput);
   const logicalRoute = version ? `/${[version, ...segments].join("/")}` : route;
+  const identity = frontmatterSlug
+    ? mapRoute(
+        withPrefix(ctx.prefix, adapterSlug ? `${adapterSlug}${ext}` : navPath),
+      )
+    : { segments, route };
+  const translationKey = version
+    ? `/${[version, ...identity.segments].join("/")}`
+    : identity.route;
   return {
     groups,
     locales,
     logicalRoute,
+    translationKey,
     navPath: withPrefix(ctx.prefix, navPath),
     segments,
     version,
@@ -409,6 +422,7 @@ export function normalizeEntry(
     groups,
     locales,
     logicalRoute,
+    translationKey,
     navPath,
     segments,
     version,
@@ -424,7 +438,7 @@ export function normalizeEntry(
     id: `${ctx.source?.name ?? "filesystem"}:${entry.ref}`,
     source: { name: ctx.source?.name ?? "filesystem", ref: entry.ref },
     sourcePath: entry.sourcePath,
-    translationKey: logicalRoute,
+    translationKey,
     version,
     versionKey,
     navPath,
@@ -447,7 +461,7 @@ export function normalizeEntry(
   const pages = locales.map((locale) => ({
     ...base,
     locale,
-    route: withBasePath(
+    route: mountRoute(
       ctx.basePath ?? "",
       localizedRoute(logicalRoute, locale, ctx.i18n),
     ),
