@@ -41,6 +41,10 @@ apps/web content + config + custom pages
 The minimal `brandtree build` command now scans the consumer project, generates
 `.brandtree/`, and invokes Astro's JavaScript build API with that runtime as its
 root. Run it from the consumer root; production output is written to `dist/`.
+The minimal `brandtree dev` command prepares the same runtime in development
+mode and starts it with Astro's JavaScript dev API. Run it from the consumer
+root; Ctrl+C or SIGTERM stops the server. Preparation runs once at startup;
+changes that require runtime regeneration need a restart.
 The other CLI commands remain unimplemented.
 
 The generated config includes `prerenderDeps()` from
