@@ -1,8 +1,18 @@
 import { defineConfig } from "brandtree";
 
 // Valence data adapted from apps/web; complete required brand schema.
-// This small contract fixture uses system fonts and disables generated cards.
+// Google font registration exercises the generated Astro runtime.
 export default defineConfig({
+  fonts: [
+    {
+      name: "Inter",
+      cssVariable: "--font-sandbox",
+      provider: "google",
+      weights: ["100 900"],
+      styles: ["normal"],
+      fallbacks: ["system-ui", "sans-serif"],
+    },
+  ],
   brand: {
     meta: {
       name: "Valence",
@@ -219,8 +229,8 @@ export default defineConfig({
       },
     },
     typography: {
-      display: "ui-sans-serif, system-ui, sans-serif",
-      text: "ui-sans-serif, system-ui, sans-serif",
+      display: "var(--font-sandbox)",
+      text: "var(--font-sandbox)",
       mono: "ui-monospace, SFMono-Regular, Menlo, monospace",
       families: [
         {
