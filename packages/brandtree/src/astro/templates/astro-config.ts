@@ -47,7 +47,7 @@ export default defineConfig({
   publicDir: fileURLToPath(new URL(${literal(relativePath(context.outDir, join(context.root, "public")) + "/")}, import.meta.url)),
   outDir: fileURLToPath(new URL(${literal(relativePath(context.outDir, context.distDir ?? join(context.root, "dist")) + "/")}, import.meta.url)),
   site: ${literal(config.brand.meta.url)},
-  output: 'static',${i18nOption}
+  output: 'static',
   integrations: [${integrations.join(", ")}],
   i18n: ${i18n},
   vite: {
