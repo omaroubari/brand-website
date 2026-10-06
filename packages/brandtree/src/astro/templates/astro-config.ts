@@ -14,12 +14,12 @@ export const astroConfigTemplate = ({
 }): string => {
   // Brandtree generates locale paths, redirects, and fallback pages itself.
   // Retain Astro's locale helpers without its automatic routing enforcement.
-  const i18nOption = config.i18n
-    ? `\n  i18n: ${JSON.stringify({
+  const i18n = config.i18n
+    ? `i18n: ${JSON.stringify({
         defaultLocale: config.i18n.defaultLocale,
         locales: config.i18n.locales.map((locale) => locale.code),
         routing: "manual",
-      })},`
+      })}`
     : "";
 
   const mdxImport = `import mdx from "@astrojs/mdx";\n`;
@@ -48,6 +48,7 @@ export default defineConfig({
   site: ${literal(config.brand.meta.url)},
   output: 'static',${i18nOption}
   integrations: [${integrations.join(", ")}],
+  i18n: ${i18n},
   vite: {
     plugins: [tailwindcss(), prerenderDeps()],
     resolve: {
