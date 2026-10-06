@@ -13,17 +13,15 @@ export const astroConfigTemplate = ({
   dataPath: string;
 }): string => {
   // Astro's native i18n gives locale-aware helpers + `<html lang>` correctness.
-  // Blume owns getStaticPaths and materializes fallback routes in the manifest,
+  // Brandtree owns getStaticPaths and materializes fallback routes in the manifest,
   // so we deliberately omit Astro's `fallback` to keep one source of routing.
-  const i18nOption = config.i18n
-    ? `\n  i18n: ${JSON.stringify({
+  const i18n = config.i18n
+    ? `${literal({
         defaultLocale: config.i18n.defaultLocale,
         locales: config.i18n.locales.map((locale) => locale.code),
-        routing: {
-          prefixDefaultLocale: !config.i18n.hideDefaultLocalePrefix,
-        },
-      })},`
-    : "";
+        routing: "manual",
+      })}`
+    : undefined;
 
   const mdxImport = `import mdx from "@astrojs/mdx";\n`;
   const reactImport = `import react from "@astrojs/react";\n`;
@@ -51,6 +49,7 @@ export default defineConfig({
   site: ${literal(config.brand.meta.url)},
   output: 'static',
   integrations: [${integrations.join(", ")}],
+  i18n: ${i18n},
   vite: {
     plugins: [tailwindcss(), prerenderDeps()],
     resolve: {
