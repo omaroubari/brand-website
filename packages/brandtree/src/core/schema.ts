@@ -2,6 +2,7 @@ import { brandSchema } from "../brand/schema.ts";
 import { z } from "astro/zod";
 import { contentIcons, type ContentIconName } from "./icons.ts";
 import { normalizeBasePath } from "./paths.ts";
+import { defaultFont, resolveTypographyFonts } from "./fonts.ts";
 
 /** Icon inputs in serializable contexts (frontmatter, meta files). */
 const iconName = z.enum(
@@ -167,7 +168,13 @@ const fontConfigSchema = z.union([
 
 export const fontsConfigSchema = z
   .array(fontConfigSchema)
-  .default([])
+  .prefault(() => [
+    {
+      ...defaultFont,
+      weights: [...defaultFont.weights],
+      styles: [...defaultFont.styles],
+    },
+  ])
   .superRefine((fonts, ctx) => {
     const variables = new Set<string>();
     fonts.forEach((font, index) => {
@@ -318,7 +325,11 @@ export const brandtreeConfigSchema = z
         });
       }
     }
-  });
+  })
+  .transform((config) => ({
+    ...config,
+    brand: resolveTypographyFonts(config.brand, config.fonts),
+  }));
 
 export type ResolvedConfig = z.output<typeof brandtreeConfigSchema>;
 export type BrandtreeConfigInput = z.input<typeof brandtreeConfigSchema>;

@@ -4,7 +4,10 @@ import { join } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
-import { fontsConfigSchema } from "../src/core/schema";
+import { brandtreeConfigSchema, fontsConfigSchema } from "../src/core/schema";
+import fixtureConfig from "../../../apps/sandbox/brandtree.config";
+import { resolveBrand } from "../src/brand/localize";
+import { brandStyleSheet } from "../src/brand/tokens";
 import { scanProject } from "../src/core/project-tree";
 import { generateRuntime } from "../src/astro/generate";
 
@@ -15,8 +18,18 @@ afterEach(async () => {
   );
 });
 
-it("defaults to system fonts and rejects malformed registrations", () => {
-  expect(fontsConfigSchema.parse(undefined)).toEqual([]);
+it("defaults to Google Inter, allows opting out, and rejects malformed registrations", () => {
+  expect(fontsConfigSchema.parse(undefined)).toEqual([
+    {
+      name: "Inter",
+      cssVariable: "--font-brandtree-default",
+      provider: "google",
+      weights: ["100 900"],
+      styles: ["normal", "italic"],
+      fallbacks: ["system-ui", "sans-serif"],
+    },
+  ]);
+  expect(fontsConfigSchema.parse([])).toEqual([]);
   const hosted = {
     name: "Inter",
     cssVariable: "--font-custom",
@@ -34,6 +47,84 @@ it("defaults to system fonts and rejects malformed registrations", () => {
   ])
     expect(fontsConfigSchema.safeParse(fonts).success).toBe(false);
 });
+
+it("resolves omitted-font typography through Inter and system without changing author inputs", () => {
+  const input = {
+    ...fixtureConfig,
+    fonts: undefined,
+    brand: {
+      ...fixtureConfig.brand,
+      typography: {
+        ...fixtureConfig.brand.typography,
+        display: "var(--font-missing)",
+        text: '"Missing Family"',
+      },
+    },
+  };
+  const config = brandtreeConfigSchema.parse(input);
+  const fallback = "var(--font-brandtree-default, system-ui, sans-serif)";
+  expect(config.brand.typography.display).toBe(
+    `var(--font-missing, ${fallback}), ${fallback}`,
+  );
+  expect(config.brand.typography.text).toBe(`"Missing Family", ${fallback}`);
+  expect(config.brand.typography.mono).toBe(input.brand.typography.mono);
+  expect(config.brand.typography.families).toEqual(
+    input.brand.typography.families,
+  );
+  expect(input.brand.typography.display).toBe("var(--font-missing)");
+  // Resolved configs may be parsed again without accumulating fallback stacks.
+  expect(brandtreeConfigSchema.parse(config)).toEqual(config);
+  const arabic = resolveBrand(config.brand, "ar", config.i18n);
+  const arabicTypography = input.brand.localeOverrides?.ar.typography;
+  if (!arabicTypography)
+    throw new Error("Fixture must define Arabic typography");
+  expect(arabic.typography.display).toBe(arabicTypography.display);
+  expect(arabic.typography.text).toBe(arabicTypography.text);
+  expect(brandStyleSheet(config.brand)).toContain(
+    `--font-display: var(--font-missing, ${fallback}), ${fallback};`,
+  );
+});
+
+it.each([{ fonts: [] }, { fonts: fixtureConfig.fonts }])(
+  "uses system fallbacks without implicitly registering Inter when fonts are explicit: $fonts",
+  ({ fonts }) => {
+    const config = brandtreeConfigSchema.parse({
+      ...fixtureConfig,
+      fonts,
+      brand: {
+        ...fixtureConfig.brand,
+        typography: {
+          ...fixtureConfig.brand.typography,
+          display: "var(--font-sandbox)",
+          text: "var(--font-custom, serif)",
+        },
+        localeOverrides: {
+          ar: {
+            typography: {
+              display: "var(--font-arabic)",
+              text: "system-ui, sans-serif",
+            },
+          },
+        },
+      },
+    });
+    expect(config.fonts).toEqual(fonts);
+    expect(config.brand.typography.display).toBe(
+      "var(--font-sandbox, system-ui, sans-serif), system-ui, sans-serif",
+    );
+    expect(config.brand.typography.text).toBe(
+      "var(--font-custom, serif), system-ui, sans-serif",
+    );
+    const arabic = resolveBrand(config.brand, "ar", config.i18n);
+    expect(arabic.typography.display).toBe(
+      "var(--font-arabic, system-ui, sans-serif), system-ui, sans-serif",
+    );
+    expect(arabic.typography.text).toBe("system-ui, sans-serif");
+    expect(brandStyleSheet(config.brand)).not.toContain(
+      "--font-brandtree-default",
+    );
+  },
+);
 
 it("emits hosted provider calls and preserves their family options", async () => {
   const fonts = fontsConfigSchema.parse([
@@ -78,6 +169,17 @@ it("emits hosted provider calls and preserves their family options", async () =>
     fallbacks: [],
   });
   expect(resolved[4]).not.toHaveProperty("id");
+  // The omitted-font path must generate the same real Google provider API.
+  project.config = brandtreeConfigSchema.parse({
+    ...fixtureConfig,
+    fonts: undefined,
+  });
+  await generateRuntime(project);
+  const defaultSource = await readFile(configPath, "utf8");
+  expect(defaultSource).toContain('"cssVariable": "--font-brandtree-default"');
+  expect(defaultSource).toContain('"name": "Inter"');
+  expect(defaultSource).toContain("fontProviders.google()");
+  expect(defaultSource).not.toContain("fontProviders.local()");
 });
 
 it("builds custom font CSS and preloads from an external generated runtime", async () => {
