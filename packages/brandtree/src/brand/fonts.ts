@@ -1,4 +1,4 @@
-import type { BrandConfig } from "../brand/schema.ts";
+import type { BrandConfig } from "./schema.ts";
 
 /** The default is part of resolved configuration, not component-owned styling. */
 export const defaultFont = {

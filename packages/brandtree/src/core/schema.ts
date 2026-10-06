@@ -2,7 +2,7 @@ import { brandSchema } from "../brand/schema.ts";
 import { z } from "astro/zod";
 import { contentIcons, type ContentIconName } from "./icons.ts";
 import { normalizeBasePath } from "./paths.ts";
-import { defaultFont, resolveTypographyFonts } from "./fonts.ts";
+import { defaultFont, resolveTypographyFonts } from "../brand/fonts.ts";
 
 /** Icon inputs in serializable contexts (frontmatter, meta files). */
 const iconName = z.enum(
@@ -168,13 +168,6 @@ const fontConfigSchema = z.union([
 
 export const fontsConfigSchema = z
   .array(fontConfigSchema)
-  .prefault(() => [
-    {
-      ...defaultFont,
-      weights: [...defaultFont.weights],
-      styles: [...defaultFont.styles],
-    },
-  ])
   .superRefine((fonts, ctx) => {
     const variables = new Set<string>();
     fonts.forEach((font, index) => {
@@ -287,7 +280,13 @@ const seoConfigSchema = z.strictObject({
 export const brandtreeConfigSchema = z
   .object({
     brand: brandSchema,
-    fonts: fontsConfigSchema,
+    fonts: fontsConfigSchema.prefault([
+      {
+        ...defaultFont,
+        weights: [...defaultFont.weights],
+        styles: [...defaultFont.styles],
+      },
+    ]),
     /**
      * Site-wide mount point prepended to every generated route (e.g. `/docs`),
      * while staying invisible to the sidebar/nav tree. Distinct from a per-source

@@ -9,7 +9,7 @@ import { imageSize } from "image-size";
 import ts from "typescript";
 import { scanProject, type BrandtreeProject } from "../src/core/project-tree";
 import type { RuntimeOgAssets } from "../src/core/types";
-import { resolveBrand } from "../src/brand/localize";
+import { resolveBrand } from "../src/brand/i18n";
 import { colorCss, resolveColor } from "../src/brand/tokens";
 import { getNavigation } from "../src/core/navigation";
 import { localeDir } from "../src/core/i18n";

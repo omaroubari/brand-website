@@ -6,7 +6,7 @@ import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 import { brandtreeConfigSchema, fontsConfigSchema } from "../src/core/schema";
 import fixtureConfig from "../../../apps/sandbox/brandtree.config";
-import { resolveBrand } from "../src/brand/localize";
+import { resolveBrand } from "../src/brand/i18n";
 import { brandStyleSheet } from "../src/brand/tokens";
 import { scanProject } from "../src/core/project-tree";
 import { generateRuntime } from "../src/astro/generate";
@@ -19,7 +19,9 @@ afterEach(async () => {
 });
 
 it("defaults to Google Inter, allows opting out, and rejects malformed registrations", () => {
-  expect(fontsConfigSchema.parse(undefined)).toEqual([
+  expect(
+    brandtreeConfigSchema.parse({ ...fixtureConfig, fonts: undefined }).fonts,
+  ).toEqual([
     {
       name: "Inter",
       cssVariable: "--font-brandtree-default",
