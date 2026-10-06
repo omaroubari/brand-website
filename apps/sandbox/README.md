@@ -64,6 +64,27 @@ Arabic locale overrides keep system-font stacks.
 Logo SVGs and favicon are the template's existing placeholder artwork.
 The arrow SVG is copied from its Phosphor-based icon set.
 
+## Font defaults and fallbacks
+
+For generated Brandtree sites, omitting the top-level `fonts` field registers
+Google Inter (variable weights `100 900`, normal and italic), exposed as
+`--font-brandtree-default`. Display and text typography retain authored families,
+then fall back to Inter and `system-ui, sans-serif`. A bare `var(--font-name)`
+also receives a fallback inside `var()` so an undefined variable stays usable.
+Existing explicit variable fallbacks and generic system stacks keep their priority.
+Locale overrides follow the same rules; monospace and documented font-family
+metadata are unchanged. Inter does not cover every script, including Arabic.
+
+Set `fonts: []` to opt out of managed fonts. An explicit nonempty `fonts` array
+replaces the default registration; typography then falls back to system fonts.
+Local font paths resolve from the project root: `./assets/fonts/font.woff2`,
+`./src/fonts/font.woff2`, and `./public/fonts/font.woff2` are all supported.
+
+Google fonts are downloaded during the build and served as site assets. Download
+failure recovery and warnings for undeclared font variables remain follow-up work;
+the CSS fallback stack does not make a failed provider download nonfatal.
+Social-card fonts still use the separate `seo.og.fonts` configuration.
+
 ## What Brandtree manages
 
 ```text
