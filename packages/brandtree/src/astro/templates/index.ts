@@ -1,5 +1,5 @@
 const coverImports = (): string => `import data from "brandtree:data";
-import { resolveBrand, localeDir, resolveUIStrings, getNavigation, type Navigation, type ContentTree } from "brandtree";
+import { getCoverPagePaths, resolveBrand, localeDir, resolveUIStrings, getNavigation, type Navigation, type ContentTree } from "brandtree";
 import { CoverPage, generatedOgImagePath, RootLayout, withBase, type BareRootLayoutProps } from "brandtree/runtime";
 
 const config = data.config;
@@ -111,43 +111,24 @@ const layoutProps = {
 </RootLayout>
 `;
 
-/** Root cover, or a static default-locale redirect for fully prefixed sites. */
+/** One route serves the mount root and every configured locale cover. */
 export const indexPageTemplate = (): string => `---
-${coverImports()}
-export const prerender = true;
-
-const locale = config.i18n?.defaultLocale ?? "en";
-const navigation = getNavigation(tree, locale);
-if (config.i18n && !config.i18n.hideDefaultLocalePrefix) {
-  return Astro.redirect(withBase(navigation.root ?? \`/\${locale}\`), 302);
-}
-
-${coverBody()}`;
-
-/** Locale covers; the unprefixed default locale is handled by index.astro. */
-export const localizedIndexPageTemplate = (): string => `---
 ${coverImports()}
 export const prerender = true;
 
 interface Props {
   locale: string;
+  redirect: boolean;
   navigation: Navigation;
 }
 
 export function getStaticPaths() {
-  const config = data.config;
   const tree: ContentTree = { ...data.tree, routes: new Map(data.tree.routes) };
-  const i18n = config.i18n;
-  if (!i18n) return [];
-  return i18n.locales
-    .filter(({ code }) =>
-      !i18n.hideDefaultLocalePrefix || code !== i18n.defaultLocale,
-    )
-    .map(({ code }) => ({
-      params: { lang: code },
-      props: { locale: code, navigation: getNavigation(tree, code) },
-    }));
+  return getCoverPagePaths(tree, data.config);
 }
 
-const { locale, navigation } = Astro.props;
+const { locale, navigation, redirect } = Astro.props;
+if (redirect) {
+  return Astro.redirect(withBase(navigation.root ?? \`/\${locale}\`), 302);
+}
 ${coverBody()}`;
