@@ -129,11 +129,14 @@ contract; this small example demonstrates the existing app's directory mode.
 ## Commands
 
 Run from the consumer root, since Brandtree uses the current directory and does
-not search ancestors. The implemented build command can run through the workspace:
+not search ancestors. The implemented dev and build commands can run through the workspace:
 
 ```sh
+pnpm --filter brandtree-sandbox dev
 pnpm --filter brandtree-sandbox build
 ```
 
-The `dev`, `check`, and `preview` scripts describe planned commands and remain
-unimplemented. The root check therefore still excludes the sandbox.
+The dev command prepares the runtime once at startup; changes that require
+runtime regeneration need a restart. The `check` and `preview` scripts describe
+planned commands and remain unimplemented. The root check therefore still
+excludes the sandbox.
