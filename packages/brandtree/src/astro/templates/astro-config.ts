@@ -12,15 +12,16 @@ export const astroConfigTemplate = ({
   config: ResolvedConfig;
   dataPath: string;
 }): string => {
-  // Brandtree generates locale paths, redirects, and fallback pages itself.
-  // Retain Astro's locale helpers without its automatic routing enforcement.
+  // Astro's native i18n gives locale-aware helpers + `<html lang>` correctness.
+  // Brandtree owns getStaticPaths and materializes fallback routes in the manifest,
+  // so we deliberately omit Astro's `fallback` to keep one source of routing.
   const i18n = config.i18n
-    ? `i18n: ${JSON.stringify({
+    ? `${literal({
         defaultLocale: config.i18n.defaultLocale,
         locales: config.i18n.locales.map((locale) => locale.code),
         routing: "manual",
       })}`
-    : "";
+    : undefined;
 
   const mdxImport = `import mdx from "@astrojs/mdx";\n`;
   const reactImport = `import react from "@astrojs/react";\n`;
