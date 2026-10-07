@@ -41,7 +41,7 @@ content/
     index.mdx
     01-logotype.mdx
 components/AuthorNote.astro         # explicitly imported custom component
-assets/fonts/Inter-Variable.woff2    # local fixture for offline framework tests
+assets/fonts/Inter-Variable.woff2    # local Inter for canonical typography
 assets/icons/arrow.svg              # explicitly imported raw SVG
 public/
   favicon.svg
@@ -57,8 +57,9 @@ data without importing that app or using repository aliases. Required palette
 shades and complete light/dark roles are retained; a complete config is larger
 than the minimal author-file layout because the current schema requires them.
 The sandbox trims the documented type scale and disables generated social cards.
-Its top-level `fonts` array registers Inter through Astro's Google provider with
-variable weights `100 900` and normal style; display and text reference
+Its top-level `fonts` array registers Inter through Astro's local provider from
+`./assets/fonts/Inter-Variable.woff2`, with variable weights `100 900` and normal
+style; display and text reference
 `--font-sandbox`.
 Arabic locale overrides keep system-font stacks.
 Logo SVGs and favicon are the template's existing placeholder artwork.

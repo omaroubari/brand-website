@@ -33,6 +33,11 @@ const makeConfig = async (source: string) => {
   const directory = await mkdtemp(join(tmpdir(), "brandtree-config-"));
   directories.push(directory);
   await symlink(
+    fileURLToPath(new URL("../../../apps/sandbox/assets/", import.meta.url)),
+    join(directory, "assets"),
+    "dir",
+  );
+  await symlink(
     fileURLToPath(new URL("../../../apps/sandbox/public/", import.meta.url)),
     join(directory, "public"),
     "dir",

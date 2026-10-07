@@ -26,6 +26,7 @@ const fixtureConfig = join(sandboxRoot, "brandtree.config.ts");
 const makeProject = async (files: Record<string, string>): Promise<string> => {
   const root = await mkdtemp(join(tmpdir(), "brandtree-project-"));
   temporaryDirectories.push(root);
+  await symlink(join(sandboxRoot, "assets"), join(root, "assets"), "dir");
   if (!Object.keys(files).some((file) => file.startsWith("public/"))) {
     await symlink(join(sandboxRoot, "public"), join(root, "public"), "dir");
   }

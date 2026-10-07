@@ -1,16 +1,25 @@
 import { defineConfig } from "brandtree";
 
 // Valence data adapted from apps/web; complete required brand schema.
-// Google font registration exercises the generated Astro runtime.
+// Local font registration exercises project-root asset resolution.
 export default defineConfig({
   fonts: [
     {
       name: "Inter",
       cssVariable: "--font-sandbox",
-      provider: "google",
+      provider: "local",
       weights: ["100 900"],
       styles: ["normal"],
       fallbacks: ["system-ui", "sans-serif"],
+      options: {
+        variants: [
+          {
+            src: ["./assets/fonts/Inter-Variable.woff2"],
+            weight: "100 900",
+            style: "normal",
+          },
+        ],
+      },
     },
   ],
   brand: {
