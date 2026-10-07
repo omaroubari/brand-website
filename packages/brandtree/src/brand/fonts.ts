@@ -16,10 +16,11 @@ export function resolveTypographyFonts(
   fonts: readonly { cssVariable: string }[],
   unavailableVariables: ReadonlySet<string> = new Set(),
 ): BrandConfig {
+  const declaredVariables = new Set(
+    fonts.map(({ cssVariable }) => cssVariable),
+  );
   const system = defaultFont.fallbacks.join(", ");
-  const fallback = fonts.some(
-    ({ cssVariable }) => cssVariable === defaultFont.cssVariable,
-  )
+  const fallback = declaredVariables.has(defaultFont.cssVariable)
     ? `var(${defaultFont.cssVariable}, ${system})`
     : system;
   const resolveFamily = (family: string): string => {
@@ -51,7 +52,7 @@ export function resolveTypographyFonts(
       mono: typography.mono.replace(
         /var\(\s*(--[a-zA-Z_][a-zA-Z0-9_-]*)\s*\)/gu,
         (expression, variable: string) =>
-          unavailableVariables.has(variable)
+          !declaredVariables.has(variable) || unavailableVariables.has(variable)
             ? `var(${variable}, ui-monospace, monospace)`
             : expression,
       ),
