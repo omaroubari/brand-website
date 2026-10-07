@@ -47,6 +47,10 @@ values through composition roots to components.
   weights, and the published type scale. Inter does not cover every script,
   including Arabic; locale typography must retain suitable families or system
   stacks.
+- Bare monospace variables that are undeclared or whose local font is unavailable
+  receive `ui-monospace, monospace` inside `var()`, for canonical typography and
+  locale overrides. Declared variables, explicit fallbacks, and authored system
+  monospace stacks retain their priority.
 - Local font sources use the shared reference and availability rules in
   [ADR 0019](0019-define-local-asset-loading-and-reference-rules.md).
 - Astro owns font resolution, downloading, and caching for Google and other

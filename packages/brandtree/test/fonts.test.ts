@@ -174,6 +174,63 @@ it.each([{ fonts: [] }, { fonts: fixtureConfig.fonts }])(
   },
 );
 
+it.each([
+  { mode: "omitted", fonts: undefined },
+  { mode: "opted out", fonts: [] },
+  { mode: "explicit", fonts: fixtureConfig.fonts },
+])(
+  "uses system monospace fallbacks for undeclared canonical and locale variables when fonts are $mode",
+  ({ fonts }) => {
+    const input = {
+      ...fixtureConfig,
+      fonts,
+      brand: {
+        ...fixtureConfig.brand,
+        typography: {
+          ...fixtureConfig.brand.typography,
+          mono: "var(--font-missing-code), monospace",
+        },
+        localeOverrides: {
+          ar: { typography: { mono: "var(--font-arabic-code)" } },
+        },
+      },
+    };
+    const config = brandtreeConfigSchema.parse(input);
+    expect(config.brand.typography.mono).toBe(
+      "var(--font-missing-code, ui-monospace, monospace), monospace",
+    );
+    expect(resolveBrand(config.brand, "ar", config.i18n).typography.mono).toBe(
+      "var(--font-arabic-code, ui-monospace, monospace)",
+    );
+    expect(brandStyleSheet(config.brand)).toContain(
+      "--font-mono: var(--font-missing-code, ui-monospace, monospace), monospace;",
+    );
+    expect(input.brand.typography.mono).toBe(
+      "var(--font-missing-code), monospace",
+    );
+    expect(brandtreeConfigSchema.parse(config)).toEqual(config);
+  },
+);
+
+it.each([
+  "var(--font-sandbox)",
+  "var(--font-missing-code, Courier, monospace)",
+  "ui-monospace, SFMono-Regular, Menlo, monospace",
+])("preserves usable authored mono stacks: %s", (mono) => {
+  const config = brandtreeConfigSchema.parse({
+    ...fixtureConfig,
+    brand: {
+      ...fixtureConfig.brand,
+      typography: { ...fixtureConfig.brand.typography, mono },
+      localeOverrides: { ar: { typography: { mono } } },
+    },
+  });
+  expect(config.brand.typography.mono).toBe(mono);
+  expect(resolveBrand(config.brand, "ar", config.i18n).typography.mono).toBe(
+    mono,
+  );
+});
+
 it("emits hosted provider calls and preserves their family options", async () => {
   const fonts = fontsConfigSchema.parse([
     ...["google", "fontsource", "bunny", "fontshare"].map((provider) => ({
