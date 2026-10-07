@@ -2,6 +2,7 @@ import { brandSchema } from "../brand/schema.ts";
 import { z } from "astro/zod";
 import { contentIcons, type ContentIconName } from "./icons.ts";
 import { normalizeBasePath } from "./paths.ts";
+import { defaultFont, resolveTypographyFonts } from "../brand/index.ts";
 
 /** Icon inputs in serializable contexts (frontmatter, meta files). */
 const iconName = z.enum(
@@ -110,6 +111,77 @@ export const navigationConfigSchema = z
   .object({ numbering: z.boolean().default(false) })
   .strict();
 
+const fontWeightSchema = z.union([z.number(), z.string().min(1)]);
+const fontStyleSchema = z.enum(["normal", "italic", "oblique"]);
+const fontStringsSchema = z.tuple([z.string().min(1)], z.string().min(1));
+const fontProperties = {
+  display: z.enum(["auto", "block", "swap", "fallback", "optional"]).optional(),
+  stretch: z.string().optional(),
+  featureSettings: z.string().optional(),
+  variationSettings: z.string().optional(),
+  unicodeRange: fontStringsSchema.optional(),
+};
+const fontFamily = {
+  ...fontProperties,
+  name: z.string().min(1),
+  cssVariable: z.string().regex(/^--[a-zA-Z_][a-zA-Z0-9_-]*$/u),
+  weights: z.tuple([fontWeightSchema], fontWeightSchema).optional(),
+  styles: z.tuple([fontStyleSchema], fontStyleSchema).optional(),
+  subsets: fontStringsSchema.optional(),
+  formats: z
+    .tuple(
+      [z.enum(["woff2", "woff", "ttf", "otf", "eot"])],
+      z.enum(["woff2", "woff", "ttf", "otf", "eot"]),
+    )
+    .optional(),
+  fallbacks: z.array(z.string()).optional(),
+  optimizedFallbacks: z.boolean().optional(),
+};
+
+const fontVariantSchema = z.strictObject({
+  ...fontProperties,
+  /** File paths are relative to the client project, not the generated app. */
+  src: fontStringsSchema,
+  weight: fontWeightSchema.optional(),
+  style: fontStyleSchema.optional(),
+});
+
+/** Serializable font declarations translated into Astro font providers at build time. */
+const fontConfigSchema = z.union([
+  z.strictObject({
+    ...fontFamily,
+    provider: z.literal("local"),
+    options: z.strictObject({
+      variants: z.tuple([fontVariantSchema], fontVariantSchema),
+    }),
+  }),
+  z.strictObject({
+    ...fontFamily,
+    provider: z.enum(["google", "fontsource", "bunny", "fontshare"]),
+  }),
+  z.strictObject({
+    ...fontFamily,
+    provider: z.literal("adobe"),
+    id: z.string().min(1),
+  }),
+]);
+
+export const fontsConfigSchema = z
+  .array(fontConfigSchema)
+  .superRefine((fonts, ctx) => {
+    const variables = new Set<string>();
+    fonts.forEach((font, index) => {
+      if (variables.has(font.cssVariable)) {
+        ctx.addIssue({
+          code: "custom",
+          path: [index, "cssVariable"],
+          message: "Font CSS variables must be unique.",
+        });
+      }
+      variables.add(font.cssVariable);
+    });
+  });
+
 /**
  * Any CSS color. Takumi parses the full grammar, so this stays unvalidated
  * here and a bad value fails the OG prerender with a parse error naming it —
@@ -208,6 +280,13 @@ const seoConfigSchema = z.strictObject({
 export const brandtreeConfigSchema = z
   .object({
     brand: brandSchema,
+    fonts: fontsConfigSchema.prefault([
+      {
+        ...defaultFont,
+        weights: [...defaultFont.weights],
+        styles: [...defaultFont.styles],
+      },
+    ]),
     /**
      * Site-wide mount point prepended to every generated route (e.g. `/docs`),
      * while staying invisible to the sidebar/nav tree. Distinct from a per-source
@@ -245,7 +324,11 @@ export const brandtreeConfigSchema = z
         });
       }
     }
-  });
+  })
+  .transform((config) => ({
+    ...config,
+    brand: resolveTypographyFonts(config.brand, config.fonts),
+  }));
 
 export type ResolvedConfig = z.output<typeof brandtreeConfigSchema>;
 export type BrandtreeConfigInput = z.input<typeof brandtreeConfigSchema>;

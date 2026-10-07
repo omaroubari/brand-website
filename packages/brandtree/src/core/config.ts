@@ -1,4 +1,5 @@
 import { BrandtreeError, diagnosticsFromZod } from "./diagnostics.ts";
+import { collectBrandDiagnostics } from "../brand/index.ts";
 
 import {
   brandtreeConfigSchema,
@@ -87,9 +88,19 @@ export const loadConfig = async (root: string): Promise<ConfigLoadResult> => {
     throw new BrandtreeError(detail);
   }
 
-  const assets = await prepareConfigAssets(parsed.data, {
+  const assetResult = await prepareConfigAssets(parsed.data, {
     root,
     file: configFile ?? undefined,
   });
-  return { config: assets.config, configFile, diagnostics: assets.diagnostics };
+
+  return {
+    config: assetResult.config,
+    configFile,
+    diagnostics: [
+      ...collectBrandDiagnostics(parsed.data, {
+        file: configFile ?? undefined,
+      }),
+      ...assetResult.diagnostics,
+    ],
+  };
 };
