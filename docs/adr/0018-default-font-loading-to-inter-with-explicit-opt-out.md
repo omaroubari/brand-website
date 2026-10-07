@@ -42,6 +42,12 @@ values through composition roots to components.
   another family outside an undefined variable does not make the declaration
   valid. Existing explicit variable fallbacks and generic system stacks retain
   their priority.
+- For now, canonical `brand.typography.display`, `text`, and `mono` are required
+  strings. Omitting a field or setting it to `undefined` fails config validation
+  before font fallback resolution; font fallbacks cannot rescue missing required
+  config fields. Locale overrides may omit these fields and inherit their
+  canonical values. Font fallbacks handle unavailable font families or undefined
+  CSS variables within valid typography strings.
 - Canonical and locale-specific display/text typography follow the same rules.
   Preserve authored locale choices, monospace, documented family metadata,
   weights, and the published type scale. Inter does not cover every script,
