@@ -1,7 +1,7 @@
 import { colors } from "consola/utils";
 import { relative } from "pathe";
 import type { ZodError } from "zod";
-import type { Diagnostic } from "./types.ts";
+import type { Diagnostic, DiagnosticSeverity } from "./types.ts";
 
 /** A recoverable error carrying a structured diagnostic. */
 export class BrandtreeError extends Error {
@@ -112,7 +112,12 @@ export const diagnosticsFromIssues = (
     message: string;
     path: readonly (string | number)[];
   }[],
-  options: { code: string; file?: string; source?: string },
+  options: {
+    code: string;
+    file?: string;
+    source?: string;
+    severity?: DiagnosticSeverity;
+  },
 ): Diagnostic[] =>
   issues.map((issue) => {
     const schemaPath = issue.path.join(".");
@@ -126,7 +131,7 @@ export const diagnosticsFromIssues = (
       line: position?.line,
       message: schemaPath ? `${schemaPath}: ${issue.message}` : issue.message,
       schemaPath: schemaPath || undefined,
-      severity: "error",
+      severity: options.severity ?? "error",
     } satisfies Diagnostic;
   });
 

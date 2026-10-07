@@ -229,7 +229,11 @@ export const scanProject = async (
     mode,
     context,
     config,
-    diagnostics: [...contentDiagnostics, ...folderMeta.diagnostics],
+    diagnostics: [
+      ...configResult.diagnostics,
+      ...contentDiagnostics,
+      ...folderMeta.diagnostics,
+    ],
     sources: [source],
     droppedPages,
     tree,
