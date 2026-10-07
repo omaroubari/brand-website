@@ -2,11 +2,13 @@ import {
   collectBrandAssetReferences,
   resolveTypographyFonts,
 } from "../brand/index.ts";
+
 import {
   checkLocalAssets,
   localAssetDiagnostics,
   type LocalAssetReference,
 } from "./local-assets.ts";
+
 import type { ResolvedConfig } from "./schema.ts";
 import type { Diagnostic } from "./types.ts";
 
@@ -18,7 +20,7 @@ export function collectConfigAssetReferences(
   config.fonts.forEach((font, fontIndex) => {
     if (font.provider !== "local") return;
     font.options.variants.forEach((variant, variantIndex) => {
-      variant.src.forEach((value, sourceIndex) => {
+      variant.src.forEach((value, srcIndex) => {
         references.push({
           value,
           path: [
@@ -28,7 +30,7 @@ export function collectConfigAssetReferences(
             "variants",
             variantIndex,
             "src",
-            sourceIndex,
+            srcIndex,
           ],
         });
       });
@@ -46,11 +48,14 @@ export async function prepareConfigAssets(
     collectConfigAssetReferences(config),
     options.root,
   );
-  const unavailable = new Set(
+  const unavailablePaths = new Set(
     failures.map(({ reference }) => JSON.stringify(reference.path)),
   );
   const fonts: ResolvedConfig["fonts"] = [];
-  const unavailableVariables = new Set<string>();
+  const unavailableFontCSSVariables = new Set<string>();
+
+  // Prune unavailable local font sources, empty variants, and empty fonts.
+  // Track removed fonts' CSS variables for typography fallbacks.
   config.fonts.forEach((font, fontIndex) => {
     if (font.provider !== "local") {
       fonts.push(font);
@@ -58,9 +63,10 @@ export async function prepareConfigAssets(
     }
     const variants: (typeof font.options.variants)[number][] = [];
     font.options.variants.forEach((variant, variantIndex) => {
-      const [first, ...rest] = variant.src.filter(
-        (_, sourceIndex) =>
-          !unavailable.has(
+      // Select valid variant sources only
+      const validVariantSources = variant.src.filter(
+        (_, srcIndex) =>
+          !unavailablePaths.has(
             JSON.stringify([
               "fonts",
               fontIndex,
@@ -68,18 +74,27 @@ export async function prepareConfigAssets(
               "variants",
               variantIndex,
               "src",
-              sourceIndex,
+              srcIndex,
             ]),
           ),
       );
-      if (first !== undefined)
+
+      // Promote variants with atleast one valid source
+      const [first, ...rest] = validVariantSources;
+      if (first !== undefined) {
         variants.push({ ...variant, src: [first, ...rest] });
+      }
     });
     const [first, ...rest] = variants;
-    if (first !== undefined)
+    if (first !== undefined) {
+      // Push fonts with atleast one valid variant
       fonts.push({ ...font, options: { variants: [first, ...rest] } });
-    else unavailableVariables.add(font.cssVariable);
+    } else {
+      // Remove the font if no variants remain, recording its CSS variable
+      unavailableFontCSSVariables.add(font.cssVariable);
+    }
   });
+
   return {
     config: {
       ...config,
@@ -87,7 +102,7 @@ export async function prepareConfigAssets(
       brand: resolveTypographyFonts(
         config.brand,
         config.fonts,
-        unavailableVariables,
+        unavailableFontCSSVariables,
       ),
     },
     diagnostics: localAssetDiagnostics(failures, options),

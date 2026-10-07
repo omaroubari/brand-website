@@ -92,6 +92,7 @@ export const loadConfig = async (root: string): Promise<ConfigLoadResult> => {
     root,
     file: configFile ?? undefined,
   });
+
   return {
     config: assetResult.config,
     configFile,
