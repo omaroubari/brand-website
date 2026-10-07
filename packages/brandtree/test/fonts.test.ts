@@ -122,11 +122,12 @@ it("resolves omitted-font typography through Inter and system without changing a
   // Resolved configs may be parsed again without accumulating fallback stacks.
   expect(brandtreeConfigSchema.parse(config)).toEqual(config);
   const arabic = resolveBrand(config.brand, "ar", config.i18n);
-  const arabicTypography = input.brand.localeOverrides?.ar.typography;
-  if (!arabicTypography)
-    throw new Error("Fixture must define Arabic typography");
-  expect(arabic.typography.display).toBe(arabicTypography.display);
-  expect(arabic.typography.text).toBe(arabicTypography.text);
+  expect(arabic.typography.display).toBe(
+    `var(--font-sandbox-arabic, ${fallback}), ${fallback}`,
+  );
+  expect(arabic.typography.text).toBe(
+    `var(--font-sandbox-arabic, ${fallback}), ${fallback}`,
+  );
   expect(brandStyleSheet(config.brand)).toContain(
     `--font-display: var(--font-missing, ${fallback}), ${fallback};`,
   );

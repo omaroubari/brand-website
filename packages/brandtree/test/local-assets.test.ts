@@ -239,6 +239,7 @@ it("runs the shared check when loading config without reporting removed fonts as
   const configFile = join(root, "brandtree.config.mjs");
   const input = {
     ...fixtureConfig,
+    brand: { ...fixtureConfig.brand, localeOverrides: undefined },
     fonts: [
       {
         name: "Missing",

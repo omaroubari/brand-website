@@ -18,6 +18,14 @@ it("accepts declared variables, system stacks, and generated default fallback va
         display: "var(--font-brandtree-default)",
         text: "system-ui, sans-serif",
       },
+      localeOverrides: {
+        ar: {
+          typography: {
+            display: "var(--font-brandtree-default)",
+            text: "system-ui, sans-serif",
+          },
+        },
+      },
     },
   });
   expect(collectBrandDiagnostics(config)).toEqual([]);

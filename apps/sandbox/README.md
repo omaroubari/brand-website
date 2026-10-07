@@ -61,7 +61,18 @@ Its top-level `fonts` array registers Inter through Astro's local provider from
 `./assets/fonts/Inter-Variable.woff2`, with variable weights `100 900` and normal
 style; display and text reference
 `--font-sandbox`.
-Arabic locale overrides keep system-font stacks.
+Google Rubik is registered under `--font-sandbox-arabic`, with variable weights
+`300 900`, normal style, and Arabic/Latin subsets. Arabic locale overrides use
+that variable for display and text. Documented brand families and type scales
+remain separate from these runtime font-loading declarations.
+
+To verify provider loading, build the packed sandbox and inspect
+`dist/_astro/fonts/` plus the English and Arabic HTML: English typography must
+reference local Inter, and Arabic typography must reference Google Rubik. Both
+fonts must emit font-face CSS and preload links. Rebuild after removing the
+disposable `.brandtree/` directory to verify project-root resolution survives
+regeneration. Astro owns remote downloads and caching; a timeout warning with
+only fallback typography does not verify successful Google loading.
 Logo SVGs and favicon are the template's existing placeholder artwork.
 The arrow SVG is copied from its Phosphor-based icon set.
 
