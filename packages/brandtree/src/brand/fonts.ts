@@ -14,6 +14,7 @@ export const defaultFont = {
 export function resolveTypographyFonts(
   brand: BrandConfig,
   fonts: readonly { cssVariable: string }[],
+  unavailableVariables: ReadonlySet<string> = new Set(),
 ): BrandConfig {
   const system = defaultFont.fallbacks.join(", ");
   const fallback = fonts.some(
@@ -34,7 +35,9 @@ export function resolveTypographyFonts(
       return resolved;
     return resolved.endsWith(fallback) ? resolved : `${resolved}, ${fallback}`;
   };
-  const resolveTypography = <T extends { display?: string; text?: string }>(
+  const resolveTypography = <
+    T extends { display?: string; text?: string; mono?: string },
+  >(
     typography: T,
   ): T => ({
     ...typography,
@@ -43,6 +46,15 @@ export function resolveTypographyFonts(
     }),
     ...(typography.text !== undefined && {
       text: resolveFamily(typography.text),
+    }),
+    ...(typography.mono !== undefined && {
+      mono: typography.mono.replace(
+        /var\(\s*(--[a-zA-Z_][a-zA-Z0-9_-]*)\s*\)/gu,
+        (expression, variable: string) =>
+          unavailableVariables.has(variable)
+            ? `var(${variable}, ui-monospace, monospace)`
+            : expression,
+      ),
     }),
   });
 

@@ -11,6 +11,7 @@ import {
 } from "../src/core/local-assets";
 import { prepareConfigAssets } from "../src/core/config-assets";
 import { brandtreeConfigSchema } from "../src/core/schema";
+import { loadConfig } from "../src/core/config";
 
 const roots: string[] = [];
 const sandboxRoot = fileURLToPath(
@@ -163,4 +164,100 @@ it("checks brand asset fields while preserving artwork and download references",
     "brand.downloads.0.href",
   ]);
   expect(result.config.brand).toEqual(config.brand);
+  expect(result.config.fonts).toEqual(config.fonts);
+});
+
+it("retains readable alternative sources and variants, and removes wholly unavailable local fonts", async () => {
+  const root = await makeRoot();
+  await mkdir(join(root, "src"));
+  await writeFile(join(root, "./src/readable.woff2"), "readable fixture");
+  const input = {
+    ...fixtureConfig,
+    fonts: [
+      {
+        name: "Partial",
+        provider: "local",
+        cssVariable: "--font-sandbox",
+        options: {
+          variants: [
+            {
+              src: ["./missing.woff2", "./src/readable.woff2"],
+              weight: 400,
+              style: "normal",
+            },
+            { src: ["./missing-bold.woff2"], weight: 700, style: "normal" },
+          ],
+        },
+      },
+      {
+        name: "Missing",
+        provider: "local",
+        cssVariable: "--font-code",
+        options: { variants: [{ src: ["./missing-code.woff2"] }] },
+      },
+      { name: "Remote", provider: "google", cssVariable: "--font-remote" },
+    ],
+    brand: {
+      ...fixtureConfig.brand,
+      typography: {
+        ...fixtureConfig.brand.typography,
+        mono: "var(--font-code)",
+      },
+      localeOverrides: { ar: { typography: { mono: "var(--font-code)" } } },
+    },
+  };
+  const config = brandtreeConfigSchema.parse(input);
+  const snapshot = structuredClone(config);
+  const result = await prepareConfigAssets(config, { root });
+  expect(result.config.fonts).toHaveLength(2);
+  expect(result.config.fonts[0]).toMatchObject({
+    options: {
+      variants: [
+        { src: ["./src/readable.woff2"], weight: 400, style: "normal" },
+      ],
+    },
+  });
+  expect(result.config.fonts[1]).toEqual(config.fonts[2]);
+  expect(result.config.brand.typography.mono).toBe(
+    "var(--font-code, ui-monospace, monospace)",
+  );
+  expect(result.config.brand.localeOverrides?.ar.typography?.mono).toBe(
+    "var(--font-code, ui-monospace, monospace)",
+  );
+  expect(result.diagnostics).toHaveLength(3);
+  expect(config).toEqual(snapshot);
+  // Availability is checked afresh; restoring a file restores the registration.
+  await writeFile(join(root, "./missing-code.woff2"), "restored fixture");
+  expect(
+    (await prepareConfigAssets(config, { root })).config.fonts,
+  ).toHaveLength(3);
+});
+
+it("runs the shared check when loading config without reporting removed fonts as undeclared", async () => {
+  const root = await makeRoot();
+  const configFile = join(root, "brandtree.config.mjs");
+  const input = {
+    ...fixtureConfig,
+    fonts: [
+      {
+        name: "Missing",
+        provider: "local",
+        cssVariable: "--font-sandbox",
+        options: { variants: [{ src: ["./missing.woff2"] }] },
+      },
+    ],
+  };
+  await writeFile(configFile, `export default ${JSON.stringify(input)};`);
+  const result = await loadConfig(root);
+  expect(result.config.fonts).toEqual([]);
+  expect(result.config.brand.typography.display).toContain(
+    "system-ui, sans-serif",
+  );
+  expect(result.diagnostics).toEqual([
+    expect.objectContaining({
+      code: "BRANDTREE_LOCAL_FILE_UNAVAILABLE",
+      file: configFile,
+      schemaPath: "fonts.0.options.variants.0.src.0",
+    }),
+  ]);
 });

@@ -1,8 +1,9 @@
-import { join, resolve } from "node:path";
+import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 import { literal, relativePath } from "./helpers.ts";
 import type { ProjectContext } from "../../core/types.ts";
 import type { ResolvedConfig } from "../../core/schema.ts";
+import { resolveLocalAssetPath } from "../../core/local-assets.ts";
 
 export const astroConfigTemplate = ({
   context,
@@ -42,9 +43,8 @@ export const astroConfigTemplate = ({
     const { provider, options, ...family } = font;
     const variants = options.variants.map(({ src, ...variant }) => {
       const sources = src.map((source) => {
-        const url = /^[a-z][a-z0-9+.-]*:/iu.test(source)
-          ? source
-          : pathToFileURL(resolve(context.root, source)).href;
+        const file = resolveLocalAssetPath(context.root, { value: source });
+        const url = file === null ? source : pathToFileURL(file).href;
         return `new URL(${literal(url)})`;
       });
       return `{ ...${literal(variant)}, src: [${sources.join(", ")}] }`;
