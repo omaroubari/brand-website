@@ -66,6 +66,12 @@ Google Rubik is registered under `--font-sandbox-arabic`, with variable weights
 that variable for display and text. Documented brand families and type scales
 remain separate from these runtime font-loading declarations.
 
+For now, canonical `brand.typography.display`, `text`, and `mono` are required
+strings. Missing or `undefined` values fail config validation; font fallbacks
+cannot supply missing config fields. Locale overrides may omit these fields to
+inherit the canonical values. Font fallbacks handle unavailable font families or
+undefined CSS variables within valid typography strings.
+
 To verify provider loading, build the packed sandbox and inspect
 `dist/_astro/fonts/` plus the English and Arabic HTML: English typography must
 reference local Inter, and Arabic typography must reference Google Rubik. Both
