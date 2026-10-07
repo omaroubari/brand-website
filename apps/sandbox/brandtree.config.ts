@@ -1,7 +1,7 @@
 import { defineConfig } from "brandtree";
 
 // Valence data adapted from apps/web; complete required brand schema.
-// Local font registration exercises project-root asset resolution.
+// Local Inter and Google Rubik exercise canonical and locale font loading.
 export default defineConfig({
   fonts: [
     {
@@ -20,6 +20,15 @@ export default defineConfig({
           },
         ],
       },
+    },
+    {
+      name: "Rubik",
+      cssVariable: "--font-sandbox-arabic",
+      provider: "google",
+      weights: ["300 900"],
+      styles: ["normal"],
+      subsets: ["arabic", "latin"],
+      fallbacks: ["system-ui", "sans-serif"],
     },
   ],
   brand: {
@@ -366,8 +375,8 @@ export default defineConfig({
           ],
         },
         typography: {
-          display: "ui-sans-serif, system-ui, sans-serif",
-          text: "ui-sans-serif, system-ui, sans-serif",
+          display: "var(--font-sandbox-arabic)",
+          text: "var(--font-sandbox-arabic)",
           families: [
             {
               id: "display",
