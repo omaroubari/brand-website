@@ -7,7 +7,7 @@ import {
   it,
   vi,
 } from "vitest";
-import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, rm, writeFile, symlink } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { tmpdir } from "node:os";
@@ -26,6 +26,9 @@ const fixtureConfig = join(sandboxRoot, "brandtree.config.ts");
 const makeProject = async (files: Record<string, string>): Promise<string> => {
   const root = await mkdtemp(join(tmpdir(), "brandtree-project-"));
   temporaryDirectories.push(root);
+  if (!Object.keys(files).some((file) => file.startsWith("public/"))) {
+    await symlink(join(sandboxRoot, "public"), join(root, "public"), "dir");
+  }
   await Promise.all(
     Object.entries(files).map(async ([path, contents]) => {
       const file = join(root, path);
@@ -61,6 +64,29 @@ afterAll(async () => {
 });
 
 describe("scanProject", () => {
+  it("preserves asset warnings alongside folder errors without dropping pages", async () => {
+    const root = await makeProject({
+      "brandtree.config.mjs": `import config from ${JSON.stringify(fixtureConfig)};
+export default { ...config, brand: { ...config.brand, logo: { ...config.brand.logo, logotype: { ...config.brand.logo.logotype, onLight: '/missing-logo.svg' } } } };`,
+      "content/en/01-public.md": "# Public\n",
+      "content/en/meta.ts": "export default { title: 123 };",
+    });
+    const project = await scanProject(root);
+    expect(project.diagnostics[0]).toMatchObject({
+      code: "BRANDTREE_LOCAL_FILE_UNAVAILABLE",
+      severity: "warning",
+      file: join(root, "brandtree.config.mjs"),
+      schemaPath: "brand.logo.logotype.onLight",
+    });
+    expect(
+      project.diagnostics.some(({ severity }) => severity === "error"),
+    ).toBe(true);
+    expect(project.tree.pages.some(({ route }) => route === "/en/public")).toBe(
+      true,
+    );
+    expect(project.droppedPages).toBe(0);
+  });
+
   it("excludes partials, dependencies, and build output at every content depth", async () => {
     const visible = [
       "01-public.md",
