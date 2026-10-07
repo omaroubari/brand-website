@@ -1,4 +1,4 @@
-import { mkdtemp, rm, writeFile } from "node:fs/promises";
+import { mkdtemp, rm, writeFile, symlink } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -8,6 +8,7 @@ import { loadConfig } from "../src/core/config";
 import { BrandtreeError } from "../src/core/diagnostics";
 import { brandtreeConfigSchema } from "../src/core/schema";
 import fixtureConfig from "../../../apps/web/brandtree.config";
+import sandboxConfig from "../../../apps/sandbox/brandtree.config";
 
 const directories: string[] = [];
 const configModule = fileURLToPath(
@@ -31,6 +32,11 @@ const invalidInput = {
 const makeConfig = async (source: string) => {
   const directory = await mkdtemp(join(tmpdir(), "brandtree-config-"));
   directories.push(directory);
+  await symlink(
+    fileURLToPath(new URL("../../../apps/sandbox/public/", import.meta.url)),
+    join(directory, "public"),
+    "dir",
+  );
   const file = join(directory, "brandtree.config.mjs");
   await writeFile(file, source);
   return { root: directory, file };
@@ -108,12 +114,42 @@ describe("config diagnostics", () => {
 
   it("returns resolved config for a valid module", async () => {
     const { root, file } = await makeConfig(
-      `export default ${JSON.stringify(fixtureConfig)};`,
+      `export default ${JSON.stringify(sandboxConfig)};`,
     );
     await expect(loadConfig(root)).resolves.toEqual({
-      config: brandtreeConfigSchema.parse(fixtureConfig),
+      config: brandtreeConfigSchema.parse(sandboxConfig),
       configFile: file,
       diagnostics: [],
     });
+  });
+
+  it("returns nonfatal asset warnings alongside resolved config", async () => {
+    const input = {
+      ...sandboxConfig,
+      brand: {
+        ...sandboxConfig.brand,
+        logo: {
+          ...sandboxConfig.brand.logo,
+          logotype: {
+            ...sandboxConfig.brand.logo.logotype,
+            onLight: "/missing-logo.svg",
+          },
+        },
+      },
+    };
+    const { root, file } = await makeConfig(
+      `export default ${JSON.stringify(input)};`,
+    );
+    const result = await loadConfig(root);
+    expect(result.config).toEqual(brandtreeConfigSchema.parse(input));
+    expect(result.diagnostics).toEqual([
+      expect.objectContaining({
+        file,
+        code: "BRANDTREE_LOCAL_FILE_UNAVAILABLE",
+        severity: "warning",
+        schemaPath: "brand.logo.logotype.onLight",
+        message: expect.stringContaining("/missing-logo.svg"),
+      }),
+    ]);
   });
 });

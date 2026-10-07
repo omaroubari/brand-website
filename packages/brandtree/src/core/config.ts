@@ -7,9 +7,9 @@ import {
 } from "./schema.ts";
 import type { Diagnostic } from "./types.ts";
 import { createModuleLoader } from "./load-module.ts";
-import { join } from "node:path";
 import { existsSync, readFileSync } from "node:fs";
 import { findConfigFile } from "./project.ts";
+import { prepareConfigAssets } from "./config-assets.ts";
 
 export const defineConfig = (
   config: BrandtreeConfigInput,
@@ -87,9 +87,9 @@ export const loadConfig = async (root: string): Promise<ConfigLoadResult> => {
     throw new BrandtreeError(detail);
   }
 
-  return {
-    config: parsed.data,
-    configFile,
-    diagnostics: [],
-  };
+  const assets = await prepareConfigAssets(parsed.data, {
+    root,
+    file: configFile ?? undefined,
+  });
+  return { config: assets.config, configFile, diagnostics: assets.diagnostics };
 };
