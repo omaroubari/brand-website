@@ -68,7 +68,7 @@ const layoutProps = {
   imageZoom: true,
   codeWrap: false,
   themeMode: localizedBrand.theme.default,
-  fontCssVariables: [],
+  fontCssVariables: config.fonts.map(({ cssVariable }) => cssVariable),
   searchEnabled: false,
   indexable: true,
   ogImage: ogImage ? absolute(ogImage) : null,

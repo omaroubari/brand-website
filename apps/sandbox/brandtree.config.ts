@@ -1,8 +1,36 @@
 import { defineConfig } from "brandtree";
 
 // Valence data adapted from apps/web; complete required brand schema.
-// This small contract fixture uses system fonts and disables generated cards.
+// Local Inter and Google Rubik exercise canonical and locale font loading.
 export default defineConfig({
+  fonts: [
+    {
+      name: "Inter",
+      cssVariable: "--font-sandbox",
+      provider: "local",
+      weights: ["100 900"],
+      styles: ["normal"],
+      fallbacks: ["system-ui", "sans-serif"],
+      options: {
+        variants: [
+          {
+            src: ["./assets/fonts/Inter-Variable.woff2"],
+            weight: "100 900",
+            style: "normal",
+          },
+        ],
+      },
+    },
+    {
+      name: "Rubik",
+      cssVariable: "--font-sandbox-arabic",
+      provider: "google",
+      weights: ["300 900"],
+      styles: ["normal"],
+      subsets: ["arabic", "latin"],
+      fallbacks: ["system-ui", "sans-serif"],
+    },
+  ],
   brand: {
     meta: {
       name: "Valence",
@@ -219,8 +247,8 @@ export default defineConfig({
       },
     },
     typography: {
-      display: "ui-sans-serif, system-ui, sans-serif",
-      text: "ui-sans-serif, system-ui, sans-serif",
+      display: "var(--font-sandbox)",
+      text: "var(--font-sandbox)",
       mono: "ui-monospace, SFMono-Regular, Menlo, monospace",
       families: [
         {
@@ -347,8 +375,8 @@ export default defineConfig({
           ],
         },
         typography: {
-          display: "ui-sans-serif, system-ui, sans-serif",
-          text: "ui-sans-serif, system-ui, sans-serif",
+          display: "var(--font-sandbox-arabic)",
+          text: "var(--font-sandbox-arabic)",
           families: [
             {
               id: "display",

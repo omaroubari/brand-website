@@ -11,10 +11,7 @@ as an external consumer. Feature coverage should grow beyond this initial
 minimal content set.
 
 The sandbox installs `brandtree.tgz`, a packed snapshot of the framework, rather
-than linking the workspace package. Keep the tarball with the sandbox so a fresh
-checkout can install it. Framework source edits only reach the sandbox after
-repacking and updating its dependency. The web app continues to use the
-workspace package.
+than linking the workspace package.
 
 From the repository root, refresh the snapshot and build:
 
@@ -25,9 +22,7 @@ pnpm --filter brandtree-sandbox build
 ```
 
 Include both `apps/sandbox/brandtree.tgz` and `pnpm-lock.yaml` when committing a
-snapshot update. This checks packed files and exports inside the monorepo; an
-external consumer test is still needed to prove independence from workspace
-dependency resolution.
+snapshot update. This checks packed files and exports inside the monorepo.
 
 ## Files authors maintain
 
@@ -46,6 +41,7 @@ content/
     index.mdx
     01-logotype.mdx
 components/AuthorNote.astro         # explicitly imported custom component
+assets/fonts/Inter-Variable.woff2    # local Inter for canonical typography
 assets/icons/arrow.svg              # explicitly imported raw SVG
 public/
   favicon.svg
@@ -56,15 +52,34 @@ public/
     brandmark-light.svg
 ```
 
-Only the brand config holds structured brand data. It copies the current app's
+Only the brand config holds structured brand data. It copies the web app's
 data without importing that app or using repository aliases. Required palette
 shades and complete light/dark roles are retained; a complete config is larger
 than the minimal author-file layout because the current schema requires them.
-The initial sandbox trims the documented type scale, uses system-font stacks, and
-disables generated social cards. This avoids copied licensed fonts or dependence
-on the later font/social-card implementation. Display family documentation is
-retained as a brand fact; it does not claim the system-font fixture loads those
-families. Logo SVGs and favicon are the template's existing placeholder artwork.
+The sandbox trims the documented type scale and disables generated social cards.
+Its top-level `fonts` array registers Inter through Astro's local provider from
+`./assets/fonts/Inter-Variable.woff2`, with variable weights `100 900` and normal
+style; display and text reference
+`--font-sandbox`.
+Google Rubik is registered under `--font-sandbox-arabic`, with variable weights
+`300 900`, normal style, and Arabic/Latin subsets. Arabic locale overrides use
+that variable for display and text. Documented brand families and type scales
+remain separate from these runtime font-loading declarations.
+
+For now, canonical `brand.typography.display`, `text`, and `mono` are required
+strings. Missing or `undefined` values fail config validation; font fallbacks
+cannot supply missing config fields. Locale overrides may omit these fields to
+inherit the canonical values. Font fallbacks handle unavailable font families or
+undefined CSS variables within valid typography strings.
+
+To verify provider loading, build the packed sandbox and inspect
+`dist/_astro/fonts/` plus the English and Arabic HTML: English typography must
+reference local Inter, and Arabic typography must reference Google Rubik. Both
+fonts must emit font-face CSS and preload links. Rebuild after removing the
+disposable `.brandtree/` directory to verify project-root resolution survives
+regeneration. Astro owns remote downloads and caching; a timeout warning with
+only fallback typography does not verify successful Google loading.
+Logo SVGs and favicon are the template's existing placeholder artwork.
 The arrow SVG is copied from its Phosphor-based icon set.
 
 ## What Brandtree manages

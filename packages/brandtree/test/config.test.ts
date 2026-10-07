@@ -33,6 +33,11 @@ const makeConfig = async (source: string) => {
   const directory = await mkdtemp(join(tmpdir(), "brandtree-config-"));
   directories.push(directory);
   await symlink(
+    fileURLToPath(new URL("../../../apps/sandbox/assets/", import.meta.url)),
+    join(directory, "assets"),
+    "dir",
+  );
+  await symlink(
     fileURLToPath(new URL("../../../apps/sandbox/public/", import.meta.url)),
     join(directory, "public"),
     "dir",
@@ -123,17 +128,14 @@ describe("config diagnostics", () => {
     });
   });
 
-  it("returns nonfatal asset warnings alongside resolved config", async () => {
+  it("returns nonfatal brand warnings alongside resolved config", async () => {
     const input = {
       ...sandboxConfig,
       brand: {
         ...sandboxConfig.brand,
-        logo: {
-          ...sandboxConfig.brand.logo,
-          logotype: {
-            ...sandboxConfig.brand.logo.logotype,
-            onLight: "/missing-logo.svg",
-          },
+        typography: {
+          ...sandboxConfig.brand.typography,
+          display: "var(--font-missing)",
         },
       },
     };
@@ -145,10 +147,10 @@ describe("config diagnostics", () => {
     expect(result.diagnostics).toEqual([
       expect.objectContaining({
         file,
-        code: "BRANDTREE_LOCAL_FILE_UNAVAILABLE",
+        code: "BRANDTREE_FONT_VARIABLE_UNDECLARED",
         severity: "warning",
-        schemaPath: "brand.logo.logotype.onLight",
-        message: expect.stringContaining("/missing-logo.svg"),
+        schemaPath: "brand.typography.display",
+        message: expect.stringContaining("--font-missing"),
       }),
     ]);
   });

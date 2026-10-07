@@ -259,7 +259,7 @@ it.each(routeScenarios)(
     await writeFile(
       join(root, "brandtree.config.ts"),
       `import config from ${JSON.stringify(configPath)};
-export default { ...config, brand: { ...config.brand, localeOverrides: undefined }, basePath: ${JSON.stringify(basePath)}, seo: { ...config.seo, og: { enabled: false } },
+export default { ...config, brand: { ...config.brand, localeOverrides: undefined }, basePath: ${JSON.stringify(basePath)}, fonts: [], seo: { ...config.seo, og: { enabled: false } },
 i18n: ${single ? "undefined" : `{ ...config.i18n, parser: "${parser}", hideDefaultLocalePrefix: ${hidden} }`} };`,
     );
     const author = async (logical: string, locale: string, body: string) => {

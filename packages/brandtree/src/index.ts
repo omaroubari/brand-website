@@ -1,5 +1,5 @@
 export * from "./brand/schema.ts";
-export { resolveBrand } from "./brand/localize.ts";
+export { resolveBrand } from "./brand/i18n.ts";
 export {
   brandStyleSheet,
   colorCss,

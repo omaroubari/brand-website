@@ -1,6 +1,6 @@
 import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
-import { resolveBrand } from "../brand/localize.ts";
+import { resolveBrand } from "../brand/i18n.ts";
 import type { BrandtreeProject } from "../core/project-tree.ts";
 import type { RuntimeOgAssets } from "../core/types.ts";
 
