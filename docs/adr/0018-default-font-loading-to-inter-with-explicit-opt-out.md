@@ -84,9 +84,9 @@ pass. Authored inputs are never mutated.
 
 Remote-provider failures follow Astro's behavior and may block a build, including
 when the affected font is default Inter. Browser CSS fallbacks do not guarantee
-build completion. Issue #14 verifies that Astro's remote warnings/errors remain
-visible, with deterministic failure fixtures; nonblocking remote-download
-recovery is outside Brandtree's responsibilities.
+build completion. Astro's remote warnings/errors remain visible through the
+existing command output. Separate remote failure fixtures and nonblocking
+remote-download recovery are outside Brandtree's responsibilities.
 
 Social cards still use separate `seo.og.fonts` declarations. Reusing top-level
 font declarations and packaging Inter as a deterministic rendering fallback
