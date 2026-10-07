@@ -134,6 +134,7 @@ it("reports missing files, directories, and broken symlinks for every affected f
 
 it("checks brand asset fields while preserving artwork and download references", async () => {
   const root = await makeRoot();
+  await symlink(join(sandboxRoot, "assets"), join(root, "assets"), "dir");
   const input = {
     ...fixtureConfig,
     brand: {
