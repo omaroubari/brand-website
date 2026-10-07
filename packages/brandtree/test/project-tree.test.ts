@@ -64,19 +64,19 @@ afterAll(async () => {
 });
 
 describe("scanProject", () => {
-  it("preserves asset warnings alongside folder errors without dropping pages", async () => {
+  it("preserves brand warnings alongside folder errors without dropping pages", async () => {
     const root = await makeProject({
       "brandtree.config.mjs": `import config from ${JSON.stringify(fixtureConfig)};
-export default { ...config, brand: { ...config.brand, logo: { ...config.brand.logo, logotype: { ...config.brand.logo.logotype, onLight: '/missing-logo.svg' } } } };`,
+export default { ...config, brand: { ...config.brand, typography: { ...config.brand.typography, display: 'var(--font-missing)' } } };`,
       "content/en/01-public.md": "# Public\n",
       "content/en/meta.ts": "export default { title: 123 };",
     });
     const project = await scanProject(root);
     expect(project.diagnostics[0]).toMatchObject({
-      code: "BRANDTREE_LOCAL_FILE_UNAVAILABLE",
+      code: "BRANDTREE_FONT_VARIABLE_UNDECLARED",
       severity: "warning",
       file: join(root, "brandtree.config.mjs"),
-      schemaPath: "brand.logo.logotype.onLight",
+      schemaPath: "brand.typography.display",
     });
     expect(
       project.diagnostics.some(({ severity }) => severity === "error"),

@@ -10,12 +10,57 @@ import { resolveBrand } from "../src/brand/i18n";
 import { brandStyleSheet } from "../src/brand/tokens";
 import { scanProject } from "../src/core/project-tree";
 import { generateRuntime } from "../src/astro/generate";
+import { prepareConfigAssets } from "../src/core/config-assets";
+import { astroConfigTemplate } from "../src/astro/templates/astro-config";
 
 const roots: string[] = [];
 afterEach(async () => {
   await Promise.all(
     roots.splice(0).map((root) => rm(root, { recursive: true, force: true })),
   );
+});
+
+it("generates local provider URLs using the shared prefixes", () => {
+  const config = brandtreeConfigSchema.parse({
+    ...fixtureConfig,
+    fonts: [
+      {
+        name: "Client",
+        provider: "local",
+        cssVariable: "--font-client",
+        options: {
+          variants: [
+            {
+              src: [
+                "./assets/font.woff2",
+                "/fonts/font.woff2",
+                "file:///elsewhere/font.woff2",
+              ],
+            },
+          ],
+        },
+      },
+    ],
+  });
+  const source = astroConfigTemplate({
+    config,
+    context: {
+      root: "/client",
+      outDir: "/client/.brandtree",
+      contentRoot: "/client/content",
+      themeFile: null,
+      componentsFile: null,
+      configFile: "/client/brandtree.config.ts",
+    },
+    dataPath: "/client/.brandtree/data.json",
+  });
+  for (const url of [
+    "file:///client/assets/font.woff2",
+    "file:///client/public/fonts/font.woff2",
+    "file:///elsewhere/font.woff2",
+  ]) {
+    expect(source).toContain(`new URL("${url}")`);
+  }
 });
 
 it("defaults to Google Inter, allows opting out, and rejects malformed registrations", () => {
@@ -240,8 +285,39 @@ it("builds custom font CSS and preloads from an external generated runtime", asy
     expect(html).toMatch(/rel="preload"[^>]+as="font"/u);
     expect(html).toContain("/_astro/fonts/");
   }
-  // Changing registrations regenerates Astro's structural config; removal disables preloads.
-  project.config.fonts = [];
+  // Missing local files are omitted from Astro, keeping the runtime build usable.
+  const recovered = await prepareConfigAssets(
+    {
+      ...project.config,
+      fonts: fontsConfigSchema.parse([
+        {
+          name: "Client Sans",
+          cssVariable: "--font-client",
+          provider: "local",
+          options: { variants: [{ src: ["./assets/fonts/missing.woff2"] }] },
+        },
+      ]),
+    },
+    { root },
+  );
+  expect(recovered.diagnostics).toEqual([
+    expect.objectContaining({
+      code: "BRANDTREE_LOCAL_FILE_UNAVAILABLE",
+      schemaPath: "fonts.0.options.variants.0.src.0",
+    }),
+  ]);
+  project.config = recovered.config;
+  expect(project.config.fonts).toEqual([]);
   expect((await generateRuntime(project)).structuralChange).toBe(true);
   expect((await generateRuntime(project)).structuralChange).toBe(false);
+  await promisify(execFile)(process.execPath, [probe], {
+    timeout: 120000,
+    maxBuffer: 4 * 1024 * 1024,
+  });
+  const recoveredHtml = await readFile(
+    join(project.context.distDir, "/en", "index.html"),
+    "utf8",
+  );
+  expect(recoveredHtml).toContain("var(--font-client, system-ui, sans-serif)");
+  expect(recoveredHtml).not.toMatch(/rel="preload"[^>]+as="font"/u);
 }, 120000);
