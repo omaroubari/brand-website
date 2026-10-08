@@ -146,8 +146,10 @@ export default { ...config, brand: { ...config.brand, typography: { ...config.br
     expect(project.tree.pages.map((page) => page.route)).toEqual([
       "/ar/logo/logotype",
       "/ar/logo",
+      "/ar/exhibits",
       "/en/logo/logotype",
       "/en/logo",
+      "/en/exhibits",
     ]);
     expect(project.tree.routes.get("/en/logo/logotype")).toBe(
       "filesystem:en/03-logo/01-logotype.mdx",
