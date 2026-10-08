@@ -13,6 +13,18 @@ export const prerenderDeps = (): Plugin => {
     apply: "build",
     enforce: "pre",
     applyToEnvironment: (environment) => environment.name === "prerender",
+    options(options) {
+      // Astro adds Sharp to Rolldown's external list before resolveId runs.
+      // Let Vite externalize it instead, so our resolver can preserve the
+      // original image service's dependency location in the emitted chunk.
+      if (Array.isArray(options.external)) {
+        return {
+          ...options,
+          external: options.external.filter((id) => id !== "sharp"),
+        };
+      }
+      return null;
+    },
     configResolved(resolved) {
       config = resolved;
     },

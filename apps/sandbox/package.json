@@ -9,6 +9,8 @@
     "preview": "brandtree preview"
   },
   "dependencies": {
-    "brandtree": "file:brandtree.tgz"
+    "brandtree": "file:brandtree.tgz",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8"
   }
 }
