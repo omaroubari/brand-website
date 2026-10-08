@@ -228,7 +228,8 @@ it("loads sharp and Takumi native dependencies through isolated package links", 
   await writeFile(
     join(owner, "index.js"),
     `
-    import sharp from "sharp";
+    let sharp;
+    try { sharp = (await import("sharp")).default; } catch (error) { throw new Error("Image service could not load Sharp", { cause: error }); }
     import { render } from "takumi-js";
     const png = await render({ type: "container", style: { backgroundColor: "red", width: 8, height: 8 } }, { width: 8, height: 8, format: "png" });
     const metadata = await sharp(png).metadata();
@@ -250,7 +251,11 @@ it("loads sharp and Takumi native dependencies through isolated package links", 
         build: {
           ssr: join(owner, "index.js"),
           outDir: join(root, "dist"),
-          rolldownOptions: { output: { entryFileNames: "entry.mjs" } },
+          // Astro externalizes Sharp before the resolver plugins run.
+          rolldownOptions: {
+            external: ["sharp"],
+            output: { entryFileNames: "entry.mjs" },
+          },
         },
       },
     },

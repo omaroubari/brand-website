@@ -1,8 +1,8 @@
 ---
 interface Props {
-  /** Icons discovered by the consuming app. */
+  /** Explicit named SVG data supplied by the author. */
   icons: Array<{ name: string; svg: string }>;
-  /** Restrict and order by filename, without the extension. */
+  /** Restrict and order by names in the supplied icon set. */
   only?: string[];
   /** Grid the icons are drawn on, shown as an overlay on the first tile. */
   unit?: number;
@@ -13,7 +13,7 @@ interface Props {
 }
 
 const {
-  icons: discoveredIcons,
+  icons: suppliedIcons,
   only,
   unit = 24,
   version = "v1.0",
@@ -21,7 +21,7 @@ const {
   class: className,
 } = Astro.props;
 
-const all = [...discoveredIcons].sort((a, b) => a.name.localeCompare(b.name));
+const all = [...suppliedIcons].sort((a, b) => a.name.localeCompare(b.name));
 
 const icons = only
   ? only.map((name) => {
