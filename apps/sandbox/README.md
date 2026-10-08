@@ -1,8 +1,8 @@
 # Brandtree feature sandbox
 
-This sandbox exercises Brandtree features as they are implemented. It adopts
-the Valence brand from `apps/web`, starting with its palette, light/dark themes,
-logo files, and two nested logo pages in English and Arabic. It also demonstrates
+This sandbox exercises Brandtree features as they are implemented. It defines
+the Fieldwork sample brand, with palette, typography, light/dark themes,
+logo files, and localized exhibits in English and Arabic. It also demonstrates
 the consumer ownership contract in [ADR 0017](../../docs/adr/0017-define-the-brandtree-consumer-project-contract.md).
 
 Add focused demonstrations here as framework features become available. Keep
@@ -17,7 +17,7 @@ From the repository root, refresh the snapshot and build:
 
 ```sh
 pnpm sandbox:pack
-pnpm --filter brandtree-sandbox update brandtree
+pnpm --filter brandtree-sandbox update brandtree --offline
 pnpm --filter brandtree-sandbox build
 ```
 
@@ -27,8 +27,8 @@ snapshot update. This checks packed files and exports inside the monorepo.
 ## Files authors maintain
 
 ```text
-brandtree.config.ts                 # complete Valence-derived config
-package.json                       # only Brandtree; no extra package imports
+brandtree.config.ts                 # complete Fieldwork config
+package.json                       # Brandtree and author-declared React dependencies
 .gitignore
 content/
   _partials/ArtworkNote.mdx         # importable, never a routed page
@@ -40,7 +40,10 @@ content/
     meta.ts
     index.mdx
     01-logotype.mdx
-components/AuthorNote.astro         # explicitly imported custom component
+components/AuthorNote.astro         # explicitly imported custom Astro component
+components/TypeTester.tsx           # explicitly imported, hydrated React component
+content/{en,ar}/04-exhibits.mdx      # palette, type, interactive type, photography
+assets/photography/field.jpg        # explicitly imported image
 assets/fonts/Inter-Variable.woff2    # local Inter for canonical typography
 assets/icons/arrow.svg              # explicitly imported raw SVG
 public/
@@ -52,8 +55,8 @@ public/
     brandmark-light.svg
 ```
 
-Only the brand config holds structured brand data. It copies the web app's
-data without importing that app or using repository aliases. Required palette
+Only the brand config holds structured brand data. It adapts the web app's
+schema without importing that app or using repository aliases. Required palette
 shades and complete light/dark roles are retained; a complete config is larger
 than the minimal author-file layout because the current schema requires them.
 The sandbox trims the documented type scale and disables generated social cards.
@@ -79,7 +82,7 @@ fonts must emit font-face CSS and preload links. Rebuild after removing the
 disposable `.brandtree/` directory to verify project-root resolution survives
 regeneration. Astro owns remote downloads and caching; a timeout warning with
 only fallback typography does not verify successful Google loading.
-Logo SVGs and favicon are the template's existing placeholder artwork.
+Logo SVGs and favicon are author-owned Fieldwork sample artwork.
 The arrow SVG is copied from its Phosphor-based icon set.
 
 ## What Brandtree manages
@@ -97,9 +100,14 @@ even after `.brandtree/` is deleted.
 
 ## Source imports and routes
 
-Two illustrative files demonstrate agreed extension rules:
+These author files demonstrate agreed extension rules:
 
 - **AuthorNote.astro:** a custom component explicitly imported from `components/`.
+- **TypeTester.tsx:** a React type tester hydrated with `client:load`; its label
+  and initial text come from the resolved page UI and brand props.
+- **04-exhibits.mdx:** built-in palette and typography exhibits receive required
+  `brand={props.brand}` and `ui={props.ui}` props. PhotoGrid receives an image
+  explicitly imported from the original author asset path.
 - **ArtworkNote.mdx:** a reusable partial under `_partials/`, importable but
   excluded from page routes.
 
@@ -121,9 +129,8 @@ The nested logotype page preserves the current required-prop flow:
 ```
 
 Brandtree supplies built-in component names and resolved page props centrally;
-the custom component is imported explicitly. It imports no third-party package,
-so the manifest needs only Brandtree. Custom source importing React or another
-package would declare that dependency directly.
+custom components are imported explicitly. The author declares `react` and
+`react-dom` directly; Brandtree supplies the React integration.
 
 The current app's `dir` parser and visible default-locale prefix are retained:
 
@@ -133,6 +140,8 @@ The current app's `dir` parser and visible default-locale prefix are retained:
 | `content/en/03-logo/01-logotype.mdx` | `/en/logo/logotype`    |
 | `content/ar/03-logo/index.mdx`       | `/ar/logo`             |
 | `content/ar/03-logo/01-logotype.mdx` | `/ar/logo/logotype`    |
+| `content/en/04-exhibits.mdx`         | `/en/exhibits`         |
+| `content/ar/04-exhibits.mdx`         | `/ar/exhibits`         |
 | `content/_partials/ArtworkNote.mdx`  | None                   |
 
 Numeric prefixes drive ordering, not URLs. Metadata orders only the single
@@ -152,3 +161,6 @@ pnpm --filter brandtree-sandbox build
 
 The `dev`, `check`, and `preview` scripts describe planned commands and remain
 unimplemented. The root check therefore still excludes the sandbox.
+
+For a browser hydration check after building, edit the type tester input on
+`/en/exhibits` or `/ar/exhibits` and verify that the specimen updates.
