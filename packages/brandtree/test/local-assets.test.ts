@@ -210,7 +210,12 @@ it("retains readable alternative sources and variants, and removes wholly unavai
   const config = brandtreeConfigSchema.parse(input);
   const snapshot = structuredClone(config);
   const result = await prepareConfigAssets(config, { root });
-  expect(result.config.fonts).toHaveLength(2);
+  expect(result.config.fonts).toHaveLength(3);
+  expect(result.config.fonts[2]).toMatchObject({
+    name: "Inter",
+    provider: "google",
+    cssVariable: "--font-brandtree-default",
+  });
   expect(result.config.fonts[0]).toMatchObject({
     options: {
       variants: [
@@ -251,7 +256,13 @@ it("runs the shared check when loading config without reporting removed fonts as
   };
   await writeFile(configFile, `export default ${JSON.stringify(input)};`);
   const result = await loadConfig(root);
-  expect(result.config.fonts).toEqual([]);
+  expect(result.config.fonts).toMatchObject([
+    {
+      name: "Inter",
+      provider: "google",
+      cssVariable: "--font-brandtree-default",
+    },
+  ]);
   expect(result.config.brand.typography.display).toContain(
     "system-ui, sans-serif",
   );

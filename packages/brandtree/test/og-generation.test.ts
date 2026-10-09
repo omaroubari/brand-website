@@ -14,6 +14,7 @@ import { colorCss, resolveColor } from "../src/brand/tokens";
 import { getNavigation } from "../src/core/navigation";
 import { localeDir } from "../src/core/i18n";
 import { renderOgImage } from "../src/og/card";
+import { loadOgFonts, resolveOgFontFamily } from "../src/og/fonts";
 import { resolveOgLayer, resolveOgLogo } from "../src/og/options";
 import { generatedOgImagePath } from "../src/og/paths";
 import { buildOgAssets } from "../src/astro/build-og-assets";
@@ -131,6 +132,10 @@ const endpoint = (
     })
     .replace(/^export /gmu, "");
   return new Function(
+    "loadOgFonts",
+    "resolveOgFontFamily",
+    "astroFontData",
+    "experimental_getFontFileURL",
     "data",
     "bundledAssets",
     "resolveBrand",
@@ -143,6 +148,10 @@ const endpoint = (
     "localeDir",
     `${js}\nreturn { getStaticPaths, GET };`,
   )(
+    loadOgFonts,
+    resolveOgFontFamily,
+    {},
+    (url: string) => url,
     JSON.parse(buildRuntimeData(project)),
     assets,
     resolveBrand,
@@ -213,7 +222,7 @@ it("honors disabled generation, custom page images, and SEO titles", async () =>
   expect(await buildOgAssets(input)).toEqual({ assets, warnings: [] });
 });
 
-it("bundles author-root assets and warns with usable font fallbacks", async () => {
+it("bundles author-root logos and respects explicit font opt-out", async () => {
   const root = await mkdtemp(join(tmpdir(), "brandtree-og-assets-"));
   roots.push(root);
   await mkdir(join(root, "public/brand"), { recursive: true });
@@ -221,20 +230,14 @@ it("bundles author-root assets and warns with usable font fallbacks", async () =
   const svg =
     '<svg xmlns="http://www.w3.org/2000/svg" width="100" height="20"><rect width="100" height="20"/></svg>';
   await writeFile(join(root, "public/brand/mark.svg"), svg);
-  await writeFile(join(root, "assets/font.ttf"), "font fixture");
   const input = project();
   input.context.root = root;
+  input.config.fonts = [];
   input.config.seo.og.logo = "/brand/mark.svg";
-  input.config.seo.og.fonts = [
-    { name: "Available", src: "assets/font.ttf" },
-    { name: "Missing", src: "assets/missing.ttf" },
-  ];
   const { assets, warnings } = await buildOgAssets(input);
   expect(assets.logos["/brand/mark.svg"]).toBe(svg);
-  expect(assets.fontData["assets/font.ttf"]).toBe(
-    Buffer.from("font fixture").toString("base64"),
-  );
-  expect(warnings).toHaveLength(1);
+  expect(assets.fontData).toEqual({});
+  expect(warnings).toEqual([]);
   const renderer = vi.fn<typeof renderOgImage>(async () => new Uint8Array([1]));
   await endpoint(input, assets, renderer).GET({
     props: { title: "Arabic", locale: "ar" },
@@ -242,8 +245,8 @@ it("bundles author-root assets and warns with usable font fallbacks", async () =
   expect(renderer.mock.calls[0]![0]).toMatchObject({
     logo: svg,
     dir: "rtl",
-    titleFont: "Available",
-    fonts: [{ name: "Available", src: "assets/font.ttf" }],
+    titleFont: "",
+    fonts: [],
   });
 });
 
@@ -251,7 +254,9 @@ it("renders a real 1200 by 630 PNG without i18n", async () => {
   const input = project();
   delete input.config.i18n;
   input.config.seo.og.logo = false;
-  const response = await endpoint(input, { logos: {}, fontData: {} }).GET({
+  input.config.fonts = [];
+  const { assets } = await buildOgAssets(input);
+  const response = await endpoint(input, assets).GET({
     props: { title: "Brand guidelines", locale: "en" },
   });
   expect(response.headers.get("Content-Type")).toBe("image/png");

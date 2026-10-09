@@ -7,6 +7,7 @@
     "node": ">=22.12.0"
   },
   "scripts": {
+    "sandbox:check-og": "node packages/brandtree/scripts/check-packed-og.mjs",
     "sandbox:pack": "pnpm --filter brandtree pack --out ./apps/sandbox/brandtree.tgz",
     "dev": "pnpm --filter brandtree build && pnpm --filter web dev",
     "build": "pnpm --filter brandtree build && pnpm --filter web build",
