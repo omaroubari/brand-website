@@ -19,10 +19,10 @@ export interface PrepareOptions {
 }
 
 /**
- * Scan the project, surface diagnostics, and (re)generate the `.brandtree` runtime.
+ * Scan the project and surface diagnostics without touching the runtime.
  * In strict mode, any error aborts. Returns the resolved project.
  */
-export const prepareProject = async (
+export const readProject = async (
   options: PrepareOptions,
 ): Promise<BrandtreeProject> => {
   let project: BrandtreeProject;
@@ -41,7 +41,7 @@ export const prepareProject = async (
     } else {
       logger.error(error);
     }
-    process.exit(1);
+    throw error;
   }
 
   const hadErrors = reportDiagnostics(project.diagnostics, options.root);
@@ -51,18 +51,33 @@ export const prepareProject = async (
       logger.error(
         "Preparation aborted: diagnostics contain errors and strict mode is enabled.",
       );
-      process.exit(1);
+      throw new Error(
+        "Preparation aborted: diagnostics contain errors and strict mode is enabled.",
+      );
     }
     logger.warn(
       "Continuing preparation with errors because strict mode is disabled.",
     );
   }
 
+  return project;
+};
+
+export const writeProject = async (
+  project: BrandtreeProject,
+): Promise<void> => {
   const { warnings } = await generateRuntime(project);
 
   for (const warning of warnings) {
     logger.warn(warning);
   }
+};
 
+/** Prepare once for startup/build/check; watched changes can validate before stopping Astro. */
+export const prepareProject = async (
+  options: PrepareOptions,
+): Promise<BrandtreeProject> => {
+  const project = await readProject(options);
+  await writeProject(project);
   return project;
 };
