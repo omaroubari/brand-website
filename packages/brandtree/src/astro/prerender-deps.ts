@@ -44,6 +44,16 @@ export const prerenderDeps = (): Plugin => {
         ...options,
         skipSelf: true,
       });
+      // Sharp loads native binaries relative to its installed files. Some
+      // Vite resolutions mark it internal after Astro's external list is
+      // filtered above; preserve that location instead of bundling it.
+      if (source === "sharp" && resolved && isAbsolute(resolved.id)) {
+        return {
+          ...resolved,
+          id: pathToFileURL(resolved.id).href,
+          external: "absolute",
+        };
+      }
       if (!resolved?.external) return resolved;
       if (isBuiltin(resolved.id) || resolved.id.startsWith("file:"))
         return resolved;

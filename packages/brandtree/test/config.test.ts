@@ -155,3 +155,16 @@ describe("config diagnostics", () => {
     ]);
   });
 });
+
+it("reloads authored config and its imported helper after edits", async () => {
+  const { root, file } = await makeConfig(
+    `import name from './name.ts'; export default { ...${JSON.stringify(fixtureConfig)}, brand: { ...${JSON.stringify(fixtureConfig.brand)}, meta: { ...${JSON.stringify(fixtureConfig.brand.meta)}, name } } };`,
+  );
+  const helper = join(root, "name.ts");
+  await writeFile(helper, 'export default "Initial name";');
+  expect((await loadConfig(root)).config.brand.meta.name).toBe("Initial name");
+  await writeFile(helper, 'export default "Edited name";');
+  expect((await loadConfig(root)).config.brand.meta.name).toBe("Edited name");
+  await writeFile(file, "export default { brand: ;");
+  await expect(loadConfig(root)).rejects.toBeInstanceOf(BrandtreeError);
+});

@@ -4,7 +4,13 @@ export const runtimeTsconfigTemplate = (): string =>
     {
       exclude: ["dist"],
       extends: "astro/tsconfigs/strict",
-      include: [".astro/types.d.ts", "**/*"],
+      include: [
+        ".astro/types.d.ts",
+        "**/*",
+        "../brandtree.config.*",
+        "../content/**/*",
+        "../components/**/*",
+      ],
     },
     null,
     2,

@@ -160,10 +160,17 @@ pnpm --filter brandtree-sandbox dev
 pnpm --filter brandtree-sandbox build
 ```
 
-The dev command prepares the runtime once at startup; changes that require
-runtime regeneration need a restart. The `check` and `preview` scripts describe
-planned commands and remain unimplemented. The root check therefore still
-excludes the sandbox.
+The dev command watches authored inputs, validates saves, regenerates the
+runtime, and restarts Astro. Invalid watched config keeps the last successful
+runtime/server; correcting the config retries automatically. Invalid startup
+config requires rerunning dev. A failed restart can leave the server down until
+the next successful save. Regeneration errors appear in the terminal, without a
+custom browser overlay. SIGINT/SIGTERM close the watcher and server.
+
+`pnpm --filter brandtree-sandbox check` prepares and type-checks the site without
+a production build. `pnpm --filter brandtree-sandbox preview` serves existing
+`dist/`, even after deleting `.brandtree/`. Dev and preview accept `--host` and
+`--port`. The root check includes the packed sandbox.
 
 For a browser hydration check after building, edit the type tester input on
 `/en/exhibits` or `/ar/exhibits` and verify that the specimen updates.

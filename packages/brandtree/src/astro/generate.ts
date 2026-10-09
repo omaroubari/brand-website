@@ -1,5 +1,13 @@
-import { mkdir, readFile, readdir, rm, writeFile } from "node:fs/promises";
+import {
+  mkdir,
+  readFile,
+  readdir,
+  rename,
+  rm,
+  writeFile,
+} from "node:fs/promises";
 import { dirname, join, normalize } from "node:path";
+import { randomUUID } from "node:crypto";
 
 import type { BrandtreeProject } from "../core/project-tree.ts";
 import { ensureDepsLink } from "./ensure-deps-link.ts";
@@ -39,12 +47,14 @@ const writeIfChanged = async (
     return false;
   }
 
-  // Todo: Atomic temp-write + rename, so a watching dev server never observes a
-  // missing or half-written file mid-regeneration.
-  // await writeTextAtomic(path, content);
-
   await mkdir(dirname(path), { recursive: true });
-  await writeFile(path, content, "utf8");
+  const temporary = `${path}.${randomUUID()}.tmp`;
+  try {
+    await writeFile(temporary, content, "utf8");
+    await rename(temporary, path);
+  } finally {
+    await rm(temporary, { force: true });
+  }
   return true;
 };
 

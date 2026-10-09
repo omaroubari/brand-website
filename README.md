@@ -69,8 +69,9 @@ first. Astro and React components are compiled by the consuming Astro app.
 The package export tests check source API loading, the compiled CLI, and public
 API declarations with bundler resolution.
 
-The root check currently excludes the sandbox's placeholder `brandtree check`
-command; enable it when the generated-app commands are implemented.
+The root check includes the packed sandbox's `brandtree check`. Run
+`pnpm verify:packed` to install the package outside the monorepo, check and build
+the consumer, and preview its output after deleting the generated runtime.
 
 The agreed consumer contract is consolidated in
 [ADR 0017](docs/adr/0017-define-the-brandtree-consumer-project-contract.md), with a
@@ -78,8 +79,16 @@ The agreed consumer contract is consolidated in
 app. The sandbox starts with minimal consumer inputs and grows to exercise
 framework features as they are implemented. It installs a committed local tarball;
 refresh it with `pnpm sandbox:pack` followed by
-`pnpm --filter brandtree-sandbox update brandtree`. The build CLI generates its
-disposable Astro runtime. Track the work
+`pnpm --filter brandtree-sandbox update brandtree`. The CLI generates its disposable Astro runtime. `brandtree dev` watches authored
+content, metadata, components, assets, public files, and configuration. Saves are
+coalesced and validated before regeneration and server restart. Invalid watched
+config preserves the last successful runtime/server and retries on the next save;
+invalid startup config requires rerunning the command. A failed restart may leave
+the server down until the next successful edit. Regeneration failures are reported
+in the terminal; there is no custom browser overlay. `brandtree check` validates
+inputs and runs Astro type checks; `brandtree preview` serves existing `dist/`
+without loading author config or requiring `.brandtree/`. Dev and preview accept
+`--host` and `--port`, and close resources on SIGINT/SIGTERM. Track the work
 in the [Framework alpha milestone](https://github.com/omaroubari/brand-website/milestone/9).
 
 ```

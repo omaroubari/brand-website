@@ -45,8 +45,8 @@ it.each([
     vi.mocked(scanProject).mockResolvedValue(project);
     const preparing = prepareProject({ root: "/project", strict });
     if (aborts) {
-      await expect(preparing).rejects.toBe(exitError);
-      expect(process.exit).toHaveBeenCalledWith(1);
+      await expect(preparing).rejects.toThrow("Preparation aborted");
+      expect(process.exit).not.toHaveBeenCalled();
       expect(generateRuntime).not.toHaveBeenCalled();
     } else {
       await expect(preparing).resolves.toBe(project);
@@ -71,11 +71,13 @@ it.each([
 
 it("reports thrown BrandtreeError diagnostics to stderr before aborting", async () => {
   vi.mocked(scanProject).mockRejectedValue(new BrandtreeError(diagnostic));
-  await expect(prepareProject({ root: "/project" })).rejects.toBe(exitError);
+  await expect(prepareProject({ root: "/project" })).rejects.toBeInstanceOf(
+    BrandtreeError,
+  );
   expect(process.stderr.write).toHaveBeenCalledWith(
     expect.stringContaining("INVALID_META Invalid metadata"),
   );
   expect(process.stdout.write).not.toHaveBeenCalled();
-  expect(process.exit).toHaveBeenCalledWith(1);
+  expect(process.exit).not.toHaveBeenCalled();
   expect(generateRuntime).not.toHaveBeenCalled();
 });
