@@ -1,15 +1,17 @@
 import { createJiti } from "jiti";
 
-/**
- * Create a loader for user-authored ESM/TS modules (`brandtree.config.ts`,
- * `meta.ts`). One jiti instance is reused across every file the returned loader
- * is called with. `moduleCache: false` ensures edits are picked up on each load,
- * which is what makes dev-server regeneration reflect config/meta changes.
- */
+/** Load a fresh authored module graph, including imported config/meta helpers. */
 export const createModuleLoader = (): ((file: string) => Promise<unknown>) => {
-  const jiti = createJiti(import.meta.url, { moduleCache: false });
   return async (file: string) => {
-    const loaded = await jiti.import<{ default?: unknown }>(file);
+    // Each reload needs a fresh import cache. Node's native TS/ESM imports would
+    // retain old modules, so let jiti transform the authored graph instead.
+    const jiti = createJiti(import.meta.url, {
+      moduleCache: false,
+      tryNative: false,
+    });
+    // Synchronous evaluation also transforms authored .mjs files instead of
+    // handing them to Node's persistent ESM import cache.
+    const loaded = jiti(file) as { default?: unknown } | undefined;
     return loaded?.default ?? loaded;
   };
 };

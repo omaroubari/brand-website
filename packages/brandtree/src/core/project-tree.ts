@@ -4,6 +4,7 @@ import { parse as parseYaml } from "yaml";
 
 import { normalizeEntry, type SourceEntry } from "./entries.ts";
 import { loadConfig } from "./config.ts";
+import { BrandtreeError } from "./diagnostics.ts";
 
 import { discoverFolderMeta } from "./meta.ts";
 import { normalizeBasePath } from "./paths.ts";
@@ -120,7 +121,17 @@ const loadFilesystemSource = async (source: {
       const source = await readFile(file, "utf-8");
       const ext = extname(file).toLowerCase();
       const format = ext === ".mdx" ? "mdx" : "md";
-      const parsed = matter(source);
+      let parsed: ParsedSource;
+      try {
+        parsed = matter(source);
+      } catch (error) {
+        throw new BrandtreeError({
+          code: "BRANDTREE_FRONTMATTER_INVALID",
+          file,
+          message: `Failed to parse frontmatter: ${error instanceof Error ? error.message : String(error)}`,
+          severity: "error",
+        });
+      }
       return {
         body: { format, text: parsed.content },
         data: parsed.data,

@@ -245,7 +245,7 @@ it("loads sharp and Takumi native dependencies through isolated package links", 
       prerender: {
         consumer: "server",
         resolve: {
-          external: ["sharp", "takumi-js"],
+          external: ["takumi-js"],
           noExternal: ["native-owner"],
         },
         build: {
