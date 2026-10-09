@@ -365,7 +365,13 @@ it("builds custom font CSS and preloads from an external generated runtime", asy
     }),
   ]);
   project.config = recovered.config;
-  expect(project.config.fonts).toEqual([]);
+  expect(project.config.fonts).toMatchObject([
+    {
+      name: "Inter",
+      provider: "google",
+      cssVariable: "--font-brandtree-default",
+    },
+  ]);
   expect((await generateRuntime(project)).structuralChange).toBe(true);
   expect((await generateRuntime(project)).structuralChange).toBe(false);
   await promisify(execFile)(process.execPath, [probe], {
@@ -377,5 +383,5 @@ it("builds custom font CSS and preloads from an external generated runtime", asy
     "utf8",
   );
   expect(recoveredHtml).toContain("var(--font-client, system-ui, sans-serif)");
-  expect(recoveredHtml).not.toMatch(/rel="preload"[^>]+as="font"/u);
+  expect(recoveredHtml).toMatch(/rel="preload"[^>]+as="font"/u);
 }, 120000);

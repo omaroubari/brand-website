@@ -429,7 +429,7 @@ export default defineConfig({
   },
   seo: {
     og: {
-      enabled: false,
+      enabled: true,
     },
   },
 });

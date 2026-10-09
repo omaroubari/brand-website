@@ -59,7 +59,7 @@ Only the brand config holds structured brand data. It adapts the web app's
 schema without importing that app or using repository aliases. Required palette
 shades and complete light/dark roles are retained; a complete config is larger
 than the minimal author-file layout because the current schema requires them.
-The sandbox trims the documented type scale and disables generated social cards.
+The sandbox trims the documented type scale and generates localized social cards.
 Its top-level `fonts` array registers Inter through Astro's local provider from
 `./assets/fonts/Inter-Variable.woff2`, with variable weights `100 900` and normal
 style; display and text reference
@@ -164,3 +164,27 @@ unimplemented. The root check therefore still excludes the sandbox.
 
 For a browser hydration check after building, edit the type tester input on
 `/en/exhibits` or `/ar/exhibits` and verify that the specimen updates.
+
+## Social cards
+
+The packed consumer generates cover and content cards under `dist/og/`, with
+matching `og:image` and Twitter metadata. Cards reuse the top-level local Inter
+and Google Rubik declarations, including Arabic/Latin subsets; there is no
+separate social-card font list. Display and body families follow the resolved
+locale typography. Astro owns font downloads and caching.
+
+When a local font declaration has no readable files, Brandtree warns and
+registers Google Inter through Astro as the fallback. Omitting font declarations
+also registers Inter; explicit `fonts: []` opts out. Font files come from Astro,
+not fonts installed on the build machine. Inter loading requires a successful
+provider download or an existing Astro cache. **Inter does not cover Arabic.**
+Keep a working Arabic-capable font declaration for Arabic cards; fallback does
+not guarantee every locale.
+`seo.og.enabled: false` disables generation, while explicit page `seo.image`
+values continue to supply metadata without generating that page's card.
+
+After a build, delete the disposable `.brandtree/` directory and rebuild: card
+URLs and metadata must remain identical. Removing a content page and rebuilding
+must remove its card too. To check recovery, temporarily move the local font
+file, build, and restore it: the warning and Inter fallback must not prevent
+card generation, and restoring the file must restore the configured family.
