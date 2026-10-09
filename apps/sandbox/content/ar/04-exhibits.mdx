@@ -1,0 +1,24 @@
+---
+title: عناصر الهوية
+description: الألوان والطباعة والصور المستوردة.
+---
+
+import photo from "../../assets/photography/field.jpg";
+import TypeTester from "../../components/TypeTester.tsx";
+
+<ColorPalette brand={props.brand} ui={props.ui} />
+
+<TypeSpecimen brand={props.brand} ui={props.ui} />
+
+<TypeScale brand={props.brand} ui={props.ui} />
+
+<TypeTester
+  client:load
+  label={props.ui.typography.text}
+  initialText={props.brand.meta.name}
+/>
+
+<PhotoGrid
+  images={[{ src: photo, caption: "Alex Bachor / Unsplash" }]}
+  cols={1}
+/>
