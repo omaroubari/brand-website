@@ -56,6 +56,12 @@ importers:
       brandtree:
         specifier: file:brandtree.tgz
         version: file:apps/sandbox/brandtree.tgz(@astrojs/markdown-remark@7.2.2(supports-color@10.2.2))(@astrojs/markdown-satteri@0.3.5)(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1)(@types/node@22.20.1)(@types/react-dom@19.2.4(@types/react@19.2.18))(@types/react@19.2.18)(esbuild@0.28.2)(prettier-plugin-astro@0.14.1)(prettier@3.9.6)(supports-color@10.2.2)
+      react:
+        specifier: ^19.2.8
+        version: 19.2.8
+      react-dom:
+        specifier: ^19.2.8
+        version: 19.2.8(react@19.2.8)
 
   apps/web:
     dependencies:
@@ -2150,7 +2156,7 @@ packages:
     engines: {node: '>=8'}
 
   brandtree@file:apps/sandbox/brandtree.tgz:
-    resolution: {integrity: sha512-M0IvOrtxFpHdXW8xg6FCtUntHPMPC3tgp6GZ46XINbwziAGchdA1Bg5o9rzT0+aP0MBdMQCQUdWHoTr9NUtSDg==, tarball: file:apps/sandbox/brandtree.tgz}
+    resolution: {integrity: sha512-1sNzkJl/kqqdKkA2m6PGpo0KiJPZ5YnYmsXwoJDTpuDS6B1KZMTbpgksQ0ftJPmSKu8osLQ+pcEHKsznCW3xUw==, tarball: file:apps/sandbox/brandtree.tgz}
     version: 0.0.1
     engines: {node: '>=22.12.0'}
     hasBin: true
