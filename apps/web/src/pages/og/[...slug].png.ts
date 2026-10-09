@@ -79,7 +79,13 @@ export const GET: APIRoute<OgPageProps> = async ({ props }) => {
     (font): font is Extract<typeof font, { src: string }> =>
       typeof font === "object" && "src" in font,
   );
-  const primaryFont = localFonts[0]?.name;
+  const fonts = localFonts
+    .filter((font) => fontData[font.src])
+    .map((font) => ({
+      ...font,
+      data: new Uint8Array(Buffer.from(fontData[font.src]!, "base64")),
+    }));
+  const primaryFont = fonts[0]?.name;
 
   const png = await renderOgImage({
     title: props.title,
@@ -88,8 +94,7 @@ export const GET: APIRoute<OgPageProps> = async ({ props }) => {
     description: resolveOgLayer(og.description, props.description),
     logo: resolveOgLogo(og.logo, bundledLogo),
     site: resolveOgLayer(og.site, new URL(localizedBrand.meta.url).host),
-    fonts: localFonts,
-    fontData,
+    fonts,
     titleFont: primaryFont,
     bodyFont: primaryFont,
     palette: {

@@ -1,5 +1,7 @@
 export const ogEndpointTemplate = (): string =>
   String.raw`import type { APIRoute, GetStaticPaths } from "astro";
+import { fontData as astroFontData, experimental_getFontFileURL } from "astro:assets";
+import { loadOgFonts, resolveOgFontFamily } from "brandtree/og/fonts";
 import bundledAssets from "../../generated/og-assets.json";
 import data from "brandtree:data";
 import type { ContentTree, RuntimeOgAssets } from "brandtree";
@@ -13,11 +15,12 @@ import { localeDir } from "brandtree";
 
 const config = data.config;
 const assets: RuntimeOgAssets = bundledAssets;
-const fontData = assets.fontData;
+const loadedFonts = () => fontsPromise ??= loadOgFonts(config.fonts, astroFontData, experimental_getFontFileURL, assets.fontData);
+let fontsPromise: ReturnType<typeof loadOgFonts> | undefined;
 export const prerender = true;
-const brand = config.brand;
+const brandConfig = config.brand;
 
-interface OgPageProps extends Record<string, unknown> {
+interface OgImageProps extends Record<string, unknown> {
   title: string;
   description?: string;
   locale: string;
@@ -30,7 +33,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
   const tree: ContentTree = { ...data.tree, routes: new Map(data.tree.routes) };
   const paths: {
     params: { slug: string };
-    props: OgPageProps;
+    props: OgImageProps;
   }[] = [];
   const seen = new Set<string>();
 
@@ -39,7 +42,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
     return [];
   }
 
-  const add = (route: string, props: OgPageProps) => {
+  const add = (route: string, props: OgImageProps) => {
     const slug = slugForRoute(route);
     if (seen.has(slug)) return;
     seen.add(slug);
@@ -47,24 +50,28 @@ export const getStaticPaths: GetStaticPaths = async () => {
   };
 
   for (const page of tree.pages) {
-    const localizedBrand = resolveBrand(brand, page.locale, config.i18n);
-    if (page.meta.seo.image) continue;
+    const brand = resolveBrand(brandConfig, page.locale, config.i18n);
+    if (page.meta.seo.image) {
+      seen.add(slugForRoute(page.route));
+      continue;
+    }
     add(page.route, {
       title: page.meta.seo.title ?? page.title,
       description:
         page.meta.seo.description ??
         page.description ??
-        localizedBrand.meta.description,
+        brand.meta.description,
       locale: page.locale,
     });
   }
 
   const locales = config.i18n?.locales.map(({ code }) => code) ?? ["en"];
+
   for (const locale of locales) {
-    const localizedBrand = resolveBrand(brand, locale, config.i18n);
+    const brand = resolveBrand(brandConfig, locale, config.i18n);
     add(getNavigation(tree, locale).root ?? "/", {
-      title: localizedBrand.meta.documentTitle,
-      description: localizedBrand.meta.description,
+      title: brand.meta.documentTitle,
+      description: brand.meta.description,
       locale,
     });
   }
@@ -72,33 +79,29 @@ export const getStaticPaths: GetStaticPaths = async () => {
   return paths;
 };
 
-export const GET: APIRoute<OgPageProps> = async ({ props }) => {
-  const localizedBrand = resolveBrand(brand, props.locale, config.i18n);
+export const GET: APIRoute<OgImageProps> = async ({ props }) => {
+  const brand = resolveBrand(brandConfig, props.locale, config.i18n);
   const og = config.seo.og;
-  const light = localizedBrand.theme.light;
-  const siteTitle = localizedBrand.meta.documentTitle;
+  const light = brand.theme.light;
+  const siteTitle = brand.meta.documentTitle;
   const color = (reference: Parameters<typeof resolveColor>[1]) =>
-    colorCss(resolveColor(localizedBrand, reference).value);
-  const localFonts = (og.fonts ?? []).filter(
-    (font): font is Extract<typeof font, { src: string }> =>
-      typeof font === "object" && "src" in font,
-  );
-  const availableFonts = localFonts.filter((font) => fontData[font.src]);
-  const primaryFont = availableFonts[0]?.name;
-  const logoSource = og.logo ?? localizedBrand.logo.logotype.onDark;
+    colorCss(resolveColor(brand, reference).value);
+  const { fonts, renderer } = await loadedFonts();
+  const logoSource = og.logo ?? brand.logo.logotype.onDark;
   const bundledLogo = typeof logoSource === "string" ? assets.logos[logoSource] : logoSource;
 
+
   const png = await renderOgImage({
+    renderer,
     title: props.title,
     siteTitle,
     eyebrow: resolveOgLayer(og.eyebrow, siteTitle),
     description: resolveOgLayer(og.description, props.description),
     logo: resolveOgLogo(og.logo, bundledLogo),
-    site: resolveOgLayer(og.site, new URL(localizedBrand.meta.url).host),
-    fonts: availableFonts,
-    fontData,
-    titleFont: primaryFont,
-    bodyFont: primaryFont,
+    site: resolveOgLayer(og.site, new URL(brand.meta.url).host),
+    fonts,
+    titleFont: resolveOgFontFamily(brand.typography.display, config.fonts, fonts),
+    bodyFont: resolveOgFontFamily(brand.typography.text, config.fonts, fonts),
     palette: {
       accent: og.palette?.accent ?? color(light.accent),
       background: og.palette?.background ?? color(light.background),
