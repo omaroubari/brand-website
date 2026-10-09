@@ -9,7 +9,7 @@ import { imageSize } from "image-size";
 import ts from "typescript";
 import { scanProject, type BrandtreeProject } from "../src/core/project-tree";
 import type { RuntimeOgAssets } from "../src/core/types";
-import { resolveBrand } from "../src/brand/localize";
+import { resolveBrand } from "../src/brand/i18n";
 import { colorCss, resolveColor } from "../src/brand/tokens";
 import { getNavigation } from "../src/core/navigation";
 import { localeDir } from "../src/core/i18n";
@@ -20,12 +20,80 @@ import { buildOgAssets } from "../src/astro/build-og-assets";
 import { buildRuntimeData } from "../src/astro/build-runtime-data";
 import { generateRuntime } from "../src/astro/generate";
 import { ogEndpointTemplate } from "../src/astro/templates/og";
+import { normalizeEntry } from "../src/core/entries";
+import { buildContentTree } from "../src/core/tree";
 
 interface OgProps {
   title: string;
   description?: string;
   locale: string;
 }
+
+it.each(
+  [
+    "single",
+    "dir-hidden",
+    "dir-prefixed",
+    "dot-hidden",
+    "dot-prefixed",
+  ].flatMap((mode) =>
+    ["", "/brand", "/brand/guide"].map((basePath) => ({ mode, basePath })),
+  ),
+)(
+  "maps OG endpoints for root and nested routes: $mode, '$basePath'",
+  async ({ mode, basePath }) => {
+    const fixture = project();
+    fixture.config.basePath = basePath;
+    if (mode === "single") delete fixture.config.i18n;
+    else {
+      fixture.config.i18n!.parser = mode.startsWith("dot") ? "dot" : "dir";
+      fixture.config.i18n!.hideDefaultLocalePrefix = mode.endsWith("hidden");
+    }
+    const i18n = fixture.config.i18n;
+    const locales = i18n ? i18n.locales.map(({ code }) => code) : [""];
+    const logical = ["01-start.md", "02-logo/index.md", "02-logo/01-mark.md"];
+    const pages = locales.flatMap((locale) =>
+      logical.flatMap((file) => {
+        const ref = !i18n
+          ? file
+          : i18n.parser === "dir"
+            ? `${locale}/${file}`
+            : file.replace(/\.md$/, `.${locale}.md`);
+        return normalizeEntry(
+          { ref, data: {}, body: { format: "md", text: "# Page" } },
+          { i18n, basePath },
+        ).pages;
+      }),
+    );
+    fixture.tree = buildContentTree(pages, {
+      i18n,
+      basePath,
+      folderMeta: new Map(),
+    });
+    const prefixes = locales.map(
+      (locale) =>
+        `${basePath}${locale && !(i18n?.hideDefaultLocalePrefix && locale === i18n.defaultLocale) ? `/${locale}` : ""}`,
+    );
+    const expectedRoutes = prefixes.flatMap((prefix) => [
+      prefix || "/",
+      `${prefix}/start`,
+      `${prefix}/logo`,
+      `${prefix}/logo/mark`,
+    ]);
+    const paths = await endpoint(fixture, {
+      fontData: {},
+      logos: {},
+    }).getStaticPaths();
+    expect(paths.map(({ params }) => `/og/${params.slug}.png`).sort()).toEqual(
+      expectedRoutes
+        .map((route) => `/og/${route.slice(1) || "index"}.png`)
+        .sort(),
+    );
+    expect(new Set(paths.map(({ params }) => params.slug)).size).toBe(
+      paths.length,
+    );
+  },
+);
 interface Endpoint {
   getStaticPaths(): Promise<{ params: { slug: string }; props: OgProps }[]>;
   GET(context: { props: OgProps }): Promise<Response>;
@@ -202,6 +270,8 @@ it("prerenders the emitted endpoint into static PNG files", async () => {
   const input = project();
   input.context.outDir = runtime;
   input.context.distDir = join(runtime, "dist");
+  // This tests social-card output; site font downloads are covered separately.
+  input.config.fonts = [];
   await generateRuntime(input);
   await promisify(execFile)(
     process.execPath,

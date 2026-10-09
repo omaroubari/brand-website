@@ -1,4 +1,5 @@
 import { BrandtreeError, diagnosticsFromZod } from "./diagnostics.ts";
+import { collectBrandDiagnostics } from "../brand/index.ts";
 
 import {
   brandtreeConfigSchema,
@@ -7,9 +8,9 @@ import {
 } from "./schema.ts";
 import type { Diagnostic } from "./types.ts";
 import { createModuleLoader } from "./load-module.ts";
-import { join } from "node:path";
 import { existsSync, readFileSync } from "node:fs";
 import { findConfigFile } from "./project.ts";
+import { prepareConfigAssets } from "./config-assets.ts";
 
 export const defineConfig = (
   config: BrandtreeConfigInput,
@@ -87,9 +88,19 @@ export const loadConfig = async (root: string): Promise<ConfigLoadResult> => {
     throw new BrandtreeError(detail);
   }
 
+  const assetResult = await prepareConfigAssets(parsed.data, {
+    root,
+    file: configFile ?? undefined,
+  });
+
   return {
-    config: parsed.data,
+    config: assetResult.config,
     configFile,
-    diagnostics: [],
+    diagnostics: [
+      ...collectBrandDiagnostics(parsed.data, {
+        file: configFile ?? undefined,
+      }),
+      ...assetResult.diagnostics,
+    ],
   };
 };

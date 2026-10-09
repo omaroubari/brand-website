@@ -71,8 +71,9 @@ const translationsByLocale = new Map(
     .filter((candidate) => candidate.translationKey === page.translationKey)
     .map((candidate) => [candidate.locale, candidate]),
 );
-const localeSwitch = config.i18n
-  ? config.i18n.locales.map(({ code, label, dir: localeDirection }) => {
+const i18n = config.i18n;
+const localeSwitch = i18n
+  ? i18n.locales.map(({ code, label, dir: localeDirection }) => {
       const translation = translationsByLocale.get(code);
       return {
         code,
@@ -80,7 +81,7 @@ const localeSwitch = config.i18n
         dir: localeDirection,
         href:
           translation?.route ??
-          localizeRoute(page.translationKey, code, config.i18n),
+          localizeRoute(page.translationKey, code, i18n),
         isCurrent: code === page.locale,
         isFallback: translation?.fallback === true,
       };
@@ -124,7 +125,7 @@ const layoutProps = {
   imageZoom: true,
   codeWrap: false,
   themeMode: localizedBrand.theme.default,
-  fontCssVariables: [],
+  fontCssVariables: config.fonts.map(({ cssVariable }) => cssVariable),
   searchEnabled: false,
   indexable: !noindex,
   ogImage: ogImage ? absolute(ogImage) : null,

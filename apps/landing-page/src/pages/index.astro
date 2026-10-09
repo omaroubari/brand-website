@@ -1,5 +1,8 @@
 ---
 import Layout from "../layouts/layout.astro";
+import inputImage from "../assets/input.svg?url";
+import processImage from "../assets/process.svg?url";
+import outputImage from "../assets/output.svg?url";
 
 const capabilities = [
   {
@@ -134,6 +137,15 @@ const guidelineSections = [
           <li
             class="bg-muted flex min-h-72 flex-col rounded-2xl p-6 sm:min-h-80 sm:p-8">
             <p>01</p>
+            <img
+              src={inputImage}
+              alt=""
+              width="1342"
+              height="755"
+              loading="lazy"
+              decoding="async"
+              class="h-auto w-full"
+            />
             <div class="mt-auto">
               <h3 class="text-foreground font-medium">Share the system</h3>
               <p class="mt-2 max-w-80">
@@ -145,19 +157,37 @@ const guidelineSections = [
           <li
             class="bg-muted flex min-h-72 flex-col rounded-2xl p-6 sm:min-h-80 sm:p-8">
             <p>02</p>
+            <img
+              src={processImage}
+              alt=""
+              width="1342"
+              height="755"
+              loading="lazy"
+              decoding="async"
+              class="h-auto w-full"
+            />
             <div class="mt-auto">
               <h3 class="text-foreground font-medium">
                 We shape the experience
               </h3>
               <p class="mt-2 max-w-80">
-                We structure, design, and build a website around the identity,
-                not a generic template.
+                We structure, design, and build a site that brings the identity
+                to life.
               </p>
             </div>
           </li>
           <li
             class="bg-muted flex min-h-72 flex-col rounded-2xl p-6 sm:min-h-80 sm:p-8">
             <p>03</p>
+            <img
+              src={outputImage}
+              alt=""
+              width="1342"
+              height="755"
+              loading="lazy"
+              decoding="async"
+              class="h-auto w-full"
+            />
             <div class="mt-auto">
               <h3 class="text-foreground font-medium">
                 Hand off with confidence
@@ -288,7 +318,7 @@ const guidelineSections = [
       </section>
 
       <section
-        class="bg-muted mb-12 flex min-h-112 flex-col items-center justify-center rounded-3xl px-6 py-20 text-center sm:px-10"
+        class="bg-muted mb-12 flex min-h-112 flex-col items-center justify-center rounded-3xl px-6 py-20 text-center text-balance sm:px-10"
         aria-labelledby="closing-title">
         <h2
           id="closing-title"

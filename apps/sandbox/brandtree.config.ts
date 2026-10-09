@@ -1,19 +1,47 @@
 import { defineConfig } from "brandtree";
 
-// Valence data adapted from apps/web; complete required brand schema.
-// This small contract fixture uses system fonts and disables generated cards.
+// Fieldwork is the sandbox brand; all structured identity data lives here.
+// Local Inter and Google Rubik exercise canonical and locale font loading.
 export default defineConfig({
+  fonts: [
+    {
+      name: "Inter",
+      cssVariable: "--font-sandbox",
+      provider: "local",
+      weights: ["100 900"],
+      styles: ["normal"],
+      fallbacks: ["system-ui", "sans-serif"],
+      options: {
+        variants: [
+          {
+            src: ["./assets/fonts/Inter-Variable.woff2"],
+            weight: "100 900",
+            style: "normal",
+          },
+        ],
+      },
+    },
+    {
+      name: "Rubik",
+      cssVariable: "--font-sandbox-arabic",
+      provider: "google",
+      weights: ["300 900"],
+      styles: ["normal"],
+      subsets: ["arabic", "latin"],
+      fallbacks: ["system-ui", "sans-serif"],
+    },
+  ],
   brand: {
     meta: {
-      name: "Valence",
-      legalName: "Studio Valence Design",
+      name: "Fieldwork",
+      legalName: "Fieldwork Studio",
       tagline: "Web Design Studio",
       documentTitle: "Brand Guidelines",
       version: "1.1",
       year: 2026,
-      url: "https://brand.byvalence.com",
+      url: "https://fieldwork.example",
       description:
-        "The brand guidelines for Studio Valence — logo usage, colour, typography and application rules.",
+        "The brand guidelines for Fieldwork — logo usage, colour, typography and application rules.",
     },
     colors: {
       palette: [
@@ -69,7 +97,7 @@ export default defineConfig({
         },
         {
           id: "orange",
-          name: "Orange",
+          name: "Fieldwork orange",
           shades: {
             "50": {
               space: "hex",
@@ -137,7 +165,7 @@ export default defineConfig({
         },
         {
           id: "orange-red",
-          name: "Orange",
+          name: "Fieldwork orange",
           color: "orange-500",
           cmyk: [0, 77, 100, 6],
           usage:
@@ -219,8 +247,8 @@ export default defineConfig({
       },
     },
     typography: {
-      display: "ui-sans-serif, system-ui, sans-serif",
-      text: "ui-sans-serif, system-ui, sans-serif",
+      display: "var(--font-sandbox)",
+      text: "var(--font-sandbox)",
       mono: "ui-monospace, SFMono-Regular, Menlo, monospace",
       families: [
         {
@@ -268,7 +296,7 @@ export default defineConfig({
           size: "clamp(3rem, 8vw, 5rem)",
           lineHeight: "1",
           tracking: "-0.04em",
-          sample: "Progress",
+          sample: "Explore together",
         },
       ],
     },
@@ -284,7 +312,7 @@ export default defineConfig({
         aspect: 1,
       },
       favicon: "/favicon.svg",
-      pronunciation: "VAY • luhns",
+      pronunciation: "FIELD • work",
       clearspace: {
         unit: "the height of the lowercase “e”",
         ratio: 0.34,
@@ -313,21 +341,30 @@ export default defineConfig({
         },
       ],
     },
+    downloads: [
+      {
+        id: "logotype",
+        label: "Fieldwork logo artwork",
+        href: "/brand/logotype-dark.svg",
+        format: "SVG",
+      },
+    ],
     contact: {
-      email: "omar@byvalence.com",
-      website: "www.byvalence.com",
+      email: "hello@fieldwork.example",
+      website: "fieldwork.example",
       socials: [],
     },
     localeOverrides: {
       ar: {
         meta: {
+          name: "فيلدوورك",
           tagline: "استوديو تصميم الويب",
           documentTitle: "دليل الهوية",
           description:
-            "دليل الهوية لاستوديو فالنس — استخدام الشعار والألوان والطباعة وقواعد التطبيق.",
+            "دليل الهوية لفيلدوورك — استخدام الشعار والألوان والطباعة وقواعد التطبيق.",
         },
         logo: {
-          pronunciation: "فاي • لَنس",
+          pronunciation: "فيلد • وورك",
           clearspace: {
             unit: "ارتفاع الحرف الصغير «e»",
           },
@@ -347,16 +384,16 @@ export default defineConfig({
           ],
         },
         typography: {
-          display: "ui-sans-serif, system-ui, sans-serif",
-          text: "ui-sans-serif, system-ui, sans-serif",
+          display: "var(--font-sandbox-arabic)",
+          text: "var(--font-sandbox-arabic)",
           families: [
             {
               id: "display",
-              name: "PP Neue Montreal Arabic",
+              name: "Rubik",
             },
             {
               id: "text",
-              name: "PP Neue Montreal Arabic",
+              name: "Rubik",
             },
           ],
           scale: [
