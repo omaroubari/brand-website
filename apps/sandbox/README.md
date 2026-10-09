@@ -176,14 +176,3 @@ URLs and metadata must remain identical. Removing a content page and rebuilding
 must remove its card too. To check recovery, temporarily move the local font
 file, build, and restore it: the warning and Inter fallback must not prevent
 card generation, and restoring the file must restore the configured family.
-
-Run the packed social-card checks after refreshing the snapshot and building:
-
-```sh
-pnpm sandbox:check-og
-```
-
-The check uses a disposable consumer copy and the sandbox's existing Astro font
-cache. It verifies local/Google loading, authored metadata, PNG dimensions,
-runtime deletion, missing-font recovery and restoration, page deletion, image
-overrides, and disabled generation. It does not change the authored sandbox.
