@@ -1,11 +1,13 @@
-import type { LocalAssetReference } from "../core/local-assets.ts";
+import type { AssetReference } from "../core/types.ts";
+import { resolveAssetReference } from "../core/local-assets.ts";
 import type { BrandConfig } from "./schema.ts";
 
-/** Only file-bearing brand fields are assets; copy and ordinary URLs are not. */
+/** Resolve artwork and download references against root; copy and ordinary URLs are not assets. */
 export function collectBrandAssetReferences(
   brand: BrandConfig,
-): LocalAssetReference[] {
-  const references: LocalAssetReference[] = [];
+  root: string,
+): AssetReference[] {
+  const references: Pick<AssetReference, "value" | "path">[] = [];
   for (const mark of ["logotype", "brandmark"] as const) {
     for (const scheme of ["onLight", "onDark"] as const) {
       references.push({
@@ -27,5 +29,5 @@ export function collectBrandAssetReferences(
     });
   });
   // Locale overlays only translate artwork/download metadata, not file paths.
-  return references;
+  return references.map((reference) => resolveAssetReference(root, reference));
 }

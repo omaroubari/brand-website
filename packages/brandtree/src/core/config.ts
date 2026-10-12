@@ -10,7 +10,6 @@ import type { Diagnostic } from "./types.ts";
 import { createModuleLoader } from "./load-module.ts";
 import { existsSync, readFileSync } from "node:fs";
 import { findConfigFile } from "./project.ts";
-import { prepareConfigAssets } from "./config-assets.ts";
 
 export const defineConfig = (
   config: BrandtreeConfigInput,
@@ -18,6 +17,7 @@ export const defineConfig = (
 
 /** Result of loading + validating a project config. */
 export interface ConfigLoadResult {
+  /** Validated authored config; project scanning applies asset fallbacks. */
   config: ResolvedConfig;
   /** Absolute path of the config file used, or null when defaults were used. */
   configFile: string | null;
@@ -88,19 +88,11 @@ export const loadConfig = async (root: string): Promise<ConfigLoadResult> => {
     throw new BrandtreeError(detail);
   }
 
-  const assetResult = await prepareConfigAssets(parsed.data, {
-    root,
-    file: configFile ?? undefined,
-  });
-
   return {
-    config: assetResult.config,
+    config: parsed.data,
     configFile,
-    diagnostics: [
-      ...collectBrandDiagnostics(parsed.data, {
-        file: configFile ?? undefined,
-      }),
-      ...assetResult.diagnostics,
-    ],
+    diagnostics: collectBrandDiagnostics(parsed.data, {
+      file: configFile ?? undefined,
+    }),
   };
 };
