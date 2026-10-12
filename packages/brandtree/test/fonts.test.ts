@@ -11,6 +11,7 @@ import { brandStyleSheet } from "../src/brand/tokens";
 import { scanProject } from "../src/core/project-tree";
 import { generateRuntime } from "../src/astro/generate";
 import { prepareConfigAssets } from "../src/core/config-assets";
+import { resolveProjectContext } from "../src/core/project";
 import { astroConfigTemplate } from "../src/astro/templates/astro-config";
 
 const roots: string[] = [];
@@ -45,6 +46,7 @@ it("generates local provider URLs using the shared prefixes", () => {
   const source = astroConfigTemplate({
     config,
     context: {
+      assetReferences: [],
       root: "/client",
       outDir: "/client/.brandtree",
       contentRoot: "/client/content",
@@ -344,19 +346,20 @@ it("builds custom font CSS and preloads from an external generated runtime", asy
     expect(html).toContain("/_astro/fonts/");
   }
   // Missing local files are omitted from Astro, keeping the runtime build usable.
+  const missingFontConfig = {
+    ...project.config,
+    fonts: fontsConfigSchema.parse([
+      {
+        name: "Client Sans",
+        cssVariable: "--font-client",
+        provider: "local",
+        options: { variants: [{ src: ["./assets/fonts/missing.woff2"] }] },
+      },
+    ]),
+  };
   const recovered = await prepareConfigAssets(
-    {
-      ...project.config,
-      fonts: fontsConfigSchema.parse([
-        {
-          name: "Client Sans",
-          cssVariable: "--font-client",
-          provider: "local",
-          options: { variants: [{ src: ["./assets/fonts/missing.woff2"] }] },
-        },
-      ]),
-    },
-    { root },
+    missingFontConfig,
+    resolveProjectContext(root, { config: missingFontConfig }),
   );
   expect(recovered.diagnostics).toEqual([
     expect.objectContaining({

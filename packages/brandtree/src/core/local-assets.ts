@@ -2,19 +2,16 @@ import { open } from "node:fs/promises";
 import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { diagnosticsFromIssues } from "./diagnostics.ts";
-import type { Diagnostic } from "./types.ts";
+import type { AssetReference, Diagnostic } from "./types.ts";
 
-export interface LocalAssetReference {
-  value: string;
-  path: (string | number)[];
-}
-
-/** All asset fields use the same explicit prefixes, without network I/O. */
+/**
+ * Resolve an asset value to an absolute filename: ./ uses root, / uses root/public.
+ * Returns null for URLs and anchors; throws for invalid local syntax. No file I/O.
+ */
 export function resolveLocalAssetPath(
   root: string,
-  reference: Pick<LocalAssetReference, "value">,
+  { value }: Pick<AssetReference, "value">,
 ): string | null {
-  const { value } = reference;
   if (/^file:\/\/\//iu.test(value)) return fileURLToPath(new URL(value));
   if (/^file:/iu.test(value))
     throw new Error("Use file:/// for an explicit filesystem path");
@@ -32,16 +29,38 @@ export function resolveLocalAssetPath(
   );
 }
 
+/**
+ * Preserve the authored reference and any resolution error.
+ * resolutionValue overrides path resolution for legacy social-card references.
+ */
+export function resolveAssetReference(
+  root: string,
+  reference: Pick<AssetReference, "value" | "path">,
+  resolutionValue = reference.value,
+): AssetReference {
+  try {
+    return {
+      ...reference,
+      file: resolveLocalAssetPath(root, { value: resolutionValue }),
+    };
+  } catch (error) {
+    return {
+      ...reference,
+      file: null,
+      resolutionError: error instanceof Error ? error.message : String(error),
+    };
+  }
+}
+
 export interface LocalAssetFailure {
-  reference: LocalAssetReference;
+  reference: AssetReference;
   file?: string;
   reason: string;
 }
 
-/** Check each physical file once while reporting every affected authored field. */
+/** Forward resolution errors and check each resolved file once, without reparsing. */
 export async function checkLocalAssets(
-  references: readonly LocalAssetReference[],
-  root: string,
+  references: readonly AssetReference[],
 ): Promise<LocalAssetFailure[]> {
   const checks = new Map<string, Promise<string | null>>();
   const inspect = async (file: string): Promise<string | null> => {
@@ -61,15 +80,9 @@ export async function checkLocalAssets(
 
   const results = await Promise.all(
     references.map(async (reference) => {
-      let file: string | null;
-      try {
-        file = resolveLocalAssetPath(root, reference);
-      } catch (error) {
-        return {
-          reference,
-          reason: error instanceof Error ? error.message : String(error),
-        };
-      }
+      const { file } = reference;
+      if (reference.resolutionError !== undefined)
+        return { reference, reason: reference.resolutionError };
       if (file === null) return null;
       let check = checks.get(file);
       if (!check) {

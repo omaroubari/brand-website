@@ -4,6 +4,7 @@ import { parse as parseYaml } from "yaml";
 
 import { normalizeEntry, type SourceEntry } from "./entries.ts";
 import { loadConfig } from "./config.ts";
+import { prepareConfigAssets } from "./config-assets.ts";
 
 import { discoverFolderMeta } from "./meta.ts";
 import { normalizeBasePath } from "./paths.ts";
@@ -157,11 +158,15 @@ export const scanProject = async (
   const preview = options.preview ?? false;
   const configResult = await loadConfig(root);
 
-  const config = configResult.config;
-
   const context = resolveProjectContext(root, {
+    config: configResult.config,
     runtimeDir: options.runtimeDir,
   });
+
+  // Collects asset diagnostics and applies fallbacks where applicable
+  const assetResult = await prepareConfigAssets(configResult.config, context);
+
+  const config = assetResult.config;
 
   const source = {
     name: "filesystem",
@@ -231,6 +236,7 @@ export const scanProject = async (
     config,
     diagnostics: [
       ...configResult.diagnostics,
+      ...assetResult.diagnostics,
       ...contentDiagnostics,
       ...folderMeta.diagnostics,
     ],
