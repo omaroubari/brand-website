@@ -1,5 +1,7 @@
 import type { APIRoute, GetStaticPaths } from "astro";
-import { fontData, logo as bundledLogo } from "virtual:og-assets";
+import { logo as bundledLogo } from "virtual:og-assets";
+import { fontData, experimental_getFontFileURL } from "astro:assets";
+import { loadOgFonts, resolveOgFontFamily } from "brandtree/og/fonts.ts";
 
 import config from "@config";
 import { resolveBrand } from "brandtree";
@@ -12,6 +14,13 @@ import { localeDir } from "brandtree";
 
 export const prerender = true;
 const brand = config.brand;
+let fontsPromise: ReturnType<typeof loadOgFonts> | undefined;
+const loadedFonts = () =>
+  (fontsPromise ??= loadOgFonts(
+    config.fonts,
+    fontData,
+    experimental_getFontFileURL,
+  ));
 
 interface OgPageProps extends Record<string, unknown> {
   title: string;
@@ -75,19 +84,10 @@ export const GET: APIRoute<OgPageProps> = async ({ props }) => {
   const siteTitle = localizedBrand.meta.documentTitle;
   const color = (reference: Parameters<typeof resolveColor>[1]) =>
     colorCss(resolveColor(localizedBrand, reference).value);
-  const localFonts = (og.fonts ?? []).filter(
-    (font): font is Extract<typeof font, { src: string }> =>
-      typeof font === "object" && "src" in font,
-  );
-  const fonts = localFonts
-    .filter((font) => fontData[font.src])
-    .map((font) => ({
-      ...font,
-      data: new Uint8Array(Buffer.from(fontData[font.src]!, "base64")),
-    }));
-  const primaryFont = fonts[0]?.name;
+  const { fonts, renderer } = await loadedFonts();
 
   const png = await renderOgImage({
+    renderer,
     title: props.title,
     siteTitle,
     eyebrow: resolveOgLayer(og.eyebrow, siteTitle),
@@ -95,8 +95,16 @@ export const GET: APIRoute<OgPageProps> = async ({ props }) => {
     logo: resolveOgLogo(og.logo, bundledLogo),
     site: resolveOgLayer(og.site, new URL(localizedBrand.meta.url).host),
     fonts,
-    titleFont: primaryFont,
-    bodyFont: primaryFont,
+    titleFont: resolveOgFontFamily(
+      localizedBrand.typography.display,
+      config.fonts,
+      fonts,
+    ),
+    bodyFont: resolveOgFontFamily(
+      localizedBrand.typography.text,
+      config.fonts,
+      fonts,
+    ),
     palette: {
       accent: og.palette?.accent ?? color(light.accent),
       background: og.palette?.background ?? color(light.background),

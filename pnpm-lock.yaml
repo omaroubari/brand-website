@@ -2156,7 +2156,7 @@ packages:
     engines: {node: '>=8'}
 
   brandtree@file:apps/sandbox/brandtree.tgz:
-    resolution: {integrity: sha512-l3oqBUwY2wXkXMj5FxGJDDon/ZQsVNL98fmTVSeJxK8Sj4cAC4AYfxOGOk2Ghn9pTcWiKYvPxdk/VlJlppHA5w==, tarball: file:apps/sandbox/brandtree.tgz}
+    resolution: {integrity: sha512-xNIzsQ3alayFcVbf2jqccvdrNdhuJdn1HDFIvavlWKxiQ7IhfK5QBI2ReAfId0xGMokoTq6T7Q/H7DfVYr873Q==, tarball: file:apps/sandbox/brandtree.tgz}
     version: 0.0.1
     engines: {node: '>=22.12.0'}
     hasBin: true
