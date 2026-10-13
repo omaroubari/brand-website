@@ -2,8 +2,9 @@ import { existsSync } from "node:fs";
 
 import { isAbsolute, join, resolve } from "pathe";
 
-import type { ResolvedConfig } from "./schema.ts";
 import type { ProjectContext } from "./types.ts";
+import type { ResolvedConfig } from "./schema.ts";
+import { collectConfigAssetReferences } from "./config-assets.ts";
 
 export const CONFIG_FILENAMES = new Array(
   "brandtree.config.ts",
@@ -41,17 +42,24 @@ export const resolveRuntimeDir = (
   isAbsolute(runtimeDir) ? runtimeDir : join(resolve(root), runtimeDir);
 
 /**
- * Resolve every path Blume needs from a project root and its resolved config.
- * Paths are absolute and normalized. `options.runtimeDir` relocates the whole
+ * Resolve Brandtree's conventional paths and retain absolute config-referenced
+ * asset files, including missing files, for targeted watching. Paths are absolute
+ * and normalized. `options.runtimeDir` relocates the whole
  * generated runtime (and its build output) so a verify build/check can run
  * without touching a live dev server's `.brandtree/` or the real `dist/`.
  */
 export const resolveProjectContext = (
   root: string,
-  options?: { runtimeDir?: string },
+  options?: {
+    runtimeDir?: string;
+    config?: ResolvedConfig;
+  },
 ): ProjectContext => {
   const absoluteRoot = resolve(root);
   const contentRoot = join(absoluteRoot, "content");
+  const assetReferences = options?.config
+    ? collectConfigAssetReferences(options.config, absoluteRoot)
+    : [];
 
   const outDir = resolveRuntimeDir(absoluteRoot, options?.runtimeDir);
   // A relocated runtime keeps its build output self-contained under itself, so a
@@ -61,6 +69,7 @@ export const resolveProjectContext = (
     : join(absoluteRoot, "dist");
 
   return {
+    assetReferences,
     componentsFile: firstExisting(absoluteRoot, COMPONENTS_FILENAMES),
     configFile: findConfigFile(absoluteRoot),
     contentRoot,

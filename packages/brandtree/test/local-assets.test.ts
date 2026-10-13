@@ -7,11 +7,17 @@ import fixtureConfig from "../../../apps/sandbox/brandtree.config";
 import {
   checkLocalAssets,
   localAssetDiagnostics,
+  resolveAssetReference,
   resolveLocalAssetPath,
 } from "../src/core/local-assets";
-import { prepareConfigAssets } from "../src/core/config-assets";
+import {
+  collectConfigAssetReferences,
+  prepareConfigAssets,
+} from "../src/core/config-assets";
 import { brandtreeConfigSchema } from "../src/core/schema";
 import { loadConfig } from "../src/core/config";
+import { resolveProjectContext } from "../src/core/project";
+import { scanProject } from "../src/core/project-tree";
 
 const roots: string[] = [];
 const sandboxRoot = fileURLToPath(
@@ -71,8 +77,9 @@ it("ignores remote URLs and anchors without performing network requests", async 
   ];
   expect(
     await checkLocalAssets(
-      values.map((value) => ({ value, path: ["asset"] })),
-      "/missing-project",
+      values.map((value) =>
+        resolveAssetReference("/project", { value, path: ["asset"] }),
+      ),
     ),
   ).toEqual([]);
   expect(fetch).not.toHaveBeenCalled();
@@ -93,24 +100,24 @@ it("reports missing files, directories, and broken symlinks for every affected f
   const root = await makeRoot();
   await mkdir(join(root, "./assets"));
   await symlink(join(root, "gone.svg"), join(root, "./broken.svg"));
-  const failures = await checkLocalAssets(
-    [
-      {
-        value: "./missing.svg",
-        path: ["brand", "logo", "logotype", "onLight"],
-      },
-      {
-        value: "./missing.svg",
-        path: ["brand", "logo", "logotype", "onDark"],
-      },
-      { value: "./assets", path: ["fonts", 0] },
-      {
-        value: "./broken.svg",
-        path: ["brand", "downloads", 0, "href"],
-      },
-    ],
-    root,
-  );
+  const failures = await checkLocalAssets([
+    {
+      value: "./missing.svg",
+      file: join(root, "missing.svg"),
+      path: ["brand", "logo", "logotype", "onLight"],
+    },
+    {
+      value: "./missing.svg",
+      file: join(root, "missing.svg"),
+      path: ["brand", "logo", "logotype", "onDark"],
+    },
+    { value: "./assets", path: ["fonts", 0], file: join(root, "assets") },
+    {
+      value: "./broken.svg",
+      file: join(root, "broken.svg"),
+      path: ["brand", "downloads", 0, "href"],
+    },
+  ]);
   expect(failures).toHaveLength(4);
   expect(failures[2]?.reason).toBe("Path is not a regular file");
   const diagnostics = localAssetDiagnostics(failures, {
@@ -130,6 +137,77 @@ it("reports missing files, directories, and broken symlinks for every affected f
     });
     expect(diagnostic.message).toContain(root);
   }
+});
+
+it("reports invalid authored syntax during checking rather than collection", async () => {
+  const config = brandtreeConfigSchema.parse({
+    ...fixtureConfig,
+    fonts: [],
+    brand: {
+      ...fixtureConfig.brand,
+      downloads: [
+        { id: "bare", label: "Bare", href: "assets/kit.zip" },
+        { id: "escaped", label: "Escaped", href: "/bad%ZZ.zip" },
+        { id: "remote", label: "Remote", href: "https://example.com/kit.zip" },
+      ],
+    },
+  });
+  const references = collectConfigAssetReferences(config, "/project").filter(
+    ({ path }) => path[1] === "downloads",
+  );
+  expect(references.map(({ file }) => file)).toEqual([null, null, null]);
+  expect(references[0]?.resolutionError).toContain("Use ./");
+  expect(references[1]?.resolutionError).toContain("URI malformed");
+  expect(references[2]).not.toHaveProperty("resolutionError");
+  const failures = await checkLocalAssets(references);
+  expect(failures).toHaveLength(2);
+  expect(failures[0]?.reason).toContain("Use ./");
+  expect(failures[1]?.reason).toContain("URI malformed");
+  expect(failures.map(({ reason }) => reason)).toEqual(
+    references.slice(0, 2).map(({ resolutionError }) => resolutionError),
+  );
+  expect(failures.map(({ reference }) => reference.value)).toEqual([
+    "assets/kit.zip",
+    "/bad%ZZ.zip",
+  ]);
+});
+
+it("checks the supplied context paths and leaves config and context intact", async () => {
+  const root = await makeRoot();
+  await writeFile(join(root, "font.woff2"), "readable font fixture");
+  const config = brandtreeConfigSchema.parse({
+    ...fixtureConfig,
+    fonts: [
+      {
+        name: "Context font",
+        provider: "local",
+        cssVariable: "--font-sandbox",
+        options: { variants: [{ src: ["./font.woff2"] }] },
+      },
+    ],
+  });
+  const context = resolveProjectContext(root, { config });
+  context.configFile = join(root, "brandtree.config.ts");
+  const reference = context.assetReferences.find(
+    ({ path }) => path[0] === "fonts",
+  )!;
+  // A resolved context can identify a different physical file. Preparation
+  // must check that filename rather than rediscovering the authored reference.
+  reference.file = join(root, "missing.woff2");
+  const before = structuredClone({ config, context });
+  const result = await prepareConfigAssets(config, context);
+  expect(result.config.fonts).toEqual([]);
+  expect(result.config.brand.typography.display).toContain(
+    "system-ui, sans-serif",
+  );
+  expect(result.diagnostics).toEqual([
+    expect.objectContaining({
+      file: context.configFile,
+      schemaPath: "fonts.0.options.variants.0.src.0",
+      message: expect.stringContaining(reference.file),
+    }),
+  ]);
+  expect({ config, context }).toEqual(before);
 });
 
 it("checks brand asset fields while preserving artwork and download references", async () => {
@@ -157,7 +235,10 @@ it("checks brand asset fields while preserving artwork and download references",
     },
   };
   const config = brandtreeConfigSchema.parse(input);
-  const result = await prepareConfigAssets(config, { root });
+  const result = await prepareConfigAssets(
+    config,
+    resolveProjectContext(root, { config }),
+  );
   expect(result.diagnostics.map(({ schemaPath }) => schemaPath)).toEqual([
     "brand.logo.logotype.onLight",
     "brand.logo.brandmark.onDark",
@@ -209,7 +290,10 @@ it("retains readable alternative sources and variants, and removes wholly unavai
   };
   const config = brandtreeConfigSchema.parse(input);
   const snapshot = structuredClone(config);
-  const result = await prepareConfigAssets(config, { root });
+  const result = await prepareConfigAssets(
+    config,
+    resolveProjectContext(root, { config }),
+  );
   expect(result.config.fonts).toHaveLength(2);
   expect(result.config.fonts[0]).toMatchObject({
     options: {
@@ -230,11 +314,12 @@ it("retains readable alternative sources and variants, and removes wholly unavai
   // Availability is checked afresh; restoring a file restores the registration.
   await writeFile(join(root, "./missing-code.woff2"), "restored fixture");
   expect(
-    (await prepareConfigAssets(config, { root })).config.fonts,
+    (await prepareConfigAssets(config, resolveProjectContext(root, { config })))
+      .config.fonts,
   ).toHaveLength(3);
 });
 
-it("runs the shared check when loading config without reporting removed fonts as undeclared", async () => {
+it("owns authored references on the context before applying asset fallbacks", async () => {
   const root = await makeRoot();
   const configFile = join(root, "brandtree.config.mjs");
   const input = {
@@ -248,18 +333,46 @@ it("runs the shared check when loading config without reporting removed fonts as
         options: { variants: [{ src: ["./missing.woff2"] }] },
       },
     ],
+    seo: {
+      og: {
+        enabled: true,
+        logo: "./assets/card.svg",
+        fonts: [{ name: "Card", src: "assets/card.ttf" }],
+      },
+    },
   };
   await writeFile(configFile, `export default ${JSON.stringify(input)};`);
-  const result = await loadConfig(root);
+  const loaded = await loadConfig(root);
+  expect(loaded.config.fonts).toHaveLength(1);
+  const references = collectConfigAssetReferences(loaded.config, root);
+  await mkdir(join(root, "content"));
+  const result = await scanProject(root);
+  expect(result.context.assetReferences).toContainEqual({
+    value: "./missing.woff2",
+    path: ["fonts", 0, "options", "variants", 0, "src", 0],
+    file: join(root, "missing.woff2"),
+  });
+  expect(result.context.assetReferences).toContainEqual({
+    value: "assets/card.ttf",
+    path: ["seo", "og", "fonts", 0, "src"],
+    file: join(root, "assets/card.ttf"),
+  });
+  expect(result.context.assetReferences).toEqual(references);
   expect(result.config.fonts).toEqual([]);
   expect(result.config.brand.typography.display).toContain(
     "system-ui, sans-serif",
   );
-  expect(result.diagnostics).toEqual([
-    expect.objectContaining({
-      code: "BRANDTREE_LOCAL_FILE_UNAVAILABLE",
-      file: configFile,
-      schemaPath: "fonts.0.options.variants.0.src.0",
-    }),
-  ]);
+  expect(result.diagnostics).toEqual(
+    [
+      "fonts.0.options.variants.0.src.0",
+      "seo.og.logo",
+      "seo.og.fonts.0.src",
+    ].map((schemaPath) =>
+      expect.objectContaining({
+        code: "BRANDTREE_LOCAL_FILE_UNAVAILABLE",
+        file: configFile,
+        schemaPath,
+      }),
+    ),
+  );
 });
