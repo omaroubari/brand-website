@@ -1,5 +1,5 @@
 import {
-  collectBrandAssetReferences,
+  collectBrandAssetInputs,
   resolveTypographyFonts,
 } from "../brand/index.ts";
 
@@ -9,45 +9,46 @@ import {
   resolveAssetReference,
 } from "./local-assets.ts";
 import type { ResolvedConfig } from "./schema.ts";
-import type { AssetReference, Diagnostic, ProjectContext } from "./types.ts";
+import type {
+  AssetReference,
+  CollectedAssetReference,
+  Diagnostic,
+  ProjectContext,
+} from "./types.ts";
 
-/** Resolve local font sources against root, preserving each declaration's field location. */
-export function collectFontAssetReferences(
+/** Collect local font sources, preserving each declaration's field location. */
+export function collectFontAssetInputs(
   fonts: ResolvedConfig["fonts"],
-  root: string,
-): AssetReference[] {
-  const references: AssetReference[] = [];
+): CollectedAssetReference[] {
+  const references: CollectedAssetReference[] = [];
   fonts.forEach((font, fontIndex) => {
     if (font.provider !== "local") return;
     font.options.variants.forEach((variant, variantIndex) => {
       variant.src.forEach((value, srcIndex) => {
-        references.push(
-          resolveAssetReference(root, {
-            value,
-            path: [
-              "fonts",
-              fontIndex,
-              "options",
-              "variants",
-              variantIndex,
-              "src",
-              srcIndex,
-            ],
-          }),
-        );
+        references.push({
+          value,
+          path: [
+            "fonts",
+            fontIndex,
+            "options",
+            "variants",
+            variantIndex,
+            "src",
+            srcIndex,
+          ],
+        });
       });
     });
   });
   return references;
 }
 
-/** Resolve enabled social-card logo/font references, including legacy bare root-relative paths. */
-export function collectSocialCardAssetReferences(
+/** Collect enabled social-card logo/font references, including legacy bare root-relative paths. */
+export function collectSocialCardAssetInputs(
   og: ResolvedConfig["seo"]["og"],
-  root: string,
-): AssetReference[] {
+): CollectedAssetReference[] {
   if (!og.enabled) return [];
-  const references: Pick<AssetReference, "value" | "path">[] = [];
+  const references: CollectedAssetReference[] = [];
   if (typeof og.logo === "string") {
     references.push({ value: og.logo, path: ["seo", "og", "logo"] });
   }
@@ -63,24 +64,27 @@ export function collectSocialCardAssetReferences(
     const value = /^(?:\.?\/|[a-z][a-z0-9+.-]*:|#)/iu.test(reference.value)
       ? reference.value
       : `./${reference.value}`;
-    return resolveAssetReference(root, reference, value);
+    return { ...reference, resolutionValue: value };
   });
 }
 
 /**
- * Merge resolved references from brand, font, and social-card collectors.
- * Each source resolves authored paths against root and preserves values and
- * config field locations. No availability checks or directory discovery occur.
+ * Collect brand, font, and social-card references, then resolve them against root.
+ * Preserve authored values and config field locations. No availability checks
+ * or directory discovery occur.
  */
 export function collectConfigAssetReferences(
   config: ResolvedConfig,
   root: string,
 ): AssetReference[] {
-  return [
-    ...collectBrandAssetReferences(config.brand, root),
-    ...collectFontAssetReferences(config.fonts, root),
-    ...collectSocialCardAssetReferences(config.seo.og, root),
+  const references = [
+    ...collectBrandAssetInputs(config.brand),
+    ...collectFontAssetInputs(config.fonts),
+    ...collectSocialCardAssetInputs(config.seo.og),
   ];
+  return references.map(({ resolutionValue, ...reference }) =>
+    resolveAssetReference(root, reference, resolutionValue),
+  );
 }
 
 /**
