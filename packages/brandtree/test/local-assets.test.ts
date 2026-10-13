@@ -332,7 +332,12 @@ it("retains readable alternative sources and variants, and removes wholly unavai
     config,
     resolveProjectContext(root, { config }),
   );
-  expect(result.config.fonts).toHaveLength(2);
+  expect(result.config.fonts).toHaveLength(3);
+  expect(result.config.fonts[2]).toMatchObject({
+    name: "Inter",
+    provider: "google",
+    cssVariable: "--font-brandtree-default",
+  });
   expect(result.config.fonts[0]).toMatchObject({
     options: {
       variants: [
@@ -396,7 +401,13 @@ it("owns authored references on the context before applying asset fallbacks", as
     file: join(root, "assets/card.ttf"),
   });
   expect(result.context.assetReferences).toEqual(references);
-  expect(result.config.fonts).toEqual([]);
+  expect(result.config.fonts).toMatchObject([
+    {
+      name: "Inter",
+      provider: "google",
+      cssVariable: "--font-brandtree-default",
+    },
+  ]);
   expect(result.config.brand.typography.display).toContain(
     "system-ui, sans-serif",
   );

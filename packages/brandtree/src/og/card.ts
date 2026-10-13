@@ -2,25 +2,28 @@ import { imageSize } from "image-size";
 import { render } from "takumi-js";
 import { container, image, text } from "takumi-js/helpers";
 import type { Node } from "takumi-js/helpers";
+import type { Renderer } from "takumi-js/node";
 
 import { OG_IMAGE_HEIGHT, OG_IMAGE_WIDTH } from "./dimensions";
 
-export interface OgLocalFont {
-  name: string;
+export interface OgRenderFont {
   src: string;
+  name: string;
+  data: Uint8Array | ArrayBuffer;
   weight?: number;
-  style?: "normal" | "italic";
+  style?: string;
+  subsetOf?: string;
 }
 
 export interface OgCardOptions {
+  renderer?: Renderer;
   title: string;
   siteTitle: string;
   eyebrow?: string;
   description?: string;
   logo?: string | false;
   site?: string;
-  fonts?: OgLocalFont[];
-  fontData?: Record<string, string>;
+  fonts?: OgRenderFont[];
   titleFont?: string;
   bodyFont?: string;
   palette: {
@@ -92,10 +95,12 @@ export async function renderOgImage(
   const titleFamily = fontFamily(options.titleFont);
   const bodyFamily = fontFamily(options.bodyFont);
   const initial = [...options.siteTitle.trim()][0]?.toUpperCase() ?? "";
+
   const loadedFonts = (options.fonts ?? []).map((font) => ({
-    data: () => Uint8Array.fromBase64(options.fontData?.[font.src] ?? ""),
-    key: font.src,
+    data: () => font.data,
+    key: `${font.name}:${font.weight}`,
     name: font.name,
+    subsetOf: font.subsetOf,
     weight: font.weight,
     style: font.style,
   }));
@@ -190,6 +195,7 @@ export async function renderOgImage(
   });
 
   return render(card, {
+    renderer: options.renderer,
     width: OG_IMAGE_WIDTH,
     height: OG_IMAGE_HEIGHT,
     fonts: loadedFonts,

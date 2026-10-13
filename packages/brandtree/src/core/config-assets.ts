@@ -1,4 +1,5 @@
 import {
+  defaultFont,
   collectBrandAssetInputs,
   resolveTypographyFonts,
 } from "../brand/index.ts";
@@ -136,6 +137,19 @@ export async function prepareConfigAssets(
       unavailableFontCSSVariables.add(font.cssVariable);
     }
   });
+
+  // Add default Inter for fallback only when a declared font is pruned.
+  if (
+    unavailableFontCSSVariables.size > 0 &&
+    !fonts.some((font) => font.cssVariable === defaultFont.cssVariable)
+  ) {
+    fonts.push({
+      ...defaultFont,
+      weights: [...defaultFont.weights],
+      styles: [...defaultFont.styles],
+      fallbacks: [...defaultFont.fallbacks],
+    });
+  }
 
   return {
     config: {
