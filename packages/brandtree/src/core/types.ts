@@ -52,6 +52,15 @@ export interface PageLink {
   file?: string;
 }
 
+/**
+ * Authored asset location collected before filesystem resolution.
+ * Temporary until issue #37 is closed.
+ */
+export type CollectedAssetReference = Pick<AssetReference, "value" | "path"> & {
+  /** Alternate value used to resolve legacy social-card paths. */
+  resolutionValue?: string;
+};
+
 export interface AssetReference {
   /** Original authored reference, preserved for diagnostics. */
   value: string;
