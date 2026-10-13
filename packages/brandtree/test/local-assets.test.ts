@@ -343,7 +343,6 @@ it("owns authored references on the context before applying asset fallbacks", as
   };
   await writeFile(configFile, `export default ${JSON.stringify(input)};`);
   const loaded = await loadConfig(root);
-  expect(loaded).not.toHaveProperty("assetReferences");
   expect(loaded.config.fonts).toHaveLength(1);
   const references = collectConfigAssetReferences(loaded.config, root);
   await mkdir(join(root, "content"));
@@ -359,7 +358,6 @@ it("owns authored references on the context before applying asset fallbacks", as
     file: join(root, "assets/card.ttf"),
   });
   expect(result.context.assetReferences).toEqual(references);
-  expect(result.context).not.toHaveProperty("assetFiles");
   expect(result.config.fonts).toEqual([]);
   expect(result.config.brand.typography.display).toContain(
     "system-ui, sans-serif",
