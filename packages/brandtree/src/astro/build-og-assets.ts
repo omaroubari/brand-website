@@ -7,7 +7,6 @@ import type { RuntimeOgAssets } from "../core/types.ts";
 export const buildOgAssets = async ({
   config,
   context,
-  tree,
 }: BrandtreeProject): Promise<{
   assets: RuntimeOgAssets;
   warnings: string[];
@@ -20,8 +19,8 @@ export const buildOgAssets = async ({
 
   const locales = new Set([
     ...(config.i18n?.locales.map(({ code }) => code) ?? ["en"]),
-    ...tree.pages.map(({ locale }) => locale),
   ]);
+
   const logos = new Set(
     [...locales].map(
       (locale) =>
@@ -29,6 +28,7 @@ export const buildOgAssets = async ({
         resolveBrand(config.brand, locale, config.i18n).logo.logotype.onDark,
     ),
   );
+
   for (const logo of logos) {
     if (
       typeof logo !== "string" ||
@@ -48,21 +48,6 @@ export const buildOgAssets = async ({
       );
     }
   }
-  for (const font of og.fonts ?? []) {
-    if (typeof font !== "object" || !("src" in font)) continue;
-    if (assets.fontData[font.src]) continue;
-    const file = references.find(
-      ({ path, value }) =>
-        path[0] === "seo" && path[2] === "fonts" && value === font.src,
-    )?.file;
-    if (!file) continue;
-    try {
-      assets.fontData[font.src] = (await readFile(file)).toString("base64");
-    } catch (error) {
-      warnings.push(
-        `Cannot load OG font ${file}: ${(error as Error).message}. Using the renderer's fallback font.`,
-      );
-    }
-  }
+
   return { assets, warnings };
 };

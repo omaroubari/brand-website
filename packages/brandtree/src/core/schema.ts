@@ -246,8 +246,8 @@ const ogConfigSchema = z.strictObject({
    */
   enabled: z.boolean().default(true),
   /**
-   * Fonts for the generated card. Local files are bundled into the prerender
-   * worker so card routes remain static under server adapters.
+   * @deprecated Legacy hand-wired app support only. CLI-generated cards reuse
+   * top-level fonts and resolved locale typography via Astro fontData.
    */
   fonts: z.array(ogFontSchema).optional(),
   /**

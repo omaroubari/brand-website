@@ -19,6 +19,7 @@
     "./components/*": "./src/components/*",
     "./core/*": "./src/core/*",
     "./runtime": "./src/runtime.ts",
+    "./og/*": "./src/og/*",
     "./astro/prerender-deps": "./dist/astro/prerender-deps.js",
     "./styles.css": "./src/styles/global.css"
   },
