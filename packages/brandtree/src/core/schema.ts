@@ -199,36 +199,6 @@ const ogPaletteSchema = z.strictObject({
   muted: ogColorSchema.optional(),
 });
 
-/**
- * A font to load into the OG card renderer. A bare string is a Google Fonts
- * family name; the name-only object form pins the weight (a number, a list, or
- * a variable range like `"100..900"`) and style, fetched from Google Fonts at
- * build. The `src` form reads a local font file from the project instead.
- * Either way Takumi does per-glyph fallback, so a family covering a script
- * (e.g. Noto Sans JP for CJK) fixes tofu without touching how Latin renders.
- */
-const ogFontWeightSchema = z.union([
-  z.number().int().positive(),
-  z.array(z.number().int().positive()),
-  z.string().regex(/^\d+\.\.\d+$/u),
-]);
-const ogFontStyleSchema = z.enum(["normal", "italic"]);
-const ogFontSchema = z.union([
-  z.string(),
-  z.strictObject({
-    name: z.string(),
-    style: z.union([ogFontStyleSchema, z.array(ogFontStyleSchema)]).optional(),
-    weight: ogFontWeightSchema.optional(),
-  }),
-  /** A local font file, read from the project at build. */
-  z.strictObject({
-    name: z.string(),
-    src: z.string().min(1),
-    style: ogFontStyleSchema.optional(),
-    weight: z.number().int().positive().optional(),
-  }),
-]);
-
 const ogConfigSchema = z.strictObject({
   /**
    * Small label above the headline. Defaults to the localized site title; a
@@ -245,11 +215,6 @@ const ogConfigSchema = z.strictObject({
    * `page.seo.image` still works when this is off.
    */
   enabled: z.boolean().default(true),
-  /**
-   * @deprecated Legacy hand-wired app support only. CLI-generated cards reuse
-   * top-level fonts and resolved locale typography via Astro fontData.
-   */
-  fonts: z.array(ogFontSchema).optional(),
   /**
    * Local SVG used in the generated card instead of the site logo; `false`
    * renders the card without any brand mark.

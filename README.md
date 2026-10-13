@@ -117,18 +117,17 @@ in the [Framework alpha milestone](https://github.com/omaroubari/brand-website/m
    type to outlines. Keep each file single-colour — `LogoColorways` recolours
    the mark with a CSS mask, which only works on flat artwork.
 4. **Set the typefaces.** Edit the `fonts` block in
-   [`apps/web/astro.config.ts`](apps/web/astro.config.ts). Self-host a licensed file from
-   `apps/web/src/assets/fonts/`, or switch `provider` to `fontProviders.google()` and
+   [`apps/web/brandtree.config.ts`](apps/web/brandtree.config.ts). Self-host a licensed file from
+   `apps/web/src/assets/fonts/`, or switch `provider` to `"google"` and
    drop `options`. Whatever `cssVariable` you use must match
    `typography.display` / `typography.text` in the brand config. Use the same
-   loading declarations in top-level `config.fonts` for Brandtree CLI consumers.
+   loading declarations for Brandtree CLI consumers.
    Generated social cards reuse Astro's resolved local and Google font files and
    the locale's display/text families, without a separate OG loading list.
    Astro resolves Google Inter when font declarations are omitted or a local
    font declaration is removed because its files are unavailable. Inter does not
    cover all languages; provide a working font with
-   the script coverage your cards require. The legacy hand-wired web app still
-   uses `seo.og.fonts` until it migrates to the CLI runtime.
+   the script coverage your cards require.
 5. **Rewrite the sections.** Content in
    [`apps/web/src/content/brand-guidelines/`](apps/web/src/content/brand-guidelines/) is organized by locale. A
    numbered file is a top-level page; a numbered folder is a navigation group

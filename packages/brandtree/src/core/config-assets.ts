@@ -39,7 +39,7 @@ export function collectFontAssetInputs(
   return references;
 }
 
-/** Collect enabled social-card logo/font references, preserving authored values. */
+/** Collect enabled social-card logo references, preserving authored values. */
 export function collectSocialCardAssetInputs(
   og: ResolvedConfig["seo"]["og"],
 ): Pick<AssetReference, "value" | "path">[] {
@@ -48,14 +48,6 @@ export function collectSocialCardAssetInputs(
   if (typeof og.logo === "string") {
     references.push({ value: og.logo, path: ["seo", "og", "logo"] });
   }
-  og.fonts?.forEach((font, index) => {
-    if (typeof font === "object" && "src" in font) {
-      references.push({
-        value: font.src,
-        path: ["seo", "og", "fonts", index, "src"],
-      });
-    }
-  });
   return references;
 }
 

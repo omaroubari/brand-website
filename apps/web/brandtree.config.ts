@@ -13,6 +13,46 @@ import { defineConfig } from "brandtree";
  * See README.md for the full checklist.
  */
 export default defineConfig({
+  fonts: [
+    {
+      name: "Brand Sans",
+      cssVariable: "--font-brand",
+      provider: "local",
+      fallbacks: [
+        "ui-sans-serif",
+        "system-ui",
+        "-apple-system",
+        "Segoe UI",
+        "Helvetica Neue",
+        "Arial",
+        "sans-serif",
+      ],
+      options: {
+        variants: [
+          {
+            src: ["./src/assets/fonts/BrandSans-Variable.ttf"],
+            weight: "100 900",
+            style: "normal",
+          },
+        ],
+      },
+    },
+    {
+      name: "PP Neue Montreal Arabic",
+      cssVariable: "--font-arabic",
+      provider: "local",
+      fallbacks: ["ui-sans-serif", "system-ui", "sans-serif"],
+      options: {
+        variants: [
+          {
+            src: ["./src/assets/fonts/PPNeueMontrealArabic-Variable.ttf"],
+            weight: "100 900",
+            style: "normal",
+          },
+        ],
+      },
+    },
+  ],
   brand: {
     meta: {
       name: "Valence",
@@ -172,7 +212,7 @@ export default defineConfig({
     },
 
     typography: {
-      // These point at `cssVariable`s declared in the `fonts` block of astro.config.ts.
+      // These point at `cssVariable`s declared in the top-level `fonts` block above.
       display: "var(--font-brand)",
       text: "var(--font-brand)",
       mono: "ui-monospace, SFMono-Regular, Menlo, monospace",
@@ -180,7 +220,7 @@ export default defineConfig({
         {
           id: "display",
           name: "Inter",
-          note: "Swap in the licensed brand face via the fonts block in astro.config.ts. Ships as Inter (SIL Open Font License) so the template runs out of the box.",
+          note: "Swap in the licensed brand face via the top-level fonts block. Ships as Inter (SIL Open Font License) so the template runs out of the box.",
         },
         {
           id: "text",
@@ -630,16 +670,6 @@ export default defineConfig({
     og: {
       logo: "/favicon.svg",
       eyebrow: false,
-      fonts: [
-        {
-          name: "Brand Sans",
-          src: "./src/assets/fonts/BrandSans-Variable.ttf",
-        },
-        {
-          name: "PP Neue Montreal Arabic",
-          src: "./src/assets/fonts/PPNeueMontrealArabic-Variable.ttf",
-        },
-      ],
     },
   },
 });
