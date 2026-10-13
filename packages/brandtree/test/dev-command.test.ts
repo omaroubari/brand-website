@@ -1,17 +1,24 @@
 import { runCommand } from "citty";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
 
+vi.mock("../src/cli/dev-lock.ts", () => ({ acquireDevLock: vi.fn() }));
 vi.mock("astro", () => ({ dev: vi.fn() }));
 vi.mock("../src/cli/prepare.ts", () => ({ prepareProject: vi.fn() }));
 vi.mock("../src/cli/log.ts", () => ({ logger: { error: vi.fn() } }));
 
 import { dev } from "astro";
+import { acquireDevLock } from "../src/cli/dev-lock.ts";
 import { mainCommand } from "../src/cli/command.ts";
 import { logger } from "../src/cli/log.ts";
 import { prepareProject } from "../src/cli/prepare.ts";
 
 beforeEach(() => {
   vi.resetAllMocks();
+  vi.mocked(acquireDevLock).mockReturnValue({
+    owns: vi.fn(() => true),
+    updatePort: vi.fn(),
+    release: vi.fn(),
+  });
   vi.stubEnv("NODE_ENV", undefined);
 });
 afterEach(() => {
@@ -33,9 +40,10 @@ it.each(["SIGINT", "SIGTERM"])(
       >;
     });
     const stop = vi.fn().mockResolvedValue(undefined);
-    vi.mocked(dev).mockResolvedValue({ stop } as unknown as Awaited<
-      ReturnType<typeof dev>
-    >);
+    vi.mocked(dev).mockResolvedValue({
+      stop,
+      address: { port: 4321 },
+    } as unknown as Awaited<ReturnType<typeof dev>>);
     const once = vi.spyOn(process, "once").mockReturnValue(process);
     const removeListener = vi.spyOn(process, "removeListener");
 
@@ -44,7 +52,10 @@ it.each(["SIGINT", "SIGTERM"])(
       root: process.cwd(),
       mode: "dev",
     });
-    expect(dev).toHaveBeenCalledExactlyOnceWith({ root: runtimeRoot });
+    expect(dev).toHaveBeenCalledExactlyOnceWith({
+      root: runtimeRoot,
+      server: { port: 4321 },
+    });
     expect(stop).not.toHaveBeenCalled();
     const handler = once.mock.calls.find(([event]) => event === signal)![1];
     handler();

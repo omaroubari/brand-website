@@ -45,6 +45,14 @@ The minimal `brandtree dev` command prepares the same runtime in development
 mode and starts it with Astro's JavaScript dev API. Run it from the consumer
 root; Ctrl+C or SIGTERM stops the server. Preparation runs once at startup;
 changes that require runtime regeneration need a restart.
+Each `brandtree dev` session claims `.brandtree/dev.lock` before preparing the
+runtime. A second invocation is refused with the existing session's localhost
+URL. The lock records the CLI PID and requested port, then Astro's actual port;
+`--port <number>` selects the requested port (including `0` for a free port).
+Shutdown removes the lock after Astro stops. A later invocation replaces a lock
+whose PID has exited. This guards dev sessions; other CLI commands do not acquire
+the dev lock.
+
 The other CLI commands remain unimplemented.
 
 The generated config includes `prerenderDeps()` from
