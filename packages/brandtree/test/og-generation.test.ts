@@ -227,13 +227,13 @@ it("bundles author-root assets and warns with usable font fallbacks", async () =
   input.context.root = root;
   input.config.seo.og.logo = "/brand/mark.svg";
   input.config.seo.og.fonts = [
-    { name: "Available", src: "assets/font.ttf" },
-    { name: "Missing", src: "assets/missing.ttf" },
+    { name: "Available", src: "./assets/font.ttf" },
+    { name: "Missing", src: "./assets/missing.ttf" },
   ];
   input.context = resolveProjectContext(root, { config: input.config });
   const { assets, warnings } = await buildOgAssets(input);
   expect(assets.logos["/brand/mark.svg"]).toBe(svg);
-  expect(assets.fontData["assets/font.ttf"]).toBe(
+  expect(assets.fontData["./assets/font.ttf"]).toBe(
     Buffer.from("font fixture").toString("base64"),
   );
   expect(warnings).toHaveLength(1);
@@ -245,7 +245,7 @@ it("bundles author-root assets and warns with usable font fallbacks", async () =
     logo: svg,
     dir: "rtl",
     titleFont: "Available",
-    fonts: [{ name: "Available", src: "assets/font.ttf" }],
+    fonts: [{ name: "Available", src: "./assets/font.ttf" }],
   });
 });
 
