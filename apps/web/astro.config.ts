@@ -1,5 +1,7 @@
 // @ts-check
 import { defineConfig, fontProviders } from "astro/config";
+import type { AstroUserConfig } from "astro";
+import { prerenderDeps } from "brandtree/astro/prerender-deps";
 import mdx from "@astrojs/mdx";
 import cloudflare from "@astrojs/cloudflare";
 
@@ -19,9 +21,10 @@ const configuredOgLogo = (
   fallback: string,
 ): string | false => (value === false ? false : (value ?? fallback));
 
-/** Bundle build-only OG assets so Cloudflare's prerender worker needs no disk access. */
+/** Bundle the configured logo for static social-card generation. */
 const ogAssets = () => ({
   name: "brand-og-assets",
+  enforce: "pre" as const,
   resolveId(id: string) {
     return id === "virtual:og-assets" ? `\0${id}` : undefined;
   },
@@ -40,22 +43,24 @@ const ogAssets = () => ({
         : logoSource === false
           ? false
           : undefined;
-    const fontData = Object.fromEntries(
-      (og.fonts ?? [])
-        .filter(
-          (font): font is Extract<typeof font, { src: string }> =>
-            typeof font === "object" && "src" in font,
-        )
-        .map((font) => [
-          font.src,
-          readFileSync(resolve(font.src)).toString("base64"),
-        ]),
-    );
-    return `export const logo = ${JSON.stringify(logo)}; export const fontData = ${JSON.stringify(fontData)};`;
+    return `export const logo = ${JSON.stringify(logo)};`;
   },
 });
 
-// https://astro.build/config
+/** Resolve providers from the centralized brand font declarations. */
+const fonts = config.fonts.map((font) => {
+  if (font.provider === "local") {
+    return { ...font, provider: fontProviders.local() };
+  }
+  if (font.provider === "adobe") {
+    const { id, ...family } = font;
+    return { ...family, provider: fontProviders.adobe({ id }) };
+  }
+  return { ...font, provider: fontProviders[font.provider]() };
+});
+
+// Astro infers provider-specific options from tuples; this schema-validated
+// configuration produces a dynamic list of local and hosted font families.
 export default defineConfig({
   site: brand.meta.url,
   output: "static",
@@ -73,71 +78,14 @@ export default defineConfig({
   // A guidelines site's imagery is fixed, so images are optimised at build
   // time. That keeps the output plain static files — no Cloudflare Images
   // binding to provision, and the `dist/` folder deploys anywhere.
-  adapter: cloudflare({ imageService: "compile" }),
+  adapter: cloudflare({
+    imageService: "compile",
+    prerenderEnvironment: "node",
+  }),
 
-  /**
-   * Brand typefaces. Astro self-hosts these, preloads them and generates
-   * size-adjusted fallbacks, so there is no layout shift and no third-party
-   * request.
-   *
-   * `cssVariable` is what `typography.display` / `typography.text` in
-   * brandtree.config.ts point at — change one, change the other.
-   *
-   * The template ships a single variable family so there is one download. Most
-   * brands want two: add a second entry with its own `cssVariable`, then set
-   * `typography.display` to it.
-   *
-   *   Licensed file you host yourself (drop it in src/assets/fonts/):
-   *     provider: fontProviders.local(),
-   *     options: { variants: [{ src: ['./src/assets/fonts/MyFont.woff2'], weight: '100 900', style: 'normal' }] }
-   *
-   *   Hosted — swap `provider` and drop `options` entirely:
-   *     provider: fontProviders.google(),   // or .adobe({ id }), .fontshare(), .bunny(), .fontsource()
-   *     name: 'Inter',
-   *     weights: ['300 800'],
-   */
-  fonts: [
-    {
-      name: "Brand Sans",
-      cssVariable: "--font-brand",
-      provider: fontProviders.local(),
-      fallbacks: [
-        "ui-sans-serif",
-        "system-ui",
-        "-apple-system",
-        "Segoe UI",
-        "Helvetica Neue",
-        "Arial",
-        "sans-serif",
-      ],
-      options: {
-        variants: [
-          {
-            src: ["./src/assets/fonts/BrandSans-Variable.ttf"],
-            weight: "100 900",
-            style: "normal",
-          },
-        ],
-      },
-    },
-    {
-      name: "PP Neue Montreal Arabic",
-      cssVariable: "--font-arabic",
-      provider: fontProviders.local(),
-      fallbacks: ["ui-sans-serif", "system-ui", "sans-serif"],
-      options: {
-        variants: [
-          {
-            src: ["./src/assets/fonts/PPNeueMontrealArabic-Variable.ttf"],
-            weight: "100 900",
-            style: "normal",
-          },
-        ],
-      },
-    },
-  ],
+  fonts: fonts as NonNullable<AstroUserConfig["fonts"]>,
 
   vite: {
-    plugins: [ogAssets(), tailwindcss()],
+    plugins: [prerenderDeps(), ogAssets(), tailwindcss()],
   },
 });

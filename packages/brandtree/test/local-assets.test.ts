@@ -117,13 +117,13 @@ it.each([
       },
     ],
     seo: {
-      og: { enabled: true, logo: value, fonts: [{ name: "Card", src: value }] },
+      og: { enabled: true, logo: value },
     },
   });
   const references = collectConfigAssetReferences(config, "/project").filter(
     (reference) => reference.value === value,
   );
-  expect(references).toHaveLength(4);
+  expect(references).toHaveLength(3);
   for (const reference of references) {
     expect(reference.file).toBe(file);
     if (value === "assets/card.ttf") {
@@ -234,7 +234,13 @@ it("checks the supplied context paths and leaves config and context intact", asy
   reference.file = join(root, "missing.woff2");
   const before = structuredClone({ config, context });
   const result = await prepareConfigAssets(config, context);
-  expect(result.config.fonts).toEqual([]);
+  expect(result.config.fonts).toMatchObject([
+    {
+      name: "Inter",
+      provider: "google",
+      cssVariable: "--font-brandtree-default",
+    },
+  ]);
   expect(result.config.brand.typography.display).toContain(
     "system-ui, sans-serif",
   );
@@ -380,7 +386,6 @@ it("owns authored references on the context before applying asset fallbacks", as
       og: {
         enabled: true,
         logo: "./assets/card.svg",
-        fonts: [{ name: "Card", src: "./assets/card.ttf" }],
       },
     },
   };
@@ -395,11 +400,7 @@ it("owns authored references on the context before applying asset fallbacks", as
     path: ["fonts", 0, "options", "variants", 0, "src", 0],
     file: join(root, "missing.woff2"),
   });
-  expect(result.context.assetReferences).toContainEqual({
-    value: "./assets/card.ttf",
-    path: ["seo", "og", "fonts", 0, "src"],
-    file: join(root, "assets/card.ttf"),
-  });
+
   expect(result.context.assetReferences).toEqual(references);
   expect(result.config.fonts).toMatchObject([
     {
@@ -412,11 +413,7 @@ it("owns authored references on the context before applying asset fallbacks", as
     "system-ui, sans-serif",
   );
   expect(result.diagnostics).toEqual(
-    [
-      "fonts.0.options.variants.0.src.0",
-      "seo.og.logo",
-      "seo.og.fonts.0.src",
-    ].map((schemaPath) =>
+    ["fonts.0.options.variants.0.src.0", "seo.og.logo"].map((schemaPath) =>
       expect.objectContaining({
         code: "BRANDTREE_LOCAL_FILE_UNAVAILABLE",
         file: configFile,
