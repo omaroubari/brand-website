@@ -8,6 +8,7 @@ import { promisify } from "node:util";
 import { imageSize } from "image-size";
 import ts from "typescript";
 import { scanProject, type BrandtreeProject } from "../src/core/project-tree";
+import { resolveProjectContext } from "../src/core/project";
 import type { RuntimeOgAssets } from "../src/core/types";
 import { resolveBrand } from "../src/brand/i18n";
 import { colorCss, resolveColor } from "../src/brand/tokens";
@@ -234,6 +235,7 @@ it("bundles author-root logos and respects explicit font opt-out", async () => {
   input.context.root = root;
   input.config.fonts = [];
   input.config.seo.og.logo = "/brand/mark.svg";
+  input.context = resolveProjectContext(root, { config: input.config });
   const { assets, warnings } = await buildOgAssets(input);
   expect(assets.logos["/brand/mark.svg"]).toBe(svg);
   expect(assets.fontData).toEqual({});

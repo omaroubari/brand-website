@@ -1,5 +1,4 @@
 import { readFile } from "node:fs/promises";
-import { resolve } from "node:path";
 import { resolveBrand } from "../brand/i18n.ts";
 import type { BrandtreeProject } from "../core/project-tree.ts";
 import type { RuntimeOgAssets } from "../core/types.ts";
@@ -16,6 +15,7 @@ export const buildOgAssets = async ({
   const warnings: string[] = [];
   const og = config.seo.og;
   if (!og.enabled) return { assets, warnings };
+  const references = context.assetReferences;
 
   const locales = new Set([
     ...(config.i18n?.locales.map(({ code }) => code) ?? ["en"]),
@@ -36,9 +36,10 @@ export const buildOgAssets = async ({
       /^https?:\/\//iu.test(logo)
     )
       continue;
-    const file = logo.startsWith("/")
-      ? resolve(context.root, "public", logo.slice(1))
-      : resolve(context.root, logo);
+    const file = references.find(
+      ({ value, file }) => value === logo && file !== null,
+    )?.file;
+    if (!file) continue;
     try {
       assets.logos[logo] = await readFile(file, "utf8");
     } catch (error) {

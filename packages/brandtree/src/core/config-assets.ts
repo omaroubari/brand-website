@@ -1,24 +1,23 @@
 import {
-  collectBrandAssetReferences,
   defaultFont,
+  collectBrandAssetInputs,
   resolveTypographyFonts,
 } from "../brand/index.ts";
 
 import {
   checkLocalAssets,
   localAssetDiagnostics,
-  type LocalAssetReference,
+  resolveAssetReference,
 } from "./local-assets.ts";
-
 import type { ResolvedConfig } from "./schema.ts";
-import type { Diagnostic } from "./types.ts";
+import type { AssetReference, Diagnostic, ProjectContext } from "./types.ts";
 
-/** Enumerate typed asset fields rather than guessing from arbitrary strings. */
-export function collectConfigAssetReferences(
-  config: ResolvedConfig,
-): LocalAssetReference[] {
-  const references = collectBrandAssetReferences(config.brand);
-  config.fonts.forEach((font, fontIndex) => {
+/** Collect local font sources, preserving each declaration's field location. */
+export function collectFontAssetInputs(
+  fonts: ResolvedConfig["fonts"],
+): Pick<AssetReference, "value" | "path">[] {
+  const references: Pick<AssetReference, "value" | "path">[] = [];
+  fonts.forEach((font, fontIndex) => {
     if (font.provider !== "local") return;
     font.options.variants.forEach((variant, variantIndex) => {
       variant.src.forEach((value, srcIndex) => {
@@ -40,18 +39,61 @@ export function collectConfigAssetReferences(
   return references;
 }
 
-/** Local availability is recoverable; authored inputs and remote providers stay intact. */
+/** Collect enabled social-card logo/font references, preserving authored values. */
+export function collectSocialCardAssetInputs(
+  og: ResolvedConfig["seo"]["og"],
+): Pick<AssetReference, "value" | "path">[] {
+  if (!og.enabled) return [];
+  const references: Pick<AssetReference, "value" | "path">[] = [];
+  if (typeof og.logo === "string") {
+    references.push({ value: og.logo, path: ["seo", "og", "logo"] });
+  }
+  og.fonts?.forEach((font, index) => {
+    if (typeof font === "object" && "src" in font) {
+      references.push({
+        value: font.src,
+        path: ["seo", "og", "fonts", index, "src"],
+      });
+    }
+  });
+  return references;
+}
+
+/**
+ * Collect brand, font, and social-card references, then resolve them against root.
+ * Preserve authored values and config field locations. No availability checks
+ * or directory discovery occur.
+ */
+export function collectConfigAssetReferences(
+  config: ResolvedConfig,
+  root: string,
+): AssetReference[] {
+  const references = [
+    ...collectBrandAssetInputs(config.brand),
+    ...collectFontAssetInputs(config.fonts),
+    ...collectSocialCardAssetInputs(config.seo.og),
+  ];
+  return references.map((reference) => resolveAssetReference(root, reference));
+}
+
+/**
+ * Check asset references, return availability diagnostics, and
+ * apply supported fallbacks to a copy of the config. Authored config and context
+ * references stay intact so missing files can be watched and restored.
+ */
 export async function prepareConfigAssets(
   config: ResolvedConfig,
-  options: { root: string; file?: string; source?: string },
-): Promise<{ config: ResolvedConfig; diagnostics: Diagnostic[] }> {
-  const failures = await checkLocalAssets(
-    collectConfigAssetReferences(config),
-    options.root,
-  );
+  context: ProjectContext,
+): Promise<{
+  config: ResolvedConfig;
+  diagnostics: Diagnostic[];
+}> {
+  const failures = await checkLocalAssets(context.assetReferences);
+
   const unavailablePaths = new Set(
     failures.map(({ reference }) => JSON.stringify(reference.path)),
   );
+
   const fonts: ResolvedConfig["fonts"] = [];
   const unavailableFontCSSVariables = new Set<string>();
 
@@ -119,6 +161,8 @@ export async function prepareConfigAssets(
         unavailableFontCSSVariables,
       ),
     },
-    diagnostics: localAssetDiagnostics(failures, options),
+    diagnostics: localAssetDiagnostics(failures, {
+      file: context.configFile ?? undefined,
+    }),
   };
 }
