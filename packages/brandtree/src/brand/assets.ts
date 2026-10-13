@@ -1,11 +1,11 @@
-import type { LocalAssetReference } from "../core/local-assets.ts";
+import type { AssetReference } from "../core/types.ts";
 import type { BrandConfig } from "./schema.ts";
 
-/** Only file-bearing brand fields are assets; copy and ordinary URLs are not. */
-export function collectBrandAssetReferences(
+/** Collect artwork and download references; copy and ordinary URLs are not assets. */
+export function collectBrandAssetInputs(
   brand: BrandConfig,
-): LocalAssetReference[] {
-  const references: LocalAssetReference[] = [];
+): Pick<AssetReference, "value" | "path">[] {
+  const references: Pick<AssetReference, "value" | "path">[] = [];
   for (const mark of ["logotype", "brandmark"] as const) {
     for (const scheme of ["onLight", "onDark"] as const) {
       references.push({

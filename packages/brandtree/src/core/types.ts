@@ -52,11 +52,25 @@ export interface PageLink {
   file?: string;
 }
 
+export interface AssetReference {
+  /** Original authored reference, preserved for diagnostics. */
+  value: string;
+  /** Location of the reference within the configuration. */
+  path: (string | number)[];
+  /** Absolute path to the referenced asset (e.g. `<root>/image.png`).
+   * Null for remote or malformed references. */
+  file: string | null;
+  /** Syntax error retained during resolution; absent for local files and remote references. */
+  resolutionError?: string;
+}
+
 /**
- * Resolved project paths. Computed once per CLI invocation and threaded
- * through the core pipeline.
+ * Resolved project paths, computed on each project scan and threaded through
+ * the core pipeline.
  */
 export interface ProjectContext {
+  /** Resolved authored references. */
+  assetReferences: AssetReference[];
   /** Absolute path to the user project root. */
   root: string;
   /** Absolute path to the content root (e.g. `<root>/docs`). */

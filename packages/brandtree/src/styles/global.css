@@ -3,10 +3,13 @@
 @import "shadcn/tailwind.css";
 @import "@fontsource-variable/geist";
 @import "./site-tokens.css";
-/*
- ---break---
- */
+
+/* Consumers scan their own app by default; include the framework's utilities
+ * explicitly, including when Brandtree is installed under node_modules. */
+@source "../";
+
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+
 /*
  * Global styles for the brand guidelines site.
  *

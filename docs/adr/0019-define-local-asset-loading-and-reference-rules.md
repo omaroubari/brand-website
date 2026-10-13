@@ -32,17 +32,23 @@ Apply the same reference rules to every asset field in scope:
 The rule depends on the prefix, not the asset type. `assets/` is a convention,
 not a restriction; project-relative files can be under `src/`, `public/`, or any
 other author-selected directory. Bare paths receive a diagnostic requesting an
-explicit prefix. Public URL query strings and fragments are removed for
+explicit prefix, including social-card logo and font references. Public URL query strings and fragments are removed for
 filesystem checks; filesystem references preserve their filename characters.
 
 Enumerate references from typed file-bearing configuration fields rather than
-guessing whether arbitrary strings are paths. Current scope is logo artwork, favicon, and downloads. Ordinary copy and site/contact
+guessing whether arbitrary strings are paths. Current scope is logo artwork, favicon, downloads, local font declarations,
+and enabled social-card logos and fonts. Ordinary copy and site/contact
 URLs are not treated as files. Remote URLs are skipped by the local checker;
 their resolution and downloading remain owned by their consuming providers.
-Font declarations and OG handling remain separate work.
+Social-card rendering consumes the same resolved references.
 
-Check availability during config loading, then forward findings through the
-existing project-scanning and CLI diagnostics pipeline. A file must be readable
+Config loading validates and retains the authored configuration. Project scanning
+resolves typed references into `ProjectContext.assetReferences` before checking
+availability and applying supported fallbacks to a copy of the configuration.
+References retain their authored values, field locations, resolved filenames,
+and syntax errors. Missing files remain on the context so development watchers
+can observe restoration even when a font registration has been omitted.
+Forward findings through the existing project-scanning and CLI diagnostics pipeline. A file must be readable
 and regular. Missing, unreadable, and non-file references produce the same
 structured warning with the affected config field, original reference, resolved
 file path when available, and an actionable suggestion.
