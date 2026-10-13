@@ -633,11 +633,11 @@ export default defineConfig({
       fonts: [
         {
           name: "Brand Sans",
-          src: "src/assets/fonts/BrandSans-Variable.ttf",
+          src: "./src/assets/fonts/BrandSans-Variable.ttf",
         },
         {
           name: "PP Neue Montreal Arabic",
-          src: "src/assets/fonts/PPNeueMontrealArabic-Variable.ttf",
+          src: "./src/assets/fonts/PPNeueMontrealArabic-Variable.ttf",
         },
       ],
     },

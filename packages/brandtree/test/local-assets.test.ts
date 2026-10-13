@@ -96,6 +96,44 @@ it("rejects ambiguous bare paths instead of applying field-specific defaults", (
   }
 });
 
+it.each([
+  ["assets/card.ttf", null],
+  ["./assets/card.ttf", "/project/assets/card.ttf"],
+  ["/fonts/card.ttf", "/project/public/fonts/card.ttf"],
+  ["file:///elsewhere/card.ttf", "/elsewhere/card.ttf"],
+])("applies shared asset rules to every field for %s", (value, file) => {
+  const config = brandtreeConfigSchema.parse({
+    ...fixtureConfig,
+    brand: {
+      ...fixtureConfig.brand,
+      downloads: [{ id: "card", label: "Card", href: value }],
+    },
+    fonts: [
+      {
+        name: "Card",
+        provider: "local",
+        cssVariable: "--font-card",
+        options: { variants: [{ src: [value] }] },
+      },
+    ],
+    seo: {
+      og: { enabled: true, logo: value, fonts: [{ name: "Card", src: value }] },
+    },
+  });
+  const references = collectConfigAssetReferences(config, "/project").filter(
+    (reference) => reference.value === value,
+  );
+  expect(references).toHaveLength(4);
+  for (const reference of references) {
+    expect(reference.file).toBe(file);
+    if (value === "assets/card.ttf") {
+      expect(reference.resolutionError).toContain("Use ./");
+    } else {
+      expect(reference).not.toHaveProperty("resolutionError");
+    }
+  }
+});
+
 it("reports missing files, directories, and broken symlinks for every affected field", async () => {
   const root = await makeRoot();
   await mkdir(join(root, "./assets"));
@@ -337,7 +375,7 @@ it("owns authored references on the context before applying asset fallbacks", as
       og: {
         enabled: true,
         logo: "./assets/card.svg",
-        fonts: [{ name: "Card", src: "assets/card.ttf" }],
+        fonts: [{ name: "Card", src: "./assets/card.ttf" }],
       },
     },
   };
@@ -353,7 +391,7 @@ it("owns authored references on the context before applying asset fallbacks", as
     file: join(root, "missing.woff2"),
   });
   expect(result.context.assetReferences).toContainEqual({
-    value: "assets/card.ttf",
+    value: "./assets/card.ttf",
     path: ["seo", "og", "fonts", 0, "src"],
     file: join(root, "assets/card.ttf"),
   });

@@ -9,18 +9,13 @@ import {
   resolveAssetReference,
 } from "./local-assets.ts";
 import type { ResolvedConfig } from "./schema.ts";
-import type {
-  AssetReference,
-  CollectedAssetReference,
-  Diagnostic,
-  ProjectContext,
-} from "./types.ts";
+import type { AssetReference, Diagnostic, ProjectContext } from "./types.ts";
 
 /** Collect local font sources, preserving each declaration's field location. */
 export function collectFontAssetInputs(
   fonts: ResolvedConfig["fonts"],
-): CollectedAssetReference[] {
-  const references: CollectedAssetReference[] = [];
+): Pick<AssetReference, "value" | "path">[] {
+  const references: Pick<AssetReference, "value" | "path">[] = [];
   fonts.forEach((font, fontIndex) => {
     if (font.provider !== "local") return;
     font.options.variants.forEach((variant, variantIndex) => {
@@ -43,12 +38,12 @@ export function collectFontAssetInputs(
   return references;
 }
 
-/** Collect enabled social-card logo/font references, including legacy bare root-relative paths. */
+/** Collect enabled social-card logo/font references, preserving authored values. */
 export function collectSocialCardAssetInputs(
   og: ResolvedConfig["seo"]["og"],
-): CollectedAssetReference[] {
+): Pick<AssetReference, "value" | "path">[] {
   if (!og.enabled) return [];
-  const references: CollectedAssetReference[] = [];
+  const references: Pick<AssetReference, "value" | "path">[] = [];
   if (typeof og.logo === "string") {
     references.push({ value: og.logo, path: ["seo", "og", "logo"] });
   }
@@ -60,12 +55,7 @@ export function collectSocialCardAssetInputs(
       });
     }
   });
-  return references.map((reference) => {
-    const value = /^(?:\.?\/|[a-z][a-z0-9+.-]*:|#)/iu.test(reference.value)
-      ? reference.value
-      : `./${reference.value}`;
-    return { ...reference, resolutionValue: value };
-  });
+  return references;
 }
 
 /**
@@ -82,9 +72,7 @@ export function collectConfigAssetReferences(
     ...collectFontAssetInputs(config.fonts),
     ...collectSocialCardAssetInputs(config.seo.og),
   ];
-  return references.map(({ resolutionValue, ...reference }) =>
-    resolveAssetReference(root, reference, resolutionValue),
-  );
+  return references.map((reference) => resolveAssetReference(root, reference));
 }
 
 /**

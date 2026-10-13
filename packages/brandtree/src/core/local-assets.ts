@@ -31,17 +31,15 @@ export function resolveLocalAssetPath(
 
 /**
  * Preserve the authored reference and any resolution error.
- * resolutionValue overrides path resolution for legacy social-card references.
  */
 export function resolveAssetReference(
   root: string,
   reference: Pick<AssetReference, "value" | "path">,
-  resolutionValue = reference.value,
 ): AssetReference {
   try {
     return {
       ...reference,
-      file: resolveLocalAssetPath(root, { value: resolutionValue }),
+      file: resolveLocalAssetPath(root, reference),
     };
   } catch (error) {
     return {
