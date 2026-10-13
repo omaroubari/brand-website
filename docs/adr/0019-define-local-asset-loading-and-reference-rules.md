@@ -32,8 +32,7 @@ Apply the same reference rules to every asset field in scope:
 The rule depends on the prefix, not the asset type. `assets/` is a convention,
 not a restriction; project-relative files can be under `src/`, `public/`, or any
 other author-selected directory. Bare paths receive a diagnostic requesting an
-explicit prefix. Social-card logo and font references retain their legacy bare
-project-root-relative syntax for compatibility. Public URL query strings and fragments are removed for
+explicit prefix, including social-card logo and font references. Public URL query strings and fragments are removed for
 filesystem checks; filesystem references preserve their filename characters.
 
 Enumerate references from typed file-bearing configuration fields rather than

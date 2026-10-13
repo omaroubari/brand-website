@@ -1,11 +1,11 @@
-import type { CollectedAssetReference } from "../core/types.ts";
+import type { AssetReference } from "../core/types.ts";
 import type { BrandConfig } from "./schema.ts";
 
 /** Collect artwork and download references; copy and ordinary URLs are not assets. */
 export function collectBrandAssetInputs(
   brand: BrandConfig,
-): CollectedAssetReference[] {
-  const references: CollectedAssetReference[] = [];
+): Pick<AssetReference, "value" | "path">[] {
+  const references: Pick<AssetReference, "value" | "path">[] = [];
   for (const mark of ["logotype", "brandmark"] as const) {
     for (const scheme of ["onLight", "onDark"] as const) {
       references.push({
