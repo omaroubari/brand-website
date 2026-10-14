@@ -15,7 +15,7 @@ export const CONFIG_FILENAMES = new Array(
 );
 
 const THEME_FILENAMES = ["theme.css"];
-const COMPONENTS_FILENAMES = ["components.tsx", "components.ts"];
+export const COMPONENTS_FILENAMES = ["components.tsx", "components.ts"];
 
 const firstExisting = (root: string, names: string[]): string | null => {
   for (const name of names) {

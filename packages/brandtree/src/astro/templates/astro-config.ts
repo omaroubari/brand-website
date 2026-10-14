@@ -56,15 +56,19 @@ export const astroConfigTemplate = ({
 import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
 import { prerenderDeps } from 'brandtree/astro/prerender-deps';
+import { devContentModules } from 'brandtree/astro/dev-content-modules';
 
 // Resolve framework-owned dependencies from the installed Brandtree package.
 const frameworkEntry = import.meta.resolve('brandtree');
 const frameworkRequire = createRequire(frameworkEntry);
 
+// Keep integrations in Node's module graph. Absolute dynamic imports are
+// transformed by Astro's temporary config runner, whose lifetime ends before
+// MDX lazily loads its renderer during the first request.
 const [{ defineConfig, fontProviders }, { default: mdx }, { default: react }, { default: tailwindcss }] =
-  await Promise.all(['astro/config', '@astrojs/mdx', '@astrojs/react', '@tailwindcss/vite'].map(
-    (specifier) => import(frameworkRequire.resolve(specifier)),
-  ));
+  ['astro/config', '@astrojs/mdx', '@astrojs/react', '@tailwindcss/vite'].map(
+    (specifier) => frameworkRequire(specifier),
+  );
 
 export default defineConfig({
   publicDir: fileURLToPath(new URL(${literal(relativePath(context.outDir, join(context.root, "public")) + "/")}, import.meta.url)),
@@ -75,7 +79,16 @@ export default defineConfig({
   integrations: [${integrations.join(", ")}],
   i18n: ${i18n},
   vite: {
-    plugins: [tailwindcss(), prerenderDeps()],
+    plugins: [tailwindcss(), prerenderDeps(), devContentModules(${literal(context.contentRoot)})],
+    // Framework islands are imported from the installed package, outside the
+    // app's initial dependency scan. Convert their nested CommonJS dependency
+    // before the browser imports Base UI and hydrates the enclosing sidebar.
+    optimizeDeps: {
+      include: [
+        '@base-ui/react > use-sync-external-store/shim',
+        '@base-ui/react > use-sync-external-store/shim/with-selector',
+      ],
+    },
     resolve: {
       alias: {
         "brandtree:data": ${literal(dataPath)},

@@ -20,7 +20,7 @@
     "./core/*": "./src/core/*",
     "./runtime": "./src/runtime.ts",
     "./og/*": "./src/og/*",
-    "./astro/prerender-deps": "./dist/astro/prerender-deps.js",
+    "./astro/*": "./src/astro/*.ts",
     "./styles.css": "./src/styles/global.css"
   },
   "scripts": {
@@ -58,7 +58,8 @@
     "typescript": "^6.0.3",
     "vite": "^8.2.0",
     "yaml": "^2.9.0",
-    "zod": "^4.4.3"
+    "zod": "^4.4.3",
+    "chokidar": "^5.0.0"
   },
   "devDependencies": {
     "@types/node": "^22.20.1",
