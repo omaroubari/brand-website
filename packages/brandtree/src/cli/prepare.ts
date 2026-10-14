@@ -10,7 +10,7 @@ export interface PrepareOptions {
   strict?: boolean;
   /** Local dev server URL, used as the `deployment.site` fallback (dev only). */
   devServerUrl?: string;
-  /** Render drafts and fetch unpublished CMS content. */
+  /** Include draft content. */
   preview?: boolean;
   /** Force remote sources to re-fetch instead of serving the cached snapshot. */
   refresh?: boolean;

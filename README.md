@@ -43,8 +43,32 @@ The minimal `brandtree build` command now scans the consumer project, generates
 root. Run it from the consumer root; production output is written to `dist/`.
 The minimal `brandtree dev` command prepares the same runtime in development
 mode and starts it with Astro's JavaScript dev API. Run it from the consumer
-root; Ctrl+C or SIGTERM stops the server. Preparation runs once at startup;
-changes that require runtime regeneration need a restart.
+root; Ctrl+C or SIGTERM stops the server. Initial preparation generates the
+runtime before Astro starts; watched changes regenerate it during the session.
+Development watches content additions, removals, renames, frontmatter, folder
+metadata, configuration, and explicitly configured assets. Regeneration batches
+edits and processes them serially, and reports failures without ending the session.
+The watcher starts after Astro starts; edits made during startup are not
+reconciled and may require a restart. Missing asset filenames remain watched
+so restored fonts and artwork can be picked up. Imported components/assets and
+public files update through Astro/Vite; assets are resolved from the author root
+without discovering asset directories. Changes to font registrations or referenced
+font files trigger runtime regeneration. Brandtree does not explicitly stop or
+recreate Astro during regeneration; Astro/Vite handles changes to generated files.
+
+Dev options include `--host <address>` (or bare `--host` for all interfaces),
+`--port <number>`, `--open`, `--debug`, `--strict`, and `--preview` for draft content.
+`--strict` aborts initial preparation on error diagnostics; warnings do not abort
+startup, and strict mode does not apply to later regeneration.
+
+Each `brandtree dev` session claims `.brandtree/dev.lock` before preparing the
+runtime. A second invocation is refused with the existing session's localhost
+URL. The lock records the CLI PID and requested port, then Astro's actual port;
+`--port <number>` selects the requested port (including `0` for a free port).
+Shutdown removes the lock after Astro stops. A later invocation replaces a lock
+whose PID has exited. This guards dev sessions; other CLI commands do not acquire
+the dev lock.
+
 The other CLI commands remain unimplemented.
 
 The generated config includes `prerenderDeps()` from
