@@ -87,8 +87,8 @@ describe("folder metadata discovery", () => {
 
   it.each([
     ["unknown field", 'export default { typo: "unknown" };'],
-    ["unknown icon", 'export default { icon: "unknown-icon" };'],
-    ["invalid factory icon", 'export default async () => ({ icon: " " });'],
+    ["invalid icon type", 'export default { icon: 123 };'],
+    ["empty factory icon", 'export default async () => ({ icon: "" });'],
     ["invalid factory result", 'export default () => ({ order: "first" });'],
     ["null async result", "export default async () => null;"],
   ])(

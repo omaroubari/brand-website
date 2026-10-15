@@ -450,7 +450,7 @@ const buildSidebar = (
       badge: page.meta.sidebar.badge,
       description: page.description,
       file: page.sourcePath,
-      icon: page.meta.sidebar.icon,
+      icon: page.meta.sidebar.icon ?? page.meta.icon,
       key: segmentKey(stem),
       kind: "page",
       label: page.meta.sidebar.label ?? page.title,
