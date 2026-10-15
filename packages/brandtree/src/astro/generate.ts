@@ -95,7 +95,10 @@ export const generateRuntime = async (
         join(out, "package.json"),
         runtimePackageTemplate(runtimeDependencies({ config })),
       ),
-      write(join(out, "tsconfig.json"), runtimeTsconfigTemplate()),
+      write(
+        join(out, "tsconfig.json"),
+        runtimeTsconfigTemplate(context.root, out),
+      ),
       write(join(srcDir, "env.d.ts"), runtimeDataTypesTemplate()),
       write(
         join(srcDir, "middleware.ts"),
@@ -112,6 +115,13 @@ export const onRequest = defineMiddleware((_context, next) => next());
         contentConfigTemplate({
           config,
           context,
+          // Keep dropped pages from becoming fatal errors in Astro sync.
+          excludedFiles: project.diagnostics.flatMap((diagnostic) =>
+            diagnostic.file &&
+            diagnostic.code === "BRANDTREE_FRONTMATTER_INVALID"
+              ? [diagnostic.file]
+              : [],
+          ),
         }),
       ),
       write(join(srcDir, "pages", "[...slug].astro"), catchAllPageTemplate()),
