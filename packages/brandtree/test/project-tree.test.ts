@@ -12,7 +12,6 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { tmpdir } from "node:os";
 import { parse as parseYaml } from "yaml";
-import { ZodError } from "zod";
 
 import { scanProject } from "../src/core/project-tree";
 import { BrandtreeError } from "../src/core/diagnostics";
@@ -267,12 +266,45 @@ export default { ...config, brand: { ...config.brand, typography: { ...config.br
     });
   });
 
-  it("rejects invalid page metadata under content", async () => {
+  it("drops invalid page metadata and identifies the authored source", async () => {
     const invalidPageRoot = await makeProject({
       "brandtree.config.mjs": validConfigModule,
-      "content/index.mdx": "---\nunknown: true\n---\n# Home\n",
+      "content/index.mdx": "---\ntitle: 123\n---\n# Home\n",
+      "content/valid.md": "---\ntitle: Valid\n---\n# Valid\n",
     });
-    await expect(scanProject(invalidPageRoot)).rejects.toBeInstanceOf(ZodError);
+    const project = await scanProject(invalidPageRoot);
+    expect(project.diagnostics).toContainEqual(
+      expect.objectContaining({
+        code: "BRANDTREE_FRONTMATTER_INVALID",
+        file: join(invalidPageRoot, "content/index.mdx"),
+        severity: "error",
+        schemaPath: "title",
+        line: 2,
+      }),
+    );
+    expect(project.droppedPages).toBe(1);
+    expect(project.tree.pages.length).toBeGreaterThan(0);
+    expect(
+      project.tree.pages.every(
+        (page) => page.sourcePath === join(invalidPageRoot, "content/valid.md"),
+      ),
+    ).toBe(true);
+  });
+
+  it("rejects malformed YAML during source loading", async () => {
+    const root = await makeProject({
+      "brandtree.config.mjs": validConfigModule,
+      "content/broken.md": "---\ntitle: [broken\n---\n",
+      "content/invalid.md": "---\ntitle: 123\n---\n",
+    });
+    await expect(scanProject(root)).rejects.toMatchObject({
+      name: "BrandtreeError",
+      diagnostic: {
+        code: "CONTENT_PARSE_FAILED",
+        file: join(root, "content/broken.md"),
+        severity: "error",
+      },
+    });
   });
 
   it("retains valid pages and reports invalid folder metadata under content", async () => {
