@@ -1,0 +1,24 @@
+---
+import { resolveIcon } from "../../core/icons";
+
+interface Props {
+  iconName?: string;
+}
+
+const { iconName } = Astro.props;
+const resolvedIcon = iconName ? resolveIcon(iconName) : undefined;
+---
+
+{
+  resolvedIcon && (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="16"
+      height="16"
+      viewBox={resolvedIcon.viewBox}
+      aria-hidden="true"
+      focusable="false"
+      set:html={resolvedIcon.body}
+    />
+  )
+}

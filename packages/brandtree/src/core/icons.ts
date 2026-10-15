@@ -1,41 +1,37 @@
-import {
-  BookOpenIcon,
-  CameraIcon,
-  GlobeIcon,
-  ImageIcon,
-  MonitorIcon,
-  PaletteIcon,
-  PenNibIcon,
-  PrinterIcon,
-  ShapesIcon,
-  SparkleIcon,
-  SquaresFourIcon,
-  TextAaIcon,
-  type Icon,
-} from "@phosphor-icons/react";
+import { icons as phosphorIcons } from "@iconify-json/ph";
+import { getIconData } from "@iconify/utils/lib/icon-set/get-icon";
+import { iconToSVG } from "@iconify/utils/lib/svg/build";
 
-/**
- * The deliberately small icon set available to folder and page metadata.
- * Keep this explicit: metadata names are stable content API, while the icon
- * components remain tree-shakeable and cannot pull in the whole Phosphor set.
- */
-export const contentIcons = {
-  "book-open": BookOpenIcon,
-  camera: CameraIcon,
-  globe: GlobeIcon,
-  image: ImageIcon,
-  "layout-grid": SquaresFourIcon,
-  monitor: MonitorIcon,
-  palette: PaletteIcon,
-  "pen-tool": PenNibIcon,
-  printer: PrinterIcon,
-  shapes: ShapesIcon,
-  sparkles: SparkleIcon,
-  type: TextAaIcon,
-};
+/** Icon metadata is a string, resolved against the bundled Iconify set. */
+export type ContentIconName = string;
 
-export type ContentIconName = keyof typeof contentIcons;
+export interface ContentIconSvg {
+  body: string;
+  viewBox: string;
+}
 
-export function getContentIcon(name: ContentIconName): Icon {
-  return contentIcons[name];
+/** Bare names and the bundled set's explicit prefix resolve identically. */
+function normalizeContentIconName(value: string): string {
+  const normalized = value.trim().toLowerCase();
+  return normalized.startsWith(`${phosphorIcons.prefix}:`)
+    ? normalized.slice(phosphorIcons.prefix.length + 1)
+    : normalized;
+}
+
+function resolveIconData(name: string) {
+  const normalized = normalizeContentIconName(name);
+  if (
+    !/^[a-z0-9]+(?:-[a-z0-9]+)*$/u.test(normalized) ||
+    (!Object.hasOwn(phosphorIcons.icons, normalized) &&
+      !Object.hasOwn(phosphorIcons.aliases ?? {}, normalized))
+  )
+    return null;
+  return getIconData(phosphorIcons, normalized);
+}
+
+export function resolveIcon(name: string): ContentIconSvg | undefined {
+  const data = resolveIconData(name);
+  if (!data) return undefined;
+  const svg = iconToSVG(data);
+  return { body: svg.body, viewBox: svg.attributes.viewBox };
 }
