@@ -3,6 +3,8 @@ title: الأيقونات
 description: مجموعة أيقونات خطّية بسُمك واحد، مرسومة على شبكة 24 × 24.
 ---
 
+import { icons } from "../../assets/icons/index.ts";
+
 ## مجموعة الأيقونات
 
 تعزز الأيقونات جاذبية التخطيط ووظيفته، وتنقل الأفكار والإجراءات عبر المواد الرقمية
@@ -20,7 +22,7 @@ description: مجموعة أيقونات خطّية بسُمك واحد، مرس
   ]}
 />
 
-<IconGrid unit={16} version="v1.0" cols={4} />
+<IconGrid icons={icons} unit={16} version="v1.0" cols={4} />
 
 ## الاستخدام
 
@@ -37,4 +39,9 @@ description: مجموعة أيقونات خطّية بسُمك واحد، مرس
 
 </Callout>
 
-<IconGrid unit={16} only={["arrow", "play", "inspect", "message"]} cols={4} />
+<IconGrid
+  icons={icons}
+  unit={16}
+  only={["arrow", "play", "inspect", "message"]}
+  cols={4}
+/>
