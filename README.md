@@ -57,6 +57,7 @@ search parent directories. Brandtree supplies Astro and its integrations.
 | `brandtree dev`       | Generate the runtime and start the development server       |
 | `brandtree build`     | Regenerate the runtime and build the static site to `dist/` |
 | `brandtree check`     | Validate inputs and check types without a production build  |
+| `brandtree preview`   | Serve the existing production build through the generated app |
 | `brandtree --help`    | Show available commands                                     |
 | `brandtree --version` | Show the installed version                                  |
 
@@ -70,6 +71,19 @@ imports to private framework dependencies.
 Dev options: `--host [address]`, `--port <number>`, `--open`, `--debug`,
 `--strict` to abort startup on error diagnostics, and `--preview` to include drafts.
 Stop with Ctrl+C or SIGTERM. Each project allows one active dev session.
+Both dev and preview accept ports from `1–65535` (default `4321`).
+
+## Previewing a build
+
+Run `brandtree build`, then `brandtree preview` from the consumer root. Preview
+uses Astro to serve existing root-level `dist/` through the generated
+`.brandtree/` app without rebuilding or regenerating it. Unbuilt source or
+`public/` edits take effect only after another build. If `.brandtree/` or
+production output is missing, preview exits nonzero with exactly:
+``No build found. Run `brandtree build` first.``
+
+Preview accepts `--host [address]`, `--port <number>`, and `--open`.
+Ctrl+C or SIGTERM closes the server.
 
 ## Checking a project
 

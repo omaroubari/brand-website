@@ -1,8 +1,5 @@
 import { defineCommand } from "citty";
 
-import { checkCommand } from "./check.ts";
-import { buildCommand } from "./build.ts";
-import { devCommand } from "./dev.ts";
 import { readPackageVersion } from "./version.ts";
 
 export const mainCommand = defineCommand({
@@ -11,5 +8,10 @@ export const mainCommand = defineCommand({
     version: await readPackageVersion(),
     description: "Build and publish living brand guidelines.",
   }),
-  subCommands: { build: buildCommand, check: checkCommand, dev: devCommand },
+  subCommands: {
+    build: async () => (await import("./build.ts")).buildCommand,
+    check: async () => (await import("./check.ts")).checkCommand,
+    dev: async () => (await import("./dev.ts")).devCommand,
+    preview: async () => (await import("./preview.ts")).previewCommand,
+  },
 });

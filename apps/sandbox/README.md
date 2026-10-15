@@ -96,8 +96,9 @@ dist/                              # generated static production output
 
 Both are ignored and neither is supplied as authored source. Delete
 `.brandtree/` and all the authored files above still exist. The next `dev`,
-`build`, or `check` invocation recreates it. Preview serves existing `dist/`
-even after `.brandtree/` is deleted.
+`build`, or `check` invocation recreates it. Preview requires both `.brandtree/`
+and existing `dist/`. If `.brandtree/` is deleted, preview exits with
+``No build found. Run `brandtree build` first.``
 
 ## Source imports and routes
 
@@ -154,17 +155,24 @@ contract; this small example demonstrates the existing app's directory mode.
 ## Commands
 
 Run from the consumer root, since Brandtree uses the current directory and does
-not search ancestors. The implemented dev, build, and check commands can run through the workspace:
+not search ancestors. The implemented dev, build, check, and preview commands can run through the workspace:
 
 ```sh
 pnpm --filter brandtree-sandbox dev
 pnpm --filter brandtree-sandbox build
+pnpm --filter brandtree-sandbox check
+pnpm --filter brandtree-sandbox preview
 ```
 
 The check command prepares the runtime and validates authored inputs and
 components without changing `dist/`. Refresh the packed package before checking
 new framework changes. The root check excludes this separately packed snapshot;
 run `pnpm --filter brandtree-sandbox check` explicitly for consumer verification.
+
+The dev command regenerates the runtime as authored inputs change. Preview serves
+the last build through the existing `.brandtree/` app; unbuilt source and public
+file edits do not change its responses. Deleting `.brandtree/` requires running
+`brandtree build` again before preview.
 
 For a browser hydration check after building, edit the type tester input on
 `/en/exhibits` or `/ar/exhibits` and verify that the specimen updates.

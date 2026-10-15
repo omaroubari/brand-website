@@ -24,10 +24,10 @@ before invoking the site. Direct `pnpm --filter web ...` commands require
 | `pnpm dev`     | Start the site on `localhost:4321`                                                 |
 | `pnpm build`   | Build static output to `apps/web/dist/`                                            |
 | `pnpm check`   | Check framework and site types |
-| `pnpm preview` | Serve the built site; requires the forthcoming `brandtree preview` command         |
+| `pnpm preview` | Serve the existing production build through the generated Astro app               |
 | `pnpm deploy`  | Build and deploy the site to Cloudflare                                            |
 
-The CLI preview implementation belongs to a separate prerequisite PR.
+Run `pnpm build` before preview. Both `.brandtree/` and `dist/` must exist.
 
 ## Project files
 

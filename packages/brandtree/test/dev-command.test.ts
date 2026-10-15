@@ -37,7 +37,10 @@ import { logger } from "../src/cli/log.ts";
 import { scanProject } from "../src/core/project-tree.ts";
 import { generateRuntime } from "../src/astro/generate.ts";
 
+let previousExitCode: typeof process.exitCode;
 beforeEach(() => {
+  previousExitCode = process.exitCode;
+  vi.spyOn(process.stderr, "write").mockReturnValue(true);
   vi.resetAllMocks();
   vi.mocked(acquireDevLock).mockReturnValue({
     owns: vi.fn(() => true),
@@ -48,6 +51,7 @@ beforeEach(() => {
   vi.spyOn(process, "once").mockReturnValue(process);
 });
 afterEach(() => {
+  process.exitCode = previousExitCode;
   vi.restoreAllMocks();
   vi.unstubAllEnvs();
 });
@@ -254,14 +258,34 @@ it.each(["lock", "preparation", "Astro"])(
   },
 );
 
-it.each(["abc", "", "-1", "65536", "4321.5", "1e3"])(
+it.each(["abc", "", "0", "-1", "65536", "4321.5", "1e3"])(
   "rejects invalid port %j before claiming or preparing the runtime",
   async (port) => {
-    await expect(runDev(`--port=${port}`)).rejects.toThrow(
-      "--port must be an integer between 0 and 65535.",
+    await runDev(`--port=${port}`);
+    expect(process.stderr.write).toHaveBeenCalledExactlyOnceWith(
+      `Invalid --port "${port}" (expected an integer 1-65535).\n`,
     );
+    expect(process.exitCode).toBe(1);
     expect(acquireDevLock).not.toHaveBeenCalled();
     expect(prepareProject).not.toHaveBeenCalled();
     expect(dev).not.toHaveBeenCalled();
   },
 );
+
+it.each([
+  [[], false],
+  [["--host"], true],
+  [["--host", "127.0.0.1"], "127.0.0.1"],
+])("forwards host %j alongside other server flags", async (args, host) => {
+  vi.mocked(prepareProject).mockResolvedValue(project());
+  vi.mocked(dev).mockResolvedValue({
+    stop: vi.fn().mockResolvedValue(undefined),
+    address: { port: 4567 },
+  } as unknown as Awaited<ReturnType<typeof dev>>);
+  await runDev(...args, "--port=4567", "--open");
+  expect(dev).toHaveBeenCalledWith(
+    expect.objectContaining({
+      server: { host, port: 4567, open: true },
+    }),
+  );
+});
