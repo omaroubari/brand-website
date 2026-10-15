@@ -32,7 +32,7 @@ The current `apps/web` keeps its maintained Astro composition until its later
 | `package.json` and package-manager lockfile | Author    | Brandtree dependency, author-code dependencies, and command scripts         |
 | `.gitignore`                                | Author    | Excludes generated/runtime output and installed dependencies                |
 | `.brandtree/`                               | Brandtree | Ignored, generated, disposable Astro composition and runtime artifacts      |
-| `dist/`                                     | Brandtree | Static production output, independently previewable                         |
+| `dist/`                                     | Brandtree | Static production output; preview requires the generated Astro app          |
 
 Authors never edit `.brandtree/`. No authored content, configuration, component,
 or asset has its only copy there. Deleting it loses no authored work; `dev`,
@@ -59,7 +59,10 @@ no alternate-location API is established by this contract.
 
 A public URL is not an absolute filesystem path. Generated configuration must
 translate paths as needed without changing their authored meaning. Preview
-serves the selected project's existing `dist/`; initialization's target
+serves the selected project's existing `dist/` through `.brandtree/` using
+Astro's preview API. Missing `.brandtree/` or production output causes a nonzero
+exit with ``No build found. Run `brandtree build` first.``; preview never
+regenerates the app. Initialization's target
 argument details are still to be defined.
 No custom path-prefix syntax is introduced. If alternate config locations are
 supported later, moving the config does not implicitly move the path base.
@@ -149,13 +152,13 @@ Warnings identify the affected reference/declaration and reason for fallback.
 
 ### Commands and error behavior
 
-| Command             | Contract                                                                                                                                      |
-| ------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
-| `brandtree dev`     | Prepare the generated app, start development, and apply source/config changes without manual CLI restart                                      |
-| `brandtree build`   | Prepare the generated app and build static production output to root-level `dist/`                                                            |
-| `brandtree check`   | Prepare the generated app, validate inputs, and run Astro type checks without producing a production build                                    |
-| `brandtree preview` | Serve existing `dist/` without rebuilding or requiring `.brandtree/`; report a missing build                                                  |
-| `brandtree init`    | Generate a complete starter in an empty target; reject nonempty targets without writes; skip dependency installation and print setup commands |
+| Command             | Contract                                                                                                                                            |
+| ------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `brandtree dev`     | Prepare the generated app, start development, and apply source/config changes without manual CLI restart                                            |
+| `brandtree build`   | Prepare the generated app and build static production output to root-level `dist/`                                                                  |
+| `brandtree check`   | Prepare the generated app, validate inputs, and run Astro type checks without producing a production build                                          |
+| `brandtree preview` | Serve existing `dist/` through `.brandtree/` without rebuilding; missing runtime/output exits with ``No build found. Run `brandtree build` first.`` |
+| `brandtree init`    | Generate a complete starter in an empty target; reject nonempty targets without writes; skip dependency installation and print setup commands       |
 
 Development watches original MDX, custom components, asset/public changes, page
 additions/deletions/renames, and configuration. Configuration loading and
