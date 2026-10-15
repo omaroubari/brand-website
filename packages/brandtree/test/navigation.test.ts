@@ -55,6 +55,15 @@ const labels = (nodes: NavNode[]): string[] => nodes.map((node) => node.label);
 
 const empty = new Map<string, FolderMeta>();
 
+it("uses the page icon unless sidebar metadata overrides it", () => {
+  const launch = page("01-launch.md", "/launch", "Launch");
+  launch.meta.icon = "rocket";
+  const guide = page("02-guide.md", "/guide", "Guide", { icon: "book-open" });
+  guide.meta.icon = "rocket";
+  const nav = buildNavigation([launch, guide], { folderMeta: empty });
+  expect(nav.sidebar.map((node) => node.icon)).toEqual(["rocket", "book-open"]);
+});
+
 describe("buildNavigation — filesystem sidebar", () => {
   it("nests pages into groups by directory and orders by numeric prefix", () => {
     const nav = buildNavigation(
