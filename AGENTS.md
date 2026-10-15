@@ -1,7 +1,7 @@
 ## What this is
 
 A pnpm monorepo for a reusable Astro brand-guidelines framework and its dogfood
-site. See README.md for the per-client setup checklist.
+site. See apps/web/README.md for the per-client setup checklist.
 
 The shape that matters: **structured brand data is typed and centralised, prose
 is MDX.** Keep it that way.
@@ -11,10 +11,10 @@ is MDX.** Keep it that way.
   `packages/brandtree/src/`.
 - `packages/brandtree/src/brand/tokens.ts` — derives CSS custom properties,
   contrast ratios and tint ramps from the config.
-- `apps/web/src/content/brand-guidelines/NN-slug.mdx` — one file per section. The `NN-` prefix
+- `apps/web/content/{locale}/NN-slug.mdx` — one file per section. The `NN-` prefix
   drives order and section number; the URL is the slug alone.
-- `apps/web/src/components/mdx.ts` — the composition barrel supplied to every
-  MDX file.
+- `brandtree/components` — built-in components supplied to every MDX file by
+  the generated runtime. Custom components are explicitly imported by MDX.
 - `packages/brandtree` — reusable framework code. It must never import from
   `apps/web`.
 
@@ -39,14 +39,14 @@ is MDX.** Keep it that way.
 
 ## Development
 
-When starting the dev server, use background mode:
+The web app is a CLI consumer. Start it with:
 
 ```
-pnpm --filter web exec astro dev --background
+pnpm dev
 ```
 
-Manage the background server from the web workspace with `astro dev stop`,
-`astro dev status`, and `astro dev logs`.
+The CLI owns `.brandtree/` generation and the dev lock. Stop it with Ctrl+C
+or SIGTERM. Do not maintain Astro composition inside `apps/web`.
 
 Run `pnpm check` before considering a change done — it catches config/component
 drift that the build alone will not.

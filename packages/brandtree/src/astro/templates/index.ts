@@ -1,6 +1,6 @@
 const coverImports = (): string => `import data from "brandtree:data";
 import { getCoverPagePaths, resolveBrand, localeDir, resolveUIStrings, getNavigation, type Navigation, type ContentTree } from "brandtree";
-import { CoverPage, generatedOgImagePath, RootLayout, withBase, type BareRootLayoutProps } from "brandtree/runtime";
+import { CoverPage, generatedOgImagePath, RootLayout, withBase, localeRedirectHtml, type BareRootLayoutProps } from "brandtree/runtime";
 
 const config = data.config;
 const tree: ContentTree = { ...data.tree, routes: new Map(data.tree.routes) };
@@ -129,6 +129,7 @@ export function getStaticPaths() {
 
 const { locale, navigation, redirect } = Astro.props;
 if (redirect) {
-  return Astro.redirect(withBase(navigation.root ?? \`/\${locale}\`), 302);
+  const routes = Object.fromEntries((config.i18n?.locales ?? []).map(({ code }) => [code, withBase(getNavigation(tree, code).root ?? \`/\${code}\`)]));
+  return new Response(localeRedirectHtml(routes, locale), { headers: { "Content-Type": "text/html; charset=utf-8" } });
 }
 ${coverBody()}`;
