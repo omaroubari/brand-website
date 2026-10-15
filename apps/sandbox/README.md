@@ -19,6 +19,7 @@ From the repository root, refresh the snapshot and build:
 pnpm sandbox:pack
 pnpm --filter brandtree-sandbox update brandtree --offline
 pnpm --filter brandtree-sandbox build
+pnpm --filter brandtree-sandbox check
 ```
 
 Include both `apps/sandbox/brandtree.tgz` and `pnpm-lock.yaml` when committing a
@@ -153,17 +154,17 @@ contract; this small example demonstrates the existing app's directory mode.
 ## Commands
 
 Run from the consumer root, since Brandtree uses the current directory and does
-not search ancestors. The implemented dev and build commands can run through the workspace:
+not search ancestors. The implemented dev, build, and check commands can run through the workspace:
 
 ```sh
 pnpm --filter brandtree-sandbox dev
 pnpm --filter brandtree-sandbox build
 ```
 
-The dev command prepares the runtime once at startup; changes that require
-runtime regeneration need a restart. The `check` and `preview` scripts describe
-planned commands and remain unimplemented. The root check therefore still
-excludes the sandbox.
+The check command prepares the runtime and validates authored inputs and
+components without changing `dist/`. Refresh the packed package before checking
+new framework changes. The root check excludes this separately packed snapshot;
+run `pnpm --filter brandtree-sandbox check` explicitly for consumer verification.
 
 For a browser hydration check after building, edit the type tester input on
 `/en/exhibits` or `/ar/exhibits` and verify that the specimen updates.

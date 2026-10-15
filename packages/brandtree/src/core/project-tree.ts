@@ -1,6 +1,9 @@
 import { readFile } from "node:fs/promises";
 import { extname, relative } from "node:path";
 import { parse as parseYaml } from "yaml";
+import { ZodError } from "zod";
+
+import { BrandtreeError, diagnosticsFromZod } from "./diagnostics.ts";
 
 import { normalizeEntry, type SourceEntry } from "./entries.ts";
 import { loadConfig } from "./config.ts";
@@ -22,6 +25,7 @@ import { glob } from "tinyglobby";
 const IGNORED_DIRECTORIES = [
   ".astro",
   ".brandtree",
+  ".brandtree-verify",
   ".git",
   "coverage",
   "dist",
@@ -121,7 +125,17 @@ const loadFilesystemSource = async (source: {
       const source = await readFile(file, "utf-8");
       const ext = extname(file).toLowerCase();
       const format = ext === ".mdx" ? "mdx" : "md";
-      const parsed = matter(source);
+      let parsed: ParsedSource;
+      try {
+        parsed = matter(source);
+      } catch (error) {
+        throw new BrandtreeError({
+          code: "CONTENT_PARSE_FAILED",
+          file,
+          message: `Cannot parse content: ${error instanceof Error ? error.message : String(error)}`,
+          severity: "error",
+        });
+      }
       return {
         body: { format, text: parsed.content },
         data: parsed.data,
@@ -204,11 +218,37 @@ export const scanProject = async (
   let droppedPages = 0;
 
   for (const entry of loaded.entries) {
-    const normalized = normalizeEntry(entry, {
-      basePath,
-      i18n: config.i18n,
-      source,
-    });
+    let normalized: ReturnType<typeof normalizeEntry>;
+    try {
+      normalized = normalizeEntry(entry, {
+        basePath,
+        i18n: config.i18n,
+        source,
+      });
+    } catch (error) {
+      // Invalid frontmatter can be skipped safely. Unsafe routes and other
+      // scanner failures still abort preparation.
+      if (!(error instanceof ZodError)) {
+        throw new BrandtreeError(
+          {
+            code: "CONTENT_INVALID",
+            file: entry.sourcePath,
+            message: `Invalid content: ${error instanceof Error ? error.message : String(error)}`,
+            severity: "error",
+          },
+          { cause: error },
+        );
+      }
+      contentDiagnostics.push(
+        ...diagnosticsFromZod(error, {
+          code: "BRANDTREE_FRONTMATTER_INVALID",
+          file: entry.sourcePath,
+          source: entry.raw,
+        }),
+      );
+      droppedPages += 1;
+      continue;
+    }
     if (normalized.pages.length === 0 && normalized.diagnostics.length > 0) {
       droppedPages += 1;
     }
@@ -237,6 +277,7 @@ export const scanProject = async (
     diagnostics: [
       ...configResult.diagnostics,
       ...assetResult.diagnostics,
+      ...loaded.diagnostics,
       ...contentDiagnostics,
       ...folderMeta.diagnostics,
     ],

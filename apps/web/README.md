@@ -23,11 +23,11 @@ before invoking the site. Direct `pnpm --filter web ...` commands require
 | -------------- | ---------------------------------------------------------------------------------- |
 | `pnpm dev`     | Start the site on `localhost:4321`                                                 |
 | `pnpm build`   | Build static output to `apps/web/dist/`                                            |
-| `pnpm check`   | Check framework and site types; requires the forthcoming `brandtree check` command |
+| `pnpm check`   | Check framework and site types |
 | `pnpm preview` | Serve the built site; requires the forthcoming `brandtree preview` command         |
 | `pnpm deploy`  | Build and deploy the site to Cloudflare                                            |
 
-The CLI check and preview implementations belong to separate prerequisite PRs.
+The CLI preview implementation belongs to a separate prerequisite PR.
 
 ## Project files
 

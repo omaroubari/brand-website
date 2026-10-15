@@ -46,6 +46,12 @@ export const prepareProject = async (
 
   const hadErrors = reportDiagnostics(project.diagnostics, options.root);
 
+  if (project.droppedPages > 0) {
+    logger.warn(
+      `Dropped ${project.droppedPages} content ${project.droppedPages === 1 ? "entry" : "entries"} from the page graph.`,
+    );
+  }
+
   if (hadErrors) {
     if (options.strict) {
       logger.error(
