@@ -11,6 +11,12 @@ import { watch } from "chokidar";
 import { CONFIG_FILENAMES, resolveRuntimeDir } from "../core/project.ts";
 import { acquireDevLock } from "./dev-lock.ts";
 import type { ProjectContext } from "../core/types.ts";
+import {
+  InvalidPortError,
+  normalizeHost,
+  parsePort,
+  parseServerArgs,
+} from "./server-options.ts";
 
 /** Derive local watch targets without storing a second copy on the context. */
 const referencedFiles = (context: ProjectContext): Set<string> =>
@@ -20,35 +26,30 @@ const referencedFiles = (context: ProjectContext): Set<string> =>
     ),
   );
 
-/**
- * Resolve a `--host` flag value into what Astro/Vite's `server.host` expects.
- * citty (0.1) has no mixed string/boolean arg type, so `host` is declared as a
- * string and a bare `--host` parses as `""` — Node would bind all interfaces
- * for `""`, but Vite's `resolveHostname` treats it as a literal hostname and
- * prints malformed URLs like `http://:4321/`. Match Astro's own `--host`
- * semantics instead: bare flag → `true` (bind all interfaces), `--host
- * 10.0.0.1` → that address, absent → `false` (localhost only).
- */
-export const normalizeHost = (host: string | undefined): boolean | string =>
-  host === "" ? true : (host ?? false);
+export { normalizeHost } from "./server-options.ts";
+
+const devArgs = {
+  debug: {
+    description: "Verbose Astro/Vite logging for troubleshooting.",
+    type: "boolean",
+  },
+  host: { description: "Network host to bind.", type: "string" },
+  open: { description: "Open the browser on start.", type: "boolean" },
+  port: { description: "Port to listen on.", type: "string" },
+  preview: {
+    description: "Include draft content.",
+    type: "boolean",
+  },
+  strict: {
+    description: "Abort startup on error diagnostics",
+    type: "boolean",
+  },
+} as const;
 
 export const devCommand = defineCommand({
-  args: {
-    debug: {
-      description: "Verbose Astro/Vite logging for troubleshooting.",
-      type: "boolean",
-    },
-    host: { description: "Network host to bind.", type: "string" },
-    open: { description: "Open the browser on start.", type: "boolean" },
-    port: { description: "Port to listen on.", type: "string" },
-    preview: {
-      description: "Include draft content.",
-      type: "boolean",
-    },
-    strict: {
-      description: "Abort startup on error diagnostics",
-      type: "boolean",
-    },
+  args: devArgs,
+  setup(context) {
+    context.args = parseServerArgs(context.rawArgs, devArgs);
   },
   meta: {
     name: "dev",
@@ -58,14 +59,14 @@ export const devCommand = defineCommand({
     const root = process.cwd();
     const preview = args.preview ?? false;
 
-    const port = args.port === undefined ? 4321 : Number(args.port);
-    if (
-      args.port !== undefined &&
-      (!/^\d+$/u.test(args.port) ||
-        !Number.isInteger(port) ||
-        Number(args.port) > 65535)
-    ) {
-      throw new Error("--port must be an integer between 0 and 65535.");
+    let port: number;
+    try {
+      port = parsePort(args.port);
+    } catch (error) {
+      if (!(error instanceof InvalidPortError)) throw error;
+      process.stderr.write(`${error.message}\n`);
+      process.exitCode = 1;
+      return;
     }
     let devServerUrl = `http://localhost:${port}`;
 
