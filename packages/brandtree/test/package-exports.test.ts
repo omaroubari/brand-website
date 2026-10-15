@@ -1,7 +1,10 @@
 import { execFileSync } from "node:child_process";
 import {
+  copyFileSync,
   mkdtempSync,
   mkdirSync,
+  existsSync,
+  readFileSync,
   rmSync,
   symlinkSync,
   writeFileSync,
@@ -12,10 +15,38 @@ import { fileURLToPath } from "node:url";
 import { beforeAll, expect, test } from "vitest";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
+const manifest = JSON.parse(readFileSync(join(root, "package.json"), "utf8"));
+
+test("the install-time CLI entry exists outside generated build output and is shipped", () => {
+  const entry = manifest.bin.brandtree.replace(/^\.\//, "");
+  expect(entry.startsWith("dist/")).toBe(false);
+  expect(existsSync(join(root, entry))).toBe(true);
+  expect(
+    manifest.files.some((directory: string) => entry.startsWith(directory)),
+  ).toBe(true);
+});
 
 beforeAll(() => {
   execFileSync(process.execPath, ["scripts/build.mjs"], { cwd: root });
 }, 60_000);
+
+test("the CLI runs from source before compiled output exists", () => {
+  const directory = mkdtempSync(join(tmpdir(), "brandtree-source-cli-"));
+  try {
+    mkdirSync(join(directory, "bin"));
+    const launcher = join(directory, manifest.bin.brandtree);
+    copyFileSync(join(root, manifest.bin.brandtree), launcher);
+    symlinkSync(join(root, "src"), join(directory, "src"), "dir");
+    expect(
+      execFileSync(process.execPath, [launcher, "--version"], {
+        cwd: directory,
+        encoding: "utf8",
+      }).trim(),
+    ).toBe(manifest.version);
+  } finally {
+    rmSync(directory, { recursive: true, force: true });
+  }
+});
 
 test("the source API loads through the config loader and the compiled CLI runs", () => {
   const output = execFileSync(
@@ -34,7 +65,7 @@ test("the source API loads through the config loader and the compiled CLI runs",
   );
   expect(output.trim()).toBe("resolved");
   expect(
-    execFileSync(process.execPath, ["dist/cli/index.js", "--version"], {
+    execFileSync(process.execPath, [manifest.bin.brandtree, "--version"], {
       cwd: root,
       encoding: "utf8",
     }).trim(),
