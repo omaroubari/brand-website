@@ -19,7 +19,7 @@
     "./components/*": "./src/components/*",
     "./core/*": "./src/core/*",
     "./runtime": "./src/runtime.ts",
-    "./og/*": "./src/og/*",
+    "./og/*": "./src/og/*.ts",
     "./astro/*": "./src/astro/*.ts",
     "./styles.css": "./src/styles/global.css"
   },

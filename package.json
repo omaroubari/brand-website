@@ -15,9 +15,7 @@
     "check": "pnpm --filter brandtree build && pnpm -r --filter=!brandtree-sandbox --if-present check",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "deploy": "pnpm --filter brandtree build && pnpm --filter web deploy",
-    "astro": "pnpm --filter web astro",
-    "generate-types": "pnpm --filter web generate-types"
+    "deploy": "pnpm --filter brandtree build && pnpm --filter web deploy"
   },
   "packageManager": "pnpm@11.18.0",
   "devDependencies": {

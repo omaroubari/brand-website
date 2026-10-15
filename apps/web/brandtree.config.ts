@@ -6,7 +6,7 @@ import { defineConfig } from "brandtree";
  * ─────────────────────────────────────────────────────────────────────────────
  *
  * Everything structured — palette, type scale, logo artwork, contact details —
- * lives here. Prose lives in `src/content/brand-guidelines/*.mdx`.
+ * lives here. Prose lives in `content/*.mdx`.
  *
  * The values below are the sample brand the template ships with. Replace them,
  * drop new artwork into `public/brand/`, and rewrite the MDX sections.
@@ -30,7 +30,7 @@ export default defineConfig({
       options: {
         variants: [
           {
-            src: ["./src/assets/fonts/BrandSans-Variable.ttf"],
+            src: ["./assets/fonts/BrandSans-Variable.ttf"],
             weight: "100 900",
             style: "normal",
           },
@@ -45,7 +45,7 @@ export default defineConfig({
       options: {
         variants: [
           {
-            src: ["./src/assets/fonts/PPNeueMontrealArabic-Variable.ttf"],
+            src: ["./assets/fonts/PPNeueMontrealArabic-Variable.ttf"],
             weight: "100 900",
             style: "normal",
           },
@@ -475,13 +475,6 @@ export default defineConfig({
         format: "SVG",
         note: "Logotype and brandmark, all approved colourways.",
       },
-      {
-        id: "document",
-        label: "This document",
-        href: "/",
-        format: "PDF",
-        note: "Replace with an exported PDF of the guidelines.",
-      },
     ],
 
     /**
@@ -643,11 +636,6 @@ export default defineConfig({
             id: "logo-pack",
             label: "حزمة الشعار",
             note: "الشعار النصي والعلامة، بكل الألوان المعتمدة.",
-          },
-          {
-            id: "document",
-            label: "هذا المستند",
-            note: "استبدله بنسخة PDF مُصدّرة من الدليل.",
           },
         ],
       },

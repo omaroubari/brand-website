@@ -1,5 +1,6 @@
 export * from "./index";
 export { withBase } from "./components/islands/base-paths";
+export { localeRedirectHtml } from "./lib/locale-redirect";
 export { default as CoverPage } from "./components/content/CoverPage.astro";
 export { default as RootLayout } from "./layouts/RootLayout.astro";
 export type {

@@ -3,6 +3,8 @@ title: Iconography
 description: A single-weight line set, drawn on a 24 × 24 grid.
 ---
 
+import { icons } from "../../assets/icons/index.ts";
+
 ## Iconset
 
 Icons enhance the appeal and function of a layout, communicating ideas and actions across
@@ -20,7 +22,7 @@ family rather than a collection.
   ]}
 />
 
-<IconGrid unit={16} version="v1.0" cols={4} />
+<IconGrid icons={icons} unit={16} version="v1.0" cols={4} />
 
 ## Usage
 
@@ -37,4 +39,9 @@ emphasis, or rotate them to invent a new meaning. Ask for a new icon instead.
 
 </Callout>
 
-<IconGrid unit={16} only={["arrow", "play", "inspect", "message"]} cols={4} />
+<IconGrid
+  icons={icons}
+  unit={16}
+  only={["arrow", "play", "inspect", "message"]}
+  cols={4}
+/>
