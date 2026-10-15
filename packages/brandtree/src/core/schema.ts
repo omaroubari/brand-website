@@ -1,13 +1,11 @@
 import { brandSchema } from "../brand/schema.ts";
 import { z } from "astro/zod";
-import { contentIcons, type ContentIconName } from "./icons.ts";
+
 import { normalizeBasePath } from "./paths.ts";
 import { defaultFont, resolveTypographyFonts } from "../brand/index.ts";
 
 /** Icon inputs in serializable contexts (frontmatter, meta files). */
-const iconName = z.enum(
-  Object.keys(contentIcons) as [ContentIconName, ...ContentIconName[]],
-);
+const iconName = z.string().min(1);
 
 export const pageMetaSchema = z.strictObject({
   title: z.string().optional(),
