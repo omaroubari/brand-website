@@ -364,8 +364,14 @@ apps/web/src/content/brand-guidelines/en/03-logo/
 ```
 
 `meta.ts` must use a static `defineMeta` call. Its `pages` array orders direct
-children by their normalized slugs, while the curated `icon` names are listed
-by the content metadata API:
+children by their normalized slugs. Page `icon`, page `sidebar.icon`, and folder
+`icon` fields are strings resolved against the bundled Phosphor collection.
+For pages, `sidebar.icon` overrides the top-level `icon` in navigation.
+Use kebab-case names such as `book-open`, `acorn`, `folder-simple`, or `text-aa`.
+Unknown names render no icon.
+Icons come from Iconify's bundled `@iconify-json/ph` collection. Names are trimmed
+and lowercased; `rocket` and `ph:rocket` resolve identically. Iconify aliases and
+weight suffixes such as `rocket-bold` are supported.
 
 ```ts
 import { defineMeta } from "../../../../lib/content-meta";

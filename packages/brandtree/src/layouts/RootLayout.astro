@@ -6,6 +6,7 @@ import type { RootLayoutProps } from "../lib/root-layout";
 import { getInitialThemeAttributes } from "../lib/theme-state";
 import { LOCALE_COOKIE_NAME } from "../core/i18n";
 import SideNav from "../components/nav/SideNav";
+import NavTree from "../components/nav/NavTree.astro";
 import ColorPaletteInteractions from "../components/brand/ColorPaletteInteractions";
 import ThemeScript from "../components/theme-script.astro";
 import { withBase } from "../components/islands/base-paths.ts";
@@ -102,7 +103,6 @@ const currentRoute = Astro.url.pathname.replace(/\/$/, "") || "/";
 const tokens = brandStyleSheet(brand);
 const initialTheme = getInitialThemeAttributes(brand.theme.default);
 
-const navigationItems = navigation.sidebar;
 const navigationRoot = navigation.root ?? "/";
 ---
 
@@ -201,14 +201,16 @@ const navigationRoot = navigation.root ?? "/";
           nav: ui.nav,
           theme: ui.theme,
         }}
-        items={navigationItems}
-        numbering={navigationNumbering}
-        currentRoute={currentRoute}
         dir={dir}
         localeSwitch={localeSwitch}
         navigationRoot={navigationRoot}
         client:load>
-        <main class="main" id="content">
+        <NavTree
+          items={navigation.sidebar}
+          numbering={navigationNumbering}
+          currentRoute={currentRoute}
+        />
+        <main slot="content" class="main" id="content">
           {
             contentLayout === "bare" || !contentProps ? (
               <slot />
