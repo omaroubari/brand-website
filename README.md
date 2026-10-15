@@ -56,13 +56,44 @@ search parent directories. Brandtree supplies Astro and its integrations.
 | --------------------- | ----------------------------------------------------------- |
 | `brandtree dev`       | Generate the runtime and start the development server       |
 | `brandtree build`     | Regenerate the runtime and build the static site to `dist/` |
+| `brandtree check`     | Validate inputs and check types without a production build  |
 | `brandtree --help`    | Show available commands                                     |
 | `brandtree --version` | Show the installed version                                  |
+
+Brandtree supplies Astro, React, integrations, styling, and check tooling.
+Dependencies imported by custom author code remain the author's responsibility:
+React components need `react`, `react-dom`, `@types/react`, and `@types/react-dom`;
+author code importing Astro APIs or components needs `astro`. Imports resolve
+through normal package exports. The generated tsconfig does not alias author
+imports to private framework dependencies.
 
 Dev options: `--host [address]`, `--port <number>`, `--open`, `--debug`,
 `--strict` to abort startup on error diagnostics, and `--preview` to include drafts.
 Stop with Ctrl+C or SIGTERM. Each project allows one active dev session.
 
+## Checking a project
+
+Consumer projects run `brandtree check` from their project root. It recreates
+`.brandtree`, scans configuration and content, runs Astro sync, then runs one
+Astro type check. If the project has `tsconfig.json`, that file controls code
+coverage and compiler options. Otherwise it uses `.brandtree/tsconfig.json`,
+which covers the generated runtime and authored Astro/React/TypeScript files.
+The two configs are not combined. Content scanning runs independently of the
+selected tsconfig's `include`/`exclude` rules.
+
+Type errors fail the command. Valid YAML with invalid frontmatter values produces
+`BRANDTREE_FRONTMATTER_INVALID` diagnostics and a dropped-entry count. Without
+`--strict`, checking continues with those entries excluded; with `--strict`, it
+fails before generating the runtime. Malformed YAML rejects during source loading
+and fails regardless of `--strict`. Invalid configuration and unsafe source paths
+also always fail. Recoverable warnings remain
+nonfatal. `--preview` includes drafts in the content graph. `--isolated` prepares
+and syncs `.brandtree-verify/` instead, leaving a dev session's `.brandtree/`
+untouched. Checking produces no production build and leaves `dist/` unchanged.
+Astro and check tooling are supplied by Brandtree. This checkout currently uses
+the filesystem content scanner; CMS sources and include expansion are separate
+scanner work.
+
 ## Repository notes
 
-Within this repository, `pnpm dev` and `pnpm build` prepare the framework package before running the web app. `pnpm test` runs framework tests, and `pnpm check` runs workspace type checks once the check command is available. Framework source lives in [`packages/brandtree`](packages/brandtree/).
+Within this repository, `pnpm dev` and `pnpm build` prepare the framework package before running the web app. `pnpm test` runs framework tests, and `pnpm check` runs framework and consumer type checks. Framework source lives in [`packages/brandtree`](packages/brandtree/).

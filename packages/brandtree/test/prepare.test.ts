@@ -41,6 +41,7 @@ it.each([
   async ({ strict, severity, aborts }) => {
     const project = {
       diagnostics: [{ ...diagnostic, severity }],
+      droppedPages: severity === "error" ? 1 : 0,
     } as BrandtreeProject;
     vi.mocked(scanProject).mockResolvedValue(project);
     const preparing = prepareProject({ root: "/project", strict });
@@ -56,6 +57,11 @@ it.each([
     expect(process.stderr.write).toHaveBeenCalledWith(
       expect.stringContaining("INVALID_META Invalid metadata"),
     );
+    if (severity === "error") {
+      expect(process.stderr.write).toHaveBeenCalledWith(
+        expect.stringContaining("Dropped 1 content entry from the page graph."),
+      );
+    }
     if (severity === "error") {
       expect(process.stderr.write).toHaveBeenCalledWith(
         expect.stringContaining(

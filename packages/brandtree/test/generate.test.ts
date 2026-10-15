@@ -1,11 +1,5 @@
 import { afterEach, expect, it } from "vitest";
-import {
-  mkdtemp,
-  readFile,
-  rm,
-  writeFile,
-  mkdir,
-} from "node:fs/promises";
+import { mkdtemp, readFile, rm, writeFile, mkdir } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -49,6 +43,8 @@ it.each(["missing", "real"])(
     const specifiers = [
       "brandtree",
       "astro/config",
+      "astro/components",
+      "astro/types",
       "@astrojs/mdx",
       "@astrojs/react",
       "@tailwindcss/vite",
