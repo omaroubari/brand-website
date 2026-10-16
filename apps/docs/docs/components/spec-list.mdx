@@ -1,0 +1,50 @@
+---
+title: SpecList
+description: Props, defaults, and an MDX usage example for SpecList.
+sidebar:
+  order: 6
+---
+
+`SpecList` is available by name in Brandtree content MDX; no import is needed. Pass any required `brand`, `ui`, or `dir` props explicitly from `props.brand`, `props.ui`, and `props.dir`; the generated route supplies these values to the document. The optional `class` prop adds a class to the outer element; other HTML attributes are not forwarded automatically.
+
+## Preview
+
+<ComponentDemo name="spec-list" />
+
+## Props and behavior
+
+<TypeTable
+  type={{
+    items: {
+      type: "Array<{ term: string; value: string }>",
+      required: true,
+      description: "Key/value rows, in order.",
+    },
+    inline: {
+      type: "boolean",
+      description: "Lay the pairs out side by side instead of stacked.",
+      default: "false",
+    },
+    class: {
+      type: "string",
+      description: "Additional class on the outer element.",
+    },
+  }}
+/>
+
+An ordered description list. **Required:** `items`, an array of `{ term: string, value: string }`. Optional: `inline` (default `false`), `class`.
+
+## Usage
+
+```mdx
+<SpecList
+  items={[
+    { term: "Format", value: "SVG" },
+    { term: "Use", value: "Digital artwork" },
+  ]}
+/>
+```
+
+Use the stacked default for long values. The inline layout places pairs side by side and needs particular care on narrow screens.
+
+Return to the [component overview](/components) for the full catalog and MDX conventions.

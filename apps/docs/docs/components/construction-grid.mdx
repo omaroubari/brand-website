@@ -1,0 +1,63 @@
+---
+title: ConstructionGrid
+description: Props, defaults, and an MDX usage example for ConstructionGrid.
+sidebar:
+  order: 12
+---
+
+`ConstructionGrid` is available by name in Brandtree content MDX; no import is needed. Pass any required `brand`, `ui`, or `dir` props explicitly from `props.brand`, `props.ui`, and `props.dir`; the generated route supplies these values to the document. The optional `class` prop adds a class to the outer element; other HTML attributes are not forwarded automatically.
+
+This component requires `brand`. Artwork, aspect ratios, alt text, clearspace, and approved colorways come from `brand.logo`; set them in configuration rather than copying asset URLs into every page. Wherever supported, `mark` is `"logotype"` (default) or `"brandmark"`.
+
+## Preview
+
+<ComponentDemo name="construction-grid" />
+
+## Props and behavior
+
+<TypeTable
+  type={{
+    brand: {
+      type: "BrandConfig",
+      required: true,
+      description: "Resolved brand for the current locale. Pass props.brand.",
+    },
+    mark: {
+      type: '"logotype" | "brandmark"',
+      default: '"brandmark"',
+    },
+    cols: {
+      type: "number",
+      description: "Grid divisions across.",
+      default: "10",
+    },
+    rows: {
+      type: "number",
+      description: "Grid divisions down.",
+      default: "10",
+    },
+    caption: {
+      type: "string",
+    },
+    class: {
+      type: "string",
+      description: "Additional class on the outer element.",
+    },
+  }}
+/>
+
+Optional: `mark` (default **`"brandmark"`**), `cols` (default `10`), `rows` (default `10`), `caption`, `class`. Overlays divisions on the artwork; it is an illustration rather than an SVG geometry editor.
+
+## Usage
+
+```mdx
+<ConstructionGrid
+  brand={props.brand}
+  mark="brandmark"
+  cols={8}
+  rows={8}
+  caption="Construction grid for the mark"
+/>
+```
+
+Return to the [component overview](/components) for the full catalog and MDX conventions.

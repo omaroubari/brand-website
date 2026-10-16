@@ -1,0 +1,66 @@
+---
+title: Logo
+description: Props, defaults, and an MDX usage example for Logo.
+sidebar:
+  order: 8
+---
+
+`Logo` is available by name in Brandtree content MDX; no import is needed. Pass any required `brand`, `ui`, or `dir` props explicitly from `props.brand`, `props.ui`, and `props.dir`; the generated route supplies these values to the document. The optional `class` prop adds a class to the outer element; other HTML attributes are not forwarded automatically.
+
+This component requires `brand`. Artwork, aspect ratios, alt text, clearspace, and approved colorways come from `brand.logo`; set them in configuration rather than copying asset URLs into every page. Wherever supported, `mark` is `"logotype"` (default) or `"brandmark"`.
+
+## Preview
+
+<ComponentDemo name="logo" />
+
+## Props and behavior
+
+<TypeTable
+  type={{
+    brand: {
+      type: "BrandConfig",
+      required: true,
+      description: "Resolved brand for the current locale. Pass props.brand.",
+    },
+    mark: {
+      type: '"logotype" | "brandmark"',
+      description: "Which piece of artwork to draw.",
+      default: '"logotype"',
+    },
+    on: {
+      type: '"auto" | "light" | "dark"',
+      description:
+        "Which background the logo sits on. auto follows the page theme; light/dark pin it, for panels with a fixed background.",
+      default: '"auto"',
+    },
+    tint: {
+      type: "string",
+      description:
+        "Paint the artwork in an arbitrary colour (any CSS colour or custom property). Uses the SVG as a mask, so it only suits single-colour marks.",
+    },
+    width: {
+      type: "string",
+      description:
+        "Any CSS width. Height follows from the artwork's aspect ratio.",
+      default: '"12rem"',
+    },
+    class: {
+      type: "string",
+      description: "Additional class on the outer element.",
+    },
+  }}
+/>
+
+Optional: `mark`, `on` (`"auto"`, default, `"light"`, or `"dark"`), `tint` (CSS color/custom property), `width` (CSS width, default `"12rem"`), `class`.
+
+## Usage
+
+```mdx
+<Logo brand={props.brand} mark="logotype" width="66%" />
+<Logo brand={props.brand} mark="brandmark" on="dark" width="6rem" />
+<Logo brand={props.brand} tint="var(--primary)" />
+```
+
+`on="auto"` selects artwork according to the page theme. Pin `on` to match an explicitly light or dark panel. `tint` uses the SVG as a mask and suits a single-color mark; it overrides the artwork's own colors. Use configured CSS tokens for branded tints.
+
+Return to the [component overview](/components) for the full catalog and MDX conventions.

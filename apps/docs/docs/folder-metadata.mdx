@@ -1,0 +1,87 @@
+---
+title: Folder metadata
+description: Reference for folder labels, ordering, icons, and metadata modules.
+---
+
+A metadata module describes its containing content folder. Add `meta.ts`,
+`meta.js`, or `meta.mjs` beside its pages. A module at the content root describes
+root children. See [Navigation](/navigation) for a walkthrough.
+
+```ts content/03-logo/meta.ts
+import { defineMeta } from "brandtree";
+
+export default defineMeta({
+  title: "Logo system",
+  order: 3,
+  icon: "ph:shapes",
+  pages: ["index", "logotype", "brandmark", "usage-rules"],
+});
+```
+
+## Fields
+
+<TypeTable
+  type={{
+    title: {
+      type: "string",
+      description:
+        "Sidebar group label. Defaults to the humanized folder name.",
+    },
+    order: {
+      type: "number",
+      description: "Rank among siblings. Overrides the numeric folder prefix.",
+    },
+    icon: {
+      type: "string",
+      description: "Group icon name, such as ph:shapes.",
+    },
+    collapsed: {
+      type: "boolean",
+      description:
+        "Retained in the navigation model. The built-in sidebar currently displays groups expanded and does not apply this setting.",
+    },
+    pages: {
+      type: "string[]",
+      description:
+        "Ordered child source keys. Each listed child's zero-based array position becomes its rank. Unlisted children retain their existing rank; this does not filter pages.",
+    },
+  }}
+/>
+
+## Child keys and ordering
+
+The child key is the source filename or folder name without its extension and
+numeric prefix. It is independent of the page's title, sidebar label, and
+frontmatter slug. Parenthesized group folders use their label as the key.
+
+For a complete explicit order, list every child and put `index` first. Unlisted
+items retain their original numeric rank or their unranked position, so they
+can interleave with listed items. Equal ranks sort by display label.
+
+## Module exports
+
+Export a plain object, or use `defineMeta` for editor type checking. Synchronous
+and asynchronous factories returning the same object are also accepted:
+
+```ts content/03-logo/meta.ts
+import { defineMeta } from "brandtree";
+
+export default defineMeta(() => ({
+  title: "Logo system",
+  pages: ["index", "logotype", "brandmark"],
+}));
+```
+
+<Callout type="info">
+  The schema is strict. Fields such as `display`, external-link entries, tabs,
+  and manual sidebar trees are not supported. Hide individual pages with
+  [frontmatter](/frontmatter).
+</Callout>
+
+## Shared and translated metadata
+
+`meta.$.ts`, `meta.$.js`, and `meta.$.mjs` provide shared values across locales.
+A locale-specific metadata module overrides shared fields; omitted fields keep
+their shared values. In a directory-based site, use shared metadata for common
+ordering rather than assuming root-language metadata applies to every locale.
+See [Localization](/localization#translate-sidebar-groups) for an example.

@@ -1,0 +1,84 @@
+---
+title: Build and deployment
+description: Build a static release and deploy it to your hosting provider.
+sidebar:
+  order: 10
+---
+
+Brandtree builds a static website. A host serves the HTML, CSS, JavaScript,
+images, fonts, and downloads from `dist/`; it does not need a running Brandtree
+or Astro server. Astro's [deployment guide](https://docs.astro.build/en/guides/deploy/)
+explains the general static hosting model. Brandtree owns the Astro config, so
+use its commands rather than adding an adapter to generated files.
+
+## Prepare production settings
+
+Set `brand.meta.url` in `brandtree.config.ts` to your production origin. Brandtree
+uses it for canonical URLs, alternate-language links, and absolute social-image
+URLs. Do not ship the example brand's URL or a localhost address.
+
+Use `basePath` only when intentionally mounting the guidelines at a route such
+as `/guidelines`. It changes generated routes; it is not an Astro deployment
+`base` option and does not rewrite every hand-authored URL. See
+[navigation](/navigation) and test your actual host's path arrangement.
+
+Replace sample artwork and photography, confirm font/image licenses, and add the
+final download files to `public/`. Check that download URLs point to actual files;
+a labelled download exhibit does not create the archive for you.
+
+Pages are indexable by default. For a page that should be omitted from search
+results, set frontmatter `noindex: true` or `seo.noindex: true`. This emits crawler
+metadata; it is not access control. Put confidential guidelines behind host-level
+authentication if they require private access.
+
+## Build a reviewed release
+
+Follow [Validation](/validation) to run strict checking, build, and inspect the
+static output. A standalone consumer runs `pnpm exec brandtree build`; this
+repository uses `pnpm build`. Stop development before building because it
+shares the generated runtime.
+
+Upload the contents of `dist/` (or `apps/web/dist/` in this repository). The
+`.brandtree/` directory contains generated source, not the release artifact.
+
+## Use a static host
+
+Configure your host with the appropriate project directory and commands:
+
+| Project layout            | Build command               | Publish directory |
+| ------------------------- | --------------------------- | ----------------- |
+| This monorepo, root build | `pnpm build`                | `apps/web/dist`   |
+| Separate consumer         | `pnpm exec brandtree build` | `dist`            |
+
+Install dependencies before building and use a compatible Node/pnpm version.
+Keep the lockfile committed. Since Brandtree is private alpha, a clean CI checkout
+must have access to its package: build it from this workspace or provide the
+local archive/private distribution you use. An unpublished dependency cannot be
+resolved by a host simply running a public registry install.
+
+The site contains real generated nested routes. Preserve them and the emitted
+asset directories when uploading. Configure your host to serve directory index
+files, and test a direct visit and refresh on a nested URL after deployment.
+A single-page-app fallback is unnecessary for this static output.
+
+## Deploy the included Cloudflare example
+
+The example already includes Wrangler and `apps/web/wrangler.jsonc` with
+`assets.directory: "./dist"`. Change its Worker `name` for the client and configure
+your own Cloudflare account/domain. When ready to publish, run from the root:
+
+```sh
+pnpm deploy
+```
+
+This script builds the framework, builds the example, and invokes Wrangler to
+publish it. Authentication and account access are handled by Wrangler. This is
+a repository script, not a `brandtree deploy` subcommand.
+
+## A repeatable release routine
+
+Keep config, content, assets, and the dependency lockfile in version control.
+For each release, install dependencies, run strict checking, build, inspect the
+output, then deploy that exact output. CI should stop when either check or build
+fails. After deployment, verify representative public URLs and download links.
+Retain your previous deployed artifact or commit so you can restore a known release.

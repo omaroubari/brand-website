@@ -1,0 +1,55 @@
+---
+title: LogoScaling
+description: Props, defaults, and an MDX usage example for LogoScaling.
+sidebar:
+  order: 11
+---
+
+`LogoScaling` is available by name in Brandtree content MDX; no import is needed. Pass any required `brand`, `ui`, or `dir` props explicitly from `props.brand`, `props.ui`, and `props.dir`; the generated route supplies these values to the document. The optional `class` prop adds a class to the outer element; other HTML attributes are not forwarded automatically.
+
+This component requires `brand`. Artwork, aspect ratios, alt text, clearspace, and approved colorways come from `brand.logo`; set them in configuration rather than copying asset URLs into every page. Wherever supported, `mark` is `"logotype"` (default) or `"brandmark"`.
+
+## Preview
+
+<ComponentDemo name="logo-scaling" />
+
+## Props and behavior
+
+<TypeTable
+  type={{
+    brand: {
+      type: "BrandConfig",
+      required: true,
+      description: "Resolved brand for the current locale. Pass props.brand.",
+    },
+    mark: {
+      type: '"logotype" | "brandmark"',
+      default: '"logotype"',
+    },
+    sizes: {
+      type: "Array<{ width: string; label: string }>",
+      description:
+        "Sizes to show, largest first. width is any CSS length; label is the spec as written in the guidelines.",
+    },
+    class: {
+      type: "string",
+      description: "Additional class on the outer element.",
+    },
+  }}
+/>
+
+Optional: `mark`, `sizes` (array of `{ width: string, label: string }`), `class`. Supply sizes largest first. Defaults: `18rem` / `288 px / 49 mm`, `11.25rem` / `180 px / 30 mm`, `9rem` / `144 px / 24 mm`, `4.5rem` / `72 px / 12 mm`, `2.25rem` / `36 px / 6 mm`. These are demonstration defaults; replace them with the actual usage specifications for your brand.
+
+## Usage
+
+```mdx
+<LogoScaling
+  brand={props.brand}
+  sizes={[
+    { width: "12rem", label: "Standard application" },
+    { width: "4rem", label: "Small digital application" },
+  ]}
+/>
+```
+
+Return to the [component overview](/components) for the full catalog and MDX conventions.

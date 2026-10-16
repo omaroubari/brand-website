@@ -1,0 +1,80 @@
+---
+title: Figure
+description: Props, defaults, and an MDX usage example for Figure.
+sidebar:
+  order: 4
+---
+
+`Figure` is available by name in Brandtree content MDX; no import is needed. Pass any required `brand`, `ui`, or `dir` props explicitly from `props.brand`, `props.ui`, and `props.dir`; the generated route supplies these values to the document. The optional `class` prop adds a class to the outer element; other HTML attributes are not forwarded automatically.
+
+## Preview
+
+<ComponentDemo name="figure" />
+
+## Props and behavior
+
+<TypeTable
+  type={{
+    ui: {
+      type: "UIStrings",
+      required: true,
+      description: "Resolved interface strings. Pass props.ui.",
+    },
+    src: {
+      type: "ImageMetadata | string",
+      description:
+        "An imported image (optimised, responsive) or a path under public/. Leave it out to get a labelled placeholder frame — useful while the client's mockups are still being produced.",
+    },
+    alt: {
+      type: "string",
+      default: '""',
+    },
+    caption: {
+      type: "string",
+    },
+    ratio: {
+      type: "string",
+      description:
+        "width / height. Required for placeholders, otherwise optional.",
+      default: '"4 / 3"',
+    },
+    fit: {
+      type: '"cover" | "contain"',
+      description: "Fill the frame (default) or fit the whole image inside it.",
+      default: '"cover"',
+    },
+    bg: {
+      type: "string",
+      description: "Palette id for the frame background.",
+    },
+    class: {
+      type: "string",
+      description: "Additional class on the outer element.",
+    },
+  }}
+/>
+
+An image or placeholder with an optional caption. **Required:** `ui`. Optional: `src` (imported Astro `ImageMetadata` or URL string), `alt` (default empty), `caption`, `ratio` (default `"4 / 3"`), `fit` (`"cover"`, default, or `"contain"`), `bg` (a generated `--color-*` suffix), `class`.
+
+## Usage
+
+```mdx
+<Figure
+  ui={props.ui}
+  src="/mockups/stationery.jpg"
+  alt="Letterhead and envelope with the primary logo in the top corner"
+  caption="Stationery application"
+  ratio="3 / 2"
+  fit="contain"
+/>
+
+<Figure
+  ui={props.ui}
+  ratio="9 / 16"
+  caption="Mobile layout — artwork pending"
+/>
+```
+
+Imported images use Astro's responsive image pipeline. String paths render ordinary lazy-loaded images. Without `src`, the frame displays `caption` or the localized artwork-pending label. `bg` directly selects a CSS custom property; unlike `Panel.bg`, it does not validate or resolve the reference. Use meaningful alt text for informative images; empty alt is suitable for purely decorative artwork.
+
+Return to the [component overview](/components) for the full catalog and MDX conventions.

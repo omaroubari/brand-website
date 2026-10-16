@@ -1,0 +1,67 @@
+---
+title: LogoMisuse
+description: Props, defaults, and an MDX usage example for LogoMisuse.
+sidebar:
+  order: 13
+---
+
+`LogoMisuse` is available by name in Brandtree content MDX; no import is needed. Pass any required `brand`, `ui`, or `dir` props explicitly from `props.brand`, `props.ui`, and `props.dir`; the generated route supplies these values to the document. The optional `class` prop adds a class to the outer element; other HTML attributes are not forwarded automatically.
+
+This component requires `brand`. Artwork, aspect ratios, alt text, clearspace, and approved colorways come from `brand.logo`; set them in configuration rather than copying asset URLs into every page. Wherever supported, `mark` is `"logotype"` (default) or `"brandmark"`.
+
+## Preview
+
+<ComponentDemo name="logo-misuse" />
+
+## Props and behavior
+
+<TypeTable
+  type={{
+    brand: {
+      type: "BrandConfig",
+      required: true,
+      description: "Resolved brand for the current locale. Pass props.brand.",
+    },
+    items: {
+      type: "Array<{ effect: MisuseEffect; title: string; note: string }>",
+      required: true,
+    },
+    mark: {
+      type: '"logotype" | "brandmark"',
+      default: '"logotype"',
+    },
+    cols: {
+      type: "number",
+      default: "3",
+    },
+    class: {
+      type: "string",
+      description: "Additional class on the outer element.",
+    },
+  }}
+/>
+
+**Also required:** `items`, an array of `{ effect, title: string, note: string }`. Allowed effects: `"stretch"`, `"recolor"`, `"low-contrast"`, `"too-small"`, `"obstruct"`, `"rotate"`, `"outline"`, `"shadow"`, `"pattern"`. Optional: `mark`, `cols` (default `3`), `class`.
+
+## Usage
+
+```mdx
+<LogoMisuse
+  brand={props.brand}
+  cols={2}
+  items={[
+    {
+      effect: "stretch",
+      title: "Do not stretch",
+      note: "Keep the original proportions.",
+    },
+    {
+      effect: "rotate",
+      title: "Do not rotate",
+      note: "Keep the artwork upright.",
+    },
+  ]}
+/>
+```
+
+Return to the [component overview](/components) for the full catalog and MDX conventions.

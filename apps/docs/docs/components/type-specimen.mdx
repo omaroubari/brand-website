@@ -1,0 +1,63 @@
+---
+title: TypeSpecimen
+description: Props, defaults, and an MDX usage example for TypeSpecimen.
+sidebar:
+  order: 18
+---
+
+`TypeSpecimen` is available by name in Brandtree content MDX; no import is needed. Pass any required `brand`, `ui`, or `dir` props explicitly from `props.brand`, `props.ui`, and `props.dir`; the generated route supplies these values to the document. The optional `class` prop adds a class to the outer element; other HTML attributes are not forwarded automatically.
+
+## Preview
+
+<ComponentDemo name="type-specimen" />
+
+## Props and behavior
+
+<TypeTable
+  type={{
+    brand: {
+      type: "BrandConfig",
+      required: true,
+      description: "Resolved brand for the current locale. Pass props.brand.",
+    },
+    ui: {
+      type: "UIStrings",
+      required: true,
+      description: "Resolved interface strings. Pass props.ui.",
+    },
+    font: {
+      type: '"display" | "text"',
+      description: "Which family to show.",
+      default: '"display"',
+    },
+    glyph: {
+      type: "string",
+      description: "The oversized characters.",
+      default: '"Aa"',
+    },
+    weight: {
+      type: "number",
+      default: "500",
+    },
+    class: {
+      type: "string",
+      description: "Additional class on the outer element.",
+    },
+  }}
+/>
+
+**Required:** `brand`, `ui`. Optional: `font` (`"display"`, default, or `"text"`), `glyph` (default `"Aa"`), `weight` (default `500`), `class`. Reads the corresponding family from `brand.typography.families`.
+
+## Usage
+
+```mdx
+<TypeSpecimen
+  brand={props.brand}
+  ui={props.ui}
+  font="text"
+  glyph="Ag"
+  weight={400}
+/>
+```
+
+Return to the [component overview](/components) for the full catalog and MDX conventions.

@@ -1,0 +1,147 @@
+---
+title: Custom components
+description: Extend MDX with your own Astro and React components while preserving Brandtree's data model.
+sidebar:
+  order: 8
+---
+
+Start with [built-in components](/components). When you need another exhibit,
+create an author-owned component and explicitly import it in MDX. Keep reusable
+brand facts in the config and pass the values the component needs through props.
+This keeps a component usable for another client or locale.
+
+## Astro components
+
+Create `components/UsageNote.astro` in your consumer project:
+
+```astro
+---
+interface Props {
+  title: string;
+}
+const { title } = Astro.props;
+---
+
+<aside class="usage-note">
+  <strong>{title}</strong>
+  <slot />
+</aside>
+
+<style>
+  .usage-note {
+    border-inline-start: 2px solid var(--accent);
+    padding-inline-start: var(--space-m);
+    color: var(--ink);
+    background: var(--surface);
+  }
+</style>
+```
+
+Import it from a page at `content/en/03-logo/index.mdx`:
+
+```mdx
+import UsageNote from "../../../components/UsageNote.astro";
+
+## Original artwork
+
+<UsageNote title="Use the supplied SVG">
+  Keep the proportions unchanged.
+</UsageNote>
+```
+
+Imports resolve relative to the original MDX file, not `.brandtree/`. Adjust the
+number of `../` segments when moving a page. The [Astro component guide](https://docs.astro.build/en/basics/astro-components/)
+explains props, slots, and scoped styles.
+
+If a custom component needs brand data, accept it as a required prop and forward
+`props.brand` from MDX. Do the same for UI strings (`props.ui`) and content
+direction (`props.dir`). These are already resolved for the rendered page;
+importing the canonical config inside a component would bypass locale overrides.
+
+## Interactive React components
+
+Astro components render HTML. For browser interaction, use a React component and
+an Astro client directive. Declare dependencies imported by author code directly:
+
+```sh
+pnpm add react react-dom
+pnpm add -D @types/react @types/react-dom
+```
+
+Create `components/SpecimenInput.tsx`:
+
+```tsx
+import { useState } from "react";
+
+export default function SpecimenInput({
+  label,
+  initialText,
+}: {
+  label: string;
+  initialText: string;
+}) {
+  const [text, setText] = useState(initialText);
+  return (
+    <div>
+      <label>
+        {label}
+        <input value={text} onChange={(event) => setText(event.target.value)} />
+      </label>
+      <p style={{ fontFamily: "var(--font-display)" }}>{text}</p>
+    </div>
+  );
+}
+```
+
+Then use it in the same nested page:
+
+```mdx
+import SpecimenInput from "../../../components/SpecimenInput.tsx";
+
+<SpecimenInput
+  client:load
+  label="Try the typeface"
+  initialText={props.brand.meta.tagline ?? props.brand.meta.name}
+/>
+```
+
+`client:load` sends the component's JavaScript to the browser and activates it
+after the page loads. Without a client directive it renders static HTML and its
+input handler does not run. Use hydration only for components that need it.
+Localize the label in each locale's page. See Astro's
+[framework components guide](https://docs.astro.build/en/guides/framework-components/)
+for directive choices and the island model.
+
+Brandtree supplies the React integration, but that does not make its private
+dependencies your project's imports. Declare React and any other package your
+own code imports. If author code imports Astro APIs such as `astro:assets`,
+declare `astro` directly too. Custom dependencies resolve using normal package
+exports; generated aliases do not expose private framework dependencies.
+
+## Styling your component
+
+Use semantic CSS variables and logical properties, as in `UsageNote` above.
+[Styling and tokens](/styling) covers shared CSS, theme fallbacks, text measure,
+and overflow in full.
+
+## Current extension boundaries
+
+The generated runtime automatically provides `brandtree/components`. It does not
+currently merge an author `components.ts` registry. Explicit MDX imports are the
+supported extension path.
+
+The current generator also does not copy an author `pages/` directory or expose
+custom Astro config, middleware, integrations, or layout replacement through
+validated config. Some design documents describe these as future extensions.
+Do not add unsupported keys or maintain your own Astro composition inside the
+consumer as a workaround. Use the supported content and component APIs, or make
+a deliberate framework change when the product needs a new capability.
+
+<Panel title="Resolved data stays consistent">
+
+Pass required values from the page to your component, then forward them to any
+nested Brandtree component. This keeps translated brand data, interface labels,
+and text direction aligned. A component that imports the canonical config would
+skip the active locale overrides.
+
+</Panel>

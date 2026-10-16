@@ -1,0 +1,67 @@
+---
+title: PhotoGrid
+description: Props, defaults, and an MDX usage example for PhotoGrid.
+sidebar:
+  order: 26
+---
+
+`PhotoGrid` is available by name in Brandtree content MDX; no import is needed. Pass any required `brand`, `ui`, or `dir` props explicitly from `props.brand`, `props.ui`, and `props.dir`; the generated route supplies these values to the document. The optional `class` prop adds a class to the outer element; other HTML attributes are not forwarded automatically.
+
+## Preview
+
+<ComponentDemo name="photo-grid" />
+
+## Props and behavior
+
+<TypeTable
+  type={{
+    images: {
+      type: "Array< ImageMetadata | { src: ImageMetadata; caption?: string; span?: number } >",
+      required: true,
+      description:
+        "Imported images. Import them at the top of the MDX file so Astro can optimise and serve responsive sources: import photo from '../../assets/photography/photo-01.jpg';",
+    },
+    cols: {
+      type: "number",
+      default: "3",
+    },
+    ratio: {
+      type: "string",
+      description: "width / height for every tile.",
+      default: '"4 / 3"',
+    },
+    treatment: {
+      type: '"none" | "duotone" | "mono"',
+      description:
+        "Treatment applied to the whole set — matches the styles in the guidelines.",
+      default: '"none"',
+    },
+    class: {
+      type: "string",
+      description: "Additional class on the outer element.",
+    },
+  }}
+/>
+
+**Required:** `images`, an array of imported Astro images or `{ src: importedImage, caption?: string, span?: number }` objects. Optional: `cols` (default `3`), `ratio` (default `"4 / 3"`), `treatment` (`"none"`, default, `"duotone"`, or `"mono"`), `class`. Plain URL strings are not supported.
+
+## Usage
+
+```mdx
+import studio from "../../assets/photography/studio.jpg";
+import detail from "../../assets/photography/detail.jpg";
+
+<PhotoGrid
+  images={[
+    { src: studio, caption: "The studio in morning light", span: 2 },
+    { src: detail, caption: "A close view of the printed identity" },
+  ]}
+  cols={3}
+  ratio="3 / 2"
+  treatment="mono"
+/>
+```
+
+Each caption also supplies the image's alt text. With no caption, the image is treated as decorative. `duotone` uses the configured primary color. On narrow screens the grid uses two columns regardless of `cols`; keep spans at `1` or `2` when authoring responsive layouts.
+
+Return to the [component overview](/components) for the full catalog and MDX conventions.

@@ -1,0 +1,68 @@
+---
+title: Styling and tokens
+description: Style custom exhibits with generated brand tokens, theme support, and accessible layouts.
+---
+
+Generated CSS variables connect your brand configuration to every page. Reuse
+those variables in custom components so brand updates and locale overrides flow
+through without editing CSS.
+
+## Use semantic tokens
+
+Use the variables derived from configuration, such as `--ink`, `--surface`,
+`--accent`, the semantic roles, and `--type-*` properties. Do not paste client
+hex values or type sizes into reusable components. The
+[configuration reference](/configuration) explains the token families.
+
+Prefer logical CSS properties such as `padding-inline-start` and
+`border-inline-start`; they follow LTR/RTL direction. Put `max-inline-size:
+var(--measure)` on paragraphs and other text elements rather than a page/grid
+container. Give wide tables or specimens their own `overflow-x: auto` wrapper;
+the body should never scroll sideways.
+
+If a rule genuinely needs theme-specific styling, support the explicit dark
+preference and the no-JavaScript system fallback:
+
+```css
+:root[data-theme="dark"] .custom-exhibit {
+  /* dark-specific rule */
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .custom-exhibit {
+    /* same dark-specific rule */
+  }
+}
+```
+
+Use these selectors in a global stylesheet, or wrap the root portion in
+`:global(...)` when writing scoped Astro styles. Prefer semantic variables when
+possible, because their values already change with the theme.
+
+## Import a stylesheet
+
+The scanner recognizes a root `theme.css` path, but the generated runtime does
+not import it automatically. Import a stylesheet explicitly from your authored
+component or MDX module:
+
+```mdx content/01-introduction.mdx
+import "../styles/exhibits.css";
+```
+
+Place the CSS file at `styles/exhibits.css` in the consumer project. This import
+resolves relative to the original MDX file. Use scoped `<style>` blocks when a
+rule belongs to one Astro component; use imported CSS for shared rules.
+
+<Callout type="tip" title="Keep brand decisions in config">
+
+If a color or type value is missing from the token system, add the corresponding
+structured setting to configuration instead of hardcoding a client value in CSS.
+
+</Callout>
+
+## Review your styles
+
+Check narrow viewports, both themes with JavaScript disabled, and any supported
+RTL locale. Confirm wide content scrolls within its own frame. Read Astro's
+[styling guide](https://docs.astro.build/en/guides/styling/) for scoped styles and
+CSS imports, or return to [Custom components](/customization).

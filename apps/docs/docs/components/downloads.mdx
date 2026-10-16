@@ -1,0 +1,48 @@
+---
+title: Downloads
+description: Props, defaults, and an MDX usage example for Downloads.
+sidebar:
+  order: 27
+---
+
+`Downloads` is available by name in Brandtree content MDX; no import is needed. Pass any required `brand`, `ui`, or `dir` props explicitly from `props.brand`, `props.ui`, and `props.dir`; the generated route supplies these values to the document. The optional `class` prop adds a class to the outer element; other HTML attributes are not forwarded automatically.
+
+## Preview
+
+<ComponentDemo name="downloads" />
+
+## Props and behavior
+
+<TypeTable
+  type={{
+    brand: {
+      type: "BrandConfig",
+      required: true,
+      description: "Resolved brand for the current locale. Pass props.brand.",
+    },
+    items: {
+      type: "BrandDownload[]",
+      description: "Defaults to downloads in the brand config.",
+    },
+    class: {
+      type: "string",
+      description: "Additional class on the outer element.",
+    },
+  }}
+/>
+
+**Required:** `brand`. Optional: `items` (a `BrandDownload[]`, default `brand.downloads` or an empty array), `class`. Each item requires `id`, `label`, and `href`, with optional `format`, `size`, and `note` strings. Existing items are matched to the localized config by `id`, or by `href` when no ID is supplied.
+
+## Usage
+
+```mdx
+<Downloads brand={props.brand} />
+<Downloads
+  brand={props.brand}
+  items={props.brand.downloads?.slice(0, 2) ?? []}
+/>
+```
+
+Maintain file metadata and URLs in configuration. This component renders links; it does not create archive files or collect referenced assets. See [Assets](/assets).
+
+Return to the [component overview](/components) for the full catalog and MDX conventions.

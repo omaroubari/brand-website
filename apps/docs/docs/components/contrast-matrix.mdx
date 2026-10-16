@@ -1,0 +1,56 @@
+---
+title: ContrastMatrix
+description: Props, defaults, and an MDX usage example for ContrastMatrix.
+sidebar:
+  order: 17
+---
+
+`ContrastMatrix` is available by name in Brandtree content MDX; no import is needed. Pass any required `brand`, `ui`, or `dir` props explicitly from `props.brand`, `props.ui`, and `props.dir`; the generated route supplies these values to the document. The optional `class` prop adds a class to the outer element; other HTML attributes are not forwarded automatically.
+
+This component requires both `brand` and `ui`. Named swatches (`brand.colors.swatches`) are editorial selections; palette families (`brand.colors.palette`) contain the shade scales. Their IDs serve different selectors.
+
+## Preview
+
+<ComponentDemo name="contrast-matrix" />
+
+## Props and behavior
+
+<TypeTable
+  type={{
+    brand: {
+      type: "BrandConfig",
+      required: true,
+      description: "Resolved brand for the current locale. Pass props.brand.",
+    },
+    ui: {
+      type: "UIStrings",
+      required: true,
+      description: "Resolved interface strings. Pass props.ui.",
+    },
+    only: {
+      type: "string[]",
+      description: "Restrict the matrix to these palette ids.",
+    },
+    threshold: {
+      type: "number",
+      description: "Ratio for normal body text. WCAG AA is 4.5.",
+      default: "4.5",
+    },
+    class: {
+      type: "string",
+      description: "Additional class on the outer element.",
+    },
+  }}
+/>
+
+Optional: `only` (swatch IDs), `threshold` (default `4.5`), `class`. Computes foreground/background contrast for the selected swatches. Filtering preserves configuration order; unknown selected IDs are silently omitted. It differs from the ordered `only` selector on `ColorPalette`.
+
+## Usage
+
+```mdx
+<ContrastMatrix brand={props.brand} ui={props.ui} threshold={4.5} />
+```
+
+The threshold controls the matrix's pass indication; inspect actual text sizes and intended use before choosing a different threshold.
+
+Return to the [component overview](/components) for the full catalog and MDX conventions.
