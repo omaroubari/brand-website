@@ -73,7 +73,10 @@ entry points, `Steps`/`Step` for ordered procedures, `Tree` for folder layouts,
 Keep essential steps visible. Avoid routine closing card groups that repeat
 previous/next navigation or links already explained on the page. Reserve closing
 cards for useful connections to other topics; one card is enough when there is
-only one relevant destination. Use manual `TypeTable` definitions checked against
+only one relevant destination. Introduce retained cards with a task-specific
+explanation of why the reader should go there. When a guide configures a whole
+brand area, link to that area's component catalog rather than picking one
+component without explaining the choice. Use manual `TypeTable` definitions checked against
 the schemas and component source; do not assume inferred Zod types can be
 extracted automatically. Blume's documentation components and Brandtree's
 components inside fenced examples have different APIs (for example, Blume
