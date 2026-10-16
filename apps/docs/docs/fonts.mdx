@@ -1,0 +1,104 @@
+---
+title: Fonts
+description: Register hosted or local fonts and connect them to typography.
+---
+
+Font registration belongs to root-level `config.fonts`, alongside `brand`.
+Each declaration loads a family and exposes a CSS variable. Refer to that
+variable in `brand.typography.display`, `text`, or `mono`.
+
+<Steps>
+  <Step title="Register a font">
+    Add a hosted or local declaration using the examples below.
+  </Step>
+  <Step title="Connect a typography role">
+    Set a role such as `brand.typography.text` to `"var(--font-brand)"`. Keep
+    the other typography fields from your starter.
+  </Step>
+  <Step title="Check the result">
+    Review body text and specimens after the font loads. Test each supported
+    language and address font warnings before publishing.
+  </Step>
+</Steps>
+
+The following `fonts` examples replace the root `fonts` array in
+`brandtree.config.ts`; they are partial config examples.
+
+When `fonts` is omitted, Brandtree declares Inter with variable weights
+`"100 900"`, normal and italic styles, and system fallbacks. Supplying `fonts`
+replaces that default array. Use `fonts: []` and explicit system-family stacks to
+opt out of font downloads.
+
+```ts
+fonts: [{
+  name: "Inter",
+  cssVariable: "--font-brand",
+  provider: "google",
+  weights: [400, 600, 700],
+  styles: ["normal", "italic"],
+  subsets: ["latin"],
+  fallbacks: ["system-ui", "sans-serif"],
+}],
+```
+
+`name`, `cssVariable`, and `provider` are required. Variables must be unique and
+start with `--`. Use the same variable in `brand.typography.display` or `text`.
+Supported providers are `google`, `fontsource`, `bunny`, `fontshare`, `adobe`, and
+`local`. Adobe additionally requires `id`, the project's Adobe Fonts ID.
+Brandtree translates these serializable declarations into Astro font providers;
+you do not import provider functions into your config.
+
+## Local fonts
+
+```ts
+fonts: [{
+  name: "Brand Sans",
+  cssVariable: "--font-brand",
+  provider: "local",
+  fallbacks: ["system-ui", "sans-serif"],
+  options: {
+    variants: [{
+      src: ["./assets/fonts/BrandSans-Variable.woff2"],
+      weight: "100 900",
+      style: "normal",
+    }],
+  },
+}],
+```
+
+Local `src` paths resolve from the **client project root**, not `.brandtree/`.
+Use one variant per face or style, and additional `src` entries for alternative
+files for the same face. A static bold face can use `weight: 700`; a variable
+font uses a string such as `"100 900"`. Each local declaration needs a nonempty
+`options.variants` array, and each variant needs a nonempty `src` array. Ensure
+your license allows web hosting and public downloads separately.
+
+## Additional font controls
+
+| Field                                             | Accepted value                                                  |
+| ------------------------------------------------- | --------------------------------------------------------------- |
+| `weights`                                         | Nonempty array of numbers or strings, including variable ranges |
+| `styles`                                          | Nonempty array of `normal`, `italic`, or `oblique`              |
+| `subsets`                                         | Nonempty array of subset strings                                |
+| `formats`                                         | Nonempty array of `woff2`, `woff`, `ttf`, `otf`, or `eot`       |
+| `fallbacks`                                       | Array of CSS fallback family names                              |
+| `optimizedFallbacks`                              | Boolean                                                         |
+| `display`                                         | `auto`, `block`, `swap`, `fallback`, or `optional`              |
+| `stretch`, `featureSettings`, `variationSettings` | CSS strings                                                     |
+| `unicodeRange`                                    | Nonempty array of CSS range strings                             |
+
+Local variants can also set `display`, `stretch`, `featureSettings`,
+`variationSettings`, and `unicodeRange`, alongside `weight` and `style`.
+
+Undeclared font variables produce warnings and receive fallback handling.
+Unavailable local files also produce warnings; Brandtree removes unusable sources
+and can add Inter as a fallback when an entire declared local font is lost.
+Warnings should be fixed before launch: fallback text can look very different
+from the approved typography. Astro's [font guide](https://docs.astro.build/en/guides/fonts/)
+explains the underlying font system; keep Brandtree declarations in this file.
+
+<Panel title="Fonts and localization">
+  Register all required families once. A locale override can choose different
+  typography stacks for another script; registration alone does not change those
+  stacks. See [Localization](/localization) for the complete setup.
+</Panel>

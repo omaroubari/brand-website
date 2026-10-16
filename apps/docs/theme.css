@@ -1,0 +1,8 @@
+.prose {
+  font-size: 1rem;
+}
+
+/* Step titles should read as headings rather than supporting prose. */
+.prose [data-blume-step] > p {
+  color: var(--blume-foreground);
+}

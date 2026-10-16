@@ -1,0 +1,51 @@
+---
+title: Callout
+description: Props, defaults, and an MDX usage example for Callout.
+sidebar:
+  order: 5
+---
+
+`Callout` is available by name in Brandtree content MDX; no import is needed. Pass any required `brand`, `ui`, or `dir` props explicitly from `props.brand`, `props.ui`, and `props.dir`; the generated route supplies these values to the document. The optional `class` prop adds a class to the outer element; other HTML attributes are not forwarded automatically.
+
+## Preview
+
+<ComponentDemo name="callout" />
+
+## Props and behavior
+
+<TypeTable
+  type={{
+    ui: {
+      type: "UIStrings",
+      required: true,
+      description: "Resolved interface strings. Pass props.ui.",
+    },
+    tone: {
+      type: '"note" | "do" | "dont"',
+      description:
+        "do and dont are the ones you will reach for on usage pages.",
+      default: '"note"',
+    },
+    title: {
+      type: "string",
+    },
+    class: {
+      type: "string",
+      description: "Additional class on the outer element.",
+    },
+  }}
+/>
+
+An editorial note or usage rule with a default slot. **Required:** `ui`. Optional: `tone` (`"note"`, default, `"do"`, or `"dont"`), `title` (defaults to the localized label for the tone), `class`.
+
+## Usage
+
+```mdx
+<Callout ui={props.ui} tone="dont" title="Keep the original proportions">
+
+Do not stretch or compress the supplied artwork.
+
+</Callout>
+```
+
+Return to the [component overview](/components) for the full catalog and MDX conventions.

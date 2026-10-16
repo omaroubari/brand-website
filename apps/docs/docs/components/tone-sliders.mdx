@@ -1,0 +1,44 @@
+---
+title: ToneSliders
+description: Props, defaults, and an MDX usage example for ToneSliders.
+sidebar:
+  order: 22
+---
+
+`ToneSliders` is available by name in Brandtree content MDX; no import is needed. Pass any required `brand`, `ui`, or `dir` props explicitly from `props.brand`, `props.ui`, and `props.dir`; the generated route supplies these values to the document. The optional `class` prop adds a class to the outer element; other HTML attributes are not forwarded automatically.
+
+## Preview
+
+<ComponentDemo name="tone-sliders" />
+
+## Props and behavior
+
+<TypeTable
+  type={{
+    items: {
+      type: "Array<{ left: string; right: string; at: number }>",
+      required: true,
+      description:
+        "Where the brand sits between each pair of opposites. at is 0–100: 0 pins the left word, 100 the right.",
+    },
+    class: {
+      type: "string",
+      description: "Additional class on the outer element.",
+    },
+  }}
+/>
+
+**Required:** `items`, an array of `{ left: string, right: string, at: number }`. `at` ranges from `0` (left) to `100` (right). Optional: `class`. This is a static visualization of editorial positioning, not an interactive form.
+
+## Usage
+
+```mdx
+<ToneSliders
+  items={[
+    { left: "Formal", right: "Conversational", at: 70 },
+    { left: "Reserved", right: "Expressive", at: 40 },
+  ]}
+/>
+```
+
+Return to the [component overview](/components) for the full catalog and MDX conventions.

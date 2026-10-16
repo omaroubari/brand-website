@@ -1,0 +1,70 @@
+---
+title: ColorPalette
+description: Props, defaults, and an MDX usage example for ColorPalette.
+sidebar:
+  order: 14
+---
+
+`ColorPalette` is available by name in Brandtree content MDX; no import is needed. Pass any required `brand`, `ui`, or `dir` props explicitly from `props.brand`, `props.ui`, and `props.dir`; the generated route supplies these values to the document. The optional `class` prop adds a class to the outer element; other HTML attributes are not forwarded automatically.
+
+This component requires both `brand` and `ui`. Named swatches (`brand.colors.swatches`) are editorial selections; palette families (`brand.colors.palette`) contain the shade scales. Their IDs serve different selectors.
+
+## Preview
+
+<ComponentDemo name="color-palette" />
+
+## Props and behavior
+
+<TypeTable
+  type={{
+    brand: {
+      type: "BrandConfig",
+      required: true,
+      description: "Resolved brand for the current locale. Pass props.brand.",
+    },
+    ui: {
+      type: "UIStrings",
+      required: true,
+      description: "Resolved interface strings. Pass props.ui.",
+    },
+    only: {
+      type: "string[]",
+      description:
+        "Limit and order named swatches by id. Defaults to every configured swatch.",
+    },
+    category: {
+      type: '"primary" | "secondary"',
+      description:
+        "Limit the palette to a named group from the brand configuration.",
+    },
+    print: {
+      type: "boolean",
+      description: "Show CMYK / RGB breakdowns alongside the hex.",
+      default: "true",
+    },
+    class: {
+      type: "string",
+      description: "Additional class on the outer element.",
+    },
+  }}
+/>
+
+Optional: `only` (swatch ID array, also sets order), `category` (`"primary"` or `"secondary"`), `print` (default `true`, includes print/RGB details), `class`. Without selectors, shows every configured swatch. `only` takes precedence over `category`; an unknown ID in `only` throws an error.
+
+## Usage
+
+```mdx
+<ColorPalette
+  brand={props.brand}
+  ui={props.ui}
+  category="primary"
+  print={false}
+/>
+<ColorPalette
+  brand={props.brand}
+  ui={props.ui}
+  only={props.brand.colors.swatches.slice(0, 2).map((color) => color.id)}
+/>
+```
+
+Return to the [component overview](/components) for the full catalog and MDX conventions.

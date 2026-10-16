@@ -1,0 +1,72 @@
+---
+title: LayoutGrid
+description: Props, defaults, and an MDX usage example for LayoutGrid.
+sidebar:
+  order: 28
+---
+
+`LayoutGrid` is available by name in Brandtree content MDX; no import is needed. Pass any required `brand`, `ui`, or `dir` props explicitly from `props.brand`, `props.ui`, and `props.dir`; the generated route supplies these values to the document. The optional `class` prop adds a class to the outer element; other HTML attributes are not forwarded automatically.
+
+## Preview
+
+<ComponentDemo name="layout-grid" />
+
+## Props and behavior
+
+<TypeTable
+  type={{
+    columns: {
+      type: "number",
+      description: "Column count.",
+      default: "12",
+    },
+    gutter: {
+      type: "string",
+      description:
+        "Gutter between columns, as a CSS length — label only, drawn proportionally.",
+      default: '"30px"',
+    },
+    margin: {
+      type: "string",
+      description: "Outer margin, as a CSS length.",
+      default: '"100px"',
+    },
+    ratio: {
+      type: "string",
+      description: "width / height of the canvas being described.",
+      default: '"16 / 9"',
+    },
+    label: {
+      type: "string",
+      description: 'e.g. "Desktop · 1440 px and up".',
+    },
+    specs: {
+      type: "Array<{ term: string; value: string }>",
+      description: "Rows of specs printed beneath the diagram.",
+      default: "[]",
+    },
+    class: {
+      type: "string",
+      description: "Additional class on the outer element.",
+    },
+  }}
+/>
+
+A layout-specification diagram. Optional: `columns` (default `12`), `gutter` (default `"30px"`, a label; the visual is proportional), `margin` (default `"100px"`, CSS length), `ratio` (default `"16 / 9"`), `label`, `specs` (array of `{ term: string, value: string }`, default empty), `class`.
+
+## Usage
+
+```mdx
+<LayoutGrid
+  columns={12}
+  gutter="24px"
+  margin="48px"
+  ratio="16 / 9"
+  label="Desktop composition"
+  specs={[{ term: "Alignment", value: "Content follows the column grid" }]}
+/>
+```
+
+This illustrates the grid you are documenting. It does not set the website's layout system; use configuration for the framework's own layout tokens.
+
+Return to the [component overview](/components) for the full catalog and MDX conventions.

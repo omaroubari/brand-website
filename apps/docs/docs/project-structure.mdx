@@ -1,0 +1,142 @@
+---
+title: Project structure
+description: Understand authored files, generated output, and how to create another client project.
+---
+
+A Brandtree consumer is the directory containing `brandtree.config.ts` and
+`content/`. In this repository, the main example consumer is `apps/web/`.
+Run Brandtree commands from that consumer directory, or use the repository's
+root scripts to select it for you.
+
+## Files you own
+
+<Tree>
+  <Tree.Folder name="my-brand" defaultOpen>
+    <Tree.File name="brandtree.config.ts" />
+    <Tree.Folder name="content" defaultOpen>
+      <Tree.File name="01-the-brand.mdx" />
+      <Tree.Folder name="02-logo">
+        <Tree.File name="index.mdx" />
+        <Tree.File name="01-clearspace.mdx" />
+        <Tree.File name="meta.ts" />
+      </Tree.Folder>
+    </Tree.Folder>
+    <Tree.Folder name="components">
+      <Tree.File name="BrandExample.astro" />
+    </Tree.Folder>
+    <Tree.Folder name="assets">
+      <Tree.File name="photograph.webp" />
+    </Tree.Folder>
+    <Tree.Folder name="public">
+      <Tree.Folder name="downloads">
+        <Tree.File name="brand-assets.zip" />
+      </Tree.Folder>
+    </Tree.Folder>
+    <Tree.File name="package.json" />
+  </Tree.Folder>
+</Tree>
+
+| Location              | Responsibility                                                  |
+| --------------------- | --------------------------------------------------------------- |
+| `brandtree.config.ts` | Structured brand data and site-wide settings.                   |
+| `content/`            | Markdown/MDX guidelines, locale folders, and folder metadata.   |
+| `components/`         | Optional custom components imported by your MDX.                |
+| `assets/`             | Imported media and local font files referenced by your project. |
+| `public/`             | Files copied unchanged, including downloadable archives.        |
+| `package.json`        | Your scripts and direct dependencies.                           |
+
+The `components/` and `assets/` names are organizational conventions. You import
+custom components and media explicitly; Brandtree does not discover exhibits by
+scanning those directories. The `content/` root is fixed.
+
+<Panel title="Brand facts and prose have different homes">
+
+Keep a palette or logo path in config so several pages can reuse it. Put the
+explanation of when to use that color or logo in MDX. See
+[Brand configuration](/brand-configuration) and [Pages and MDX](/authoring).
+
+</Panel>
+
+## Generated files
+
+The CLI creates a disposable `.brandtree/` Astro application. A production build
+writes the static website into `dist/`; isolated checking uses
+`.brandtree-verify/`. Keep all three out of version control.
+
+<Callout type="warning" title="Edit the authored inputs">
+
+Changes inside `.brandtree/` are replaced on regeneration. Fix your config,
+content, or imported component instead. The CLI owns Astro composition; a
+consumer does not need its own Astro routes or config.
+
+</Callout>
+
+The site root is a generated brand cover. Use a named page for introductory
+prose; a root `content/index.mdx` does not replace that cover. Nested index pages
+work as folder overviews. See [Navigation](/navigation).
+
+## Start another client site
+
+For a first client, fork or copy this repository, keep `apps/web` as the consumer,
+and replace its config, content, and assets. No framework source changes are
+required.
+
+<Expandable title="Create a separate consumer from a local package">
+
+<Steps>
+  <Step title="Package the framework">
+
+From this repository's root:
+
+```sh
+pnpm --filter brandtree pack --out ./brandtree.tgz
+```
+
+  </Step>
+  <Step title="Copy the authored project">
+
+Copy `brandtree.tgz` into a new project and install it there:
+
+```sh
+pnpm add ./brandtree.tgz
+```
+
+Copy `brandtree.config.ts`, `content/`, `assets/`, and `public/` from `apps/web/`.
+Copy your custom components too if content imports any. Leave generated
+directories and `node_modules/` behind.
+
+  </Step>
+  <Step title="Add consumer scripts">
+
+Merge these fields into the new project's `package.json`:
+
+```json
+{
+  "type": "module",
+  "scripts": {
+    "dev": "brandtree dev",
+    "check": "brandtree check --strict",
+    "build": "brandtree build"
+  }
+}
+```
+
+Run those commands from the new consumer root. Brandtree supplies its Astro
+and React integrations. Declare any libraries imported directly by your custom
+code as dependencies, as explained in [Custom components](/customization).
+
+  </Step>
+</Steps>
+
+`apps/sandbox/` is a working packed-consumer example. Repack and reinstall the
+archive after changing the framework: an old archive still contains old code.
+
+</Expandable>
+
+## Examples in this repository
+
+- `apps/web/`: full English and Arabic brand guidelines.
+- `apps/sandbox/`: packed consumer with imported assets and interactive content.
+- `packages/brandtree/`: reusable framework implementation.
+- `apps/docs/`: this documentation website, powered by Blume. Its `docs/` folder
+  and `blume.config.ts` are separate from your brand site's inputs.

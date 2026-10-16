@@ -1,0 +1,62 @@
+---
+title: TypeScale
+description: Props, defaults, and an MDX usage example for TypeScale.
+sidebar:
+  order: 19
+---
+
+`TypeScale` is available by name in Brandtree content MDX; no import is needed. Pass any required `brand`, `ui`, or `dir` props explicitly from `props.brand`, `props.ui`, and `props.dir`; the generated route supplies these values to the document. The optional `class` prop adds a class to the outer element; other HTML attributes are not forwarded automatically.
+
+## Preview
+
+<ComponentDemo name="type-scale" />
+
+## Props and behavior
+
+<TypeTable
+  type={{
+    brand: {
+      type: "BrandConfig",
+      required: true,
+      description: "Resolved brand for the current locale. Pass props.brand.",
+    },
+    ui: {
+      type: "UIStrings",
+      required: true,
+      description: "Resolved interface strings. Pass props.ui.",
+    },
+    only: {
+      type: "string[]",
+      description: "Restrict to these style names, in this order.",
+    },
+    print: {
+      type: "boolean",
+      description: "Show the original print spec beside each step.",
+      default: "true",
+    },
+    sample: {
+      type: "string",
+      description: "Sentence used when a step has no sample of its own.",
+      default: '"Crafting strategic visual brand identities"',
+    },
+    class: {
+      type: "string",
+      description: "Additional class on the outer element.",
+    },
+  }}
+/>
+
+**Required:** `brand`, `ui`. Optional: `only` (type style names **or IDs**, in order), `print` (default `true`), `sample` (fallback sample text), `class`. Defaults to every `brand.typography.scale` entry. Each entry's own `sample` wins over the fallback; the built-in fallback is `"Crafting strategic visual brand identities"`. Unknown selected styles throw an error.
+
+## Usage
+
+```mdx
+<TypeScale
+  brand={props.brand}
+  ui={props.ui}
+  print={false}
+  sample="A clear voice, wherever we appear."
+/>
+```
+
+Return to the [component overview](/components) for the full catalog and MDX conventions.

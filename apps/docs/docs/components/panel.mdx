@@ -1,0 +1,83 @@
+---
+title: Panel
+description: Props, defaults, and an MDX usage example for Panel.
+sidebar:
+  order: 3
+---
+
+`Panel` is available by name in Brandtree content MDX; no import is needed. Pass any required `brand`, `ui`, or `dir` props explicitly from `props.brand`, `props.ui`, and `props.dir`; the generated route supplies these values to the document. The optional `class` prop adds a class to the outer element; other HTML attributes are not forwarded automatically.
+
+## Preview
+
+<ComponentDemo name="panel" />
+
+## Props and behavior
+
+<TypeTable
+  type={{
+    brand: {
+      type: "BrandConfig",
+      required: true,
+      description: "Resolved brand for the current locale. Pass props.brand.",
+    },
+    bg: {
+      type: "BrandColorToken",
+      description:
+        "Palette shade reference for the background. Defaults to the page surface.",
+    },
+    fg: {
+      type: "BrandColorToken",
+      description:
+        "Palette shade reference for the contents. Defaults to whatever is legible on bg.",
+    },
+    ratio: {
+      type: "string",
+      description:
+        "width / height. Use to hold a consistent shape across a row.",
+    },
+    flush: {
+      type: "boolean",
+      description:
+        "Remove the internal padding — for artwork that should bleed.",
+      default: "false",
+    },
+    caption: {
+      type: "string",
+      description: "Caption under the panel.",
+    },
+    label: {
+      type: "string",
+      description: "Small label in the panel's top-left corner.",
+    },
+    class: {
+      type: "string",
+      description: "Additional class on the outer element.",
+    },
+  }}
+/>
+
+A padded artwork frame with a default slot. **Required:** `brand`. Optional: `bg` and `fg` (configured color tokens), `ratio` (CSS aspect ratio; omitted lets content determine height), `flush` (default `false`), `caption`, `label`, `class`.
+
+With `bg`, an omitted `fg` uses CSS `contrast-color()` for that background. With neither prop the implementation currently sets foreground to black, so explicitly supply configured `bg` and `fg` for text-bearing panels that need a fixed color pair. The example reads an existing configured logo colorway rather than inventing color values.
+
+## Usage
+
+```mdx
+<Panel
+  brand={props.brand}
+  bg={props.brand.logo.colorways[0].bg}
+  fg={props.brand.logo.colorways[0].fg}
+  ratio="16 / 9"
+  caption="An approved color pairing."
+  label="Primary">
+  <Logo
+    brand={props.brand}
+    tint={`var(--color-${props.brand.logo.colorways[0].fg})`}
+    width="60%"
+  />
+</Panel>
+```
+
+This example requires at least one configured colorway. A named `caption` slot can replace the caption contents, but the `caption` prop must still be present to render the caption element. Use `flush` when artwork should reach the frame edges.
+
+Return to the [component overview](/components) for the full catalog and MDX conventions.

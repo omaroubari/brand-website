@@ -1,0 +1,50 @@
+---
+title: ColorScale
+description: Props, defaults, and an MDX usage example for ColorScale.
+sidebar:
+  order: 16
+---
+
+`ColorScale` is available by name in Brandtree content MDX; no import is needed. Pass any required `brand`, `ui`, or `dir` props explicitly from `props.brand`, `props.ui`, and `props.dir`; the generated route supplies these values to the document. The optional `class` prop adds a class to the outer element; other HTML attributes are not forwarded automatically.
+
+This component requires both `brand` and `ui`. Named swatches (`brand.colors.swatches`) are editorial selections; palette families (`brand.colors.palette`) contain the shade scales. Their IDs serve different selectors.
+
+## Preview
+
+<ComponentDemo name="color-scale" />
+
+## Props and behavior
+
+<TypeTable
+  type={{
+    brand: {
+      type: "BrandConfig",
+      required: true,
+      description: "Resolved brand for the current locale. Pass props.brand.",
+    },
+    ui: {
+      type: "UIStrings",
+      required: true,
+      description: "Resolved interface strings. Pass props.ui.",
+    },
+    only: {
+      type: "string[]",
+      description:
+        "Limit and order shade families by id. Defaults to every configured scale.",
+    },
+    class: {
+      type: "string",
+      description: "Additional class on the outer element.",
+    },
+  }}
+/>
+
+Optional: `only` (palette **family** IDs in display order), `class`. Defaults to all configured families. Displays the published shade stops from `50` through `950`. Unknown selected family IDs throw an error.
+
+## Usage
+
+```mdx
+<ColorScale brand={props.brand} ui={props.ui} />
+```
+
+Return to the [component overview](/components) for the full catalog and MDX conventions.

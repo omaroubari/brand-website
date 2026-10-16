@@ -1,0 +1,88 @@
+---
+title: Validation
+description: Check source inputs and review the generated site before a release.
+---
+
+Validation has two parts: check that authored inputs are valid, then review the
+site they produce. A successful build alone can miss an omitted content page or
+a font that silently fell back.
+
+## Check your inputs
+
+Run these commands from a standalone consumer's root, containing
+`brandtree.config.ts`:
+
+<Steps>
+  <Step title="Run strict checking">
+
+```sh
+pnpm exec brandtree check --strict
+```
+
+Strict checking fails preparation on content error diagnostics, including
+invalid frontmatter. Without it, preparation can continue with invalid pages
+omitted. Type errors, malformed YAML, invalid config, and unsafe source paths
+also fail checking. Warnings alone remain nonfatal.
+
+  </Step>
+  <Step title="Build the production site">
+
+```sh
+pnpm exec brandtree build
+```
+
+This generates static output in `dist/`. Draft pages are omitted. The build
+command has no strict or preview flag, so keep the strict check as a separate
+release gate.
+
+  </Step>
+  <Step title="Serve the generated output">
+
+```sh
+pnpm exec brandtree preview --port 4322
+```
+
+Open the printed URL and follow real page links. Preview serves the build through
+its generated Astro app without rebuilding. Keep both `.brandtree/` and `dist/`
+from the build; if either is missing, build again.
+
+  </Step>
+</Steps>
+
+<Callout type="info">
+  Stop development before ordinary check and build commands: they regenerate
+  `.brandtree/`. To check while dev runs, use `pnpm exec brandtree check
+  --strict --isolated`. There is no isolated build flag.
+</Callout>
+
+## Check the repository example
+
+From the monorepo root:
+
+```sh
+pnpm check
+pnpm --filter web exec brandtree check --strict
+pnpm build
+pnpm preview --port 4322
+```
+
+The root scripts also build the framework. The example output is
+`apps/web/dist/`; a standalone consumer uses its own `dist/`.
+
+## Review the output
+
+- Follow cover links, group overviews, nested pages, the table of contents, and previous/next links.
+- Switch languages and check missing translations, fallback pages, and RTL layouts.
+- Review light and dark themes, including with JavaScript disabled.
+- At narrow widths, confirm tables and specimens scroll inside their own containers.
+- Inspect logos, font faces, image descriptions, and the contents of downloaded files.
+- Check page titles, descriptions, canonical URLs, indexing choices, and generated social cards under `dist/og/`.
+
+A fallback font can still produce a successful build. Inspect the card images
+and confirm every required writing system renders; see [Fonts](/fonts).
+
+<Panel title="Checking unfinished pages">
+  Use `check --strict --isolated --preview` to include drafts while reviewing
+  work in progress. Development already includes drafts. Keep preview checks
+  separate from the normal production review.
+</Panel>

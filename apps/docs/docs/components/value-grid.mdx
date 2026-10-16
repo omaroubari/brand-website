@@ -1,0 +1,48 @@
+---
+title: ValueGrid
+description: Props, defaults, and an MDX usage example for ValueGrid.
+sidebar:
+  order: 23
+---
+
+`ValueGrid` is available by name in Brandtree content MDX; no import is needed. Pass any required `brand`, `ui`, or `dir` props explicitly from `props.brand`, `props.ui`, and `props.dir`; the generated route supplies these values to the document. The optional `class` prop adds a class to the outer element; other HTML attributes are not forwarded automatically.
+
+## Preview
+
+<ComponentDemo name="value-grid" />
+
+## Props and behavior
+
+<TypeTable
+  type={{
+    items: {
+      type: "Array<{ title: string; body: string }>",
+      required: true,
+    },
+    numbered: {
+      type: "boolean",
+      description: "Number each value, set as a superscript beside the name.",
+      default: "true",
+    },
+    class: {
+      type: "string",
+      description: "Additional class on the outer element.",
+    },
+  }}
+/>
+
+**Required:** `items`, an array of `{ title: string, body: string }`. Optional: `numbered` (default `true`), `class`. Item bodies are strings, not nested MDX slots.
+
+## Usage
+
+```mdx
+<ValueGrid
+  numbered={false}
+  items={[
+    { title: "Clarity", body: "Make the important thing easy to find." },
+    { title: "Care", body: "Consider the person using the work." },
+  ]}
+/>
+```
+
+Return to the [component overview](/components) for the full catalog and MDX conventions.

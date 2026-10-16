@@ -1,0 +1,46 @@
+---
+title: FontWeights
+description: Props, defaults, and an MDX usage example for FontWeights.
+sidebar:
+  order: 20
+---
+
+`FontWeights` is available by name in Brandtree content MDX; no import is needed. Pass any required `brand`, `ui`, or `dir` props explicitly from `props.brand`, `props.ui`, and `props.dir`; the generated route supplies these values to the document. The optional `class` prop adds a class to the outer element; other HTML attributes are not forwarded automatically.
+
+## Preview
+
+<ComponentDemo name="font-weights" />
+
+## Props and behavior
+
+<TypeTable
+  type={{
+    brand: {
+      type: "BrandConfig",
+      required: true,
+      description: "Resolved brand for the current locale. Pass props.brand.",
+    },
+    font: {
+      type: '"display" | "text"',
+      default: '"display"',
+    },
+    sample: {
+      type: "string",
+      description: "Text rendered at each weight.",
+    },
+    class: {
+      type: "string",
+      description: "Additional class on the outer element.",
+    },
+  }}
+/>
+
+**Required:** `brand`. Optional: `font` (`"display"`, default, or `"text"`), `sample`, `class`. Shows every configured `brand.typography.weights` entry, including italic entries. Without `sample`, each row uses the weight's configured name. The requested font weight must also be available in your loaded font files.
+
+## Usage
+
+```mdx
+<FontWeights brand={props.brand} font="text" sample="Words with purpose" />
+```
+
+Return to the [component overview](/components) for the full catalog and MDX conventions.

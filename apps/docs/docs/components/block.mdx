@@ -1,0 +1,56 @@
+---
+title: Block
+description: Props, defaults, and an MDX usage example for Block.
+sidebar:
+  order: 1
+---
+
+`Block` is available by name in Brandtree content MDX; no import is needed. Pass any required `brand`, `ui`, or `dir` props explicitly from `props.brand`, `props.ui`, and `props.dir`; the generated route supplies these values to the document. The optional `class` prop adds a class to the outer element; other HTML attributes are not forwarded automatically.
+
+## Preview
+
+<ComponentDemo name="block" />
+
+## Props and behavior
+
+<TypeTable
+  type={{
+    id: {
+      type: "string",
+    },
+    class: {
+      type: "string",
+      description: "Additional class on the outer element.",
+    },
+  }}
+/>
+
+A split layout with copy beside a specimen. Optional props: `id`, `class`. Its named slots are `copy`, `content`, and optional `note`. It has **no default slot**: ordinary children without a named slot will not appear.
+
+Use a `<Fragment slot="…">` to group Markdown without adding an HTML wrapper. The slot name tells Astro which region receives the children. This differs from writing prose between `<Callout>` tags, where the default slot receives everything. See [Astro named slots](https://docs.astro.build/en/basics/astro-components/#named-slots).
+
+## Usage
+
+```mdx
+<Block id="primary-logo">
+  <Fragment slot="copy">
+
+## Primary logo
+
+Use the supplied artwork whenever the full name fits.
+
+  </Fragment>
+  <Fragment slot="note">
+
+Never recreate the logotype using live text.
+
+  </Fragment>
+  <Fragment slot="content">
+    <Logo brand={props.brand} width="66%" />
+  </Fragment>
+</Block>
+```
+
+At wider viewports the component uses a side column and flexible content column; on smaller screens it stacks. Normal headings and paragraphs remain valid outside a `Block`.
+
+Return to the [component overview](/components) for the full catalog and MDX conventions.
