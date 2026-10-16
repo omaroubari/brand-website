@@ -16,8 +16,9 @@ pnpm dev
 ```
 
 The root development, build, and deployment scripts build the framework package
-before invoking the site. Direct `pnpm --filter web ...` commands require
-`pnpm --filter brandtree build` first.
+before invoking the site. The committed CLI launcher also lets workspace consumers
+run direct `pnpm --filter web ...` commands immediately after installation: it
+prefers the compiled CLI when available and otherwise loads the TypeScript source.
 
 | Command        | Action                                                                             |
 | -------------- | ---------------------------------------------------------------------------------- |
@@ -379,6 +380,23 @@ social cards in `dist/`. It can be hosted on any static host.
 For Cloudflare, set the deployment name in [`wrangler.jsonc`](wrangler.jsonc),
 then run `pnpm deploy` from the repository root. Cloudflare serves `dist/`
 directly; this app does not deploy an Astro server entry point or an asset binding.
+
+For Git-connected Cloudflare Workers Builds, use these dashboard settings:
+
+| Setting | Value |
+| --- | --- |
+| Root directory | Repository root (`/`) |
+| Build command | `pnpm --filter brandtree build && pnpm --filter web build` |
+| Deploy command | `pnpm --filter web exec wrangler deploy` |
+
+The two commands build the framework and site separately, in order, so deployment
+uses the freshly compiled CLI. The committed `bin/brandtree.mjs` launcher lets pnpm
+create the executable link during installation, before compilation. It prefers
+`dist/cli/index.js` when available and falls back to `src/cli/index.ts` for workspace
+usage before the framework has been built.
+The deploy command then uploads the site's existing `dist/` output using its
+Wrangler configuration.
+
 A dry run checks the deployment configuration without publishing:
 
 ```sh
