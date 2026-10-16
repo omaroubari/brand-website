@@ -79,8 +79,7 @@ Every swatch requires `id`, `name`, and `color`. Optional fields are:
 | `on`           | Explicit foreground reference for the swatch    |
 
 Print values are authored specifications; they are not a substitute for print
-proofing. Keep extended usage prose in MDX. See [components](/components) for
-palette and contrast displays.
+proofing. Keep extended usage prose in MDX.
 
 <Callout type="warning" title="Keep references valid">
   Renaming a family also changes references such as `slate-700`. Update
@@ -88,8 +87,15 @@ palette and contrast displays.
   config.
 </Callout>
 
+## Present your colors
+
+With the palette configured, add exhibits to your MDX pages so readers can
+inspect approved swatches, explore shade scales, and compare contrast. The color
+component catalog helps you choose the right display and shows the props each
+component needs.
+
 <CardGroup cols={1}>
-  <Card title="ContrastMatrix" href="/components/contrast-matrix">
-    Compare your configured color pairs in a live contrast exhibit.
+  <Card title="Color components" href="/components#color">
+    Browse ColorPalette, ColorSwatch, ColorScale, and ContrastMatrix.
   </Card>
 </CardGroup>
