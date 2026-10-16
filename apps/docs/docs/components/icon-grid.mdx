@@ -1,0 +1,61 @@
+---
+title: IconGrid
+description: Props, defaults, and an MDX usage example for IconGrid.
+sidebar:
+  order: 25
+---
+
+`IconGrid` is available by name in Brandtree content MDX; no import is needed. Pass any required `brand`, `ui`, or `dir` props explicitly from `props.brand`, `props.ui`, and `props.dir`; the generated route supplies these values to the document. The optional `class` prop adds a class to the outer element; other HTML attributes are not forwarded automatically.
+
+## Preview
+
+<ComponentDemo name="icon-grid" />
+
+## Props and behavior
+
+<TypeTable
+  type={{
+    icons: {
+      type: "Array<{ name: string; svg: string }>",
+      required: true,
+      description: "Explicit named SVG data supplied by the author.",
+    },
+    only: {
+      type: "string[]",
+      description: "Restrict and order by names in the supplied icon set.",
+    },
+    unit: {
+      type: "number",
+      description:
+        "Grid the icons are drawn on, shown as an overlay on the first tile.",
+      default: "24",
+    },
+    version: {
+      type: "string",
+      description: "Version label printed under each icon.",
+      default: '"v1.0"',
+    },
+    cols: {
+      type: "number",
+      default: "4",
+    },
+    class: {
+      type: "string",
+      description: "Additional class on the outer element.",
+    },
+  }}
+/>
+
+**Required:** `icons`, an array of `{ name: string, svg: string }`. Optional: `only` (names in display order), `unit` (default `24`, overlay grid), `version` (default `"v1.0"`), `cols` (default `4`), `class`.
+
+## Usage
+
+```mdx
+import { icons } from "../../assets/icons/index.ts";
+
+<IconGrid icons={icons} unit={24} cols={4} version="v1.0" />
+```
+
+Supply SVG source strings from your own asset module; the component does not discover files. Without `only`, names sort alphabetically. Unknown names in `only` throw an error. SVG markup is rendered as HTML, so use trusted project assets. Adapt the import path to the location of your MDX file.
+
+Return to the [component overview](/components) for the full catalog and MDX conventions.

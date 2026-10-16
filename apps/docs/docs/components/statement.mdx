@@ -1,0 +1,39 @@
+---
+title: Statement
+description: Props, defaults, and an MDX usage example for Statement.
+sidebar:
+  order: 7
+---
+
+`Statement` is available by name in Brandtree content MDX; no import is needed. Pass any required `brand`, `ui`, or `dir` props explicitly from `props.brand`, `props.ui`, and `props.dir`; the generated route supplies these values to the document. The optional `class` prop adds a class to the outer element; other HTML attributes are not forwarded automatically.
+
+## Preview
+
+<ComponentDemo name="statement" />
+
+## Props and behavior
+
+<TypeTable
+  type={{
+    class: {
+      type: "string",
+      description: "Additional class on the outer element.",
+    },
+  }}
+/>
+
+A wrapper for statement prose. Optional: `class`. Its default slot supports one or more Markdown paragraphs. It does not accept a `text` prop or currently impose an oversized font treatment; typography follows its context and stylesheet.
+
+## Usage
+
+```mdx
+<Statement>
+
+We help people recognize what matters.
+
+Every touchpoint should make that promise clear.
+
+</Statement>
+```
+
+Return to the [component overview](/components) for the full catalog and MDX conventions.

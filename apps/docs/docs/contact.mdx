@@ -1,0 +1,51 @@
+---
+title: Contact and social profiles
+description: Provide contact details and official social accounts.
+---
+
+Use `brand.contact` for official channels your guidelines can display. The
+object is required, but `{}` is valid when no contact information is public.
+
+Replace `brand.contact` in `brandtree.config.ts` with this partial config example:
+
+```ts title="brandtree.config.ts — brand.contact"
+contact: {
+  email: "brand@example.com",
+  website: "https://example.com",
+  phone: "+44 20 7946 0000",
+  address: ["123 Example Street", "London"],
+  socials: [{
+    id: "instagram",
+    label: "Instagram",
+    handle: "@acme",
+    url: "https://instagram.com/acme",
+  }],
+},
+```
+
+## Contact fields
+
+<TypeTable
+  type={{
+    email: { type: "string", description: "Public contact email." },
+    website: {
+      type: "string",
+      description:
+        "Official brand website; distinct from brand.meta.url, the guidelines site origin.",
+    },
+    phone: { type: "string", description: "Reader-facing phone number." },
+    address: {
+      type: "string[]",
+      description: "Address lines, in display order.",
+    },
+    socials: {
+      type: "Social[]",
+      description:
+        "Official accounts. Each needs a unique id plus label, handle, and url.",
+    },
+  }}
+/>
+
+Use a stable social `id` even if the account's displayed label changes.
+[Localization](/localization) supports translated addresses and social labels;
+account URLs and handles stay canonical.

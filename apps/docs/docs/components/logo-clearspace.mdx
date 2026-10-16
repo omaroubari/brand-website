@@ -1,0 +1,49 @@
+---
+title: LogoClearspace
+description: Props, defaults, and an MDX usage example for LogoClearspace.
+sidebar:
+  order: 9
+---
+
+`LogoClearspace` is available by name in Brandtree content MDX; no import is needed. Pass any required `brand`, `ui`, or `dir` props explicitly from `props.brand`, `props.ui`, and `props.dir`; the generated route supplies these values to the document. The optional `class` prop adds a class to the outer element; other HTML attributes are not forwarded automatically.
+
+This component requires `brand`. Artwork, aspect ratios, alt text, clearspace, and approved colorways come from `brand.logo`; set them in configuration rather than copying asset URLs into every page. Wherever supported, `mark` is `"logotype"` (default) or `"brandmark"`.
+
+## Preview
+
+<ComponentDemo name="logo-clearspace" />
+
+## Props and behavior
+
+<TypeTable
+  type={{
+    brand: {
+      type: "BrandConfig",
+      required: true,
+      description: "Resolved brand for the current locale. Pass props.brand.",
+    },
+    ui: {
+      type: "UIStrings",
+      required: true,
+      description: "Resolved interface strings. Pass props.ui.",
+    },
+    mark: {
+      type: '"logotype" | "brandmark"',
+      default: '"logotype"',
+    },
+    class: {
+      type: "string",
+      description: "Additional class on the outer element.",
+    },
+  }}
+/>
+
+**Also required:** `ui`. Optional: `mark`, `class`. Draws the safe-area measurement using `brand.logo.clearspace.ratio` and `.unit`; it does not accept a per-instance spacing override.
+
+## Usage
+
+```mdx
+<LogoClearspace brand={props.brand} ui={props.ui} mark="brandmark" />
+```
+
+Return to the [component overview](/components) for the full catalog and MDX conventions.

@@ -1,0 +1,259 @@
+---
+title: Localization
+description: Publish translated guidelines with locale routes, fallback pages, localized brand labels, and RTL content.
+sidebar:
+  order: 7
+---
+
+Localization has three parts: translate page prose in MDX, translate brand
+labels in config, and configure each language's URL and text direction.
+Brandtree resolves these together when it generates the site.
+
+<Panel title="Two parts of configuration">
+  Top-level `config.i18n` enables languages, routes, and text direction.
+  `config.brand.localeOverrides` supplies localized brand labels and typography
+  for those languages. Overrides require `i18n` and must use configured locale
+  codes. Translate page prose separately in MDX.
+</Panel>
+
+## Enable languages
+
+Add this top-level block to the config object in `brandtree.config.ts`, alongside
+your existing `brand`:
+
+```ts
+i18n: {
+  defaultLocale: "en",
+  locales: [
+    { code: "en", label: "English", dir: "ltr" },
+    { code: "ar", label: "العربية", dir: "rtl" },
+  ],
+  parser: "dir",
+  hideDefaultLocalePrefix: true,
+  fallbackLocale: "en",
+},
+```
+
+Without an `i18n` block, the site has a single language. When enabling it,
+`locales` must contain at least one entry and include the `defaultLocale` code.
+An explicit `fallbackLocale` must also be configured in that list.
+
+<TypeTable
+  type={{
+    defaultLocale: {
+      type: "string",
+      default: '"en"',
+      description:
+        "Language assigned to files without explicit locale placement. Must appear in locales.",
+    },
+    locales: {
+      type: "{ code: string; label: string; dir?: 'ltr' | 'rtl'; style?: string }[]",
+      required: true,
+      description:
+        "At least one language. Code must be nonempty; direction defaults to ltr. Style describes dialect or editorial register, but there is no automatic translation command.",
+    },
+    parser: {
+      type: '"dir" | "dot"',
+      default: '"dir"',
+      description: "Use locale directories or filename suffixes.",
+    },
+    hideDefaultLocalePrefix: {
+      type: "boolean",
+      default: "true",
+      description: "Omit the URL language prefix for default-language pages.",
+    },
+    fallbackLocale: {
+      type: "string | null",
+      description:
+        "Language used for missing translations. Defaults to defaultLocale. Set null to disable fallback; an explicit code must appear in locales.",
+    },
+  }}
+/>
+
+## Directory layout
+
+With `parser: "dir"`, place translations in a top-level directory matching the
+locale code. The default language may live at the root:
+
+```text
+content/
+├── 01-the-brand.mdx
+├── 03-logo/
+│   ├── index.mdx
+│   └── 01-logotype.mdx
+└── ar/
+    ├── 01-the-brand.mdx
+    └── 03-logo/
+        ├── index.mdx
+        └── 01-logotype.mdx
+```
+
+The matching pages publish at `/the-brand` and `/ar/the-brand`, and at
+`/logo/logotype` and `/ar/logo/logotype`. The locale directory does not become a
+sidebar group. Explicit `en/` directories are also accepted for default-language
+content; choose one placement per page to avoid duplicate routes.
+
+Keep the meaningful file and folder paths aligned across translations. That
+source-derived identity lets the language switcher pair pages even when a
+translated page uses a localized `slug`:
+
+```yaml
+---
+title: العلامة التجارية
+description: مبادئ هويتنا وطريقة استخدامها.
+slug: العلامة
+---
+```
+
+Saved as `content/ar/01-the-brand.mdx`, this page publishes at `/ar/العلامة`
+and stays paired with `content/01-the-brand.mdx`. Slugs replace only the last
+segment and must follow the rules in [Writing pages](/authoring).
+
+Setting `hideDefaultLocalePrefix: false` prefixes all languages, giving routes
+such as `/en/the-brand` and `/ar/the-brand`. A site `basePath` comes first:
+`/guidelines/ar/the-brand`.
+
+## Filename suffix layout
+
+With `parser: "dot"`, translations sit beside the original:
+
+```text
+content/
+├── 01-the-brand.mdx
+├── 01-the-brand.ar.mdx
+└── 03-logo/
+    ├── 01-logotype.mdx
+    └── 01-logotype.ar.mdx
+```
+
+An explicit default suffix such as `01-the-brand.en.mdx` also works. Locale
+matching is case-insensitive for both parsers; generated URLs use the code's
+configured casing. Only configured codes are recognized as locales. With the
+dot parser, folder metadata is shared between the adjacent translations.
+
+## Share a page across languages
+
+A `.$.` filename publishes the same source in every configured language:
+
+```text
+content/
+└── downloads.$.mdx
+```
+
+It creates `/downloads` and `/ar/downloads` in the example configuration. The
+prose stays identical, while components receive the current locale's brand and
+UI props. Use this for content that truly needs to be the same everywhere.
+Avoid also creating a locale-specific page with the same route; shared pages
+are published records, not fallback templates to override.
+
+## Missing translations and fallback
+
+By default, Brandtree copies missing pages from the default language into the
+target locale's route tree. A missing Arabic logo page can therefore exist at
+`/ar/logo/logotype` while rendering the English source. It appears in that
+locale's sidebar and is marked as a fallback for the language switcher.
+
+The surrounding interface uses the requested language and direction. The page
+body uses the fallback language's direction. Actual translated pages are used
+for alternate-language metadata; fallback copies are excluded from that set.
+
+Fallback fills gaps from one configured language. It is not automatic
+translation, and it does not follow a chain of fallback languages. Changing
+`fallbackLocale` changes which source language fills those gaps.
+
+With `fallbackLocale: null`, only authored or shared pages exist in a locale.
+Review every language-switcher link: when a translation is absent, the switcher
+can still point to the expected localized path, which may not exist.
+
+## Translate sidebar groups
+
+Page titles and `sidebar.label` belong in the translated page's frontmatter.
+For folder labels, use `meta.ts` inside the locale directory:
+
+```ts
+// content/ar/03-logo/meta.ts
+import { defineMeta } from "brandtree";
+
+export default defineMeta({
+  title: "الشعار",
+  order: 3,
+  pages: ["index", "logotype", "brandmark"],
+});
+```
+
+For defaults that apply to every locale, use `meta.$.ts` in the corresponding
+locale-free folder, such as `content/03-logo/meta.$.ts`. Locale-specific
+metadata overrides shared fields; unspecified fields retain their shared
+values. For directory-based sites, use shared metadata for common ordering
+instead of assuming a root-level `meta.ts` applies to every language.
+See [Folder metadata](/folder-metadata) for all supported fields.
+
+## Translate structured brand labels
+
+Use `brand.localeOverrides` for localized names and explanations. The canonical
+brand retains the shared colors, dimensions, URLs, and artwork paths. For
+example, add this inside your existing `brand` object:
+
+```ts
+localeOverrides: {
+  ar: {
+    meta: {
+      documentTitle: "دليل الهوية",
+      description: "مبادئ الهوية البصرية وطريقة استخدامها.",
+    },
+    logo: {
+      logotype: { altText: "شعار العلامة" },
+      clearspace: { unit: "ارتفاع العلامة" },
+    },
+  },
+},
+```
+
+The full override surface is:
+
+| Block                   | Localizable fields                                                           |
+| ----------------------- | ---------------------------------------------------------------------------- |
+| `meta`                  | `name`, `legalName`, `tagline`, `documentTitle`, `description`               |
+| `colors.palette[]`      | Match `id`; override `name`.                                                 |
+| `colors.swatches[]`     | Match `id`; override `name`, `usage`.                                        |
+| `typography`            | `display`, `text`, `mono` font-family strings.                               |
+| `typography.families[]` | Match `id` (`display`, `text`, `mono`); override `name`, `note`.             |
+| `typography.scale[]`    | Match `id`; override `name`, `role`, `sample`.                               |
+| `typography.weights[]`  | Match numeric `weight`; override `name`.                                     |
+| `logo`                  | `logotype.altText`, `brandmark.altText`, `pronunciation`, `clearspace.unit`. |
+| `logo.colorways[]`      | Match `id`; override `label`.                                                |
+| `contact`               | `address` (an array of lines).                                               |
+| `contact.socials[]`     | Match `id`; override `label`.                                                |
+| `downloads[]`           | Match `id`; override `label`, `note`.                                        |
+
+Collection overrides match canonical IDs or weights, rather than replacing the
+collection or changing its order. Unknown IDs and weights are rejected. Use
+configured locale codes as override keys; an override requires `i18n` and a key
+present in `i18n.locales`.
+
+Typography family overrides can select script-appropriate fonts, but the font
+files or providers still need to be configured. Follow
+[Fonts](/fonts) for registration and language coverage. Font-family names alone
+do not load files.
+
+## Interface labels and RTL
+
+Brandtree ships English interface defaults and an Arabic language pack.
+Regional Arabic codes can use the base Arabic pack. Resolution starts with
+English, then applies the default locale's pack, then the requested locale's
+pack. Other languages do not currently have built-in packs. There is no
+supported `i18n.ui` option for custom string overrides in the current schema.
+
+Setting `dir: "rtl"` configures the document direction. Pass the supplied
+`props.dir` and localized props to components that accept them. In your own
+styles, prefer CSS logical properties such as `margin-inline-start` over
+`margin-left`; they follow the reader's writing direction. Test mixed content
+such as Arabic text, Latin URLs, numbers, and logo artwork in the browser.
+
+Links written in MDX are not automatically translated. Use the target locale's
+published route explicitly, including any base path and localized slug.
+Review all languages in development and build before deploying through
+[Build and deployment](/publishing). Astro's
+[internationalization guide](https://docs.astro.build/en/guides/internationalization/)
+explains the underlying locale concepts; Brandtree owns the route generation
+and fallback behavior described here.

@@ -1,0 +1,62 @@
+---
+title: Glyphs
+description: Props, defaults, and an MDX usage example for Glyphs.
+sidebar:
+  order: 21
+---
+
+`Glyphs` is available by name in Brandtree content MDX; no import is needed. Pass any required `brand`, `ui`, or `dir` props explicitly from `props.brand`, `props.ui`, and `props.dir`; the generated route supplies these values to the document. The optional `class` prop adds a class to the outer element; other HTML attributes are not forwarded automatically.
+
+## Preview
+
+<ComponentDemo name="glyphs" />
+
+## Props and behavior
+
+<TypeTable
+  type={{
+    ui: {
+      type: "UIStrings",
+      required: true,
+      description: "Resolved interface strings. Pass props.ui.",
+    },
+    dir: {
+      type: '"ltr" | "rtl"',
+      required: true,
+      description: "Current text direction. Pass props.dir.",
+    },
+    font: {
+      type: '"display" | "text"',
+      default: '"display"',
+    },
+    weight: {
+      type: "number",
+      default: "400",
+    },
+    sets: {
+      type: "Array<{ label: string; chars: string }>",
+      description: "Character sets to print.",
+    },
+    class: {
+      type: "string",
+      description: "Additional class on the outer element.",
+    },
+  }}
+/>
+
+**Required:** `ui`, `dir` (`"ltr"` or `"rtl"`). Optional: `font` (`"display"`, default, or `"text"`), `weight` (default `400`), `sets` (array of `{ label: string, chars: string }`), `class`.
+
+## Usage
+
+```mdx
+<Glyphs ui={props.ui} dir={props.dir} font="display" />
+<Glyphs
+  ui={props.ui}
+  dir={props.dir}
+  sets={[{ label: "Numerals", chars: "0123456789" }]}
+/>
+```
+
+Without custom sets, left-to-right content gets Latin uppercase, lowercase, numerals, and punctuation. Right-to-left content gets Arabic letters, Arabic and Latin numerals, and punctuation. Direction chooses these defaults; it does not load a font or prove that the font supports those characters.
+
+Return to the [component overview](/components) for the full catalog and MDX conventions.

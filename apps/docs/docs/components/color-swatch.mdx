@@ -1,0 +1,56 @@
+---
+title: ColorSwatch
+description: Props, defaults, and an MDX usage example for ColorSwatch.
+sidebar:
+  order: 15
+---
+
+`ColorSwatch` is available by name in Brandtree content MDX; no import is needed. Pass any required `brand`, `ui`, or `dir` props explicitly from `props.brand`, `props.ui`, and `props.dir`; the generated route supplies these values to the document. This component has no `class` prop.
+
+This component requires both `brand` and `ui`. Named swatches (`brand.colors.swatches`) are editorial selections; palette families (`brand.colors.palette`) contain the shade scales. Their IDs serve different selectors.
+
+## Preview
+
+<ComponentDemo name="color-swatch" />
+
+## Props and behavior
+
+<TypeTable
+  type={{
+    brand: {
+      type: "BrandConfig",
+      required: true,
+      description: "Resolved brand for the current locale. Pass props.brand.",
+    },
+    ui: {
+      type: "UIStrings",
+      required: true,
+      description: "Resolved interface strings. Pass props.ui.",
+    },
+    color: {
+      type: "BrandSwatch",
+      required: true,
+    },
+    print: {
+      type: "boolean",
+      default: "true",
+    },
+  }}
+/>
+
+**Also required:** `color` (a configured `BrandSwatch` object, not its ID). Optional: `print` (default `true`). No `class` prop. Resolves the swatch by ID against the localized brand where available.
+
+## Usage
+
+```mdx
+<ColorSwatch
+  brand={props.brand}
+  ui={props.ui}
+  color={props.brand.colors.swatches[0]}
+  print={false}
+/>
+```
+
+This example requires at least one swatch. Prefer selecting an existing configured swatch over creating an inline object with duplicate brand values.
+
+Return to the [component overview](/components) for the full catalog and MDX conventions.

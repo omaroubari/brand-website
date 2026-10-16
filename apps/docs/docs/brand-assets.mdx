@@ -1,0 +1,122 @@
+---
+title: Brand assets
+description: Organize approved brand resources and register downloadable packages.
+---
+
+Keep approved files in your project and register shared downloads under
+`brand.downloads`. A download declaration describes an existing file; it does
+not create a ZIP or export artwork.
+
+<Steps>
+  <Step title="Prepare the files">
+    Export approved artwork and prepare archives before linking them. Put public
+    resources under `public/brand/` so paths such as `/brand/logo-pack.zip`
+    work.
+  </Step>
+  <Step title="Register shared downloads">
+    Add the entries below to `brand.downloads` in `brandtree.config.ts`.
+  </Step>
+  <Step title="Present the downloads">
+    Use a Brandtree download component on your guidelines pages. Check each link
+    and update display metadata whenever you replace an archive.
+  </Step>
+</Steps>
+
+## File organization
+
+<Tree>
+  <Tree.Folder name="public" defaultOpen>
+    <Tree.Folder name="brand" defaultOpen>
+      <Tree.File name="logotype-dark.svg" />
+      <Tree.File name="logotype-light.svg" />
+      <Tree.File name="mark-dark.svg" />
+      <Tree.File name="mark-light.svg" />
+      <Tree.File name="logo-pack.zip" />
+    </Tree.Folder>
+  </Tree.Folder>
+  <Tree.File name="brandtree.config.ts" />
+</Tree>
+
+## Config asset paths
+
+Config references distinguish public URLs from source files:
+
+| Form                                                                 | Resolves to                                           |
+| -------------------------------------------------------------------- | ----------------------------------------------------- |
+| `/brand/logo-pack.zip`                                               | `public/brand/logo-pack.zip` under the client project |
+| `./assets/fonts/BrandSans.woff2`                                     | A source file relative to the client project root     |
+| `file:///absolute/path/to/file`                                      | An explicit filesystem path                           |
+| `https://example.com/file.zip`, `//example.com/file.zip`, `#section` | Not checked as a local file                           |
+
+Use `/...` public URLs for logo and download links. Local font sources normally
+use `./...` paths; see [Fonts](/fonts). A source filesystem path is not a public
+browser URL. Bare paths such as `assets/logo.svg` are not accepted by the config
+asset checker.
+
+## Register downloads
+
+This replaces `brand.downloads`; retain the rest of your config.
+
+```ts title="brandtree.config.ts — brand.downloads"
+downloads: [{
+  id: "logo-pack",
+  label: "Logo pack",
+  href: "/brand/logo-pack.zip",
+  format: "ZIP",
+  size: "2.4 MB",
+  note: "Approved artwork in SVG and PDF.",
+}],
+```
+
+<TypeTable
+  type={{
+    id: {
+      type: "string",
+      required: true,
+      description: "Stable identifier, unique within downloads.",
+    },
+    label: {
+      type: "string",
+      required: true,
+      description: "Visible download name.",
+    },
+    href: {
+      type: "string",
+      required: true,
+      description: "URL of the prepared file.",
+    },
+    format: {
+      type: "string",
+      description: "Display label such as ZIP or PDF.",
+    },
+    size: { type: "string", description: "Display size, maintained manually." },
+    note: {
+      type: "string",
+      description: "Short explanation of the package contents.",
+    },
+  }}
+/>
+
+<Panel title="Shared resources and page media">
+  Register logos under [Logos](/logos) and shared download packages here. There
+  is no generic asset-registry field in the config. Use [Media](/media) for
+  inline images and file links inside individual MDX pages.
+</Panel>
+
+<Callout type="note" title="Publish approved resources">
+  Files in `public/` are publicly accessible. Keep editable source material and
+  licensed font files there only when you intend to distribute them.
+</Callout>
+
+## Check availability
+
+Brandtree checks configured logo artwork, favicon, download links, local font
+sources, and enabled social-card logo overrides. A path must resolve to a readable
+regular file. Failures produce `BRANDTREE_LOCAL_FILE_UNAVAILABLE` warnings that
+identify the original config field; fix that reference or restore the file.
+Remote URLs are not fetched by this check.
+
+Download links keep their authored `href` and use the browser's `download`
+attribute. A missing archive still needs to be fixed: validation does not create
+it or silently remove the link. Browsers may open cross-origin files rather than
+download them, depending on the host's response headers.

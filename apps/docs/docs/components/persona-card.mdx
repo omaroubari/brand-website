@@ -1,0 +1,59 @@
+---
+title: PersonaCard
+description: Props, defaults, and an MDX usage example for PersonaCard.
+sidebar:
+  order: 24
+---
+
+`PersonaCard` is available by name in Brandtree content MDX; no import is needed. Pass any required `brand`, `ui`, or `dir` props explicitly from `props.brand`, `props.ui`, and `props.dir`; the generated route supplies these values to the document. The optional `class` prop adds a class to the outer element; other HTML attributes are not forwarded automatically.
+
+## Preview
+
+<ComponentDemo name="persona-card" />
+
+## Props and behavior
+
+<TypeTable
+  type={{
+    ui: {
+      type: "UIStrings",
+      required: true,
+      description: "Resolved interface strings. Pass props.ui.",
+    },
+    name: {
+      type: "string",
+      required: true,
+    },
+    role: {
+      type: "string",
+      description: 'e.g. "Target audience 1 — founders of small companies".',
+    },
+    image: {
+      type: "ImageMetadata | string",
+    },
+    facts: {
+      type: "Array<{ term: string; value: string }>",
+      description: "Demographic rows shown under the name.",
+      default: "[]",
+    },
+    class: {
+      type: "string",
+      description: "Additional class on the outer element.",
+    },
+  }}
+/>
+
+**Required:** `ui`, `name`. Optional: `role`, `image` (imported image or URL string), `facts` (array of `{ term: string, value: string }`, default empty), `class`. The default slot holds notes. Missing images show a localized placeholder. Portrait images intentionally use empty alt text because the adjacent name identifies the person.
+
+## Usage
+
+```mdx
+<PersonaCard ui={props.ui} name="Maya" role="Independent founder"
+  facts={[{ term: "Needs", value: "A consistent identity across channels" }]}>
+
+Maya needs clear rules that a small team can apply without supervision.
+
+</PersonaCard>
+```
+
+Return to the [component overview](/components) for the full catalog and MDX conventions.

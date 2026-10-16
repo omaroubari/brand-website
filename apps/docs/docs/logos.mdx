@@ -1,0 +1,64 @@
+---
+title: Logos
+description: Configure artwork variants, clearspace, sizes, and colorways.
+---
+
+Store approved artwork files in your project's `public/` directory, then
+configure `brand.logo`. Supply separate files for light and dark surfaces so
+the same guidelines work in either theme.
+
+The following object replaces `brand.logo` in `brandtree.config.ts`.
+
+```ts
+logo: {
+  logotype: {
+    onLight: "/brand/logotype-dark.svg",
+    onDark: "/brand/logotype-light.svg",
+    aspect: 1200 / 260,
+    altText: "Acme",
+  },
+  brandmark: {
+    onLight: "/brand/mark-dark.svg",
+    onDark: "/brand/mark-light.svg",
+    aspect: 1,
+    altText: "Acme symbol",
+  },
+  favicon: "/favicon.svg",
+  pronunciation: "ACK • mee",
+  clearspace: { unit: "the height of the capital A", ratio: 0.25 },
+  minSize: { digital: "96 px wide", print: "20 mm wide" },
+  colorways: [
+    { id: "primary", fg: "black", bg: "white", label: "Primary" },
+    { id: "reversed", fg: "white", bg: "black", label: "Reversed" },
+  ],
+},
+```
+
+Both artwork objects require `onLight`, `onDark`, and numeric `aspect`
+(width divided by height); `altText` is optional. `clearspace`, `minSize`, and
+`colorways` are required. The clearspace ratio controls the diagram's visual
+padding; write the human explanation in `unit`. Digital and print minimum sizes
+are descriptive strings.
+
+Each colorway needs a unique `id` plus `fg` and `bg` palette references;
+`label` is optional. Keep the preferred pairing first. `favicon` and
+`pronunciation` are optional; the generated site otherwise references
+`/favicon.svg`. Export the appropriate artwork variants rather than relying on
+CSS to recolor an external SVG image. See [Brand assets](/brand-assets) for file placement.
+
+<Callout type="note" title="Artwork dimensions">
+  `aspect` is width divided by height. For a 1200 by 260 logotype, use `1200 /
+  260`; an incorrect ratio can distort its presentation.
+</Callout>
+
+<Panel title="Artwork and social cards">
+  Social cards can use the site logo or a separate local SVG. Configure the
+  generated image in [Social cards and SEO](/social-cards).
+</Panel>
+
+<CardGroup cols={1}>
+  <Card title="Logo components" href="/components#logo-system">
+    Turn your logo specifications into clearspace, colorway, sizing, and misuse
+    exhibits.
+  </Card>
+</CardGroup>

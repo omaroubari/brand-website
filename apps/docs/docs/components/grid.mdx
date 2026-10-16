@@ -1,0 +1,50 @@
+---
+title: Grid
+description: Props, defaults, and an MDX usage example for Grid.
+sidebar:
+  order: 2
+---
+
+`Grid` is available by name in Brandtree content MDX; no import is needed. Pass any required `brand`, `ui`, or `dir` props explicitly from `props.brand`, `props.ui`, and `props.dir`; the generated route supplies these values to the document. The optional `class` prop adds a class to the outer element; other HTML attributes are not forwarded automatically.
+
+## Preview
+
+<ComponentDemo name="grid" />
+
+## Props and behavior
+
+<TypeTable
+  type={{
+    cols: {
+      type: "number",
+      description: "Columns from the medium breakpoint up.",
+      default: "3",
+    },
+    colsSm: {
+      type: "number",
+      description: "Columns on small screens.",
+      default: "1",
+    },
+    gap: {
+      type: "string",
+      description: "Any CSS length, or a --space-* value.",
+    },
+    class: {
+      type: "string",
+      description: "Additional class on the outer element.",
+    },
+  }}
+/>
+
+Arrange children in a responsive grid. Optional props: `cols` (number, default `3`, medium screens upward), `colsSm` (number, default `1`), `gap` (CSS length; omitted uses `var(--space-m)`), `class`.
+
+## Usage
+
+```mdx
+<Grid cols={2} colsSm={1} gap="var(--space-l)">
+  <Figure ui={props.ui} caption="Front" />
+  <Figure ui={props.ui} caption="Back" />
+</Grid>
+```
+
+Return to the [component overview](/components) for the full catalog and MDX conventions.

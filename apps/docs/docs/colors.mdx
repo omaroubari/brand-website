@@ -1,0 +1,95 @@
+---
+title: Colors
+description: Define palette shades and select the colors your guidelines document.
+---
+
+Define actual color values once in `brand.colors.palette`, then refer to them
+by name in swatches, themes, and logo colorways.
+
+<Panel title="Palette, swatch, and role">
+  A palette contains the available colors. A swatch identifies an approved brand
+  color to show readers. A theme role assigns a color to an interface job.
+  Changing a palette shade updates every reference to it.
+</Panel>
+
+The example below replaces `brand.colors` in `brandtree.config.ts`.
+
+There are three layers to the color system:
+
+1. A **palette family** defines reusable shades.
+2. A **swatch** selects a shade to document as an official brand color.
+3. A **theme role** chooses a shade for a job in the website, such as a page
+   background or a text color.
+
+## Define every shade in a family
+
+Each family has a unique `id`, a reader-facing `name`, and all eleven shade stops:
+`50`, `100`, `200`, `300`, `400`, `500`, `600`, `700`, `800`, `900`, and `950`.
+These values are authored explicitly; Brandtree does not fill missing stops.
+
+```ts
+colors: {
+  palette: [{
+    id: "slate",
+    name: "Slate",
+    shades: {
+      50:  { space: "hex", value: "#f8fafc" },
+      100: { space: "hex", value: "#f1f5f9" },
+      200: { space: "hex", value: "#e2e8f0" },
+      300: { space: "hex", value: "#cbd5e1" },
+      400: { space: "hex", value: "#94a3b8" },
+      500: { space: "hex", value: "#64748b" },
+      600: { space: "hex", value: "#475569" },
+      700: { space: "hex", value: "#334155" },
+      800: { space: "hex", value: "#1e293b" },
+      900: { space: "hex", value: "#0f172a" },
+      950: { space: "hex", value: "#020617" },
+    },
+  }],
+  swatches: [{
+    id: "brand-slate",
+    name: "Brand Slate",
+    color: "slate-700",
+    category: "primary",
+    usage: "Headlines and solid brand backgrounds.",
+    on: "white",
+  }],
+},
+```
+
+A shade can instead use `{ space: "oklch", l: 0.55, c: 0.12, h: 250 }`, with
+optional `alpha`. Lightness is expressed on the 0–1 scale; hue is in degrees.
+Palette shades hold actual color values. Other color fields hold <Tooltip tip="A stable name that points to a value defined elsewhere in the config.">references</Tooltip>:
+`slate-700`, `black`, or `white`. The built-in `black` and `white` references do
+not need palette entries. A raw hex string in a reference field fails validation.
+Use stable lowercase, hyphenated family IDs because they also form CSS variable
+names.
+
+## Document selected colors
+
+Every swatch requires `id`, `name`, and `color`. Optional fields are:
+
+| Field          | Meaning                                         |
+| -------------- | ----------------------------------------------- |
+| `cmyk`         | Four-number tuple, for example `[0, 0, 0, 100]` |
+| `pantone`      | Print reference label                           |
+| `usage`        | Short usage guidance                            |
+| `category`     | `"primary"` or `"secondary"`                    |
+| `span`, `rows` | Swatch layout spans, each `1` or `2`            |
+| `on`           | Explicit foreground reference for the swatch    |
+
+Print values are authored specifications; they are not a substitute for print
+proofing. Keep extended usage prose in MDX. See [components](/components) for
+palette and contrast displays.
+
+<Callout type="warning" title="Keep references valid">
+  Renaming a family also changes references such as `slate-700`. Update
+  swatches, both theme schemes, and logo colorways together, then validate the
+  config.
+</Callout>
+
+<CardGroup cols={1}>
+  <Card title="ContrastMatrix" href="/components/contrast-matrix">
+    Compare your configured color pairs in a live contrast exhibit.
+  </Card>
+</CardGroup>

@@ -130,3 +130,11 @@ scanner work.
 ## Repository notes
 
 Within this repository, `pnpm dev` and `pnpm build` prepare the framework package before running the web app. `pnpm test` runs framework tests, and `pnpm check` runs framework and consumer type checks. Framework source lives in [`packages/brandtree`](packages/brandtree/).
+
+## Author documentation
+
+Run `pnpm docs:dev` to read the complete author guide at `http://localhost:4323`.
+It covers setup, configuration, MDX, navigation, components, assets, localization,
+customization, CLI commands, and publishing. Source pages live in
+[`apps/docs/docs/`](apps/docs/docs/); see the [docs app README](apps/docs/README.md)
+for maintenance and build commands.
