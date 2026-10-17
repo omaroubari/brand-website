@@ -1,0 +1,53 @@
+---
+import { brandStyleSheet } from "brandtree";
+import ColorInteractions from "./ColorInteractions";
+import { demoBrand, demoConfig, demoUI } from "./demo-data";
+import fontUrl from "../../../web/assets/fonts/BrandSans-Variable.ttf?url";
+
+interface Props {
+  colorInteractions?: boolean;
+}
+
+const { colorInteractions = false } = Astro.props;
+
+// The stylesheet is loaded once through examples.css. Keep preview setup out
+// of examples/ so Blume's Code tab shows the component usage, not the harness.
+const font = demoConfig.fonts[0];
+const fontCss = `@font-face {
+  font-family: ${JSON.stringify(font.name)};
+  src: url(${JSON.stringify(fontUrl)}) format('truetype');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+:root { ${font.cssVariable}: ${JSON.stringify(font.name)}, sans-serif; }`;
+---
+
+<style is:global set:html={brandStyleSheet(demoBrand) + fontCss}></style>
+<div class="preview-shell">
+  <slot />
+</div>
+{
+  colorInteractions && (
+    <ColorInteractions
+      labels={{
+        close: demoUI.nav.close,
+        copied: demoUI.actions.copied,
+        copyFailed: demoUI.actions.copyFailed,
+        colorCopied: demoUI.color.copied,
+      }}
+      client:only="react"
+    />
+  )
+}
+
+<style>
+  .preview-shell {
+    min-inline-size: 0;
+    inline-size: 100%;
+    overflow-x: auto;
+  }
+  .preview-shell > :global(*) {
+    min-inline-size: 0;
+  }
+</style>
