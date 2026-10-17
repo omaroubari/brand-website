@@ -1,0 +1,65 @@
+---
+title: Color Scale
+description: Display the published shade stops for each configured palette family.
+sidebar:
+  order: 16
+---
+
+import previewCode from "../../snippets/color-scale.mdx?raw";
+import variantCode from "../../snippets/color-scale-selected.mdx?raw";
+
+<ComponentPreview path="color-scale" code={previewCode} />
+
+## Usage
+
+Pass the current brand and interface strings to display all families from
+`brand.colors.palette`. Define the shade values in [Colors](/colors).
+
+```mdx
+<ColorScale brand={props.brand} ui={props.ui} />
+```
+
+## Examples
+
+### Select and order families
+
+Pass palette family IDs to `only` in display order. This example takes the first
+two configured families and reverses their order.
+
+<ComponentPreview path="color-scale-selected" code={variantCode} />
+
+## Selection behavior
+
+Family IDs come from `brand.colors.palette`, rather than the named swatches in
+`brand.colors.swatches`. An unknown family ID throws an error; `only={[]}`
+renders the shade headers without any family rows.
+
+Each row displays the eleven published stops from `50` through `950`. The
+component uses those configured values directly rather than generating a new
+ramp. Each shade is a copy button in the standard Brandtree runtime.
+
+## API reference
+
+<TypeTable
+  type={{
+    brand: {
+      type: "BrandConfig",
+      required: true,
+      description: "Resolved brand for the current locale. Pass props.brand.",
+    },
+    ui: {
+      type: "UIStrings",
+      required: true,
+      description: "Resolved interface strings. Pass props.ui.",
+    },
+    only: {
+      type: "string[]",
+      description:
+        "Limit and order shade families by id. Defaults to every configured scale.",
+    },
+    class: {
+      type: "string",
+      description: "Additional class on the outer element.",
+    },
+  }}
+/>

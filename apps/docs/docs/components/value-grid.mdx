@@ -1,0 +1,56 @@
+---
+title: Value Grid
+description: Present brand values as large headings paired with concise explanations.
+sidebar:
+  order: 23
+---
+
+import previewCode from "../../snippets/value-grid.mdx?raw";
+import example0 from "../../snippets/value-grid-unnumbered.mdx?raw";
+
+<ComponentPreview path="value-grid" code={previewCode} />
+
+## Usage
+
+Supply a title and plain-text explanation for each value. Values appear in the
+order you provide, with two-digit numbers beside their headings.
+
+```mdx
+<ValueGrid
+  items={[{ title: "Clarity", body: "Make the important thing easy to find." }]}
+/>
+```
+
+## Examples
+
+### Remove the visible numbering
+
+Hide the superscript numbers when the values should read as a set of equal principles.
+
+<ComponentPreview path="value-grid-unnumbered" code={example0} />
+
+## Content and layout
+
+`body` accepts plain text, not nested MDX. The component always uses an ordered
+list, even with visible numbering hidden. At `48rem` and above, each heading and
+explanation sit side by side; below that width they stack.
+
+## API reference
+
+<TypeTable
+  type={{
+    items: {
+      type: "Array<{ title: string; body: string }>",
+      required: true,
+    },
+    numbered: {
+      type: "boolean",
+      description: "Number each value, set as a superscript beside the name.",
+      default: "true",
+    },
+    class: {
+      type: "string",
+      description: "Additional class on the outer element.",
+    },
+  }}
+/>

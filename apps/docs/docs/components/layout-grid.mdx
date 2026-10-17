@@ -1,0 +1,82 @@
+---
+title: Layout Grid
+description: Illustrate a composition grid with columns, margins, gutters, and supporting specifications.
+sidebar:
+  order: 28
+---
+
+import previewCode from "../../snippets/layout-grid.mdx?raw";
+import example0 from "../../snippets/layout-grid-mobile.mdx?raw";
+
+<ComponentPreview path="layout-grid" code={previewCode} />
+
+## Usage
+
+Use `LayoutGrid` to document a layout specification. With no props, it draws a
+12-column canvas at a `16 / 9` aspect ratio.
+
+```mdx
+<LayoutGrid />
+```
+
+The default preview adds a label and specification row. This diagram describes
+a composition; to arrange actual page content, use [Grid](/components/grid).
+
+## Examples
+
+### Describe a mobile composition
+
+Use fewer columns and a portrait ratio to document a narrow canvas. Include the
+actual dimensions in `specs` so readers can reproduce the grid.
+
+<ComponentPreview path="layout-grid-mobile" code={example0} />
+
+## Diagram scale
+
+The drawing scales the stated margin to one quarter and the gutter to one half
+so the diagram stays readable. These values affect the drawing; they do not
+configure the website's layout. Add `specs` when the real dimensions need to
+appear as text below the diagram.
+
+Use positive whole numbers for columns and CSS lengths for margins and gutters.
+The component has no content slots.
+
+## API reference
+
+<TypeTable
+  type={{
+    columns: {
+      type: "number",
+      description: "Column count.",
+      default: "12",
+    },
+    gutter: {
+      type: "string",
+      description: "CSS length; drawn at half the stated gutter.",
+      default: '"30px"',
+    },
+    margin: {
+      type: "string",
+      description: "CSS length; drawn at one quarter of the stated margin.",
+      default: '"100px"',
+    },
+    ratio: {
+      type: "string",
+      description: "width / height of the canvas being described.",
+      default: '"16 / 9"',
+    },
+    label: {
+      type: "string",
+      description: 'e.g. "Desktop · 1440 px and up".',
+    },
+    specs: {
+      type: "Array<{ term: string; value: string }>",
+      description: "Rows of specs printed beneath the diagram.",
+      default: "[]",
+    },
+    class: {
+      type: "string",
+      description: "Additional class on the outer element.",
+    },
+  }}
+/>

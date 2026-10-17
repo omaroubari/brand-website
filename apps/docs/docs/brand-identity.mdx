@@ -1,0 +1,39 @@
+---
+title: Brand identity
+description: Set your brand name, document details, and public identity.
+---
+
+Keep the facts that identify your brand in `brand.meta`. Components can reuse
+these values without repeating a name or description in every MDX page.
+
+Replace `brand.meta` in `brandtree.config.ts` with the following object. Keep the
+other required brand sections from your starter.
+
+```ts
+meta: {
+  name: "Acme",
+  legalName: "Acme Design Ltd",
+  tagline: "Make useful things",
+  documentTitle: "Brand Guidelines",
+  version: "1.0",
+  year: 2026,
+  url: "https://brand.example.com",
+  description: "Acme's visual identity and practical usage guidance.",
+},
+```
+
+`name`, `documentTitle`, `version`, `year`, `url`, and `description` are required.
+`legalName` and `tagline` are optional. `url` is the site's production origin used
+by the generated Astro site and absolute metadata URLs; use the real public
+address before publishing. `version` is a brand-document label, not the package
+version. `year` is a number.
+
+<Panel title="One identity, several uses">
+  The public URL also affects canonical links and social previews. Set it to
+  your production origin, then follow [Build and deployment](/publishing) for
+  hosting and base paths. Translate names and descriptions through
+  [Localization](/localization), rather than duplicating the whole brand object.
+</Panel>
+
+Keep your brand story, mission, values, and voice in [MDX pages](/authoring).
+These are editorial guidelines, rather than dedicated schema fields.

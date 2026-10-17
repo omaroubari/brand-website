@@ -1,0 +1,128 @@
+---
+title: Quickstart
+description: Run the example, change your brand name, and publish your first page locally.
+---
+
+Start with the included English and Arabic example. By the end, you will have
+changed its brand name and added a page you can open in your browser.
+
+## Requirements
+
+Use Node.js **22.19 or newer** and pnpm **11.18.0** for this repository.
+Brandtree itself requires Node.js 22.12 or newer; the docs app raises the
+repository requirement to 22.19.
+
+<Callout type="info" title="Start from the source repository">
+
+Brandtree is a private alpha. There is no `brandtree init` command or supported
+public-registry installation for this framework yet.
+
+</Callout>
+
+## Create your first page
+
+<Steps titleSize="h3">
+  <Step title="Run the example">
+
+Fork or clone the repository, then run:
+
+```sh
+git clone https://github.com/omaroubari/brand-website.git
+cd brand-website
+pnpm install
+pnpm dev
+```
+
+Open the URL printed by the server, normally `http://localhost:4321`.
+The root command builds Brandtree and starts the example in `apps/web/`.
+
+  <Expandable title="Installing over a slow connection">
+
+Replace `pnpm install` with this command to reuse cached packages and reduce
+concurrent network requests:
+
+```sh
+pnpm install --prefer-offline --network-concurrency=4 --fetch-timeout=600000 --fetch-retries=5
+```
+
+  </Expandable>
+
+  </Step>
+  <Step title="Change the brand name">
+
+Open `apps/web/brandtree.config.ts`. Change `brand.meta.name` to `Acme` in the
+existing object. Preserve the other fields: the starter is a complete valid
+configuration, and its required sections are still needed.
+
+Save and check that the site reflects the new name.
+
+  <Panel title="Keep the example's languages for now">
+
+The starter includes English and Arabic. A localized name in
+`brand.localeOverrides` can override the shared name. Update that locale's
+`meta.name` too if you are viewing it. [Localization](/localization) explains
+how to configure or remove languages after this first walkthrough.
+
+  </Panel>
+
+  </Step>
+  <Step title="Add a page">
+
+Create `apps/web/content/en/11-handoff.mdx` with the complete contents below:
+
+```mdx
+---
+title: Brand handoff
+description: The files and contacts you need to use our identity.
+---
+
+## Before you start
+
+Use the supplied artwork and check the color and typography rules.
+
+<Callout ui={props.ui} title="Use the original files">
+  Avoid recreating the logo from a screenshot.
+</Callout>
+
+## Get the artwork
+
+Contact the brand team for the current release.
+```
+
+Visit `/en/handoff` on your local server. The page should appear in navigation.
+The `11-` prefix controls order; `handoff` supplies its URL segment.
+
+This example uses Brandtree's `Callout` inside your authored page. Its name is
+available automatically, and `props.ui` supplies the active interface labels.
+
+  </Step>
+  <Step title="Check your work">
+
+Stop the server with Ctrl+C, then run from the repository root:
+
+```sh
+pnpm check
+pnpm build
+```
+
+Your built brand website is in `apps/web/dist/`. Checking catches type errors;
+building creates the files you can deploy. Follow [Validation](/validation)
+for strict release checks and [Build and deployment](/publishing) to publish.
+
+  </Step>
+</Steps>
+
+## Make the example your own
+
+You now have a working site and an authored page. The rest of the starter still
+uses the sample brand's values. Follow the brand configuration guides to replace
+those shared values before writing the rest of your guidelines.
+
+<CardGroup cols={1}>
+  <Card title="Configure your brand" href="/brand-configuration" icon="palette">
+    Ready to replace the sample identity? Set your colors, typography, and
+    artwork.
+  </Card>
+</CardGroup>
+
+For a separate client project, see [Project structure](/project-structure#start-another-client-site).

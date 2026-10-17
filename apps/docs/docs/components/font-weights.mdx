@@ -1,0 +1,60 @@
+---
+title: Font Weights
+description: Compare the configured font weights and italics in a selected type family.
+sidebar:
+  order: 20
+---
+
+import previewCode from "../../snippets/font-weights.mdx?raw";
+import example0 from "../../snippets/font-weights-text.mdx?raw";
+
+<ComponentPreview path="font-weights" code={previewCode} />
+
+## Usage
+
+Pass the current brand to display each configured weight using its name as the
+sample text. Weights come from `brand.typography.weights`; see
+[Typography](/typography) for font setup.
+
+```mdx
+<FontWeights brand={props.brand} />
+```
+
+## Examples
+
+### Compare a consistent phrase
+
+Choose the text family and repeat the same phrase so changes in weight are easier to compare.
+
+<ComponentPreview path="font-weights-text" code={example0} />
+
+## Font availability
+
+Rows follow configuration order, including entries marked italic. The selected
+family must have the corresponding font weights and styles loaded for an accurate
+specimen; adding a configuration entry alone does not load a font file.
+
+## API reference
+
+<TypeTable
+  type={{
+    brand: {
+      type: "BrandConfig",
+      required: true,
+      description: "Resolved brand for the current locale. Pass props.brand.",
+    },
+    font: {
+      type: '"display" | "text"',
+      default: '"display"',
+    },
+    sample: {
+      type: "string",
+      description:
+        "Text rendered at each weight. Falls back to each configured weight name.",
+    },
+    class: {
+      type: "string",
+      description: "Additional class on the outer element.",
+    },
+  }}
+/>

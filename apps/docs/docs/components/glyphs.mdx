@@ -1,0 +1,73 @@
+---
+title: Glyphs
+description: Display character sets to document the letterforms, numerals, and punctuation of a type family.
+sidebar:
+  order: 21
+---
+
+import previewCode from "../../snippets/glyphs.mdx?raw";
+import example0 from "../../snippets/glyphs-numerals.mdx?raw";
+
+<ComponentPreview path="glyphs" code={previewCode} />
+
+## Usage
+
+Forward the current interface strings and text direction. The default character
+sets adapt to the content’s direction.
+
+```mdx
+<Glyphs ui={props.ui} dir={props.dir} />
+```
+
+## Examples
+
+### Focus on numerals
+
+Supply labeled character sets to replace the defaults. Use this for numerals, symbols, or characters relevant to your brand’s languages.
+
+<ComponentPreview path="glyphs-numerals" code={example0} />
+
+## Character sets and direction
+
+Without custom `sets`, left-to-right content gets Latin uppercase, lowercase,
+numerals, and punctuation. Right-to-left content gets Arabic letters, Arabic and
+Latin numerals, and punctuation. Custom sets replace the defaults entirely;
+`sets={[]}` renders no sets.
+
+Direction chooses these defaults; it does not load a font or prove that the font
+supports those characters. Configure and load the selected family through
+[Typography](/typography).
+
+## API reference
+
+<TypeTable
+  type={{
+    ui: {
+      type: "UIStrings",
+      required: true,
+      description: "Resolved interface strings. Pass props.ui.",
+    },
+    dir: {
+      type: '"ltr" | "rtl"',
+      required: true,
+      description: "Current text direction. Pass props.dir.",
+    },
+    font: {
+      type: '"display" | "text"',
+      default: '"display"',
+    },
+    weight: {
+      type: "number",
+      default: "400",
+    },
+    sets: {
+      type: "Array<{ label: string; chars: string }>",
+      description:
+        "Character sets to print. Defaults to direction-specific sets.",
+    },
+    class: {
+      type: "string",
+      description: "Additional class on the outer element.",
+    },
+  }}
+/>

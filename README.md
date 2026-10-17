@@ -52,14 +52,14 @@ for detailed authoring and ownership rules.
 Run the CLI from the consumer root containing `brandtree.config.ts`; it does not
 search parent directories. Brandtree supplies Astro and its integrations.
 
-| Command               | Action                                                      |
-| --------------------- | ----------------------------------------------------------- |
-| `brandtree dev`       | Generate the runtime and start the development server       |
-| `brandtree build`     | Regenerate the runtime and build the static site to `dist/` |
-| `brandtree check`     | Validate inputs and check types without a production build  |
+| Command               | Action                                                        |
+| --------------------- | ------------------------------------------------------------- |
+| `brandtree dev`       | Generate the runtime and start the development server         |
+| `brandtree build`     | Regenerate the runtime and build the static site to `dist/`   |
+| `brandtree check`     | Validate inputs and check types without a production build    |
 | `brandtree preview`   | Serve the existing production build through the generated app |
-| `brandtree --help`    | Show available commands                                     |
-| `brandtree --version` | Show the installed version                                  |
+| `brandtree --help`    | Show available commands                                       |
+| `brandtree --version` | Show the installed version                                    |
 
 Brandtree supplies Astro, React, integrations, styling, and check tooling.
 Dependencies imported by custom author code remain the author's responsibility:
@@ -111,3 +111,11 @@ scanner work.
 ## Repository notes
 
 Within this repository, `pnpm dev` and `pnpm build` prepare the framework package before running the web app. `pnpm test` runs framework tests, and `pnpm check` runs framework and consumer type checks. Framework source lives in [`packages/brandtree`](packages/brandtree/).
+
+## Author documentation
+
+Run `pnpm docs:dev` to read the complete author guide at `http://localhost:4323`.
+It covers setup, configuration, MDX, navigation, components, assets, localization,
+customization, CLI commands, and publishing. Source pages live in
+[`apps/docs/docs/`](apps/docs/docs/); see the [docs app README](apps/docs/README.md)
+for maintenance and build commands.

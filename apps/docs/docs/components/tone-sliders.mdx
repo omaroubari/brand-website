@@ -1,0 +1,43 @@
+---
+title: Tone Sliders
+description: Position your brand’s voice between pairs of opposing traits.
+sidebar:
+  order: 22
+---
+
+import previewCode from "../../snippets/tone-sliders.mdx?raw";
+
+<ComponentPreview path="tone-sliders" code={previewCode} />
+
+## Usage
+
+Supply one row per pair of traits. A position of `0` sits at the left label,
+`100` sits at the right label, and `50` sits in the middle.
+
+```mdx
+<ToneSliders items={[{ left: "Formal", right: "Conversational", at: 70 }]} />
+```
+
+## Reading the scale
+
+These markers communicate editorial positioning; they are static illustrations
+rather than draggable controls. Each track has an accessible text description of
+its labels and position. Keep `at` between `0` and `100`: the visual marker clamps
+out-of-range values, but the accessible description reports the supplied value.
+
+## API reference
+
+<TypeTable
+  type={{
+    items: {
+      type: "Array<{ left: string; right: string; at: number }>",
+      required: true,
+      description:
+        "Where the brand sits between each pair of opposites. at is 0–100: 0 pins the left word, 100 the right.",
+    },
+    class: {
+      type: "string",
+      description: "Additional class on the outer element.",
+    },
+  }}
+/>

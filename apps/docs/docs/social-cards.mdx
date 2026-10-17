@@ -1,0 +1,125 @@
+---
+title: Social cards and SEO
+description: Configure generated share images, page metadata, canonical URLs, and indexing.
+---
+
+Brandtree generates an Open Graph image for each page by default. These are
+static images used when someone shares a page. They draw on your brand's colors,
+logo, registered fonts, and localized metadata.
+
+## Set your production URL
+
+Set `brand.meta.url` in `brandtree.config.ts` to the production origin, such as
+`https://brand.example.com`. It supplies canonical URLs, alternate-language
+links, and absolute image URLs. See [Navigation](/navigation) if the site also
+needs a `basePath`.
+
+## Configure generated cards
+
+Add this top-level block to the existing config object in `brandtree.config.ts`.
+The sample values demonstrate overrides; replace them with your brand values:
+
+```ts brandtree.config.ts — top-level fields
+seo: {
+  og: {
+    enabled: true,
+    logo: "/brand/social-mark.svg",
+    eyebrow: "Acme Brand Guidelines",
+    description: "A shared identity for every touchpoint.",
+    site: "brand.example.com",
+    palette: {
+      background: "#ffffff",
+      foreground: "#111111",
+      accent: "#3366ff",
+    },
+  },
+},
+```
+
+The custom logo above is `public/brand/social-mark.svg`. Card logo assets must
+be local SVGs; the bundler does not fetch remote logos. Without an override,
+Brandtree uses `brand.logo.logotype.onDark` when it can bundle that SVG, with a
+default mark as fallback.
+
+<TypeTable
+  type={{
+    enabled: {
+      type: "boolean",
+      default: "true",
+      description:
+        "Generate per-page images. Explicit page SEO images still work when generation is disabled.",
+    },
+    logo: {
+      type: "string | false",
+      description:
+        "Local SVG path, or false to hide the mark. Defaults to the brand logotype's onDark source.",
+    },
+    eyebrow: {
+      type: "string | false",
+      description:
+        "Small label above the headline. Defaults to the localized brand document title. False hides it.",
+    },
+    description: {
+      type: "string | false",
+      description:
+        "Card subtitle override. Without an override, uses the page SEO description, page description, then localized brand description. False hides it.",
+    },
+    site: {
+      type: "string | false",
+      description:
+        "Footer text. Defaults to the host from brand.meta.url. False hides it.",
+    },
+    palette: {
+      type: "{ accent?: string; background?: string; border?: string; foreground?: string; muted?: string }",
+      description:
+        "CSS color strings for card layers. Defaults to the corresponding light theme roles; muted uses mutedForeground. These are colors, not palette reference IDs.",
+    },
+    titles: {
+      type: "Record<string, string>",
+      description:
+        "Accepted by the shared config schema for custom Astro route titles. The current Brandtree generator only emits content pages and locale covers, so it does not apply this map.",
+    },
+  }}
+/>
+
+<Callout type="info">
+  Fonts are registered in top-level `config.fonts` and selected through
+  `brand.typography`. Card rendering uses those resolved files with fallback if
+  a face cannot load. Follow [Fonts](/fonts) and check script coverage for every
+  locale; a successful fallback does not guarantee Arabic glyphs are available.
+</Callout>
+
+Invalid CSS colors can fail image rendering. Generated cards use light theme
+roles regardless of the reader's selected theme.
+
+## Override a page's metadata
+
+Add the relevant fields to that page's existing frontmatter:
+
+```yaml content/03-logo/index.mdx — frontmatter
+---
+title: Logos
+description: Choose the correct logo for each background.
+seo:
+  title: Acme logo guidelines
+  description: Official logo assets and usage rules.
+  image: /brand/logo-social.jpg
+---
+```
+
+`seo.title` also supplies the generated card headline. An explicit `seo.image`
+replaces card generation for that page. Put the matching image in
+`public/brand/` or use an absolute remote URL. Page-level image URLs are outside
+the config asset-readability checks, so verify them in the final output.
+
+Use `seo.canonical` for an explicit absolute canonical URL. Pages are indexable
+by default; `noindex: true` or `seo.noindex: true` emits crawler metadata.
+
+<Panel title="Indexing and private guidelines">
+  Noindex is a request to search engines. Use host-level authentication for
+  confidential guidelines that require restricted access.
+</Panel>
+
+See [Frontmatter](/frontmatter) for all page fields. Before release, inspect
+`dist/og/`, final metadata, and actual image URLs using the
+[Validation](/validation) workflow.

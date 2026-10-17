@@ -1,0 +1,45 @@
+---
+title: Statement
+description: Group the opening prose that expresses a brand promise or point of view.
+sidebar:
+  order: 7
+---
+
+import previewCode from "../../snippets/statement.mdx?raw";
+
+<ComponentPreview path="statement" code={previewCode} />
+
+## Usage
+
+Write one or more Markdown paragraphs in the default slot. Paragraph breaks add
+a full line of space between thoughts.
+
+```mdx
+<Statement>
+
+We help people recognize what matters.
+
+Every touchpoint should make that promise clear.
+
+</Statement>
+```
+
+## Typography behavior
+
+`Statement` inherits typography from its surrounding context; it currently does
+not apply an oversized font treatment. It renders a `div` so Markdown-generated
+paragraphs remain valid HTML. Supply the prose as children; there is no `text`
+prop.
+
+## API reference
+
+<TypeTable
+  type={{
+    class: {
+      type: "string",
+      description: "Additional class on the outer element.",
+    },
+  }}
+/>
+
+The default slot accepts prose and child components.

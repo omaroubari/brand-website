@@ -1,0 +1,87 @@
+---
+title: Color Palette
+description: Display your brand’s named color swatches with optional print values.
+sidebar:
+  order: 14
+---
+
+import previewCode from "../../snippets/color-palette.mdx?raw";
+import example0 from "../../snippets/color-palette-primary.mdx?raw";
+import example1 from "../../snippets/color-palette-selected.mdx?raw";
+import example2 from "../../snippets/color-palette-screen.mdx?raw";
+
+<ComponentPreview path="color-palette" code={previewCode} />
+
+## Usage
+
+Pass the current brand and interface strings to display every configured swatch.
+Define their names, categories, and color values in [Colors](/colors).
+
+```mdx
+<ColorPalette brand={props.brand} ui={props.ui} />
+```
+
+## Examples
+
+### Show primary colors
+
+Use `category` to show one configured group of swatches.
+
+<ComponentPreview path="color-palette-primary" code={example0} />
+
+### Select and order swatches
+
+Pass swatch IDs to `only` in the order you want them displayed. This example takes the first two configured swatches and reverses their order.
+
+<ComponentPreview path="color-palette-selected" code={example1} />
+
+### Hide print values
+
+Set `print={false}` for a simpler palette without the CMYK and RGB breakdowns.
+
+<ComponentPreview path="color-palette-screen" code={example2} />
+
+## Selection behavior
+
+Without a selector, the palette shows every entry in `brand.colors.swatches`.
+`only` takes precedence over `category`, even when both are provided. An unknown
+ID in `only` throws an error; a category with no matching swatches renders no swatches.
+
+These selectors use named swatch IDs. For shade families from
+`brand.colors.palette`, use [ColorScale](/components/color-scale).
+
+## API reference
+
+<TypeTable
+  type={{
+    brand: {
+      type: "BrandConfig",
+      required: true,
+      description: "Resolved brand for the current locale. Pass props.brand.",
+    },
+    ui: {
+      type: "UIStrings",
+      required: true,
+      description: "Resolved interface strings. Pass props.ui.",
+    },
+    only: {
+      type: "string[]",
+      description:
+        "Limit and order named swatches by id. Defaults to every configured swatch.",
+    },
+    category: {
+      type: '"primary" | "secondary"',
+      description:
+        "Limit the palette to a named group from the brand configuration.",
+    },
+    print: {
+      type: "boolean",
+      description: "Show CMYK / RGB breakdowns alongside the hex.",
+      default: "true",
+    },
+    class: {
+      type: "string",
+      description: "Additional class on the outer element.",
+    },
+  }}
+/>

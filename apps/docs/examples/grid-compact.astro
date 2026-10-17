@@ -1,0 +1,13 @@
+---
+import { Grid, Figure } from "brandtree/components";
+import PreviewShell from "../previews/PreviewShell.astro";
+import { demoUI as ui } from "../previews/brand";
+import { demoPhoto as photo } from "../previews/media";
+---
+
+<PreviewShell>
+  <Grid cols={2} colsSm={2} gap="var(--space-xs)">
+    <Figure ui={ui} src={photo} caption="Wide composition" ratio="3 / 2" />
+    <Figure ui={ui} src={photo} caption="Square crop" ratio="1 / 1" />
+  </Grid>
+</PreviewShell>

@@ -1,0 +1,61 @@
+---
+title: Spec List
+description: Present short specification terms and values in a readable description list.
+sidebar:
+  order: 6
+---
+
+import previewCode from "../../snippets/spec-list.mdx?raw";
+import example0 from "../../snippets/spec-list-inline.mdx?raw";
+
+<ComponentPreview path="spec-list" code={previewCode} />
+
+## Usage
+
+Supply terms and values in the order readers should encounter them.
+
+```mdx
+<SpecList
+  items={[
+    { term: "Format", value: "SVG" },
+    { term: "Use", value: "Digital artwork" },
+  ]}
+/>
+```
+
+Keep structured brand specifications in configuration and read them from
+`props.brand` when they describe configured assets or tokens.
+
+## Examples
+
+### Place short specifications side by side
+
+Use `inline` for a small set of compact values. Each term sits above its value.
+This layout does not wrap or switch back to rows at smaller widths, so prefer
+the stacked default for long values or many items.
+
+<ComponentPreview path="spec-list-inline" code={example0} />
+
+## API reference
+
+<TypeTable
+  type={{
+    items: {
+      type: "Array<{ term: string; value: string }>",
+      required: true,
+      description: "Key/value rows, in order.",
+    },
+    inline: {
+      type: "boolean",
+      description: "Lay the pairs out side by side instead of stacked.",
+      default: "false",
+    },
+    class: {
+      type: "string",
+      description: "Additional class on the outer element.",
+    },
+  }}
+/>
+
+Each item has a `term` and a `value`, both strings. Values render as text rather
+than markup. No content slot is rendered.

@@ -1,0 +1,62 @@
+---
+title: Callout
+description: Highlight an editorial note or a rule for using the brand correctly.
+sidebar:
+  order: 5
+---
+
+import previewCode from "../../snippets/callout.mdx?raw";
+import example0 from "../../snippets/callout-recommended.mdx?raw";
+
+<ComponentPreview path="callout" code={previewCode} />
+
+## Usage
+
+Pass the interface strings and put the explanation in the default slot. Without
+a title or tone, the heading uses the localized note label.
+
+```mdx
+<Callout ui={props.ui}>
+
+Use the supplied artwork for every application.
+
+</Callout>
+```
+
+The default preview adds a custom title and the `dont` tone for a prohibited use.
+
+## Examples
+
+### Mark a recommended use
+
+Use `tone="do"` for a positive rule. Omit `title` to keep the localized heading
+for that tone; a custom title replaces that heading rather than translating it.
+
+<ComponentPreview path="callout-recommended" code={example0} />
+
+## API reference
+
+<TypeTable
+  type={{
+    ui: {
+      type: "UIStrings",
+      required: true,
+      description: "Resolved interface strings. Pass props.ui.",
+    },
+    tone: {
+      type: '"note" | "do" | "dont"',
+      description: "Select the note, recommendation, or prohibition treatment.",
+      default: '"note"',
+    },
+    title: {
+      type: "string",
+      description: "Heading; defaults to the localized label for the tone.",
+    },
+    class: {
+      type: "string",
+      description: "Additional class on the outer element.",
+    },
+  }}
+/>
+
+The default slot accepts prose and child components.

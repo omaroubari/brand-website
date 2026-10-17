@@ -1,0 +1,93 @@
+---
+title: Figure
+description: Display an image in a consistent frame, or reserve space for artwork still in production.
+sidebar:
+  order: 4
+---
+
+import previewCode from "../../snippets/figure.mdx?raw";
+import example0 from "../../snippets/figure-placeholder.mdx?raw";
+
+<ComponentPreview path="figure" code={previewCode} />
+
+## Usage
+
+Import an image and pass the current interface strings. Supply meaningful alt
+text when the image conveys information; leave it empty for decorative artwork.
+
+```mdx
+import photo from "../assets/photography/photo-01.jpg";
+
+<Figure
+  ui={props.ui}
+  src={photo}
+  alt="A photograph demonstrating the brand's image treatment"
+/>
+```
+
+This import assumes a document at the content root. Use your own asset and adjust
+the path for nested or localized pages. Imported images use Astro's responsive
+image pipeline. A string `src`, such as a path under `public/`, produces an
+ordinary lazy-loaded image instead.
+
+## Examples
+
+### Reserve space for pending artwork
+
+Omit `src` while preparing a mockup. Set `ratio` to the intended shape and use
+`caption` to identify the planned application.
+
+<ComponentPreview path="figure-placeholder" code={example0} />
+
+## Image behavior
+
+`cover` fills the frame and can crop the image; `contain` keeps the whole image
+visible, as shown in the default preview. The default ratio applies to images
+and placeholders alike.
+
+An empty frame displays its caption, or the localized artwork-pending label
+when no caption is provided. A nonempty caption also renders below the frame.
+`bg` selects a generated CSS custom property directly; unlike `Panel.bg`, it
+does not validate the token. The component has no content slots.
+
+## API reference
+
+<TypeTable
+  type={{
+    ui: {
+      type: "UIStrings",
+      required: true,
+      description: "Resolved interface strings. Pass props.ui.",
+    },
+    src: {
+      type: "ImageMetadata | string",
+      description:
+        "An imported image (optimised, responsive) or a path under public/. Leave it out to get a labelled placeholder frame — useful while the client's mockups are still being produced.",
+    },
+    alt: {
+      type: "string",
+      default: '""',
+    },
+    caption: {
+      type: "string",
+    },
+    ratio: {
+      type: "string",
+      description: "Frame aspect ratio for images and placeholders.",
+      default: '"4 / 3"',
+    },
+    fit: {
+      type: '"cover" | "contain"',
+      description: "Fill the frame (default) or fit the whole image inside it.",
+      default: '"cover"',
+    },
+    bg: {
+      type: "string",
+      description: "Generated --color-* suffix for the frame background.",
+    },
+    class: {
+      type: "string",
+      description: "Additional class on the outer element.",
+    },
+  }}
+/>

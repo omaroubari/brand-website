@@ -1,0 +1,67 @@
+---
+title: Introduction
+description: Create, maintain, and publish a brand guidelines website with Brandtree.
+---
+
+Brandtree turns your brand data and written guidelines into a static website.
+It supplies navigation, light and dark themes, and components for showing logos,
+colors, typography, and other parts of your identity.
+
+**Define reusable brand facts once in `brandtree.config.ts`. Write your guidelines
+in Markdown or MDX.** Components connect the two: change a configured color and
+every exhibit that uses it updates.
+
+<Callout type="info" title="Private alpha">
+
+These docs describe the framework in this repository. Start from the included
+example; a public package and project generator are not currently available.
+
+</Callout>
+
+## Choose your next step
+
+<CardGroup cols={2}>
+  <Card title="Create your first site" href="/quickstart" icon="rocket">
+    Run the example, change your brand name, and add a page.
+  </Card>
+  <Card title="Configure your brand" href="/brand-configuration" icon="palette">
+    Set your identity, colors, themes, typography, and artwork.
+  </Card>
+  <Card title="Create content" href="/authoring" icon="file-text">
+    Write pages and combine prose with Brandtree components.
+  </Card>
+  <Card title="Manage your site" href="/navigation" icon="settings">
+    Organize navigation, add languages, and prepare for deployment.
+  </Card>
+</CardGroup>
+
+## How a project fits together
+
+<Steps>
+  <Step title="Configure the brand">
+
+`brandtree.config.ts` holds shared facts such as the palette, logo artwork,
+typography, and contact information. It also holds site settings.
+
+  </Step>
+  <Step title="Write the guidelines">
+
+Pages in `content/` explain how to use your identity. MDX lets you add
+components that display the configured brand data alongside that explanation.
+
+  </Step>
+  <Step title="Check and publish">
+
+The CLI prepares an Astro runtime, validates your inputs, and builds a static
+website into `dist/` for your hosting provider.
+
+  </Step>
+</Steps>
+
+<Panel title="Working on an existing site?">
+
+Use [Project structure](/project-structure) to locate its authored files.
+Browse [Components](/components) for an exhibit, [Configuration](/configuration)
+for a setting, or [Troubleshooting](/troubleshooting) when something fails.
+
+</Panel>

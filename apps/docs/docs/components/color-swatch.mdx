@@ -1,0 +1,72 @@
+---
+title: Color Swatch
+description: Display one named brand color with its source value and optional print specifications.
+sidebar:
+  order: 15
+---
+
+import previewCode from "../../snippets/color-swatch.mdx?raw";
+import variantCode from "../../snippets/color-swatch-print.mdx?raw";
+
+<ComponentPreview path="color-swatch" code={previewCode} />
+
+## Usage
+
+Pass a configured swatch object, not its ID. This example needs at least one
+entry in `brand.colors.swatches`; define those entries in [Colors](/colors).
+The wrapper scopes the built-in copy interaction to this swatch.
+
+```mdx
+<div data-color-palette>
+  <ColorSwatch
+    brand={props.brand}
+    ui={props.ui}
+    color={props.brand.colors.swatches[0]}
+  />
+</div>
+```
+
+## Examples
+
+### Include print specifications
+
+The opening preview hides supplementary values with `print={false}`. Omit that
+prop to show RGB, any configured CMYK and Pantone values, and a hex conversion
+when the source color uses a different color space.
+
+<ComponentPreview path="color-swatch-print" code={variantCode} />
+
+## Swatch resolution
+
+The component looks up `color.id` in the current brand’s swatches and uses the
+matching localized entry when available. If the ID is absent, it uses the
+supplied object. The source value and configured usage note remain visible when
+`print={false}`.
+
+There is no `class` prop; place layout classes on a wrapper. For a group of
+swatches with selection and ordering, use [Color Palette](/components/color-palette).
+
+## API reference
+
+<TypeTable
+  type={{
+    brand: {
+      type: "BrandConfig",
+      required: true,
+      description: "Resolved brand for the current locale. Pass props.brand.",
+    },
+    ui: {
+      type: "UIStrings",
+      required: true,
+      description: "Resolved interface strings. Pass props.ui.",
+    },
+    color: {
+      type: "BrandSwatch",
+      required: true,
+    },
+    print: {
+      type: "boolean",
+      default: "true",
+    },
+  }}
+/>

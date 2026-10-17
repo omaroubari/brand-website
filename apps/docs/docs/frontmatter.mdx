@@ -1,0 +1,126 @@
+---
+title: Frontmatter
+description: All supported page metadata fields, defaults, and validation rules.
+---
+
+Frontmatter is the YAML block between `---` fences at the very beginning of a
+file. It describes the page rather than its prose. All fields are optional;
+explicit titles and descriptions make the result easier to maintain.
+
+```yaml
+---
+title: Logo clearspace
+description: The protected area around our logo.
+slug: protected-area
+draft: false
+hidden: false
+icon: ph:bounding-box
+noindex: false
+sidebar:
+  label: Clearspace
+  icon: ph:ruler
+  badge: Updated
+  hidden: false
+seo:
+  title: Logo clearspace guidelines
+  description: Learn the minimum clearspace for our approved logo artwork.
+  canonical: https://brand.example.com/logo/protected-area
+  image: /images/logo-social.png
+  noindex: false
+---
+```
+
+<TypeTable
+  type={{
+    title: {
+      type: "string",
+      description:
+        "Page title and default sidebar label. Without it, the scanner humanizes the filename; do not depend on a heading in the body for the title.",
+    },
+    description: {
+      type: "string",
+      description: "Page summary and default metadata description.",
+    },
+    slug: {
+      type: "string",
+      description:
+        "Replaces the final URL segment within the current folder. Use letters or numbers separated by single hyphens; Unicode letters and numbers work. Slashes, spaces, underscores, and leading or trailing hyphens are rejected. An index page cannot override its slug.",
+    },
+    draft: {
+      type: "boolean",
+      description:
+        "Included during development; omitted from normal builds and checks. Use check --preview to check drafts.",
+      default: "false",
+    },
+    hidden: {
+      type: "boolean",
+      description:
+        "Shorthand for hiding the page in the sidebar. The page remains published.",
+      default: "false",
+    },
+    icon: {
+      type: "string",
+      description:
+        "Default sidebar icon name from the bundled Phosphor icon set.",
+    },
+    noindex: {
+      type: "boolean",
+      description: "Shorthand for seo.noindex.",
+      default: "false",
+    },
+    "sidebar.label": {
+      type: "string",
+      description: "Overrides the navigation label.",
+    },
+    "sidebar.icon": {
+      type: "string",
+      description:
+        "Overrides the page-level icon. Bare Phosphor names and ph: names are accepted.",
+    },
+    "sidebar.badge": {
+      type: "string",
+      description: "Adds a badge to the sidebar entry.",
+    },
+    "sidebar.hidden": {
+      type: "boolean",
+      description: "Omits the entry from the sidebar.",
+    },
+    "seo.title": {
+      type: "string",
+      description:
+        "Overrides the title passed to the page layout, including its displayed title and document metadata.",
+    },
+    "seo.description": {
+      type: "string",
+      description: "Overrides the description passed to the page layout.",
+    },
+    "seo.canonical": {
+      type: "string",
+      description: "Overrides the canonical URL.",
+    },
+    "seo.image": {
+      type: "string",
+      description:
+        "Custom social image path or URL; takes precedence over the generated image. See Social cards and SEO.",
+    },
+    "seo.noindex": {
+      type: "boolean",
+      description: "Emits a robots instruction to avoid indexing this page.",
+      default: "false",
+    },
+  }}
+/>
+
+The schema is strict: unknown fields cause a validation error. For example,
+Brandtree does **not** accept `sidebar.order`, `layout`, `date`, `tags`, or
+arbitrary custom metadata. This documentation app's `sidebar.order` belongs to
+its Blume host. For a Brandtree site, use numeric filenames or folder metadata
+as described in [Navigation](/navigation).
+
+Setting top-level `hidden: true` or `noindex: true` takes effect even if the
+corresponding nested value is `false`. Hidden and noindex pages are still public
+URLs; neither setting provides access control.
+
+## Related guides
+
+See [Pages and MDX](/authoring) to write a page, [Navigation](/navigation) to organize it, and [Social cards and SEO](/social-cards) to control its metadata.

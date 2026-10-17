@@ -1,0 +1,79 @@
+---
+title: Typography
+description: Define font roles, weights, and the typographic scale.
+---
+
+Typography describes the system readers should follow: which font to use,
+which weights are approved, and how headings and body copy are set.
+
+<Panel title="Registration and usage are separate">
+  Register font files under root-level `fonts`, then reference their CSS
+  variables in `brand.typography`. [Fonts](/fonts) covers loading; this page
+  covers how those fonts are used and documented.
+</Panel>
+
+Replace `brand.typography` in `brandtree.config.ts` with the following object.
+The example assumes a `--font-brand` declaration in `fonts`.
+
+```ts
+typography: {
+  display: "var(--font-brand)",
+  text: "var(--font-brand)",
+  mono: "ui-monospace, monospace",
+  families: [
+    { id: "display", name: "Brand Sans", foundry: "Example Foundry",
+      url: "https://example.com/fonts", note: "Use for headings." },
+    { id: "text", name: "Brand Sans", note: "Use for running text." },
+  ],
+  weights: [
+    { name: "Regular", weight: 400 },
+    { name: "Bold", weight: 700 },
+  ],
+  scale: [{
+    id: "body",
+    name: "Body",
+    role: "Running text and descriptions.",
+    font: "text",
+    weight: 400,
+    size: "1rem",
+    lineHeight: "1.5",
+    tracking: "0",
+    sample: "A useful system makes choices clearer.",
+    print: { size: "10pt", leading: "14pt", tracking: "0" },
+  }],
+},
+```
+
+All six keys shown above are required. `display`, `text`, and `mono` are CSS
+font-family stacks. Brandtree exposes them as `--font-display`, `--font-text`,
+and `--font-mono`.
+
+Family entries require `id` (`display`, `text`, or `mono`) and `name`;
+`foundry`, `url`, and `note` are optional. Weight entries require `name` and numeric
+`weight`, with optional `italic`. Numeric weights must be unique within the
+array, including entries marked italic.
+
+Each scale entry requires `id`, `name`, `size`, `lineHeight`, and `tracking`.
+`font` selects `display` or `text`; `weight`, `role`, `sample`, and `print` are
+optional. `transform` accepts `none`, `uppercase`, `lowercase`, or `capitalize`.
+If `print` is present, all of `size`, `leading`, and `tracking` are required.
+Use valid CSS values for digital sizes and spacing, including `clamp(...)` for
+responsive sizes. Print settings document a specification; they do not create a
+PDF export workflow.
+
+<Callout type="note" title="Keep identifiers stable">
+  Scale IDs and family IDs connect localized labels to their canonical entries.
+  See [Localization](/localization) when adapting typography for another script.
+</Callout>
+
+## Present your typography
+
+Once the fonts and scale are configured, use specimens to show readers how the
+system looks. The typography components cover family samples, hierarchy, weight
+comparisons, and character coverage; choose the examples your guidelines need.
+
+<CardGroup cols={1}>
+  <Card title="Typography components" href="/components#typography">
+    Show your configured families, type scale, weights, and glyph coverage.
+  </Card>
+</CardGroup>

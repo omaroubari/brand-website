@@ -1,0 +1,67 @@
+---
+title: Downloads
+description: List downloadable brand assets with their configured format, size, and supporting notes.
+sidebar:
+  order: 27
+---
+
+import previewCode from "../../snippets/downloads.mdx?raw";
+import example0 from "../../snippets/downloads-selected.mdx?raw";
+
+<ComponentPreview path="downloads" code={previewCode} />
+
+## Usage
+
+Pass the current brand to list its configured downloads. Maintain file URLs and
+metadata in configuration; see [Assets](/assets) for preparing the files.
+
+```mdx
+<Downloads brand={props.brand} />
+```
+
+## Examples
+
+### Show a subset of assets
+
+Pass selected entries through `items` to limit the list for one section. This
+example shows only the first configured download.
+
+<ComponentPreview path="downloads-selected" code={example0} />
+
+## Selection and empty states
+
+Omitting `items` uses `brand.downloads`. Passing an empty array renders nothing,
+as does a brand without downloads.
+
+Provided entries are matched against the current brand by `id`. A matching
+configured entry replaces the supplied object, preserving its localized label
+and note. The implementation also falls back to matching `href` for an item
+without an ID, although the typed `BrandDownload` contract requires an `id`.
+Use configured entries when selecting assets.
+
+The component renders links with the `download` attribute. It does not create
+archives or collect assets, so each configured URL must point to a real file.
+
+## API reference
+
+<TypeTable
+  type={{
+    brand: {
+      type: "BrandConfig",
+      required: true,
+      description: "Resolved brand for the current locale. Pass props.brand.",
+    },
+    items: {
+      type: "BrandDownload[]",
+      description:
+        "Selected downloads, in order. Defaults to brand.downloads or an empty array.",
+    },
+    class: {
+      type: "string",
+      description: "Additional class on the outer element.",
+    },
+  }}
+/>
+
+Each `BrandDownload` requires `id`, `label`, and `href`; `format`, `size`, and
+`note` are optional strings. No content slot is rendered.

@@ -1,0 +1,73 @@
+---
+title: Type Scale
+description: Show your configured type styles at their actual sizes alongside screen and print specifications.
+sidebar:
+  order: 19
+---
+
+import previewCode from "../../snippets/type-scale.mdx?raw";
+import example0 from "../../snippets/type-scale-selected.mdx?raw";
+
+<ComponentPreview path="type-scale" code={previewCode} />
+
+## Usage
+
+Pass the current brand and interface strings to show every configured type style
+in configuration order. Define the styles in [Typography](/typography).
+
+```mdx
+<TypeScale brand={props.brand} ui={props.ui} />
+```
+
+## Examples
+
+### Focus on a few styles
+
+This example takes the last three configured styles, hides print specifications, and supplies fallback sample text. Pass names or IDs to `only` to choose a different order.
+
+<ComponentPreview path="type-scale-selected" code={example0} />
+
+## Selection and sample text
+
+`only` preserves the order you supply. Unknown names or IDs throw an error; an
+empty array renders no rows. Without `only`, every configured style appears.
+
+A style’s own `sample` takes precedence over the component’s `sample` prop.
+Print specifications appear only when `print` is enabled and the style has a
+`print` entry.
+
+## API reference
+
+<TypeTable
+  type={{
+    brand: {
+      type: "BrandConfig",
+      required: true,
+      description: "Resolved brand for the current locale. Pass props.brand.",
+    },
+    ui: {
+      type: "UIStrings",
+      required: true,
+      description: "Resolved interface strings. Pass props.ui.",
+    },
+    only: {
+      type: "string[]",
+      description:
+        "Select style names or IDs in display order. Defaults to all configured styles.",
+    },
+    print: {
+      type: "boolean",
+      description: "Show the original print spec beside each step.",
+      default: "true",
+    },
+    sample: {
+      type: "string",
+      description: "Sentence used when a step has no sample of its own.",
+      default: '"Crafting strategic visual brand identities"',
+    },
+    class: {
+      type: "string",
+      description: "Additional class on the outer element.",
+    },
+  }}
+/>

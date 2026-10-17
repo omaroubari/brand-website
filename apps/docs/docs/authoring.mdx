@@ -1,0 +1,163 @@
+---
+title: Pages and MDX
+description: Write Markdown and MDX pages, set page metadata, and connect prose to typed brand data.
+sidebar:
+  order: 3
+---
+
+Brandtree keeps two kinds of information separate. Put reusable brand facts, such
+as colors, fonts, artwork paths, and download URLs, in `brandtree.config.ts`.
+Put explanations and examples in Markdown or MDX. A component reads the brand
+data you pass it, so updating the config updates every specimen that uses it.
+
+Start with [Quickstart](/quickstart), then keep the
+[configuration reference](/configuration) nearby as you write.
+
+## Where pages live
+
+A Brandtree project discovers `.md` and `.mdx` files inside `content/`, next to
+`brandtree.config.ts`. The content root is currently fixed; there is no
+`content.root` option in Brandtree's config.
+
+<Tree>
+  <Tree.File name="brandtree.config.ts" />
+  <Tree.Folder name="content" defaultOpen>
+    <Tree.File name="index.mdx" />
+    <Tree.File name="01-introduction.mdx" />
+    <Tree.Folder name="02-logo" defaultOpen>
+      <Tree.File name="index.mdx" />
+      <Tree.File name="01-clearspace.mdx" />
+      <Tree.File name="meta.ts" />
+    </Tree.Folder>
+    <Tree.File name="_notes.md" />
+  </Tree.Folder>
+  <Tree.Folder name="public">
+    <Tree.Folder name="downloads" />
+  </Tree.Folder>
+</Tree>
+
+Files and directories whose names start with `_` are excluded from page
+discovery. Dependency, build, and generated directories are also excluded.
+An ignored file does not become a reusable partial automatically; there is no
+supported include syntax in the current generated Markdown pipeline.
+
+This documentation website uses Blume to render files in `apps/docs/docs/`.
+That is the documentation app's own setup, rather than the folder convention
+for a Brandtree consumer.
+
+Brandtree generates the root brand cover itself. An `index.mdx` at the content
+root does not replace its body; use named pages for your authored introduction.
+Nested index pages work as folder overviews. See [Navigation](/navigation).
+
+## Write your first page
+
+Save this as `content/01-introduction.mdx`:
+
+```mdx
+---
+title: Introduction
+description: What our identity stands for and how to use these guidelines.
+---
+
+Our identity should feel clear, warm, and consistent.
+
+## Start with the essentials
+
+1. Use the approved logo artwork.
+2. Choose colors from the configured palette.
+3. Follow the typography rules.
+
+[Read the logo guidelines](/logo)
+
+<Callout ui={props.ui} tone="note">
+
+Use the supplied artwork files when preparing a new application.
+
+</Callout>
+```
+
+The layout supplies the page title, so begin the body with introductory prose
+and use `##` for sections. The table of contents includes level-two and
+level-three headings. Use descriptive heading text to help readers scan.
+
+Markdown supports paragraphs, emphasis, lists, links, blockquotes, tables, and
+fenced code blocks. Use `.mdx` when you also need component tags, imports, or
+JavaScript expressions. In MDX, braces and angle brackets have meaning: put
+literal code inside backticks or fenced code blocks.
+
+## Page metadata
+
+<Tooltip tip="The YAML block at the start of a file that describes the page.">
+  Frontmatter
+</Tooltip>
+sets the page title, description, visibility, and SEO. Start with `title` and
+`description`, as in the example above. The [Frontmatter
+reference](/frontmatter) lists every supported field, default, and validation
+rule.
+
+<Callout type="note" title="Page titles come from metadata">
+
+The layout renders your page title. Start body headings at `##`, and use numeric
+filenames or [folder metadata](/folder-metadata) to control navigation order.
+Brandtree page frontmatter does not support `sidebar.order`.
+
+</Callout>
+
+## Connect prose to brand data
+
+Built-in components are available in MDX without imports. The runtime supplies
+`props.brand`, `props.ui`, and `props.dir` to every page. Pass the props required
+by the component explicitly:
+
+```mdx
+## Approved palette
+
+<ColorPalette brand={props.brand} ui={props.ui} category="primary" />
+
+## Contrast
+
+<ContrastMatrix brand={props.brand} ui={props.ui} />
+```
+
+`props.brand` contains the resolved brand for the current locale. `props.ui`
+contains interface labels such as “Copy” and “Do”. `props.dir` is the direction
+of the rendered content, either `ltr` or `rtl`.
+
+Read [Components](/components) for the full component catalog and required
+props. Import custom components explicitly, using a path relative to your MDX
+file. Keep their reusable data in config and pass it through props.
+
+## Link to pages and assets
+
+Use published URLs in links, rather than source filenames:
+
+```md
+[Logo guidelines](/logo)
+[Clearspace](/logo/clearspace)
+[Color section](/colour#primary-colours)
+[Brand archive](/downloads/brand-assets.zip)
+[Contact the team](mailto:brand@example.com)
+```
+
+Numeric ordering prefixes, `.mdx` extensions, and parenthesized grouping folders
+are absent from published URLs. Check the actual heading anchor in the browser
+before linking to a section. Keep anchors stable when other pages reference them.
+
+The generated runtime uses Astro's ordinary Markdown/MDX processing. It does
+not provide a source-file link resolver, automatic locale rewriting, or an
+include directive. Write locale-prefixed links yourself for translated pages,
+and include `basePath` in root-relative links when mounting a site below a path.
+See [Localization](/localization) and [Media](/media).
+
+## Review before publishing
+
+Run the development server, visit the page, and test its sidebar entry, headings,
+links, specimens, and downloads. Review both themes and, if enabled, both text
+directions. Then run the project checks and a production build from
+[CLI](/cli). A build catches rendering failures and confirms that draft content
+is excluded before you deploy the output using [Build and deployment](/publishing).
+
+For underlying Markdown collection behavior, see Astro's
+[content collections guide](https://docs.astro.build/en/guides/content-collections/).
+Brandtree generates its collection and routes for you; author files in your
+project rather than editing generated files in `.brandtree/`.

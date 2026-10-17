@@ -1,0 +1,57 @@
+---
+title: Block
+description: Pair explanatory copy with a specimen and an optional supporting note.
+sidebar:
+  order: 1
+---
+
+import previewCode from "../../snippets/block.mdx?raw";
+
+<ComponentPreview path="block" code={previewCode} />
+
+## Usage
+
+Put prose in the `copy` slot and the specimen in `content`. A `Fragment` assigns
+content to a named region without adding an HTML wrapper.
+
+```mdx
+<Block>
+  <Fragment slot="copy">
+    <h2>Primary logo</h2>
+    <p>Use the supplied artwork whenever the full name fits.</p>
+  </Fragment>
+  <Fragment slot="content">
+    <Logo brand={props.brand} />
+  </Fragment>
+</Block>
+```
+
+The preview adds a `note` slot for a supporting rule and wraps the logo in a
+[Panel](/components/panel) to give the artwork a frame.
+
+## Layout and slots
+
+Below `48rem`, copy and artwork stack in document order. At `48rem` and above,
+the copy uses the configured side-column width and the content fills the rest.
+
+`Block` has no default slot: children without a slot name will not appear.
+Use `copy` for the heading and explanation, `content` for the specimen, and the
+optional `note` for a rule beneath the copy. Normal prose can also sit outside
+`Block`; use it when a split layout helps explain a specimen.
+
+## API reference
+
+<TypeTable
+  type={{
+    id: {
+      type: "string",
+    },
+    class: {
+      type: "string",
+      description: "Additional class on the outer element.",
+    },
+  }}
+/>
+
+Named slots: `copy` for explanatory prose, `content` for the specimen, and optional
+`note` for supporting copy. No default slot is rendered.

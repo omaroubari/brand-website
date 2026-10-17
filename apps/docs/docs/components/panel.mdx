@@ -1,0 +1,91 @@
+---
+title: Panel
+description: Frame artwork with a configured color pairing, consistent proportions, and an optional caption.
+sidebar:
+  order: 3
+---
+
+import previewCode from "../../snippets/panel.mdx?raw";
+
+<ComponentPreview path="panel" code={previewCode} />
+
+## Usage
+
+Pass the brand and put artwork in the default slot. Omitting `ratio` lets the
+content determine the frame height.
+
+```mdx
+<Panel brand={props.brand}>
+  <Logo brand={props.brand} width="60%" />
+</Panel>
+```
+
+The preview uses the first configured logo colorway, a `16 / 9` frame, and a
+label and caption. Define approved pairs in [Logo configuration](/logos).
+
+## Color and caption behavior
+
+With `bg` set and `fg` omitted, the foreground uses CSS `contrast-color()`.
+With neither prop, the implementation sets the foreground to black. For a
+text-bearing panel with fixed colors, supply both configured `bg` and `fg`.
+An unknown color token throws an error during rendering.
+
+Set `flush` to remove the frame's padding when artwork should reach its edges.
+
+The default slot contains the artwork. A named `caption` slot replaces the
+caption text, but a nonempty `caption` prop is still needed to create the
+caption element. For example:
+
+```mdx
+<Panel brand={props.brand} caption="Primary logo">
+  <Logo brand={props.brand} width="60%" />
+  <span slot="caption">
+    Primary logo. <strong>Use supplied artwork.</strong>
+  </span>
+</Panel>
+```
+
+## API reference
+
+<TypeTable
+  type={{
+    brand: {
+      type: "BrandConfig",
+      required: true,
+      description: "Resolved brand for the current locale. Pass props.brand.",
+    },
+    bg: {
+      type: "BrandColorToken",
+      description:
+        "Palette shade reference for the background. Defaults to the page surface.",
+    },
+    fg: {
+      type: "BrandColorToken",
+      description:
+        "Palette shade for contents. Uses contrast-color(bg) when bg is set, otherwise black.",
+    },
+    ratio: {
+      type: "string",
+      description:
+        "width / height. Use to hold a consistent shape across a row.",
+    },
+    flush: {
+      type: "boolean",
+      description:
+        "Remove the internal padding — for artwork that should bleed.",
+      default: "false",
+    },
+    caption: {
+      type: "string",
+      description: "Caption under the panel.",
+    },
+    label: {
+      type: "string",
+      description: "Small label in the panel's top-left corner.",
+    },
+    class: {
+      type: "string",
+      description: "Additional class on the outer element.",
+    },
+  }}
+/>

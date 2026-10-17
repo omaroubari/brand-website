@@ -1,0 +1,129 @@
+---
+title: CLI
+description: Commands, flags, generated runtimes, and failure behavior.
+sidebar:
+  order: 9
+---
+
+Run every command from the **consumer root**, the directory containing your
+`brandtree.config.ts` and `content/`. The CLI uses the current working directory;
+it does not search parent directories.
+
+```sh
+pnpm exec brandtree --help
+pnpm exec brandtree --version
+pnpm exec brandtree dev
+pnpm exec brandtree check --strict
+pnpm exec brandtree build
+pnpm exec brandtree preview
+```
+
+In this repository, use `pnpm --filter web exec brandtree …` to select the
+example consumer. The committed CLI launcher prefers compiled output and can
+load the TypeScript source before compilation. After framework changes, build
+with `pnpm --filter brandtree build` to refresh that output. The root `pnpm dev`,
+`pnpm build`, and `pnpm check` scripts do that preparation for you.
+
+## Available commands
+
+| Command   | Result                                                                           |
+| --------- | -------------------------------------------------------------------------------- |
+| `dev`     | Scan authored inputs, generate `.brandtree/`, start Astro, and watch changes.    |
+| `check`   | Prepare a runtime, run Astro sync, and type-check once; leave `dist/` unchanged. |
+| `build`   | Prepare `.brandtree/` and build a static website into `dist/`.                   |
+| `preview` | Serve the existing production output through the generated Astro app.            |
+
+`init`, `deploy`, `doctor`, and translation commands are not implemented
+Brandtree subcommands. Blume's docs-app commands are a separate CLI and are not
+Brandtree features.
+
+## Development options
+
+| Option                | Behavior                                                                          |
+| --------------------- | --------------------------------------------------------------------------------- |
+| `--host`              | Bind all network interfaces. Without this flag the server is local.               |
+| `--host 192.168.1.20` | Bind a specific address.                                                          |
+| `--port 4322`         | Request a port from 1–65535; default is 4321. Zero is rejected.                   |
+| `--open`              | Open the site in your browser.                                                    |
+| `--debug`             | Enable verbose Astro/Vite logging.                                                |
+| `--strict`            | Abort initial preparation when error diagnostics exist. Warnings remain nonfatal. |
+| `--preview`           | Include draft content explicitly. Development mode already retains drafts.        |
+
+Read the actual listening URL printed by Astro: another service can occupy the
+requested port. Stop with Ctrl+C or SIGTERM, so the watcher, server, and lock
+are released together.
+
+### Watching and regeneration
+
+Content additions, removals, renames, frontmatter, group metadata, config changes,
+and explicitly configured asset files trigger rescanning. Edits are batched and
+processed in order, so two quick saves do not write competing generated files.
+Imported components/assets and public files use Astro/Vite's module watching.
+Brandtree does not scan your asset folders to discover exhibits automatically.
+
+The watcher starts after Astro starts. Restart if a save during startup was
+missed, or after adding a new conventional entry file that was absent at launch.
+A failed regeneration is logged and the session stays alive; fix the input and
+save again. `--strict` only governs initial dev preparation, not later regeneration.
+
+### One server per project
+
+A dev session creates `.brandtree/dev.lock`, recording its process ID and port.
+A second invocation refuses to start and reports the existing localhost URL.
+Use the existing server or stop it before starting another. A later invocation
+replaces a stale lock after its process has exited. Never delete an active lock
+to force two servers to share a generated runtime.
+
+Other commands do not acquire this lock. Stop dev before an ordinary `check` or
+`build`; use isolated checking when you need to keep dev running.
+
+## Check options and failure behavior
+
+```sh
+pnpm exec brandtree check --strict --isolated
+pnpm exec brandtree check --strict --isolated --preview
+```
+
+| Option       | Behavior                                                                            |
+| ------------ | ----------------------------------------------------------------------------------- |
+| `--strict`   | Fail during preparation on error diagnostics, including invalid frontmatter values. |
+| `--preview`  | Include drafts in the graph and generated content being checked.                    |
+| `--isolated` | Generate and sync `.brandtree-verify/` instead of touching `.brandtree/`.           |
+
+Checking selects one TypeScript project. If your project has `tsconfig.json`,
+that controls compiler settings and file coverage. Otherwise Brandtree uses its
+generated tsconfig, which covers the runtime and authored Astro, React, and
+TypeScript files. The configs are not merged. Content scanning still runs even
+when a file is outside your tsconfig's `include` list.
+
+Type errors fail checking. Valid YAML containing an invalid frontmatter value
+produces `BRANDTREE_FRONTMATTER_INVALID` and a dropped-page count. Without
+`--strict`, preparation can continue with that page omitted; with `--strict`,
+it fails before generating the runtime. Malformed YAML, invalid configuration,
+and unsafe source paths always fail. Warnings alone do not fail strict checking.
+
+Use strict checking as a release gate: a green build can otherwise hide a page
+that was dropped. The `build` command has no implemented strict or preview
+options. Check strictly first, then build normally.
+
+## Preview options
+
+Build first, then run from the consumer root:
+
+```sh
+pnpm exec brandtree preview --port 4322
+```
+
+Preview accepts `--host [address]`, `--port` (1–65535, default 4321), and
+`--open`. It serves existing root-level `dist/` through `.brandtree/` without
+regenerating or rebuilding. Source and public-file changes need another build.
+Stop with Ctrl+C or SIGTERM.
+
+Both the generated `.brandtree/astro.config.mjs` and nonempty `dist/` output must
+exist. Otherwise the command exits nonzero with
+``No build found. Run `brandtree build` first.`` The `preview` command is separate
+from the `--preview` flag used to include drafts during dev or checking.
+
+## Related guides
+
+See [Validation](/validation) for a release workflow and [Troubleshooting](/troubleshooting) for common fixes.

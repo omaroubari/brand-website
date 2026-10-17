@@ -1,0 +1,84 @@
+---
+title: Photo Grid
+description: Arrange photography in a responsive grid with captions, column spans, and image treatments.
+sidebar:
+  order: 26
+---
+
+import previewCode from "../../snippets/photo-grid.mdx?raw";
+import example0 from "../../snippets/photo-grid-mono.mdx?raw";
+import example1 from "../../snippets/photo-grid-duotone.mdx?raw";
+
+<ComponentPreview path="photo-grid" code={previewCode} />
+
+## Usage
+
+Import image files so Astro can optimize them and generate responsive sources.
+The path below assumes a page at the content root; use your own asset and adjust
+the path for nested or localized content.
+
+```mdx
+import photo from "../assets/photography/photo-01.jpg";
+
+<PhotoGrid images={[{ src: photo, caption: "The studio in morning light" }]} />
+```
+
+Use a bare imported image when it is decorative. Add a caption when the image
+needs a visible description and alt text.
+
+## Examples
+
+### Apply a monochrome treatment
+
+Use `mono` to remove color across the entire set. This example also changes the tile ratio and uses two columns.
+
+<ComponentPreview path="photo-grid-mono" code={example0} />
+
+### Feature an image with a brand tint
+
+Use `span: 2` to give the first image a full row in a two-column grid. The `duotone` treatment uses the configured primary color.
+
+<ComponentPreview path="photo-grid-duotone" code={example1} />
+
+## Images and responsive spans
+
+Each caption also supplies the image’s alt text. Without a caption, the image is
+treated as decorative. The component accepts imported image metadata, not plain
+URL strings. Images crop to the chosen `ratio`.
+
+Below `48rem`, the grid uses two columns regardless of `cols`. Keep spans at `1`
+or `2`, and no greater than your desktop column count, so an item does not create
+extra grid columns. A span changes the tile’s width; `ratio` still determines
+that tile’s width-to-height proportion.
+
+## API reference
+
+<TypeTable
+  type={{
+    images: {
+      type: "Array< ImageMetadata | { src: ImageMetadata; caption?: string; span?: number } >",
+      required: true,
+      description:
+        "Imported Astro images, optionally wrapped with a caption and column span (default 1).",
+    },
+    cols: {
+      type: "number",
+      default: "3",
+    },
+    ratio: {
+      type: "string",
+      description: "width / height for every tile.",
+      default: '"4 / 3"',
+    },
+    treatment: {
+      type: '"none" | "duotone" | "mono"',
+      description:
+        "Treatment applied to the whole set — matches the styles in the guidelines.",
+      default: '"none"',
+    },
+    class: {
+      type: "string",
+      description: "Additional class on the outer element.",
+    },
+  }}
+/>
