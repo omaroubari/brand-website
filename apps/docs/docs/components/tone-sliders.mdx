@@ -1,23 +1,31 @@
 ---
-title: ToneSliders
-description: Props, defaults, and an MDX usage example for ToneSliders.
+title: Tone Sliders
+description: Position your brand’s voice between pairs of opposing traits.
 sidebar:
   order: 22
 ---
 
 import previewCode from "../../snippets/tone-sliders.mdx?raw";
 
-`ToneSliders` is available by name in Brandtree content MDX; no import is needed. Pass any required `brand`, `ui`, or `dir` props explicitly from `props.brand`, `props.ui`, and `props.dir`; the generated route supplies these values to the document. The optional `class` prop adds a class to the outer element; other HTML attributes are not forwarded automatically.
-
-## Preview
-
-The preview uses the sample brand. Copy the MDX from the Code tab into your own
-page to render the same example with your configured brand. See [Usage](#usage)
-for more options.
-
 <ComponentPreview path="tone-sliders" code={previewCode} />
 
-## Props and behavior
+## Usage
+
+Supply one row per pair of traits. A position of `0` sits at the left label,
+`100` sits at the right label, and `50` sits in the middle.
+
+```mdx
+<ToneSliders items={[{ left: "Formal", right: "Conversational", at: 70 }]} />
+```
+
+## Reading the scale
+
+These markers communicate editorial positioning; they are static illustrations
+rather than draggable controls. Each track has an accessible text description of
+its labels and position. Keep `at` between `0` and `100`: the visual marker clamps
+out-of-range values, but the accessible description reports the supplied value.
+
+## API reference
 
 <TypeTable
   type={{
@@ -33,18 +41,3 @@ for more options.
     },
   }}
 />
-
-**Required:** `items`, an array of `{ left: string, right: string, at: number }`. `at` ranges from `0` (left) to `100` (right). Optional: `class`. This is a static visualization of editorial positioning, not an interactive form.
-
-## Usage
-
-```mdx
-<ToneSliders
-  items={[
-    { left: "Formal", right: "Conversational", at: 70 },
-    { left: "Reserved", right: "Expressive", at: 40 },
-  ]}
-/>
-```
-
-Return to the [component overview](/components) for the full catalog and MDX conventions.

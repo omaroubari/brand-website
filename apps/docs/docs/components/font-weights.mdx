@@ -1,23 +1,40 @@
 ---
-title: FontWeights
-description: Props, defaults, and an MDX usage example for FontWeights.
+title: Font Weights
+description: Compare the configured font weights and italics in a selected type family.
 sidebar:
   order: 20
 ---
 
 import previewCode from "../../snippets/font-weights.mdx?raw";
-
-`FontWeights` is available by name in Brandtree content MDX; no import is needed. Pass any required `brand`, `ui`, or `dir` props explicitly from `props.brand`, `props.ui`, and `props.dir`; the generated route supplies these values to the document. The optional `class` prop adds a class to the outer element; other HTML attributes are not forwarded automatically.
-
-## Preview
-
-The preview uses the sample brand. Copy the MDX from the Code tab into your own
-page to render the same example with your configured brand. See [Usage](#usage)
-for more options.
+import example0 from "../../snippets/font-weights-text.mdx?raw";
 
 <ComponentPreview path="font-weights" code={previewCode} />
 
-## Props and behavior
+## Usage
+
+Pass the current brand to display each configured weight using its name as the
+sample text. Weights come from `brand.typography.weights`; see
+[Typography](/typography) for font setup.
+
+```mdx
+<FontWeights brand={props.brand} />
+```
+
+## Examples
+
+### Compare a consistent phrase
+
+Choose the text family and repeat the same phrase so changes in weight are easier to compare.
+
+<ComponentPreview path="font-weights-text" code={example0} />
+
+## Font availability
+
+Rows follow configuration order, including entries marked italic. The selected
+family must have the corresponding font weights and styles loaded for an accurate
+specimen; adding a configuration entry alone does not load a font file.
+
+## API reference
 
 <TypeTable
   type={{
@@ -32,7 +49,8 @@ for more options.
     },
     sample: {
       type: "string",
-      description: "Text rendered at each weight.",
+      description:
+        "Text rendered at each weight. Falls back to each configured weight name.",
     },
     class: {
       type: "string",
@@ -40,13 +58,3 @@ for more options.
     },
   }}
 />
-
-**Required:** `brand`. Optional: `font` (`"display"`, default, or `"text"`), `sample`, `class`. Shows every configured `brand.typography.weights` entry, including italic entries. Without `sample`, each row uses the weight's configured name. The requested font weight must also be available in your loaded font files.
-
-## Usage
-
-```mdx
-<FontWeights brand={props.brand} font="text" sample="Words with purpose" />
-```
-
-Return to the [component overview](/components) for the full catalog and MDX conventions.

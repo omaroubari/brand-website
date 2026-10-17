@@ -1,25 +1,41 @@
 ---
-title: ConstructionGrid
-description: Props, defaults, and an MDX usage example for ConstructionGrid.
+title: Construction Grid
+description: Overlay a division grid on logo artwork to explain its proportions.
 sidebar:
   order: 12
 ---
 
 import previewCode from "../../snippets/construction-grid.mdx?raw";
-
-`ConstructionGrid` is available by name in Brandtree content MDX; no import is needed. Pass any required `brand`, `ui`, or `dir` props explicitly from `props.brand`, `props.ui`, and `props.dir`; the generated route supplies these values to the document. The optional `class` prop adds a class to the outer element; other HTML attributes are not forwarded automatically.
-
-This component requires `brand`. Artwork, aspect ratios, alt text, clearspace, and approved colorways come from `brand.logo`; set them in configuration rather than copying asset URLs into every page. Wherever supported, `mark` is `"logotype"` (default) or `"brandmark"`.
-
-## Preview
-
-The preview uses the sample brand. Copy the MDX from the Code tab into your own
-page to render the same example with your configured brand. See [Usage](#usage)
-for more options.
+import variantCode from "../../snippets/construction-grid-logotype.mdx?raw";
 
 <ComponentPreview path="construction-grid" code={previewCode} />
 
-## Props and behavior
+## Usage
+
+Pass the current brand to show the brandmark on a square, ten-by-ten field.
+Configure the source artwork in [Logos](/logos).
+
+```mdx
+<ConstructionGrid brand={props.brand} />
+```
+
+## Examples
+
+### Use a rectangular field
+
+Choose separate horizontal and vertical divisions for a wider mark. Supply a
+caption that explains your actual artwork rather than relying on the generic caption.
+
+<ComponentPreview path="construction-grid-logotype" code={variantCode} />
+
+## Grid behavior
+
+`cols` and `rows` control both the division count and the field’s aspect ratio.
+The grid is an illustration over the supplied artwork, not an SVG geometry
+editor; it does not inspect paths or prove that curves align with grid lines.
+Use positive division counts.
+
+## API reference
 
 <TypeTable
   type={{
@@ -44,6 +60,8 @@ for more options.
     },
     caption: {
       type: "string",
+      description:
+        "Figure caption. Defaults to a generic construction explanation using cols and rows.",
     },
     class: {
       type: "string",
@@ -51,19 +69,3 @@ for more options.
     },
   }}
 />
-
-Optional: `mark` (default **`"brandmark"`**), `cols` (default `10`), `rows` (default `10`), `caption`, `class`. Overlays divisions on the artwork; it is an illustration rather than an SVG geometry editor.
-
-## Usage
-
-```mdx
-<ConstructionGrid
-  brand={props.brand}
-  mark="brandmark"
-  cols={8}
-  rows={8}
-  caption="Construction grid for the mark"
-/>
-```
-
-Return to the [component overview](/components) for the full catalog and MDX conventions.

@@ -1,26 +1,51 @@
 ---
-title: PersonaCard
-description: Props, defaults, and an MDX usage example for PersonaCard.
+title: Persona Card
+description: Introduce an audience persona with a portrait, key facts, and supporting notes.
 sidebar:
   order: 24
 ---
 
 import previewCode from "../../snippets/persona-card.mdx?raw";
-
-`PersonaCard` is available by name in Brandtree content MDX; no import is needed. Pass any required `brand`, `ui`, or `dir` props explicitly from `props.brand`, `props.ui`, and `props.dir`; the generated route supplies these values to the document. The optional `class` prop adds a class to the outer element; other HTML attributes are not forwarded automatically.
-
-## Preview
-
-The preview uses the sample brand. Copy the MDX from the Code tab into your own
-page to render the same example with your configured brand. See [Usage](#usage)
-for more options.
-
-The media imports assume a page at the content root. Use your own assets and
-adjust import paths for nested or localized pages.
+import example0 from "../../snippets/persona-card-placeholder.mdx?raw";
 
 <ComponentPreview path="persona-card" code={previewCode} />
 
-## Props and behavior
+## Usage
+
+Provide a name and the current interface strings. Add prose in the default slot
+to describe the persona’s needs or motivations.
+
+```mdx
+<PersonaCard ui={props.ui} name="Maya">
+
+Maya needs clear rules that a small team can apply without supervision.
+
+</PersonaCard>
+```
+
+The first preview adds a portrait and facts. Its image import assumes a page at
+the content root; use your own asset and adjust the path for nested or localized
+content.
+
+## Examples
+
+### Write the persona before choosing a portrait
+
+Omit `image` while drafting. The portrait area displays a localized placeholder while the name, role, and notes remain available.
+
+<ComponentPreview path="persona-card-placeholder" code={example0} />
+
+## Images and notes
+
+Imported images use Astro’s responsive image output. URL strings render as plain
+image elements. Portraits crop to a `3 / 4` frame and use empty alt text because
+the adjacent name identifies the person. Missing images show the localized
+`ui.content.portraitPending` message.
+
+Facts render as term/value pairs. Use the default slot for richer prose, lists,
+or other MDX content.
+
+## API reference
 
 <TypeTable
   type={{
@@ -52,17 +77,6 @@ adjust import paths for nested or localized pages.
   }}
 />
 
-**Required:** `ui`, `name`. Optional: `role`, `image` (imported image or URL string), `facts` (array of `{ term: string, value: string }`, default empty), `class`. The default slot holds notes. Missing images show a localized placeholder. Portrait images intentionally use empty alt text because the adjacent name identifies the person.
+### Slots
 
-## Usage
-
-```mdx
-<PersonaCard ui={props.ui} name="Maya" role="Independent founder"
-  facts={[{ term: "Needs", value: "A consistent identity across channels" }]}>
-
-Maya needs clear rules that a small team can apply without supervision.
-
-</PersonaCard>
-```
-
-Return to the [component overview](/components) for the full catalog and MDX conventions.
+The default slot holds persona notes and supports prose, lists, and other MDX content.

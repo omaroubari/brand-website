@@ -1,23 +1,51 @@
 ---
 title: Panel
-description: Props, defaults, and an MDX usage example for Panel.
+description: Frame artwork with a configured color pairing, consistent proportions, and an optional caption.
 sidebar:
   order: 3
 ---
 
 import previewCode from "../../snippets/panel.mdx?raw";
 
-`Panel` is available by name in Brandtree content MDX; no import is needed. Pass any required `brand`, `ui`, or `dir` props explicitly from `props.brand`, `props.ui`, and `props.dir`; the generated route supplies these values to the document. The optional `class` prop adds a class to the outer element; other HTML attributes are not forwarded automatically.
-
-## Preview
-
-The preview uses the sample brand. Copy the MDX from the Code tab into your own
-page to render the same example with your configured brand. See [Usage](#usage)
-for more options.
-
 <ComponentPreview path="panel" code={previewCode} />
 
-## Props and behavior
+## Usage
+
+Pass the brand and put artwork in the default slot. Omitting `ratio` lets the
+content determine the frame height.
+
+```mdx
+<Panel brand={props.brand}>
+  <Logo brand={props.brand} width="60%" />
+</Panel>
+```
+
+The preview uses the first configured logo colorway, a `16 / 9` frame, and a
+label and caption. Define approved pairs in [Logo configuration](/logos).
+
+## Color and caption behavior
+
+With `bg` set and `fg` omitted, the foreground uses CSS `contrast-color()`.
+With neither prop, the implementation sets the foreground to black. For a
+text-bearing panel with fixed colors, supply both configured `bg` and `fg`.
+An unknown color token throws an error during rendering.
+
+Set `flush` to remove the frame's padding when artwork should reach its edges.
+
+The default slot contains the artwork. A named `caption` slot replaces the
+caption text, but a nonempty `caption` prop is still needed to create the
+caption element. For example:
+
+```mdx
+<Panel brand={props.brand} caption="Primary logo">
+  <Logo brand={props.brand} width="60%" />
+  <span slot="caption">
+    Primary logo. <strong>Use supplied artwork.</strong>
+  </span>
+</Panel>
+```
+
+## API reference
 
 <TypeTable
   type={{
@@ -34,7 +62,7 @@ for more options.
     fg: {
       type: "BrandColorToken",
       description:
-        "Palette shade reference for the contents. Defaults to whatever is legible on bg.",
+        "Palette shade for contents. Uses contrast-color(bg) when bg is set, otherwise black.",
     },
     ratio: {
       type: "string",
@@ -61,29 +89,3 @@ for more options.
     },
   }}
 />
-
-A padded artwork frame with a default slot. **Required:** `brand`. Optional: `bg` and `fg` (configured color tokens), `ratio` (CSS aspect ratio; omitted lets content determine height), `flush` (default `false`), `caption`, `label`, `class`.
-
-With `bg`, an omitted `fg` uses CSS `contrast-color()` for that background. With neither prop the implementation currently sets foreground to black, so explicitly supply configured `bg` and `fg` for text-bearing panels that need a fixed color pair. The example reads an existing configured logo colorway rather than inventing color values.
-
-## Usage
-
-```mdx
-<Panel
-  brand={props.brand}
-  bg={props.brand.logo.colorways[0].bg}
-  fg={props.brand.logo.colorways[0].fg}
-  ratio="16 / 9"
-  caption="An approved color pairing."
-  label="Primary">
-  <Logo
-    brand={props.brand}
-    tint={`var(--color-${props.brand.logo.colorways[0].fg})`}
-    width="60%"
-  />
-</Panel>
-```
-
-This example requires at least one configured colorway. A named `caption` slot can replace the caption contents, but the `caption` prop must still be present to render the caption element. Use `flush` when artwork should reach the frame edges.
-
-Return to the [component overview](/components) for the full catalog and MDX conventions.

@@ -1,26 +1,57 @@
 ---
-title: PhotoGrid
-description: Props, defaults, and an MDX usage example for PhotoGrid.
+title: Photo Grid
+description: Arrange photography in a responsive grid with captions, column spans, and image treatments.
 sidebar:
   order: 26
 ---
 
 import previewCode from "../../snippets/photo-grid.mdx?raw";
-
-`PhotoGrid` is available by name in Brandtree content MDX; no import is needed. Pass any required `brand`, `ui`, or `dir` props explicitly from `props.brand`, `props.ui`, and `props.dir`; the generated route supplies these values to the document. The optional `class` prop adds a class to the outer element; other HTML attributes are not forwarded automatically.
-
-## Preview
-
-The preview uses the sample brand. Copy the MDX from the Code tab into your own
-page to render the same example with your configured brand. See [Usage](#usage)
-for more options.
-
-The media imports assume a page at the content root. Use your own assets and
-adjust import paths for nested or localized pages.
+import example0 from "../../snippets/photo-grid-mono.mdx?raw";
+import example1 from "../../snippets/photo-grid-duotone.mdx?raw";
 
 <ComponentPreview path="photo-grid" code={previewCode} />
 
-## Props and behavior
+## Usage
+
+Import image files so Astro can optimize them and generate responsive sources.
+The path below assumes a page at the content root; use your own asset and adjust
+the path for nested or localized content.
+
+```mdx
+import photo from "../assets/photography/photo-01.jpg";
+
+<PhotoGrid images={[{ src: photo, caption: "The studio in morning light" }]} />
+```
+
+Use a bare imported image when it is decorative. Add a caption when the image
+needs a visible description and alt text.
+
+## Examples
+
+### Apply a monochrome treatment
+
+Use `mono` to remove color across the entire set. This example also changes the tile ratio and uses two columns.
+
+<ComponentPreview path="photo-grid-mono" code={example0} />
+
+### Feature an image with a brand tint
+
+Use `span: 2` to give the first image a full row in a two-column grid. The `duotone` treatment uses the configured primary color.
+
+<ComponentPreview path="photo-grid-duotone" code={example1} />
+
+## Images and responsive spans
+
+Each caption also supplies the image’s alt text. Without a caption, the image is
+treated as decorative. The component accepts imported image metadata, not plain
+URL strings. Images crop to the chosen `ratio`.
+
+Below `48rem`, the grid uses two columns regardless of `cols`. Keep spans at `1`
+or `2`, and no greater than your desktop column count, so an item does not create
+extra grid columns. A span changes the tile’s width; `ratio` still determines
+that tile’s width-to-height proportion.
+
+## API reference
 
 <TypeTable
   type={{
@@ -28,7 +59,7 @@ adjust import paths for nested or localized pages.
       type: "Array< ImageMetadata | { src: ImageMetadata; caption?: string; span?: number } >",
       required: true,
       description:
-        "Imported images. Import them at the top of the MDX file so Astro can optimise and serve responsive sources: import photo from '../../assets/photography/photo-01.jpg';",
+        "Imported Astro images, optionally wrapped with a caption and column span (default 1).",
     },
     cols: {
       type: "number",
@@ -51,26 +82,3 @@ adjust import paths for nested or localized pages.
     },
   }}
 />
-
-**Required:** `images`, an array of imported Astro images or `{ src: importedImage, caption?: string, span?: number }` objects. Optional: `cols` (default `3`), `ratio` (default `"4 / 3"`), `treatment` (`"none"`, default, `"duotone"`, or `"mono"`), `class`. Plain URL strings are not supported.
-
-## Usage
-
-```mdx
-import studio from "../../assets/photography/studio.jpg";
-import detail from "../../assets/photography/detail.jpg";
-
-<PhotoGrid
-  images={[
-    { src: studio, caption: "The studio in morning light", span: 2 },
-    { src: detail, caption: "A close view of the printed identity" },
-  ]}
-  cols={3}
-  ratio="3 / 2"
-  treatment="mono"
-/>
-```
-
-Each caption also supplies the image's alt text. With no caption, the image is treated as decorative. `duotone` uses the configured primary color. On narrow screens the grid uses two columns regardless of `cols`; keep spans at `1` or `2` when authoring responsive layouts.
-
-Return to the [component overview](/components) for the full catalog and MDX conventions.

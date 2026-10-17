@@ -9,7 +9,8 @@ import { demoBrand as brand, demoUI as ui } from "../previews/brand";
     <ColorSwatch
       brand={brand}
       ui={ui}
-      color={brand.colors.swatches[0]}
+      color={brand.colors.swatches.find((swatch) => swatch.id === "blue") ??
+        brand.colors.swatches[0]}
       print={false}
     />
   </div>

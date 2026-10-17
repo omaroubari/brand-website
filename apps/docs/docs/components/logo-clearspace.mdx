@@ -1,25 +1,41 @@
 ---
-title: LogoClearspace
-description: Props, defaults, and an MDX usage example for LogoClearspace.
+title: Logo Clearspace
+description: Show the protected space around your logo with a labeled measurement diagram.
 sidebar:
   order: 9
 ---
 
 import previewCode from "../../snippets/logo-clearspace.mdx?raw";
-
-`LogoClearspace` is available by name in Brandtree content MDX; no import is needed. Pass any required `brand`, `ui`, or `dir` props explicitly from `props.brand`, `props.ui`, and `props.dir`; the generated route supplies these values to the document. The optional `class` prop adds a class to the outer element; other HTML attributes are not forwarded automatically.
-
-This component requires `brand`. Artwork, aspect ratios, alt text, clearspace, and approved colorways come from `brand.logo`; set them in configuration rather than copying asset URLs into every page. Wherever supported, `mark` is `"logotype"` (default) or `"brandmark"`.
-
-## Preview
-
-The preview uses the sample brand. Copy the MDX from the Code tab into your own
-page to render the same example with your configured brand. See [Usage](#usage)
-for more options.
+import variantCode from "../../snippets/logo-clearspace-logotype.mdx?raw";
 
 <ComponentPreview path="logo-clearspace" code={previewCode} />
 
-## Props and behavior
+## Usage
+
+Pass the current brand and interface strings to display the logotype’s clearspace.
+Configure the artwork and `logo.clearspace` in [Logos](/logos).
+
+```mdx
+<LogoClearspace brand={props.brand} ui={props.ui} />
+```
+
+## Examples
+
+### Show the logotype
+
+The opening preview uses the brandmark. Omit `mark` to show the wider logotype
+with the same configured clearspace rule.
+
+<ComponentPreview path="logo-clearspace-logotype" code={variantCode} />
+
+## Clearspace behavior
+
+The diagram uses `brand.logo.clearspace.ratio` for its padding and
+`brand.logo.clearspace.unit` in the localized caption. There is no per-instance
+spacing override. Measurement ticks are hidden at viewport widths up to `34rem`;
+the protected zone and caption remain visible.
+
+## API reference
 
 <TypeTable
   type={{
@@ -43,13 +59,3 @@ for more options.
     },
   }}
 />
-
-**Also required:** `ui`. Optional: `mark`, `class`. Draws the safe-area measurement using `brand.logo.clearspace.ratio` and `.unit`; it does not accept a per-instance spacing override.
-
-## Usage
-
-```mdx
-<LogoClearspace brand={props.brand} ui={props.ui} mark="brandmark" />
-```
-
-Return to the [component overview](/components) for the full catalog and MDX conventions.

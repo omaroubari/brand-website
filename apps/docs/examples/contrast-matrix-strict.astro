@@ -1,0 +1,14 @@
+---
+import { ContrastMatrix } from "brandtree/components";
+import PreviewShell from "../previews/PreviewShell.astro";
+import { demoBrand as brand, demoUI as ui } from "../previews/brand";
+---
+
+<PreviewShell>
+  <ContrastMatrix
+    brand={brand}
+    ui={ui}
+    only={brand.colors.swatches.slice(0, 3).map(({ id }) => id)}
+    threshold={7}
+  />
+</PreviewShell>
