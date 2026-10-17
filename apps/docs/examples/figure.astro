@@ -1,0 +1,17 @@
+---
+import { Figure } from "brandtree/components";
+import PreviewShell from "../previews/PreviewShell.astro";
+import { demoUI as ui } from "../previews/brand";
+import { demoPhoto as photo } from "../previews/media";
+---
+
+<PreviewShell>
+  <Figure
+    ui={ui}
+    src={photo}
+    alt="An example photograph shown inside the brand's image frame"
+    caption="Photography application"
+    ratio="3 / 2"
+    fit="contain"
+  />
+</PreviewShell>

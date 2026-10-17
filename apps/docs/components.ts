@@ -1,6 +1,8 @@
 import { defineComponents } from "blume";
-import ComponentDemo from "./components/ComponentDemo.astro";
+import ComponentPreview from "./components/ComponentPreview.astro";
+import Sidebar from "./components/Sidebar.astro";
 
 export default defineComponents({
-  mdx: { ComponentDemo },
+  layout: { Sidebar },
+  mdx: { ComponentPreview },
 });

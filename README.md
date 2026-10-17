@@ -52,14 +52,14 @@ for detailed authoring and ownership rules.
 Run the CLI from the consumer root containing `brandtree.config.ts`; it does not
 search parent directories. Brandtree supplies Astro and its integrations.
 
-| Command               | Action                                                      |
-| --------------------- | ----------------------------------------------------------- |
-| `brandtree dev`       | Generate the runtime and start the development server       |
-| `brandtree build`     | Regenerate the runtime and build the static site to `dist/` |
-| `brandtree check`     | Validate inputs and check types without a production build  |
+| Command               | Action                                                        |
+| --------------------- | ------------------------------------------------------------- |
+| `brandtree dev`       | Generate the runtime and start the development server         |
+| `brandtree build`     | Regenerate the runtime and build the static site to `dist/`   |
+| `brandtree check`     | Validate inputs and check types without a production build    |
 | `brandtree preview`   | Serve the existing production build through the generated app |
-| `brandtree --help`    | Show available commands                                     |
-| `brandtree --version` | Show the installed version                                  |
+| `brandtree --help`    | Show available commands                                       |
+| `brandtree --version` | Show the installed version                                    |
 
 Brandtree supplies Astro, React, integrations, styling, and check tooling.
 Dependencies imported by custom author code remain the author's responsibility:
