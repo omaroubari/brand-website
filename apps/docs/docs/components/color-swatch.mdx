@@ -5,13 +5,19 @@ sidebar:
   order: 15
 ---
 
+import previewCode from "../../snippets/color-swatch.mdx?raw";
+
 `ColorSwatch` is available by name in Brandtree content MDX; no import is needed. Pass any required `brand`, `ui`, or `dir` props explicitly from `props.brand`, `props.ui`, and `props.dir`; the generated route supplies these values to the document. This component has no `class` prop.
 
 This component requires both `brand` and `ui`. Named swatches (`brand.colors.swatches`) are editorial selections; palette families (`brand.colors.palette`) contain the shade scales. Their IDs serve different selectors.
 
 ## Preview
 
-<ComponentDemo name="color-swatch" />
+The preview uses the sample brand. Copy the MDX from the Code tab into your own
+page to render the same example with your configured brand. See [Usage](#usage)
+for more options.
+
+<ComponentPreview path="color-swatch" code={previewCode} />
 
 ## Props and behavior
 

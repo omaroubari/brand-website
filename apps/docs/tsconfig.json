@@ -8,12 +8,15 @@
     "skipLibCheck": true,
     "types": ["astro/client"],
     "jsx": "react-jsx",
-    "allowImportingTsExtensions": true,
+    "allowImportingTsExtensions": true
   },
   "include": [
+    ".blume*/.astro/types.d.ts",
     "blume.config.ts",
+    "brandtree.config.ts",
     "components/**/*",
-    "pages/**/*",
-    "components.ts",
-  ],
+    "examples/**/*",
+    "previews/**/*",
+    "components.ts"
+  ]
 }

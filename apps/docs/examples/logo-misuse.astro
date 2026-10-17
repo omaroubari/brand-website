@@ -1,0 +1,24 @@
+---
+import { LogoMisuse } from "brandtree/components";
+import PreviewShell from "../previews/PreviewShell.astro";
+import { demoBrand as brand } from "../previews/brand";
+---
+
+<PreviewShell>
+  <LogoMisuse
+    brand={brand}
+    cols={2}
+    items={[
+      {
+        effect: "stretch",
+        title: "Do not stretch",
+        note: "Keep the original proportions.",
+      },
+      {
+        effect: "rotate",
+        title: "Do not rotate",
+        note: "Keep the artwork upright.",
+      },
+    ]}
+  />
+</PreviewShell>

@@ -5,13 +5,19 @@ sidebar:
   order: 10
 ---
 
+import previewCode from "../../snippets/logo-colorways.mdx?raw";
+
 `LogoColorways` is available by name in Brandtree content MDX; no import is needed. Pass any required `brand`, `ui`, or `dir` props explicitly from `props.brand`, `props.ui`, and `props.dir`; the generated route supplies these values to the document. The optional `class` prop adds a class to the outer element; other HTML attributes are not forwarded automatically.
 
 This component requires `brand`. Artwork, aspect ratios, alt text, clearspace, and approved colorways come from `brand.logo`; set them in configuration rather than copying asset URLs into every page. Wherever supported, `mark` is `"logotype"` (default) or `"brandmark"`.
 
 ## Preview
 
-<ComponentDemo name="logo-colorways" />
+The preview uses the sample brand. Copy the MDX from the Code tab into your own
+page to render the same example with your configured brand. See [Usage](#usage)
+for more options.
+
+<ComponentPreview path="logo-colorways" code={previewCode} />
 
 ## Props and behavior
 

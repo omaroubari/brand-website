@@ -1,0 +1,22 @@
+---
+import { Block, Panel, Logo } from "brandtree/components";
+import PreviewShell from "../previews/PreviewShell.astro";
+import { demoBrand as brand } from "../previews/brand";
+---
+
+<PreviewShell>
+  <Block id="primary-logo">
+    <Fragment slot="copy">
+      <h2>Primary logo</h2>
+      <p>Use the supplied artwork whenever the full name fits.</p>
+    </Fragment>
+    <Fragment slot="note">
+      <p>Never recreate the logotype using live text.</p>
+    </Fragment>
+    <Fragment slot="content">
+      <Panel brand={brand} ratio="16 / 9">
+        <Logo brand={brand} width="66%" />
+      </Panel>
+    </Fragment>
+  </Block>
+</PreviewShell>

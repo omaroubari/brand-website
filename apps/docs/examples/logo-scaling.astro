@@ -1,0 +1,15 @@
+---
+import { LogoScaling } from "brandtree/components";
+import PreviewShell from "../previews/PreviewShell.astro";
+import { demoBrand as brand } from "../previews/brand";
+---
+
+<PreviewShell>
+  <LogoScaling
+    brand={brand}
+    sizes={[
+      { width: "12rem", label: "Standard application" },
+      { width: "4rem", label: "Small digital application" },
+    ]}
+  />
+</PreviewShell>

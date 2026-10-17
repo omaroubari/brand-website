@@ -41,12 +41,23 @@ component catalog is nested under Content creation, with subgroups for layout,
 logos, colors, typography, voice, and collections. The explicit sidebar in
 `blume.config.ts` controls order while preserving existing page URLs.
 
+`components/Sidebar.astro` uses Blume's navigation tree with eager child rows.
+Groups retain their configured collapsed state, but opening a group does not
+need JavaScript or a fragment request. The Sidebar layout override also supplies
+the mobile drawer. Keep this behavior when changing sidebar components.
+
 Each public MDX export from `brandtree/components` has its own page there, with
 required props, defaults, and an MDX usage example. Keep the catalog synchronized
 with `packages/brandtree/src/components/mdx.ts` when adding or removing exports.
 
-Verify examples against
-`packages/brandtree/src/` and `apps/web/`; ADRs may describe future APIs.
+Verify examples against `packages/brandtree/src/` and the docs' own
+`brandtree.config.ts`; ADRs may describe future APIs.
+
+The docs app has two configuration files: `blume.config.ts` controls the docs
+website, and `brandtree.config.ts` defines its independent Brandtree example
+identity. Brand data, artwork paths, font declarations, and downloads for the
+component previews belong in the latter. Never import runtime data or assets
+from another app.
 
 The docs app uses Google Fonts through Blume: DM Sans for body and display,
 and DM Mono (400 and 500) for code. Blume downloads and self-hosts the fonts at
@@ -84,28 +95,34 @@ components inside fenced examples have different APIs (for example, Blume
 
 ## Live component previews
 
-Logo, ColorPalette, and TypeScale use Blume's native `<Component path="…" />`
-with Astro examples under `examples/`. Their Preview/Code tabs show actual
-Brandtree component usage. `components/demos/PreviewShell.astro` supplies the
-sample brand tokens, local font, overflow container, and optional client-only
-clipboard/toast controller. `examples.css` imports Brandtree's stylesheet into
-Blume's existing Tailwind pipeline. Keep helpers outside `examples/` so they do
-not become preview routes themselves. Blume generates isolated example routes,
-synchronizes their theme with the docs, and measures their height automatically.
-Native previews follow the page theme without a separate theme selector.
+All 28 reference pages use `ComponentPreview`, registered in `components.ts`.
+Each Astro file under `examples/` renders the actual Brandtree component through
+`previews/PreviewShell.astro`. Blume generates the isolated example routes
+and synchronizes their theme with the docs. `examples.css` loads Brandtree's
+stylesheet into the preview-only Tailwind pipeline.
 
-The remaining 25 reference pages use `components/ComponentDemo.astro`, registered
-through Blume's `components.ts` MDX map. It embeds an isolated static route from
-`pages/previews/[component].astro`, which renders actual `brandtree/components`
-with the framework stylesheet and generated brand tokens. These legacy frames
-fit their contents, scroll tall examples locally, and offer a per-preview
-light/dark selector in addition to following the docs theme.
+Each guide imports its displayed MDX from `snippets/*.mdx?raw`. Keep
+the snippet's props aligned with its matching Astro example; snippets use
+`props.brand`, `props.ui`, and `props.dir`, while examples pass resolved fixtures.
+Media snippets include authored asset imports relative to a content-root page;
+adjust those paths for nested or localized content. Other Usage examples may
+demonstrate additional variants.
 
-`components/demos/catalog.ts` lists the legacy routes; `DemoContent.astro` supplies
-their examples. Both preview systems share `demo-data.ts`, which resolves the web
-example's brand once and rewrites its artwork/download paths to imported build
-assets. This reuses the central sample configuration rather than maintaining a
-second brand. Photographs, icons, and font files are imported explicitly from
-`apps/web`; keep their original credits and licensing information with that app.
-Brandtree source changes appear in the previews after rebuilding the docs. Root
-docs dev/build scripts build the framework package first.
+`PreviewShell` supplies generated brand tokens, the sample font, local overflow,
+and optional client-only clipboard/toast behavior for color examples. Keep shared
+helpers outside `examples/` so they do not become example routes. The shared
+`previews/brand.ts` resolves the docs' own brand and mounts its public artwork/download
+paths; `previews/media.ts` supplies docs-owned photography and icons. Public artwork
+lives under `public/brand/`; fonts, photographs, icons, licenses, and credits live
+under `assets/`. Preview fonts load from bundled local files independently of
+the Google Fonts provider used by the surrounding docs website. Register any
+new local font file in `PreviewShell`'s static asset map so Vite can bundle it.
+
+`ComponentPreview` uses Blume's tabs and highlighting, but accepts the authored
+MDX instead of displaying the Astro harness. It validates the origin and sender
+of Blume's example-height messages and keeps both tabs the same height. When
+upgrading Blume, verify this protocol and the `blume:examples` lookup still match.
+
+Brandtree source changes appear after rebuilding the framework. Root docs
+dev/build scripts build the framework first. Use isolated checks/builds while
+the docs dev server is running.

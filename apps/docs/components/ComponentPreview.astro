@@ -1,0 +1,89 @@
+---
+import data from "blume:data";
+import { examples, examplesBase } from "blume:examples";
+import { highlightCode } from "blume/markdown";
+import Tab from "blume/components/content/Tab.astro";
+import Tabs from "blume/components/content/Tabs.astro";
+import { withMountedBase } from "blume/components/islands/base-path.ts";
+
+interface Props {
+  path: string;
+  code: string;
+}
+
+const { path, code } = Astro.props;
+if (!examples[path]) {
+  throw new Error(`No Blume preview example found for "${path}".`);
+}
+const src = withMountedBase(
+  `${examplesBase}/${path.split("/").map(encodeURIComponent).join("/")}`,
+);
+const codeHtml = await highlightCode(code.trim(), "mdx", {
+  className: "blume-source",
+  themes: data.config.codeThemes,
+});
+---
+
+<div data-component-preview>
+  <Tabs hash={false} sync={false}>
+    <Tab title="Preview" class="preview-pane p-0!">
+      <iframe
+        src={src}
+        title={`Preview: ${path}`}
+        loading="lazy"
+        data-component-preview-frame></iframe>
+    </Tab>
+    <Tab title="Code" class="preview-pane overflow-hidden">
+      <Fragment set:html={codeHtml} />
+    </Tab>
+  </Tabs>
+</div>
+
+<script>
+  // Match Blume's height reports to their sender before resizing the panes.
+  const selector = "iframe[data-component-preview-frame]";
+  const frames = () => document.querySelectorAll<HTMLIFrameElement>(selector);
+
+  window.addEventListener("message", (event) => {
+    if (
+      event.origin !== window.location.origin ||
+      event.data?.type !== "blume:example-height" ||
+      !Number.isFinite(event.data.height) ||
+      event.data.height <= 0
+    )
+      return;
+
+    const frame = Array.from(frames()).find(
+      (candidate) => candidate.contentWindow === event.source,
+    );
+    const preview = frame?.closest<HTMLElement>("[data-component-preview]");
+    preview?.style.setProperty(
+      "--preview-height",
+      `${Math.max(288, event.data.height)}px`,
+    );
+  });
+
+  function requestHeights() {
+    for (const frame of frames()) {
+      frame.contentWindow?.postMessage(
+        { type: "blume:example-height-request" },
+        window.location.origin,
+      );
+    }
+  }
+  requestHeights();
+  document.addEventListener("astro:page-load", requestHeights);
+</script>
+
+<style>
+  [data-component-preview] :global(.preview-pane) {
+    height: var(--preview-height, 18rem);
+    max-height: 100lvh;
+  }
+  iframe {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+</style>
