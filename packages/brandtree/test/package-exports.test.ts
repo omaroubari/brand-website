@@ -12,7 +12,7 @@ import {
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { beforeAll, expect, test } from "vitest";
+import { expect, test } from "vitest";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
 const manifest = JSON.parse(readFileSync(join(root, "package.json"), "utf8"));
@@ -25,10 +25,6 @@ test("the install-time CLI entry exists outside generated build output and is sh
     manifest.files.some((directory: string) => entry.startsWith(directory)),
   ).toBe(true);
 });
-
-beforeAll(() => {
-  execFileSync(process.execPath, ["scripts/build.mjs"], { cwd: root });
-}, 60_000);
 
 test("the CLI runs from source before compiled output exists", () => {
   const directory = mkdtempSync(join(tmpdir(), "brandtree-source-cli-"));

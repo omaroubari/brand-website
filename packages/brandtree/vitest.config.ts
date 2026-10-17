@@ -8,6 +8,9 @@ export default defineConfig({
     },
   },
   test: {
+    globalSetup: [
+      fileURLToPath(new URL("./test/global-setup.ts", import.meta.url)),
+    ],
     exclude: [...configDefaults.exclude, "tmp/**"],
   },
 });
