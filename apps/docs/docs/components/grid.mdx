@@ -1,26 +1,50 @@
 ---
 title: Grid
-description: Props, defaults, and an MDX usage example for Grid.
+description: Arrange related specimens in responsive columns.
 sidebar:
   order: 2
 ---
 
 import previewCode from "../../snippets/grid.mdx?raw";
-
-`Grid` is available by name in Brandtree content MDX; no import is needed. Pass any required `brand`, `ui`, or `dir` props explicitly from `props.brand`, `props.ui`, and `props.dir`; the generated route supplies these values to the document. The optional `class` prop adds a class to the outer element; other HTML attributes are not forwarded automatically.
-
-## Preview
-
-The preview uses the sample brand. Copy the MDX from the Code tab into your own
-page to render the same example with your configured brand. See [Usage](#usage)
-for more options.
-
-The media imports assume a page at the content root. Use your own assets and
-adjust import paths for nested or localized pages.
+import example0 from "../../snippets/grid-compact.mdx?raw";
 
 <ComponentPreview path="grid" code={previewCode} />
 
-## Props and behavior
+## Usage
+
+Wrap prose or other components in `Grid`. The grid itself needs no brand or
+interface props; forward those to children that require them.
+
+```mdx
+<Grid cols={2}>
+  <Figure ui={props.ui} caption="Front" />
+  <Figure ui={props.ui} caption="Back" />
+</Grid>
+```
+
+These figures render draft placeholders until you provide `src`. For image
+imports and captions, see [Figure](/components/figure). The preview’s Code tab
+includes an image import relative to a content-root page; use your own asset and
+adjust the path for nested or localized content.
+
+## Examples
+
+### Keep two columns on small screens
+
+Set `colsSm={2}` to keep specimens side by side on narrow screens. A smaller spacing token brings them closer together.
+
+<ComponentPreview path="grid-compact" code={example0} />
+
+## Responsive behavior
+
+Below `48rem`, the grid uses `colsSm`; at `48rem` and above, it uses `cols`.
+The breakpoint follows the available width of the browser viewport, including
+inside an embedded preview. Resize the page to compare the layouts.
+
+Children render in document order. Use positive whole numbers for column counts
+and spacing tokens such as `var(--space-l)` for gaps.
+
+## API reference
 
 <TypeTable
   type={{
@@ -37,6 +61,7 @@ adjust import paths for nested or localized pages.
     gap: {
       type: "string",
       description: "Any CSS length, or a --space-* value.",
+      default: "var(--space-m)",
     },
     class: {
       type: "string",
@@ -44,16 +69,3 @@ adjust import paths for nested or localized pages.
     },
   }}
 />
-
-Arrange children in a responsive grid. Optional props: `cols` (number, default `3`, medium screens upward), `colsSm` (number, default `1`), `gap` (CSS length; omitted uses `var(--space-m)`), `class`.
-
-## Usage
-
-```mdx
-<Grid cols={2} colsSm={1} gap="var(--space-l)">
-  <Figure ui={props.ui} caption="Front" />
-  <Figure ui={props.ui} caption="Back" />
-</Grid>
-```
-
-Return to the [component overview](/components) for the full catalog and MDX conventions.

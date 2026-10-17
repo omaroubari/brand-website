@@ -1,25 +1,44 @@
 ---
-title: ColorScale
-description: Props, defaults, and an MDX usage example for ColorScale.
+title: Color Scale
+description: Display the published shade stops for each configured palette family.
 sidebar:
   order: 16
 ---
 
 import previewCode from "../../snippets/color-scale.mdx?raw";
-
-`ColorScale` is available by name in Brandtree content MDX; no import is needed. Pass any required `brand`, `ui`, or `dir` props explicitly from `props.brand`, `props.ui`, and `props.dir`; the generated route supplies these values to the document. The optional `class` prop adds a class to the outer element; other HTML attributes are not forwarded automatically.
-
-This component requires both `brand` and `ui`. Named swatches (`brand.colors.swatches`) are editorial selections; palette families (`brand.colors.palette`) contain the shade scales. Their IDs serve different selectors.
-
-## Preview
-
-The preview uses the sample brand. Copy the MDX from the Code tab into your own
-page to render the same example with your configured brand. See [Usage](#usage)
-for more options.
+import variantCode from "../../snippets/color-scale-selected.mdx?raw";
 
 <ComponentPreview path="color-scale" code={previewCode} />
 
-## Props and behavior
+## Usage
+
+Pass the current brand and interface strings to display all families from
+`brand.colors.palette`. Define the shade values in [Colors](/colors).
+
+```mdx
+<ColorScale brand={props.brand} ui={props.ui} />
+```
+
+## Examples
+
+### Select and order families
+
+Pass palette family IDs to `only` in display order. This example takes the first
+two configured families and reverses their order.
+
+<ComponentPreview path="color-scale-selected" code={variantCode} />
+
+## Selection behavior
+
+Family IDs come from `brand.colors.palette`, rather than the named swatches in
+`brand.colors.swatches`. An unknown family ID throws an error; `only={[]}`
+renders the shade headers without any family rows.
+
+Each row displays the eleven published stops from `50` through `950`. The
+component uses those configured values directly rather than generating a new
+ramp. Each shade is a copy button in the standard Brandtree runtime.
+
+## API reference
 
 <TypeTable
   type={{
@@ -44,13 +63,3 @@ for more options.
     },
   }}
 />
-
-Optional: `only` (palette **family** IDs in display order), `class`. Defaults to all configured families. Displays the published shade stops from `50` through `950`. Unknown selected family IDs throw an error.
-
-## Usage
-
-```mdx
-<ColorScale brand={props.brand} ui={props.ui} />
-```
-
-Return to the [component overview](/components) for the full catalog and MDX conventions.

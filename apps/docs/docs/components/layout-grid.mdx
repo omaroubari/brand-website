@@ -1,23 +1,47 @@
 ---
-title: LayoutGrid
-description: Props, defaults, and an MDX usage example for LayoutGrid.
+title: Layout Grid
+description: Illustrate a composition grid with columns, margins, gutters, and supporting specifications.
 sidebar:
   order: 28
 ---
 
 import previewCode from "../../snippets/layout-grid.mdx?raw";
-
-`LayoutGrid` is available by name in Brandtree content MDX; no import is needed. Pass any required `brand`, `ui`, or `dir` props explicitly from `props.brand`, `props.ui`, and `props.dir`; the generated route supplies these values to the document. The optional `class` prop adds a class to the outer element; other HTML attributes are not forwarded automatically.
-
-## Preview
-
-The preview uses the sample brand. Copy the MDX from the Code tab into your own
-page to render the same example with your configured brand. See [Usage](#usage)
-for more options.
+import example0 from "../../snippets/layout-grid-mobile.mdx?raw";
 
 <ComponentPreview path="layout-grid" code={previewCode} />
 
-## Props and behavior
+## Usage
+
+Use `LayoutGrid` to document a layout specification. With no props, it draws a
+12-column canvas at a `16 / 9` aspect ratio.
+
+```mdx
+<LayoutGrid />
+```
+
+The default preview adds a label and specification row. This diagram describes
+a composition; to arrange actual page content, use [Grid](/components/grid).
+
+## Examples
+
+### Describe a mobile composition
+
+Use fewer columns and a portrait ratio to document a narrow canvas. Include the
+actual dimensions in `specs` so readers can reproduce the grid.
+
+<ComponentPreview path="layout-grid-mobile" code={example0} />
+
+## Diagram scale
+
+The drawing scales the stated margin to one quarter and the gutter to one half
+so the diagram stays readable. These values affect the drawing; they do not
+configure the website's layout. Add `specs` when the real dimensions need to
+appear as text below the diagram.
+
+Use positive whole numbers for columns and CSS lengths for margins and gutters.
+The component has no content slots.
+
+## API reference
 
 <TypeTable
   type={{
@@ -28,13 +52,12 @@ for more options.
     },
     gutter: {
       type: "string",
-      description:
-        "Gutter between columns, as a CSS length — label only, drawn proportionally.",
+      description: "CSS length; drawn at half the stated gutter.",
       default: '"30px"',
     },
     margin: {
       type: "string",
-      description: "Outer margin, as a CSS length.",
+      description: "CSS length; drawn at one quarter of the stated margin.",
       default: '"100px"',
     },
     ratio: {
@@ -57,22 +80,3 @@ for more options.
     },
   }}
 />
-
-A layout-specification diagram. Optional: `columns` (default `12`), `gutter` (default `"30px"`, a label; the visual is proportional), `margin` (default `"100px"`, CSS length), `ratio` (default `"16 / 9"`), `label`, `specs` (array of `{ term: string, value: string }`, default empty), `class`.
-
-## Usage
-
-```mdx
-<LayoutGrid
-  columns={12}
-  gutter="24px"
-  margin="48px"
-  ratio="16 / 9"
-  label="Desktop composition"
-  specs={[{ term: "Alignment", value: "Content follows the column grid" }]}
-/>
-```
-
-This illustrates the grid you are documenting. It does not set the website's layout system; use configuration for the framework's own layout tokens.
-
-Return to the [component overview](/components) for the full catalog and MDX conventions.

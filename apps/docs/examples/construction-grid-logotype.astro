@@ -1,0 +1,15 @@
+---
+import { ConstructionGrid } from "brandtree/components";
+import PreviewShell from "../previews/PreviewShell.astro";
+import { demoBrand as brand } from "../previews/brand";
+---
+
+<PreviewShell>
+  <ConstructionGrid
+    brand={brand}
+    mark="logotype"
+    cols={12}
+    rows={4}
+    caption="A rectangular field for the logotype; use the supplied artwork."
+  />
+</PreviewShell>

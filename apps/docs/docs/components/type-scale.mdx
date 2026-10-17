@@ -1,23 +1,42 @@
 ---
-title: TypeScale
-description: Props, defaults, and an MDX usage example for TypeScale.
+title: Type Scale
+description: Show your configured type styles at their actual sizes alongside screen and print specifications.
 sidebar:
   order: 19
 ---
 
 import previewCode from "../../snippets/type-scale.mdx?raw";
-
-`TypeScale` is available by name in Brandtree content MDX; no import is needed. Pass any required `brand`, `ui`, or `dir` props explicitly from `props.brand`, `props.ui`, and `props.dir`; the generated route supplies these values to the document. The optional `class` prop adds a class to the outer element; other HTML attributes are not forwarded automatically.
-
-## Preview
-
-The preview uses the sample brand. Copy the MDX from the Code tab into your own
-page to render the same example with your configured brand. See [Usage](#usage)
-for more options.
+import example0 from "../../snippets/type-scale-selected.mdx?raw";
 
 <ComponentPreview path="type-scale" code={previewCode} />
 
-## Props and behavior
+## Usage
+
+Pass the current brand and interface strings to show every configured type style
+in configuration order. Define the styles in [Typography](/typography).
+
+```mdx
+<TypeScale brand={props.brand} ui={props.ui} />
+```
+
+## Examples
+
+### Focus on a few styles
+
+This example takes the last three configured styles, hides print specifications, and supplies fallback sample text. Pass names or IDs to `only` to choose a different order.
+
+<ComponentPreview path="type-scale-selected" code={example0} />
+
+## Selection and sample text
+
+`only` preserves the order you supply. Unknown names or IDs throw an error; an
+empty array renders no rows. Without `only`, every configured style appears.
+
+A style’s own `sample` takes precedence over the component’s `sample` prop.
+Print specifications appear only when `print` is enabled and the style has a
+`print` entry.
+
+## API reference
 
 <TypeTable
   type={{
@@ -33,7 +52,8 @@ for more options.
     },
     only: {
       type: "string[]",
-      description: "Restrict to these style names, in this order.",
+      description:
+        "Select style names or IDs in display order. Defaults to all configured styles.",
     },
     print: {
       type: "boolean",
@@ -51,18 +71,3 @@ for more options.
     },
   }}
 />
-
-**Required:** `brand`, `ui`. Optional: `only` (type style names **or IDs**, in order), `print` (default `true`), `sample` (fallback sample text), `class`. Defaults to every `brand.typography.scale` entry. Each entry's own `sample` wins over the fallback; the built-in fallback is `"Crafting strategic visual brand identities"`. Unknown selected styles throw an error.
-
-## Usage
-
-```mdx
-<TypeScale
-  brand={props.brand}
-  ui={props.ui}
-  print={false}
-  sample="A clear voice, wherever we appear."
-/>
-```
-
-Return to the [component overview](/components) for the full catalog and MDX conventions.

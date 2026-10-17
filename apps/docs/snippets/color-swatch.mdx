@@ -2,7 +2,10 @@
   <ColorSwatch
     brand={props.brand}
     ui={props.ui}
-    color={props.brand.colors.swatches[0]}
+    color={
+      props.brand.colors.swatches.find((swatch) => swatch.id === "blue") ??
+      props.brand.colors.swatches[0]
+    }
     print={false}
   />
 </div>
