@@ -1,7 +1,9 @@
 ---
 import data from "blume:data";
 import { examples, examplesBase } from "blume:examples";
-import { highlightCode } from "blume/markdown";
+import { Code } from "astro:components";
+import type { ComponentProps } from "astro/types";
+import { blumeShikiTransformers } from "blume/markdown";
 import Tab from "blume/components/content/Tab.astro";
 import Tabs from "blume/components/content/Tabs.astro";
 import { withMountedBase } from "blume/components/islands/base-path.ts";
@@ -11,17 +13,19 @@ interface Props {
   code: string;
 }
 
+// Blume validates theme names as strings; Astro types bundled names as a union.
+const codeThemes = data.config.codeThemes as ComponentProps<
+  typeof Code
+>["themes"];
+
 const { path, code } = Astro.props;
+
 if (!examples[path]) {
   throw new Error(`No Blume preview example found for "${path}".`);
 }
 const src = withMountedBase(
   `${examplesBase}/${path.split("/").map(encodeURIComponent).join("/")}`,
 );
-const codeHtml = await highlightCode(code.trim(), "mdx", {
-  className: "blume-source",
-  themes: data.config.codeThemes,
-});
 ---
 
 <div data-component-preview>
@@ -34,7 +38,18 @@ const codeHtml = await highlightCode(code.trim(), "mdx", {
         data-component-preview-frame></iframe>
     </Tab>
     <Tab title="Code" class="preview-pane overflow-hidden">
-      <Fragment set:html={codeHtml} />
+      {
+        /* Load JSX grammars explicitly: MDX embeds them for component markup. */
+      }
+      <Code
+        code={code.trim()}
+        lang="mdx"
+        embeddedLangs={["jsx", "tsx", "css"]}
+        themes={codeThemes}
+        defaultColor={false}
+        transformers={blumeShikiTransformers()}
+        class="blume-source"
+      />
     </Tab>
   </Tabs>
 </div>
