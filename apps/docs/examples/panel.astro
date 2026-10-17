@@ -1,0 +1,22 @@
+---
+import { Panel, Logo } from "brandtree/components";
+import PreviewShell from "../previews/PreviewShell.astro";
+import { demoBrand as brand } from "../previews/brand";
+const colorway = brand.logo.colorways[0];
+---
+
+<PreviewShell>
+  <Panel
+    brand={brand}
+    bg={colorway?.bg}
+    fg={colorway?.fg}
+    ratio="16 / 9"
+    caption="An approved color pairing."
+    label="Primary">
+    <Logo
+      brand={brand}
+      tint={colorway ? `var(--color-${colorway.fg})` : undefined}
+      width="60%"
+    />
+  </Panel>
+</PreviewShell>

@@ -1,0 +1,78 @@
+---
+import { brandStyleSheet } from "brandtree";
+import ColorInteractions from "./ColorInteractions";
+import { demoBrand, demoConfig, demoUI } from "./brand";
+import sansUrl from "../assets/fonts/DMSans-Variable.woff2?url";
+import monoRegularUrl from "../assets/fonts/DMMono-Regular.woff2?url";
+import monoMediumUrl from "../assets/fonts/DMMono-Medium.woff2?url";
+
+interface Props {
+  colorInteractions?: boolean;
+}
+
+const { colorInteractions = false } = Astro.props;
+
+// The stylesheet is loaded once through examples.css. Keep shared preview
+// styling and interactions outside the individual runnable examples.
+const fontUrls = new Map([
+  ["./assets/fonts/DMSans-Variable.woff2", sansUrl],
+  ["./assets/fonts/DMMono-Regular.woff2", monoRegularUrl],
+  ["./assets/fonts/DMMono-Medium.woff2", monoMediumUrl],
+]);
+
+const fontCss = demoConfig.fonts
+  .map((font) => {
+    if (font.provider !== "local") {
+      throw new Error("Documentation preview fonts must use local files.");
+    }
+    const faces = font.options.variants.map((variant) => {
+      const sources = variant.src.map((source) => {
+        const url = fontUrls.get(source);
+        if (!url) throw new Error(`Register the preview font asset: ${source}`);
+        return `url(${JSON.stringify(url)}) format('woff2')`;
+      });
+      return `@font-face {
+      font-family: ${JSON.stringify(font.name)};
+      src: ${sources.join(", ")};
+      font-weight: ${variant.weight ?? 400};
+      font-style: ${variant.style ?? "normal"};
+      font-display: swap;
+    }`;
+    });
+    const family = [JSON.stringify(font.name), ...(font.fallbacks ?? [])].join(
+      ", ",
+    );
+    return `${faces.join("\n")}\n:root { ${font.cssVariable}: ${family}; }`;
+  })
+  .join("\n");
+---
+
+<style is:global set:html={brandStyleSheet(demoBrand) + fontCss}></style>
+
+<div class="preview-shell">
+  <slot />
+</div>
+{
+  colorInteractions && (
+    <ColorInteractions
+      labels={{
+        close: demoUI.nav.close,
+        copied: demoUI.actions.copied,
+        copyFailed: demoUI.actions.copyFailed,
+        colorCopied: demoUI.color.copied,
+      }}
+      client:only="react"
+    />
+  )
+}
+
+<style>
+  .preview-shell {
+    min-inline-size: 0;
+    inline-size: 100%;
+    overflow-x: auto;
+  }
+  .preview-shell > :global(*) {
+    min-inline-size: 0;
+  }
+</style>

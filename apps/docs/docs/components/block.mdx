@@ -5,11 +5,17 @@ sidebar:
   order: 1
 ---
 
+import previewCode from "../../snippets/block.mdx?raw";
+
 `Block` is available by name in Brandtree content MDX; no import is needed. Pass any required `brand`, `ui`, or `dir` props explicitly from `props.brand`, `props.ui`, and `props.dir`; the generated route supplies these values to the document. The optional `class` prop adds a class to the outer element; other HTML attributes are not forwarded automatically.
 
 ## Preview
 
-<ComponentDemo name="block" />
+The preview uses the sample brand. Copy the MDX from the Code tab into your own
+page to render the same example with your configured brand. See [Usage](#usage)
+for more options.
+
+<ComponentPreview path="block" code={previewCode} />
 
 ## Props and behavior
 
