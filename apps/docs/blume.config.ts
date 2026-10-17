@@ -142,6 +142,10 @@ export default defineConfig({
       },
     ],
   },
+  examples: {
+    source: "examples",
+    css: "examples.css",
+  },
   content: {
     root: "docs",
   },
