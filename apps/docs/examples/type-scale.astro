@@ -1,0 +1,18 @@
+---
+import { TypeScale } from "brandtree/components";
+import PreviewShell from "../components/demos/PreviewShell.astro";
+import {
+  demoBrand as brand,
+  demoUI as ui,
+} from "../components/demos/demo-data";
+---
+
+<PreviewShell>
+  <TypeScale
+    brand={brand}
+    ui={ui}
+    only={brand.typography.scale.slice(-3).map(({ id }) => id)}
+    print={false}
+    sample="A clear voice, wherever we appear."
+  />
+</PreviewShell>

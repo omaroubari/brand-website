@@ -84,18 +84,28 @@ components inside fenced examples have different APIs (for example, Blume
 
 ## Live component previews
 
-Each reference page uses `components/ComponentDemo.astro`, registered through
-Blume's `components.ts` MDX map. It embeds an
-isolated static route from `pages/previews/[component].astro`, which renders
-actual `brandtree/components` with the framework stylesheet and generated brand
-tokens. The frame automatically fits its contents, with local scrolling for tall
-examples, and follows the docs theme unless the reader selects light or dark.
+Logo, ColorPalette, and TypeScale use Blume's native `<Component path="…" />`
+with Astro examples under `examples/`. Their Preview/Code tabs show actual
+Brandtree component usage. `components/demos/PreviewShell.astro` supplies the
+sample brand tokens, local font, overflow container, and optional client-only
+clipboard/toast controller. `examples.css` imports Brandtree's stylesheet into
+Blume's existing Tailwind pipeline. Keep helpers outside `examples/` so they do
+not become preview routes themselves. Blume generates isolated example routes,
+synchronizes their theme with the docs, and measures their height automatically.
+Native previews follow the page theme without a separate theme selector.
 
-`components/demos/catalog.ts` lists the routes; `DemoContent.astro` supplies each
-example. `demo-data.ts` resolves the web example's brand once and rewrites its
-artwork/download paths to imported build assets. This reuses the central sample
-configuration rather than maintaining a second brand. Photographs, icons, and
-font files are imported explicitly from `apps/web`; keep their original credits
-and licensing information with that app. Brandtree source changes appear in the
-previews after rebuilding the docs. Root docs dev/build scripts build the
-framework package first.
+The remaining 25 reference pages use `components/ComponentDemo.astro`, registered
+through Blume's `components.ts` MDX map. It embeds an isolated static route from
+`pages/previews/[component].astro`, which renders actual `brandtree/components`
+with the framework stylesheet and generated brand tokens. These legacy frames
+fit their contents, scroll tall examples locally, and offer a per-preview
+light/dark selector in addition to following the docs theme.
+
+`components/demos/catalog.ts` lists the legacy routes; `DemoContent.astro` supplies
+their examples. Both preview systems share `demo-data.ts`, which resolves the web
+example's brand once and rewrites its artwork/download paths to imported build
+assets. This reuses the central sample configuration rather than maintaining a
+second brand. Photographs, icons, and font files are imported explicitly from
+`apps/web`; keep their original credits and licensing information with that app.
+Brandtree source changes appear in the previews after rebuilding the docs. Root
+docs dev/build scripts build the framework package first.
