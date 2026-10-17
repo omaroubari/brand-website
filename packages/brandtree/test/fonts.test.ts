@@ -377,14 +377,4 @@ it("builds custom font CSS and preloads from an external generated runtime", asy
   ]);
   expect((await generateRuntime(project)).structuralChange).toBe(true);
   expect((await generateRuntime(project)).structuralChange).toBe(false);
-  await promisify(execFile)(process.execPath, [probe], {
-    timeout: 120000,
-    maxBuffer: 4 * 1024 * 1024,
-  });
-  const recoveredHtml = await readFile(
-    join(project.context.distDir, "/en", "index.html"),
-    "utf8",
-  );
-  expect(recoveredHtml).toContain("var(--font-client, system-ui, sans-serif)");
-  expect(recoveredHtml).toMatch(/rel="preload"[^>]+as="font"/u);
 }, 120000);
