@@ -5,6 +5,7 @@ export default defineConfig({
   logo: { image: "/logo.svg", text: "" },
   description: "Build and maintain brand guidelines with Brandtree.",
   theme: {
+    accent: "#2563eb",
     fonts: {
       body: "dm-sans",
       display: "dm-sans",
