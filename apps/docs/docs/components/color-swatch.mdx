@@ -1,25 +1,52 @@
 ---
-title: ColorSwatch
-description: Props, defaults, and an MDX usage example for ColorSwatch.
+title: Color Swatch
+description: Display one named brand color with its source value and optional print specifications.
 sidebar:
   order: 15
 ---
 
 import previewCode from "../../snippets/color-swatch.mdx?raw";
-
-`ColorSwatch` is available by name in Brandtree content MDX; no import is needed. Pass any required `brand`, `ui`, or `dir` props explicitly from `props.brand`, `props.ui`, and `props.dir`; the generated route supplies these values to the document. This component has no `class` prop.
-
-This component requires both `brand` and `ui`. Named swatches (`brand.colors.swatches`) are editorial selections; palette families (`brand.colors.palette`) contain the shade scales. Their IDs serve different selectors.
-
-## Preview
-
-The preview uses the sample brand. Copy the MDX from the Code tab into your own
-page to render the same example with your configured brand. See [Usage](#usage)
-for more options.
+import variantCode from "../../snippets/color-swatch-print.mdx?raw";
 
 <ComponentPreview path="color-swatch" code={previewCode} />
 
-## Props and behavior
+## Usage
+
+Pass a configured swatch object, not its ID. This example needs at least one
+entry in `brand.colors.swatches`; define those entries in [Colors](/colors).
+The wrapper scopes the built-in copy interaction to this swatch.
+
+```mdx
+<div data-color-palette>
+  <ColorSwatch
+    brand={props.brand}
+    ui={props.ui}
+    color={props.brand.colors.swatches[0]}
+  />
+</div>
+```
+
+## Examples
+
+### Include print specifications
+
+The opening preview hides supplementary values with `print={false}`. Omit that
+prop to show RGB, any configured CMYK and Pantone values, and a hex conversion
+when the source color uses a different color space.
+
+<ComponentPreview path="color-swatch-print" code={variantCode} />
+
+## Swatch resolution
+
+The component looks up `color.id` in the current brand’s swatches and uses the
+matching localized entry when available. If the ID is absent, it uses the
+supplied object. The source value and configured usage note remain visible when
+`print={false}`.
+
+There is no `class` prop; place layout classes on a wrapper. For a group of
+swatches with selection and ordering, use [Color Palette](/components/color-palette).
+
+## API reference
 
 <TypeTable
   type={{
@@ -43,20 +70,3 @@ for more options.
     },
   }}
 />
-
-**Also required:** `color` (a configured `BrandSwatch` object, not its ID). Optional: `print` (default `true`). No `class` prop. Resolves the swatch by ID against the localized brand where available.
-
-## Usage
-
-```mdx
-<ColorSwatch
-  brand={props.brand}
-  ui={props.ui}
-  color={props.brand.colors.swatches[0]}
-  print={false}
-/>
-```
-
-This example requires at least one swatch. Prefer selecting an existing configured swatch over creating an inline object with duplicate brand values.
-
-Return to the [component overview](/components) for the full catalog and MDX conventions.

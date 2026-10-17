@@ -1,23 +1,41 @@
 ---
-title: ValueGrid
-description: Props, defaults, and an MDX usage example for ValueGrid.
+title: Value Grid
+description: Present brand values as large headings paired with concise explanations.
 sidebar:
   order: 23
 ---
 
 import previewCode from "../../snippets/value-grid.mdx?raw";
-
-`ValueGrid` is available by name in Brandtree content MDX; no import is needed. Pass any required `brand`, `ui`, or `dir` props explicitly from `props.brand`, `props.ui`, and `props.dir`; the generated route supplies these values to the document. The optional `class` prop adds a class to the outer element; other HTML attributes are not forwarded automatically.
-
-## Preview
-
-The preview uses the sample brand. Copy the MDX from the Code tab into your own
-page to render the same example with your configured brand. See [Usage](#usage)
-for more options.
+import example0 from "../../snippets/value-grid-unnumbered.mdx?raw";
 
 <ComponentPreview path="value-grid" code={previewCode} />
 
-## Props and behavior
+## Usage
+
+Supply a title and plain-text explanation for each value. Values appear in the
+order you provide, with two-digit numbers beside their headings.
+
+```mdx
+<ValueGrid
+  items={[{ title: "Clarity", body: "Make the important thing easy to find." }]}
+/>
+```
+
+## Examples
+
+### Remove the visible numbering
+
+Hide the superscript numbers when the values should read as a set of equal principles.
+
+<ComponentPreview path="value-grid-unnumbered" code={example0} />
+
+## Content and layout
+
+`body` accepts plain text, not nested MDX. The component always uses an ordered
+list, even with visible numbering hidden. At `48rem` and above, each heading and
+explanation sit side by side; below that width they stack.
+
+## API reference
 
 <TypeTable
   type={{
@@ -36,19 +54,3 @@ for more options.
     },
   }}
 />
-
-**Required:** `items`, an array of `{ title: string, body: string }`. Optional: `numbered` (default `true`), `class`. Item bodies are strings, not nested MDX slots.
-
-## Usage
-
-```mdx
-<ValueGrid
-  numbered={false}
-  items={[
-    { title: "Clarity", body: "Make the important thing easy to find." },
-    { title: "Care", body: "Consider the person using the work." },
-  ]}
-/>
-```
-
-Return to the [component overview](/components) for the full catalog and MDX conventions.

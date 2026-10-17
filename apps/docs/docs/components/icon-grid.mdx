@@ -1,26 +1,52 @@
 ---
-title: IconGrid
-description: Props, defaults, and an MDX usage example for IconGrid.
+title: Icon Grid
+description: Show a named SVG icon set with version labels and a construction-grid overlay.
 sidebar:
   order: 25
 ---
 
 import previewCode from "../../snippets/icon-grid.mdx?raw";
-
-`IconGrid` is available by name in Brandtree content MDX; no import is needed. Pass any required `brand`, `ui`, or `dir` props explicitly from `props.brand`, `props.ui`, and `props.dir`; the generated route supplies these values to the document. The optional `class` prop adds a class to the outer element; other HTML attributes are not forwarded automatically.
-
-## Preview
-
-The preview uses the sample brand. Copy the MDX from the Code tab into your own
-page to render the same example with your configured brand. See [Usage](#usage)
-for more options.
-
-The media imports assume a page at the content root. Use your own assets and
-adjust import paths for nested or localized pages.
+import example0 from "../../snippets/icon-grid-selected.mdx?raw";
 
 <ComponentPreview path="icon-grid" code={previewCode} />
 
-## Props and behavior
+## Usage
+
+Supply an array of named SVG source strings. This inline example is complete;
+for larger sets, export the array from your own asset module as in the preview.
+
+```mdx
+<IconGrid
+  icons={[
+    {
+      name: "circle",
+      svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="8" /></svg>',
+    },
+  ]}
+/>
+```
+
+The preview’s import assumes a page at the content root. Adjust the path for
+nested or localized content. The component does not discover SVG files.
+
+## Examples
+
+### Select and order icons
+
+Pass icon names to `only` in display order. This example takes the first two supplied icons and reverses them.
+
+<ComponentPreview path="icon-grid-selected" code={example0} />
+
+## Selection and construction grid
+
+Without `only`, icons sort alphabetically by name. An unknown selected name throws
+an error; an empty selection renders no tiles. The first displayed tile gets the
+construction grid; `unit` changes the overlay divisions, not the SVG’s view box.
+
+Below `48rem`, the layout uses two columns regardless of `cols`. SVG strings render
+as HTML, so supply trusted project assets.
+
+## API reference
 
 <TypeTable
   type={{
@@ -54,17 +80,3 @@ adjust import paths for nested or localized pages.
     },
   }}
 />
-
-**Required:** `icons`, an array of `{ name: string, svg: string }`. Optional: `only` (names in display order), `unit` (default `24`, overlay grid), `version` (default `"v1.0"`), `cols` (default `4`), `class`.
-
-## Usage
-
-```mdx
-import { icons } from "../../assets/icons/index.ts";
-
-<IconGrid icons={icons} unit={24} cols={4} version="v1.0" />
-```
-
-Supply SVG source strings from your own asset module; the component does not discover files. Without `only`, names sort alphabetically. Unknown names in `only` throw an error. SVG markup is rendered as HTML, so use trusted project assets. Adapt the import path to the location of your MDX file.
-
-Return to the [component overview](/components) for the full catalog and MDX conventions.

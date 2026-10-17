@@ -1,25 +1,60 @@
 ---
-title: LogoScaling
-description: Props, defaults, and an MDX usage example for LogoScaling.
+title: Logo Scaling
+description: Compare logo sizes side by side and display your configured minimum-size guidance.
 sidebar:
   order: 11
 ---
 
 import previewCode from "../../snippets/logo-scaling.mdx?raw";
 
-`LogoScaling` is available by name in Brandtree content MDX; no import is needed. Pass any required `brand`, `ui`, or `dir` props explicitly from `props.brand`, `props.ui`, and `props.dir`; the generated route supplies these values to the document. The optional `class` prop adds a class to the outer element; other HTML attributes are not forwarded automatically.
-
-This component requires `brand`. Artwork, aspect ratios, alt text, clearspace, and approved colorways come from `brand.logo`; set them in configuration rather than copying asset URLs into every page. Wherever supported, `mark` is `"logotype"` (default) or `"brandmark"`.
-
-## Preview
-
-The preview uses the sample brand. Copy the MDX from the Code tab into your own
-page to render the same example with your configured brand. See [Usage](#usage)
-for more options.
-
 <ComponentPreview path="logo-scaling" code={previewCode} />
 
-## Props and behavior
+## Usage
+
+Pass the current brand to show the built-in demonstration sizes.
+Set the published digital and print minimums in [Logos](/logos).
+
+```mdx
+<LogoScaling brand={props.brand} />
+```
+
+## Examples
+
+### Publish application sizes
+
+Replace the demonstration sizes with the specifications your brand actually uses.
+Each label is editorial copy; the component does not convert CSS lengths to print measurements.
+
+```mdx
+<LogoScaling
+  brand={props.brand}
+  sizes={[
+    { width: "12rem", label: "Standard application" },
+    { width: "4rem", label: "Small digital application" },
+  ]}
+/>
+```
+
+This is the size set shown in the opening preview. Supply sizes largest first;
+the component preserves the array order rather than sorting it.
+
+## Size behavior
+
+The built-in demonstration widths and labels are:
+
+| Width      | Label          |
+| ---------- | -------------- |
+| `18rem`    | 288 px / 49 mm |
+| `11.25rem` | 180 px / 30 mm |
+| `9rem`     | 144 px / 24 mm |
+| `4.5rem`   | 72 px / 12 mm  |
+| `2.25rem`  | 36 px / 6 mm   |
+
+The minimum-size caption always reads `brand.logo.minSize.digital` and
+`brand.logo.minSize.print`. Changing `sizes` or `mark` does not change those
+values or prevent artwork from rendering below the stated minimum.
+
+## API reference
 
 <TypeTable
   type={{
@@ -35,7 +70,7 @@ for more options.
     sizes: {
       type: "Array<{ width: string; label: string }>",
       description:
-        "Sizes to show, largest first. width is any CSS length; label is the spec as written in the guidelines.",
+        "Display widths and editorial labels, in supplied order. Defaults to the five demonstration sizes listed above.",
     },
     class: {
       type: "string",
@@ -43,19 +78,3 @@ for more options.
     },
   }}
 />
-
-Optional: `mark`, `sizes` (array of `{ width: string, label: string }`), `class`. Supply sizes largest first. Defaults: `18rem` / `288 px / 49 mm`, `11.25rem` / `180 px / 30 mm`, `9rem` / `144 px / 24 mm`, `4.5rem` / `72 px / 12 mm`, `2.25rem` / `36 px / 6 mm`. These are demonstration defaults; replace them with the actual usage specifications for your brand.
-
-## Usage
-
-```mdx
-<LogoScaling
-  brand={props.brand}
-  sizes={[
-    { width: "12rem", label: "Standard application" },
-    { width: "4rem", label: "Small digital application" },
-  ]}
-/>
-```
-
-Return to the [component overview](/components) for the full catalog and MDX conventions.

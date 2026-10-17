@@ -1,26 +1,56 @@
 ---
 title: Figure
-description: Props, defaults, and an MDX usage example for Figure.
+description: Display an image in a consistent frame, or reserve space for artwork still in production.
 sidebar:
   order: 4
 ---
 
 import previewCode from "../../snippets/figure.mdx?raw";
-
-`Figure` is available by name in Brandtree content MDX; no import is needed. Pass any required `brand`, `ui`, or `dir` props explicitly from `props.brand`, `props.ui`, and `props.dir`; the generated route supplies these values to the document. The optional `class` prop adds a class to the outer element; other HTML attributes are not forwarded automatically.
-
-## Preview
-
-The preview uses the sample brand. Copy the MDX from the Code tab into your own
-page to render the same example with your configured brand. See [Usage](#usage)
-for more options.
-
-The media imports assume a page at the content root. Use your own assets and
-adjust import paths for nested or localized pages.
+import example0 from "../../snippets/figure-placeholder.mdx?raw";
 
 <ComponentPreview path="figure" code={previewCode} />
 
-## Props and behavior
+## Usage
+
+Import an image and pass the current interface strings. Supply meaningful alt
+text when the image conveys information; leave it empty for decorative artwork.
+
+```mdx
+import photo from "../assets/photography/photo-01.jpg";
+
+<Figure
+  ui={props.ui}
+  src={photo}
+  alt="A photograph demonstrating the brand's image treatment"
+/>
+```
+
+This import assumes a document at the content root. Use your own asset and adjust
+the path for nested or localized pages. Imported images use Astro's responsive
+image pipeline. A string `src`, such as a path under `public/`, produces an
+ordinary lazy-loaded image instead.
+
+## Examples
+
+### Reserve space for pending artwork
+
+Omit `src` while preparing a mockup. Set `ratio` to the intended shape and use
+`caption` to identify the planned application.
+
+<ComponentPreview path="figure-placeholder" code={example0} />
+
+## Image behavior
+
+`cover` fills the frame and can crop the image; `contain` keeps the whole image
+visible, as shown in the default preview. The default ratio applies to images
+and placeholders alike.
+
+An empty frame displays its caption, or the localized artwork-pending label
+when no caption is provided. A nonempty caption also renders below the frame.
+`bg` selects a generated CSS custom property directly; unlike `Panel.bg`, it
+does not validate the token. The component has no content slots.
+
+## API reference
 
 <TypeTable
   type={{
@@ -43,8 +73,7 @@ adjust import paths for nested or localized pages.
     },
     ratio: {
       type: "string",
-      description:
-        "width / height. Required for placeholders, otherwise optional.",
+      description: "Frame aspect ratio for images and placeholders.",
       default: '"4 / 3"',
     },
     fit: {
@@ -54,7 +83,7 @@ adjust import paths for nested or localized pages.
     },
     bg: {
       type: "string",
-      description: "Palette id for the frame background.",
+      description: "Generated --color-* suffix for the frame background.",
     },
     class: {
       type: "string",
@@ -62,28 +91,3 @@ adjust import paths for nested or localized pages.
     },
   }}
 />
-
-An image or placeholder with an optional caption. **Required:** `ui`. Optional: `src` (imported Astro `ImageMetadata` or URL string), `alt` (default empty), `caption`, `ratio` (default `"4 / 3"`), `fit` (`"cover"`, default, or `"contain"`), `bg` (a generated `--color-*` suffix), `class`.
-
-## Usage
-
-```mdx
-<Figure
-  ui={props.ui}
-  src="/mockups/stationery.jpg"
-  alt="Letterhead and envelope with the primary logo in the top corner"
-  caption="Stationery application"
-  ratio="3 / 2"
-  fit="contain"
-/>
-
-<Figure
-  ui={props.ui}
-  ratio="9 / 16"
-  caption="Mobile layout — artwork pending"
-/>
-```
-
-Imported images use Astro's responsive image pipeline. String paths render ordinary lazy-loaded images. Without `src`, the frame displays `caption` or the localized artwork-pending label. `bg` directly selects a CSS custom property; unlike `Panel.bg`, it does not validate or resolve the reference. Use meaningful alt text for informative images; empty alt is suitable for purely decorative artwork.
-
-Return to the [component overview](/components) for the full catalog and MDX conventions.

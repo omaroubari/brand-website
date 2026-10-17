@@ -1,25 +1,40 @@
 ---
-title: LogoColorways
-description: Props, defaults, and an MDX usage example for LogoColorways.
+title: Logo Colorways
+description: Display approved logo and background combinations from your brand configuration.
 sidebar:
   order: 10
 ---
 
 import previewCode from "../../snippets/logo-colorways.mdx?raw";
-
-`LogoColorways` is available by name in Brandtree content MDX; no import is needed. Pass any required `brand`, `ui`, or `dir` props explicitly from `props.brand`, `props.ui`, and `props.dir`; the generated route supplies these values to the document. The optional `class` prop adds a class to the outer element; other HTML attributes are not forwarded automatically.
-
-This component requires `brand`. Artwork, aspect ratios, alt text, clearspace, and approved colorways come from `brand.logo`; set them in configuration rather than copying asset URLs into every page. Wherever supported, `mark` is `"logotype"` (default) or `"brandmark"`.
-
-## Preview
-
-The preview uses the sample brand. Copy the MDX from the Code tab into your own
-page to render the same example with your configured brand. See [Usage](#usage)
-for more options.
+import variantCode from "../../snippets/logo-colorways-brandmark.mdx?raw";
 
 <ComponentPreview path="logo-colorways" code={previewCode} />
 
-## Props and behavior
+## Usage
+
+Pass the current brand to display every approved colorway for the logotype.
+Define the foreground, background, and optional label of each combination in
+[Logos](/logos).
+
+```mdx
+<LogoColorways brand={props.brand} />
+```
+
+## Examples
+
+### Show brandmark colorways
+
+Set `mark="brandmark"` to apply the same approved combinations to the standalone mark.
+
+<ComponentPreview path="logo-colorways-brandmark" code={variantCode} />
+
+## Layout and selection
+
+Every entry in `brand.logo.colorways` is rendered in configuration order; there
+is no `only` filter. `cols` controls the layout from `48rem` up. Below that
+viewport width, the grid always uses two columns, including when `cols={1}`.
+
+## API reference
 
 <TypeTable
   type={{
@@ -43,13 +58,3 @@ for more options.
     },
   }}
 />
-
-Optional: `mark`, `cols` (default `3`), `class`. Displays every configured `brand.logo.colorways` entry. There is no `only` filter.
-
-## Usage
-
-```mdx
-<LogoColorways brand={props.brand} cols={2} />
-```
-
-Return to the [component overview](/components) for the full catalog and MDX conventions.

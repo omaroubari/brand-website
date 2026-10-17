@@ -1,0 +1,16 @@
+---
+import { ColorScale } from "brandtree/components";
+import PreviewShell from "../previews/PreviewShell.astro";
+import { demoBrand as brand, demoUI as ui } from "../previews/brand";
+---
+
+<PreviewShell colorInteractions>
+  <ColorScale
+    brand={brand}
+    ui={ui}
+    only={brand.colors.palette
+      .slice(0, 2)
+      .map(({ id }) => id)
+      .reverse()}
+  />
+</PreviewShell>

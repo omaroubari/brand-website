@@ -1,23 +1,44 @@
 ---
 title: Glyphs
-description: Props, defaults, and an MDX usage example for Glyphs.
+description: Display character sets to document the letterforms, numerals, and punctuation of a type family.
 sidebar:
   order: 21
 ---
 
 import previewCode from "../../snippets/glyphs.mdx?raw";
-
-`Glyphs` is available by name in Brandtree content MDX; no import is needed. Pass any required `brand`, `ui`, or `dir` props explicitly from `props.brand`, `props.ui`, and `props.dir`; the generated route supplies these values to the document. The optional `class` prop adds a class to the outer element; other HTML attributes are not forwarded automatically.
-
-## Preview
-
-The preview uses the sample brand. Copy the MDX from the Code tab into your own
-page to render the same example with your configured brand. See [Usage](#usage)
-for more options.
+import example0 from "../../snippets/glyphs-numerals.mdx?raw";
 
 <ComponentPreview path="glyphs" code={previewCode} />
 
-## Props and behavior
+## Usage
+
+Forward the current interface strings and text direction. The default character
+sets adapt to the content’s direction.
+
+```mdx
+<Glyphs ui={props.ui} dir={props.dir} />
+```
+
+## Examples
+
+### Focus on numerals
+
+Supply labeled character sets to replace the defaults. Use this for numerals, symbols, or characters relevant to your brand’s languages.
+
+<ComponentPreview path="glyphs-numerals" code={example0} />
+
+## Character sets and direction
+
+Without custom `sets`, left-to-right content gets Latin uppercase, lowercase,
+numerals, and punctuation. Right-to-left content gets Arabic letters, Arabic and
+Latin numerals, and punctuation. Custom sets replace the defaults entirely;
+`sets={[]}` renders no sets.
+
+Direction chooses these defaults; it does not load a font or prove that the font
+supports those characters. Configure and load the selected family through
+[Typography](/typography).
+
+## API reference
 
 <TypeTable
   type={{
@@ -41,7 +62,8 @@ for more options.
     },
     sets: {
       type: "Array<{ label: string; chars: string }>",
-      description: "Character sets to print.",
+      description:
+        "Character sets to print. Defaults to direction-specific sets.",
     },
     class: {
       type: "string",
@@ -49,20 +71,3 @@ for more options.
     },
   }}
 />
-
-**Required:** `ui`, `dir` (`"ltr"` or `"rtl"`). Optional: `font` (`"display"`, default, or `"text"`), `weight` (default `400`), `sets` (array of `{ label: string, chars: string }`), `class`.
-
-## Usage
-
-```mdx
-<Glyphs ui={props.ui} dir={props.dir} font="display" />
-<Glyphs
-  ui={props.ui}
-  dir={props.dir}
-  sets={[{ label: "Numerals", chars: "0123456789" }]}
-/>
-```
-
-Without custom sets, left-to-right content gets Latin uppercase, lowercase, numerals, and punctuation. Right-to-left content gets Arabic letters, Arabic and Latin numerals, and punctuation. Direction chooses these defaults; it does not load a font or prove that the font supports those characters.
-
-Return to the [component overview](/components) for the full catalog and MDX conventions.

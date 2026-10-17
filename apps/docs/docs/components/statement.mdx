@@ -1,36 +1,18 @@
 ---
 title: Statement
-description: Props, defaults, and an MDX usage example for Statement.
+description: Group the opening prose that expresses a brand promise or point of view.
 sidebar:
   order: 7
 ---
 
 import previewCode from "../../snippets/statement.mdx?raw";
 
-`Statement` is available by name in Brandtree content MDX; no import is needed. Pass any required `brand`, `ui`, or `dir` props explicitly from `props.brand`, `props.ui`, and `props.dir`; the generated route supplies these values to the document. The optional `class` prop adds a class to the outer element; other HTML attributes are not forwarded automatically.
-
-## Preview
-
-The preview uses the sample brand. Copy the MDX from the Code tab into your own
-page to render the same example with your configured brand. See [Usage](#usage)
-for more options.
-
 <ComponentPreview path="statement" code={previewCode} />
 
-## Props and behavior
-
-<TypeTable
-  type={{
-    class: {
-      type: "string",
-      description: "Additional class on the outer element.",
-    },
-  }}
-/>
-
-A wrapper for statement prose. Optional: `class`. Its default slot supports one or more Markdown paragraphs. It does not accept a `text` prop or currently impose an oversized font treatment; typography follows its context and stylesheet.
-
 ## Usage
+
+Write one or more Markdown paragraphs in the default slot. Paragraph breaks add
+a full line of space between thoughts.
 
 ```mdx
 <Statement>
@@ -42,4 +24,22 @@ Every touchpoint should make that promise clear.
 </Statement>
 ```
 
-Return to the [component overview](/components) for the full catalog and MDX conventions.
+## Typography behavior
+
+`Statement` inherits typography from its surrounding context; it currently does
+not apply an oversized font treatment. It renders a `div` so Markdown-generated
+paragraphs remain valid HTML. Supply the prose as children; there is no `text`
+prop.
+
+## API reference
+
+<TypeTable
+  type={{
+    class: {
+      type: "string",
+      description: "Additional class on the outer element.",
+    },
+  }}
+/>
+
+The default slot accepts prose and child components.

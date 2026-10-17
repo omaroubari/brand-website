@@ -1,25 +1,70 @@
 ---
-title: LogoMisuse
-description: Props, defaults, and an MDX usage example for LogoMisuse.
+title: Logo Misuse
+description: Illustrate incorrect logo treatments with numbered rules and explanatory notes.
 sidebar:
   order: 13
 ---
 
 import previewCode from "../../snippets/logo-misuse.mdx?raw";
 
-`LogoMisuse` is available by name in Brandtree content MDX; no import is needed. Pass any required `brand`, `ui`, or `dir` props explicitly from `props.brand`, `props.ui`, and `props.dir`; the generated route supplies these values to the document. The optional `class` prop adds a class to the outer element; other HTML attributes are not forwarded automatically.
-
-This component requires `brand`. Artwork, aspect ratios, alt text, clearspace, and approved colorways come from `brand.logo`; set them in configuration rather than copying asset URLs into every page. Wherever supported, `mark` is `"logotype"` (default) or `"brandmark"`.
-
-## Preview
-
-The preview uses the sample brand. Copy the MDX from the Code tab into your own
-page to render the same example with your configured brand. See [Usage](#usage)
-for more options.
-
 <ComponentPreview path="logo-misuse" code={previewCode} />
 
-## Props and behavior
+## Usage
+
+Pass the brand and at least one misuse rule. The effect creates the visual
+mistake; the title and note explain what readers should do instead.
+The artwork comes from [Logos](/logos).
+
+```mdx
+<LogoMisuse
+  brand={props.brand}
+  items={[
+    {
+      effect: "stretch",
+      title: "Do not stretch",
+      note: "Keep the original proportions.",
+    },
+  ]}
+/>
+```
+
+## Examples
+
+### Pair each mistake with a rule
+
+Add entries in the order you want readers to encounter them. The opening
+preview pairs stretching and rotation in a two-column grid.
+
+```mdx
+<LogoMisuse
+  brand={props.brand}
+  cols={2}
+  items={[
+    {
+      effect: "stretch",
+      title: "Do not stretch",
+      note: "Keep the original proportions.",
+    },
+    {
+      effect: "rotate",
+      title: "Do not rotate",
+      note: "Keep the artwork upright.",
+    },
+  ]}
+/>
+```
+
+## Effects and layout
+
+`MisuseEffect` accepts `"stretch"`, `"recolor"`, `"low-contrast"`, `"too-small"`,
+`"obstruct"`, `"rotate"`, `"outline"`, `"shadow"`, and `"pattern"`. These are preset
+visual treatments, not measurements or validators for uploaded artwork.
+
+Items are numbered automatically from one in array order. `cols` applies from
+`48rem` up; narrower viewports always use two columns. An empty `items` array
+renders an empty grid.
+
+## API reference
 
 <TypeTable
   type={{
@@ -46,28 +91,3 @@ for more options.
     },
   }}
 />
-
-**Also required:** `items`, an array of `{ effect, title: string, note: string }`. Allowed effects: `"stretch"`, `"recolor"`, `"low-contrast"`, `"too-small"`, `"obstruct"`, `"rotate"`, `"outline"`, `"shadow"`, `"pattern"`. Optional: `mark`, `cols` (default `3`), `class`.
-
-## Usage
-
-```mdx
-<LogoMisuse
-  brand={props.brand}
-  cols={2}
-  items={[
-    {
-      effect: "stretch",
-      title: "Do not stretch",
-      note: "Keep the original proportions.",
-    },
-    {
-      effect: "rotate",
-      title: "Do not rotate",
-      note: "Keep the artwork upright.",
-    },
-  ]}
-/>
-```
-
-Return to the [component overview](/components) for the full catalog and MDX conventions.

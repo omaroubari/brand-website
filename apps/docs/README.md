@@ -118,11 +118,26 @@ under `assets/`. Preview fonts load from bundled local files independently of
 the Google Fonts provider used by the surrounding docs website. Register any
 new local font file in `PreviewShell`'s static asset map so Vite can bundle it.
 
-`ComponentPreview` uses Blume's tabs and highlighting, but accepts the authored
-MDX instead of displaying the Astro harness. It validates the origin and sender
+`ComponentPreview` uses Blume’s tabs and Astro’s `Code` renderer with Blume’s
+configured themes and transformers. It explicitly loads JSX/TSX grammars for
+MDX component markup, and displays authored MDX rather than the Astro harness. It validates the origin and sender
 of Blume's example-height messages and keeps both tabs the same height. When
 upgrading Blume, verify this protocol and the `blume:examples` lookup still match.
 
 Brandtree source changes appear after rebuilding the framework. Root docs
 dev/build scripts build the framework first. Use isolated checks/builds while
 the docs dev server is running.
+
+## Component page structure
+
+The project-local authoring skill lives at
+`../../.agents/skills/component-docs/SKILL.md`. Use readable page titles such as
+“Color Palette” while keeping `ColorPalette` in code examples.
+
+Use `color-palette.mdx`, `logo.mdx`, and `grid.mdx` as the reference pattern:
+a specific frontmatter description, an immediate default preview, minimal Usage,
+task-focused Examples, Behavior only where needed, and an API reference last.
+Keep shared MDX conventions in the component overview. Do not repeat the props
+table in prose. Each visual variation has a matching `snippets/` MDX file and
+`examples/` Astro harness; keep their props and children synchronized. Simple
+components need fewer examples, not empty template sections.

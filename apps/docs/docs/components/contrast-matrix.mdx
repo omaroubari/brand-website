@@ -1,25 +1,47 @@
 ---
-title: ContrastMatrix
-description: Props, defaults, and an MDX usage example for ContrastMatrix.
+title: Contrast Matrix
+description: Compare foreground and background color pairs with contrast ratios and grades.
 sidebar:
   order: 17
 ---
 
 import previewCode from "../../snippets/contrast-matrix.mdx?raw";
-
-`ContrastMatrix` is available by name in Brandtree content MDX; no import is needed. Pass any required `brand`, `ui`, or `dir` props explicitly from `props.brand`, `props.ui`, and `props.dir`; the generated route supplies these values to the document. The optional `class` prop adds a class to the outer element; other HTML attributes are not forwarded automatically.
-
-This component requires both `brand` and `ui`. Named swatches (`brand.colors.swatches`) are editorial selections; palette families (`brand.colors.palette`) contain the shade scales. Their IDs serve different selectors.
-
-## Preview
-
-The preview uses the sample brand. Copy the MDX from the Code tab into your own
-page to render the same example with your configured brand. See [Usage](#usage)
-for more options.
+import variantCode from "../../snippets/contrast-matrix-strict.mdx?raw";
 
 <ComponentPreview path="contrast-matrix" code={previewCode} />
 
-## Props and behavior
+## Usage
+
+Pass the current brand and interface strings to compare all named swatches from
+[Colors](/colors). The opening preview limits the matrix to the first three
+swatches to keep it compact.
+
+```mdx
+<ContrastMatrix brand={props.brand} ui={props.ui} />
+```
+
+## Examples
+
+### Raise the pass threshold
+
+Use `threshold` to decide which ratios receive a failing strike-through. This
+example keeps the same three swatches as the opening preview and raises the
+threshold to `7`.
+
+<ComponentPreview path="contrast-matrix-strict" code={variantCode} />
+
+## Reading and selecting pairs
+
+Rows represent text colors and columns represent backgrounds. Cells show a
+ratio rounded to two decimal places and a grade; the underlying unrounded ratio
+is compared with `threshold`. Changing the threshold changes the strike-through,
+not the grade calculation. Same-color cells show a dash instead of sample text.
+
+`only` uses named swatch IDs from `brand.colors.swatches`. Filtering preserves
+configuration order and silently omits unknown IDs. Unlike [Color Palette](/components/color-palette),
+reordering IDs in `only` does not reorder the matrix.
+
+## API reference
 
 <TypeTable
   type={{
@@ -35,7 +57,8 @@ for more options.
     },
     only: {
       type: "string[]",
-      description: "Restrict the matrix to these palette ids.",
+      description:
+        "Restrict the matrix to named swatch IDs; configuration order is preserved.",
     },
     threshold: {
       type: "number",
@@ -48,15 +71,3 @@ for more options.
     },
   }}
 />
-
-Optional: `only` (swatch IDs), `threshold` (default `4.5`), `class`. Computes foreground/background contrast for the selected swatches. Filtering preserves configuration order; unknown selected IDs are silently omitted. It differs from the ordered `only` selector on `ColorPalette`.
-
-## Usage
-
-```mdx
-<ContrastMatrix brand={props.brand} ui={props.ui} threshold={4.5} />
-```
-
-The threshold controls the matrix's pass indication; inspect actual text sizes and intended use before choosing a different threshold.
-
-Return to the [component overview](/components) for the full catalog and MDX conventions.

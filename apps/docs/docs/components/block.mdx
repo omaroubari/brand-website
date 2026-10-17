@@ -1,23 +1,45 @@
 ---
 title: Block
-description: Props, defaults, and an MDX usage example for Block.
+description: Pair explanatory copy with a specimen and an optional supporting note.
 sidebar:
   order: 1
 ---
 
 import previewCode from "../../snippets/block.mdx?raw";
 
-`Block` is available by name in Brandtree content MDX; no import is needed. Pass any required `brand`, `ui`, or `dir` props explicitly from `props.brand`, `props.ui`, and `props.dir`; the generated route supplies these values to the document. The optional `class` prop adds a class to the outer element; other HTML attributes are not forwarded automatically.
-
-## Preview
-
-The preview uses the sample brand. Copy the MDX from the Code tab into your own
-page to render the same example with your configured brand. See [Usage](#usage)
-for more options.
-
 <ComponentPreview path="block" code={previewCode} />
 
-## Props and behavior
+## Usage
+
+Put prose in the `copy` slot and the specimen in `content`. A `Fragment` assigns
+content to a named region without adding an HTML wrapper.
+
+```mdx
+<Block>
+  <Fragment slot="copy">
+    <h2>Primary logo</h2>
+    <p>Use the supplied artwork whenever the full name fits.</p>
+  </Fragment>
+  <Fragment slot="content">
+    <Logo brand={props.brand} />
+  </Fragment>
+</Block>
+```
+
+The preview adds a `note` slot for a supporting rule and wraps the logo in a
+[Panel](/components/panel) to give the artwork a frame.
+
+## Layout and slots
+
+Below `48rem`, copy and artwork stack in document order. At `48rem` and above,
+the copy uses the configured side-column width and the content fills the rest.
+
+`Block` has no default slot: children without a slot name will not appear.
+Use `copy` for the heading and explanation, `content` for the specimen, and the
+optional `note` for a rule beneath the copy. Normal prose can also sit outside
+`Block`; use it when a split layout helps explain a specimen.
+
+## API reference
 
 <TypeTable
   type={{
@@ -31,32 +53,5 @@ for more options.
   }}
 />
 
-A split layout with copy beside a specimen. Optional props: `id`, `class`. Its named slots are `copy`, `content`, and optional `note`. It has **no default slot**: ordinary children without a named slot will not appear.
-
-Use a `<Fragment slot="…">` to group Markdown without adding an HTML wrapper. The slot name tells Astro which region receives the children. This differs from writing prose between `<Callout>` tags, where the default slot receives everything. See [Astro named slots](https://docs.astro.build/en/basics/astro-components/#named-slots).
-
-## Usage
-
-```mdx
-<Block id="primary-logo">
-  <Fragment slot="copy">
-
-## Primary logo
-
-Use the supplied artwork whenever the full name fits.
-
-  </Fragment>
-  <Fragment slot="note">
-
-Never recreate the logotype using live text.
-
-  </Fragment>
-  <Fragment slot="content">
-    <Logo brand={props.brand} width="66%" />
-  </Fragment>
-</Block>
-```
-
-At wider viewports the component uses a side column and flexible content column; on smaller screens it stacks. Normal headings and paragraphs remain valid outside a `Block`.
-
-Return to the [component overview](/components) for the full catalog and MDX conventions.
+Named slots: `copy` for explanatory prose, `content` for the specimen, and optional
+`note` for supporting copy. No default slot is rendered.

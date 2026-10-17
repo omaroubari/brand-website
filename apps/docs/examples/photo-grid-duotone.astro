@@ -1,0 +1,18 @@
+---
+import { PhotoGrid } from "brandtree/components";
+import PreviewShell from "../previews/PreviewShell.astro";
+import { demoPhoto as photo } from "../previews/media";
+---
+
+<PreviewShell>
+  <PhotoGrid
+    images={[
+      { src: photo, caption: "A full-width composition", span: 2 },
+      { src: photo, caption: "A supporting detail" },
+      { src: photo, caption: "Another supporting detail" },
+    ]}
+    cols={2}
+    ratio="3 / 2"
+    treatment="duotone"
+  />
+</PreviewShell>

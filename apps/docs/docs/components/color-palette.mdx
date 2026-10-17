@@ -1,25 +1,56 @@
 ---
-title: ColorPalette
-description: Props, defaults, and an MDX usage example for ColorPalette.
+title: Color Palette
+description: Display your brand’s named color swatches with optional print values.
 sidebar:
   order: 14
 ---
 
 import previewCode from "../../snippets/color-palette.mdx?raw";
-
-`ColorPalette` is available by name in Brandtree content MDX; no import is needed. Pass any required `brand`, `ui`, or `dir` props explicitly from `props.brand`, `props.ui`, and `props.dir`; the generated route supplies these values to the document. The optional `class` prop adds a class to the outer element; other HTML attributes are not forwarded automatically.
-
-This component requires both `brand` and `ui`. Named swatches (`brand.colors.swatches`) are editorial selections; palette families (`brand.colors.palette`) contain the shade scales. Their IDs serve different selectors.
-
-## Preview
-
-The preview uses the sample brand. Copy the MDX from the Code tab into your own
-page to render the same example with your configured brand. See [Usage](#usage)
-for more options.
+import example0 from "../../snippets/color-palette-primary.mdx?raw";
+import example1 from "../../snippets/color-palette-selected.mdx?raw";
+import example2 from "../../snippets/color-palette-screen.mdx?raw";
 
 <ComponentPreview path="color-palette" code={previewCode} />
 
-## Props and behavior
+## Usage
+
+Pass the current brand and interface strings to display every configured swatch.
+Define their names, categories, and color values in [Colors](/colors).
+
+```mdx
+<ColorPalette brand={props.brand} ui={props.ui} />
+```
+
+## Examples
+
+### Show primary colors
+
+Use `category` to show one configured group of swatches.
+
+<ComponentPreview path="color-palette-primary" code={example0} />
+
+### Select and order swatches
+
+Pass swatch IDs to `only` in the order you want them displayed. This example takes the first two configured swatches and reverses their order.
+
+<ComponentPreview path="color-palette-selected" code={example1} />
+
+### Hide print values
+
+Set `print={false}` for a simpler palette without the CMYK and RGB breakdowns.
+
+<ComponentPreview path="color-palette-screen" code={example2} />
+
+## Selection behavior
+
+Without a selector, the palette shows every entry in `brand.colors.swatches`.
+`only` takes precedence over `category`, even when both are provided. An unknown
+ID in `only` throws an error; a category with no matching swatches renders no swatches.
+
+These selectors use named swatch IDs. For shade families from
+`brand.colors.palette`, use [ColorScale](/components/color-scale).
+
+## API reference
 
 <TypeTable
   type={{
@@ -54,23 +85,3 @@ for more options.
     },
   }}
 />
-
-Optional: `only` (swatch ID array, also sets order), `category` (`"primary"` or `"secondary"`), `print` (default `true`, includes print/RGB details), `class`. Without selectors, shows every configured swatch. `only` takes precedence over `category`; an unknown ID in `only` throws an error.
-
-## Usage
-
-```mdx
-<ColorPalette
-  brand={props.brand}
-  ui={props.ui}
-  category="primary"
-  print={false}
-/>
-<ColorPalette
-  brand={props.brand}
-  ui={props.ui}
-  only={props.brand.colors.swatches.slice(0, 2).map((color) => color.id)}
-/>
-```
-
-Return to the [component overview](/components) for the full catalog and MDX conventions.
