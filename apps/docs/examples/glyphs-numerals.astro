@@ -1,0 +1,14 @@
+---
+import { Glyphs } from "brandtree/components";
+import PreviewShell from "../previews/PreviewShell.astro";
+import { demoUI as ui } from "../previews/brand";
+---
+
+<PreviewShell>
+  <Glyphs
+    ui={ui}
+    dir="ltr"
+    font="display"
+    sets={[{ label: "Numerals", chars: "0123456789" }]}
+  />
+</PreviewShell>

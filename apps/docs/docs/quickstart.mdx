@@ -1,0 +1,167 @@
+---
+title: Quickstart
+description: Scaffold a brand-guidelines project, add a page, and build your first site.
+---
+
+Create a standalone site with `brandtree init`. The starter gives you a valid
+brand configuration, three content pages, placeholder artwork, and project scripts.
+By the end, you will have a new page running locally and a production build.
+
+## Requirements
+
+Use Node.js **22.12 or newer** and npm, pnpm, or Bun. The commands below let you
+choose your package manager; later guides use pnpm examples.
+
+## Create your first site
+
+<Steps titleSize="h3">
+  <Step title="Scaffold your project">
+
+Run Brandtree directly with your package manager:
+
+<CodeGroup>
+
+```sh title="pnpm"
+pnpm dlx brandtree init
+```
+
+```sh title="npm"
+npx brandtree init
+```
+
+```sh title="Bun"
+bunx brandtree init
+```
+
+</CodeGroup>
+
+These commands download and run the package without a global installation.
+The interactive wizard asks for:
+
+1. **Project directory** — Enter `my-brand` to create a new folder for this guide.
+   Pressing Enter without a path uses the current directory (`.`).
+2. **Brand name** — Enter your brand's name, such as `Acme`. The wizard suggests
+   a name based on the project directory; accept it or type your own.
+
+After you answer both prompts, init writes the starter files and prints the
+install and dev commands for your package manager. It does not install your
+project's dependencies or start its server. The remaining steps assume you
+chose `my-brand` as the directory.
+
+For a repeatable setup without prompts:
+
+```sh
+pnpm dlx brandtree init my-brand --yes --title Acme --package-manager pnpm
+```
+
+The starter uses system fonts, three numbered pages, and placeholder logos with
+light and dark artwork. See [CLI](/cli#initialize-a-project) for defaults and
+options.
+
+Open a terminal in the generated `my-brand/` project before continuing.
+
+  </Step>
+  <Step title="Install dependencies and start the site">
+
+Follow the commands for your package manager:
+
+<CodeGroup>
+
+```sh title="pnpm"
+pnpm install
+pnpm dev
+```
+
+```sh title="npm"
+npm install
+npm run dev
+```
+
+```sh title="Bun"
+bun install
+bun dev
+```
+
+</CodeGroup>
+
+Open the URL printed by the server, normally `http://localhost:4321`. Run the
+rest of your site commands from `my-brand/`, which contains your configuration
+and content.
+
+  </Step>
+  <Step title="Configure your brand">
+
+Edit `brandtree.config.ts` in your new project. Set
+`brand.meta.name` to your brand name and keep the other required fields while
+replacing sample values. Set `brand.meta.url` to your eventual production URL and replace
+the placeholder artwork in `public/brand/` before publishing.
+
+The generated pages are `content/01-introduction.mdx`,
+`content/02-colour.mdx`, and `content/03-typography.mdx`.
+The starter has no locale folders. Add languages later with
+[Localization](/localization).
+
+  </Step>
+  <Step title="Add a page">
+
+Create `content/04-handoff.mdx` in your project with these contents:
+
+```mdx
+---
+title: Brand handoff
+description: The files and contacts you need to use our identity.
+---
+
+## Before you start
+
+Use the supplied artwork and check the color and typography rules.
+
+## Get the artwork
+
+Contact the brand team for the current release.
+```
+
+Visit `/handoff` on your local server. The page should appear in navigation.
+The `04-` prefix controls order; `handoff` supplies its URL segment.
+[Pages and MDX](/authoring) explains how to add components and richer content.
+
+  </Step>
+  <Step title="Check and build">
+
+Stop the server with Ctrl+C, then run from your project root:
+
+<CodeGroup>
+
+```sh title="pnpm"
+pnpm check
+pnpm build
+```
+
+```sh title="npm"
+npm run check
+npm run build
+```
+
+```sh title="Bun"
+bun run check
+bun run build
+```
+
+</CodeGroup>
+
+The generated `check` script runs `brandtree check`. Before a release, use strict
+checking to reject content errors during preparation; see [Validation](/validation).
+Your built site is in `my-brand/dist/`. Follow [Validation](/validation) for
+release checks and [Build and deployment](/publishing) to publish.
+
+  </Step>
+</Steps>
+
+## Continue configuring the brand
+
+Your project now has a working site and an authored page. Follow
+[Brand configuration](/brand-configuration) to replace the starter palette,
+typography, artwork, and metadata before writing the rest of your guidelines.
+
+For an existing project or another client, see
+[Project structure](/project-structure#start-another-client-site).

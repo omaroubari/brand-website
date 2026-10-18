@@ -1,0 +1,185 @@
+---
+title: CLI
+description: Commands, flags, generated runtimes, and failure behavior.
+sidebar:
+  order: 9
+---
+
+Run `dev`, `check`, `build`, and `preview` from the **consumer root**, the directory
+containing your `brandtree.config.ts` and `content/`. They use the current working
+directory and do not search parent directories. `init` creates a project in the
+current directory or a supplied destination and does not require an existing config.
+
+```sh
+pnpm brandtree --help
+pnpm brandtree --version
+pnpm brandtree dev
+pnpm brandtree check --strict
+pnpm brandtree build
+pnpm brandtree preview
+```
+
+Before you have a project dependency, run the package directly with
+`pnpm dlx brandtree`, `npx brandtree`, or `bunx brandtree`. After installing your
+project dependencies, `pnpm brandtree …` runs the version recorded by that project.
+
+## Available commands
+
+| Command      | Result                                                                           |
+| ------------ | -------------------------------------------------------------------------------- |
+| `init [dir]` | Create missing starter files in the target directory and print next steps.       |
+| `dev`        | Scan authored inputs, generate `.brandtree/`, start Astro, and watch changes.    |
+| `check`      | Prepare a runtime, run Astro sync, and type-check once; leave `dist/` unchanged. |
+| `build`      | Prepare `.brandtree/` and build a static website into `dist/`.                   |
+| `preview`    | Serve the existing production output through the generated Astro app.            |
+
+`deploy`, `doctor`, and translation commands are not implemented
+Brandtree subcommands. Blume's docs-app commands are a separate CLI and are not
+Brandtree features.
+
+## Initialize a project
+
+Create a project without installing Brandtree first:
+
+<CodeGroup>
+
+```sh title="pnpm"
+pnpm dlx brandtree
+```
+
+```sh title="npm"
+npx brandtree
+```
+
+```sh title="bun"
+bunx brandtree
+```
+
+</CodeGroup>
+
+For a noninteractive setup:
+
+```sh
+pnpm dlx brandtree init my-brand --yes --title Acme --package-manager pnpm
+```
+
+If Brandtree is already installed in your project, use
+`pnpm brandtree init my-brand` to run that installed version.
+[Quickstart](/quickstart) walks through installation and the first page.
+
+| Argument or option  | Behavior                                                                                                                                      |
+| ------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| `[dir]`             | Destination relative to the working directory, or an absolute path. Defaults to `.` when prompts are skipped.                                 |
+| `--title`           | Brand name written to a new config. Defaults to `My Brand` without prompts; interactive mode suggests a name derived from the destination.    |
+| `--package-manager` | `npm`, `pnpm`, `yarn`, or `bun` for the generated next steps. Otherwise detected from the invoking package manager, with npm as the fallback. |
+| `--yes`             | Skip prompts. It does not authorize overwriting files.                                                                                        |
+
+An interactive terminal asks for the directory and brand name when those values
+are missing. Cancelling a prompt writes nothing. CI and noninteractive runs skip
+prompts automatically. An unknown package manager or blank title is rejected.
+
+Init creates a minimal `brandtree.config.ts`, three numbered pages in `content/`,
+placeholder logo SVGs in `public/brand/`, a favicon, and a `package.json` when
+absent. The new manifest includes `dev`, `build`, `check`, and `preview` scripts.
+The starter uses system fonts and has no locale folders. Configure additional
+languages later with [Localization](/localization).
+
+Existing files are skipped. An existing supported config is preserved even when
+it uses another extension. Init appends missing `node_modules/`, `.brandtree/`,
+and `dist/` ignores to `.gitignore`; it does not merge an existing manifest or
+config. With a new manifest it prints install/dev script commands. With an
+existing manifest it prints commands to add Brandtree and invoke its CLI directly.
+
+Init does not install dependencies, start a server, or initialize Git. Review
+its output, install dependencies, then run from the target project directory. [Project structure](/project-structure) explains ownership.
+
+## Development options
+
+| Option                | Behavior                                                                          |
+| --------------------- | --------------------------------------------------------------------------------- |
+| `--host`              | Bind all network interfaces. Without this flag the server is local.               |
+| `--host 192.168.1.20` | Bind a specific address.                                                          |
+| `--port 4322`         | Request a port from 1–65535; default is 4321. Zero is rejected.                   |
+| `--open`              | Open the site in your browser.                                                    |
+| `--debug`             | Enable verbose Astro/Vite logging.                                                |
+| `--strict`            | Abort initial preparation when error diagnostics exist. Warnings remain nonfatal. |
+| `--preview`           | Include draft content explicitly. Development mode already retains drafts.        |
+
+Read the actual listening URL printed by Astro: another service can occupy the
+requested port. Stop with Ctrl+C or SIGTERM, so the watcher, server, and lock
+are released together.
+
+### Watching and regeneration
+
+Content additions, removals, renames, frontmatter, group metadata, config changes,
+and explicitly configured asset files trigger rescanning. Edits are batched and
+processed in order, so two quick saves do not write competing generated files.
+Imported components/assets and public files use Astro/Vite's module watching.
+Brandtree does not scan your asset folders to discover exhibits automatically.
+
+The watcher starts after Astro starts. Restart if a save during startup was
+missed, or after adding a new conventional entry file that was absent at launch.
+A failed regeneration is logged and the session stays alive; fix the input and
+save again. `--strict` only governs initial dev preparation, not later regeneration.
+
+### One server per project
+
+A dev session creates `.brandtree/dev.lock`, recording its process ID and port.
+A second invocation refuses to start and reports the existing localhost URL.
+Use the existing server or stop it before starting another. A later invocation
+replaces a stale lock after its process has exited. Never delete an active lock
+to force two servers to share a generated runtime.
+
+Other commands do not acquire this lock. Stop dev before an ordinary `check` or
+`build`; use isolated checking when you need to keep dev running.
+
+## Check options and failure behavior
+
+```sh
+pnpm brandtree check --strict --isolated
+pnpm brandtree check --strict --isolated --preview
+```
+
+| Option       | Behavior                                                                            |
+| ------------ | ----------------------------------------------------------------------------------- |
+| `--strict`   | Fail during preparation on error diagnostics, including invalid frontmatter values. |
+| `--preview`  | Include drafts in the graph and generated content being checked.                    |
+| `--isolated` | Generate and sync `.brandtree-verify/` instead of touching `.brandtree/`.           |
+
+Checking selects one TypeScript project. If your project has `tsconfig.json`,
+that controls compiler settings and file coverage. Otherwise Brandtree uses its
+generated tsconfig, which covers the runtime and authored Astro, React, and
+TypeScript files. The configs are not merged. Content scanning still runs even
+when a file is outside your tsconfig's `include` list.
+
+Type errors fail checking. Valid YAML containing an invalid frontmatter value
+produces `BRANDTREE_FRONTMATTER_INVALID` and a dropped-page count. Without
+`--strict`, preparation can continue with that page omitted; with `--strict`,
+it fails before generating the runtime. Malformed YAML, invalid configuration,
+and unsafe source paths always fail. Warnings alone do not fail strict checking.
+
+Use strict checking as a release gate: a green build can otherwise hide a page
+that was dropped. The `build` command has no implemented strict or preview
+options. Check strictly first, then build normally.
+
+## Preview options
+
+Build first, then run from the consumer root:
+
+```sh
+pnpm brandtree preview --port 4322
+```
+
+Preview accepts `--host [address]`, `--port` (1–65535, default 4321), and
+`--open`. It serves existing root-level `dist/` through `.brandtree/` without
+regenerating or rebuilding. Source and public-file changes need another build.
+Stop with Ctrl+C or SIGTERM.
+
+Both the generated `.brandtree/astro.config.mjs` and nonempty `dist/` output must
+exist. Otherwise the command exits nonzero with
+``No build found. Run `brandtree build` first.`` The `preview` command is separate
+from the `--preview` flag used to include drafts during dev or checking.
+
+## Related guides
+
+See [Validation](/validation) for a release workflow and [Troubleshooting](/troubleshooting) for common fixes.

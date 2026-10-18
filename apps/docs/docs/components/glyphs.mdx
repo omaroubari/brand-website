@@ -1,0 +1,94 @@
+---
+title: Glyphs
+description: Display character sets to document the letterforms, numerals, and punctuation of a type family.
+sidebar:
+  order: 21
+---
+
+import previewCode from "../../snippets/glyphs.mdx?raw";
+import example0 from "../../snippets/glyphs-numerals.mdx?raw";
+
+import GlyphsRtlCode from "../../snippets/glyphs-rtl.mdx?raw";
+
+<ComponentPreview path="glyphs" code={previewCode} />
+
+## Usage
+
+The default character sets adapt to the current page’s direction and use its
+localized interface labels automatically.
+
+```mdx
+<Glyphs />
+```
+
+## Examples
+
+### Focus on numerals
+
+Supply labeled character sets to replace the defaults. Use this for numerals, symbols, or characters relevant to your brand’s languages.
+
+<ComponentPreview path="glyphs-numerals" code={example0} />
+
+### Show Arabic letters in the text family
+
+In an Arabic page configured with RTL direction, `<Glyphs />` selects Arabic
+letters and both Arabic and Latin numerals automatically. Here, explicit `dir`
+and `ui` overrides demonstrate an Arabic specimen within an English page.
+This example also switches from the default display family to `font="text"`
+and uses a medium weight. The wrapper sets the reading direction of the example;
+`Glyphs` uses its `dir` prop to choose the character sets.
+
+Both the snippet and preview resolve Arabic labels with
+`resolveUIStrings("ar", ...)` and pass them as `ui`. Overriding direction alone
+does not change the interface language. The sample brand has no Arabic font file, so
+unsupported Arabic characters use the browser’s font fallback; load a family
+with Arabic coverage when documenting your own brand.
+
+<ComponentPreview path="glyphs-rtl" code={GlyphsRtlCode} />
+
+## Character sets and direction
+
+Without custom `sets`, left-to-right content gets Latin uppercase, lowercase,
+numerals, and punctuation. Right-to-left content gets Arabic letters, Arabic and
+Latin numerals, and punctuation. Custom sets replace the defaults entirely;
+`sets={[]}` renders no sets.
+
+Direction chooses these defaults; it does not load a font or prove that the font
+supports those characters. Configure and load the selected family through
+[Typography](/typography).
+
+## API reference
+
+<TypeTable
+  type={{
+    ui: {
+      type: "UIStrings",
+      default: "props.ui",
+      description:
+        "Override interface strings for this component. Supplied automatically in Brandtree MDX.",
+    },
+    dir: {
+      type: '"ltr" | "rtl"',
+      default: "props.dir",
+      description:
+        "Override text direction for this component. Supplied automatically in Brandtree MDX.",
+    },
+    font: {
+      type: '"display" | "text"',
+      default: '"display"',
+    },
+    weight: {
+      type: "number",
+      default: "400",
+    },
+    sets: {
+      type: "Array<{ label: string; chars: string }>",
+      description:
+        "Character sets to print. Defaults to direction-specific sets.",
+    },
+    class: {
+      type: "string",
+      description: "Additional class on the outer element.",
+    },
+  }}
+/>

@@ -1,0 +1,95 @@
+---
+title: Construction Grid
+description: Overlay a division grid on logo artwork to explain its proportions.
+sidebar:
+  order: 12
+---
+
+import previewCode from "../../snippets/construction-grid.mdx?raw";
+import defaultCode from "../../snippets/construction-grid-default.mdx?raw";
+import variantCode from "../../snippets/construction-grid-logotype.mdx?raw";
+
+<ComponentPreview path="construction-grid" code={previewCode} />
+
+## Usage
+
+Show the configured brandmark on a square, ten-by-ten field.
+Configure the source artwork in [Logos](/logos).
+
+```mdx
+<ConstructionGrid />
+```
+
+## Examples
+
+### Show the brandmark on a square field
+
+The opening preview uses eight divisions on each axis and a custom caption.
+Omitting these options uses ten divisions and a generated caption instead.
+
+```mdx
+<ConstructionGrid
+  mark="brandmark"
+  cols={8}
+  rows={8}
+  caption="Construction grid for the mark"
+/>
+```
+
+### Use the generated caption
+
+Omit `cols`, `rows`, and `caption` for a ten-by-ten brandmark field with the
+built-in construction explanation. Replace that caption when it does not
+accurately describe your artwork.
+
+<ComponentPreview path="construction-grid-default" code={defaultCode} />
+
+### Use a rectangular field
+
+Choose separate horizontal and vertical divisions for a wider mark. Supply a
+caption that explains your actual artwork rather than relying on the generic caption.
+
+<ComponentPreview path="construction-grid-logotype" code={variantCode} />
+
+## Grid behavior
+
+`cols` and `rows` control both the division count and the field’s aspect ratio.
+The grid is an illustration over the supplied artwork, not an SVG geometry
+editor; it does not inspect paths or prove that curves align with grid lines.
+Use positive division counts.
+
+## API reference
+
+<TypeTable
+  type={{
+    brand: {
+      type: "BrandConfig",
+      default: "props.brand",
+      description:
+        "Override the resolved brand for this component. Supplied automatically in Brandtree MDX.",
+    },
+    mark: {
+      type: '"logotype" | "brandmark"',
+      default: '"brandmark"',
+    },
+    cols: {
+      type: "number",
+      description: "Grid divisions across.",
+      default: "10",
+    },
+    rows: {
+      type: "number",
+      description: "Grid divisions down.",
+      default: "10",
+    },
+    caption: {
+      type: "string",
+      description:
+        "Figure caption. Defaults to a generic construction explanation using cols and rows.",
+    },
+    class: {
+      type: "string",
+      description: "Additional class on the outer element.",
+    },
+  }}
+/>

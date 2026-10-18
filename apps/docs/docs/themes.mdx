@@ -1,0 +1,62 @@
+---
+title: Themes
+description: Assign semantic colors for light and dark interfaces.
+---
+
+Configure the appearance of your guidelines through `brand.theme` in
+`brandtree.config.ts`. Theme roles describe what a color does, so components
+can follow the active theme without choosing raw colors themselves.
+
+<Steps>
+  <Step title="Define the palette">
+    Add the shades you need in [Colors](/colors) before using their references.
+  </Step>
+  <Step title="Edit both schemes">
+    Update the complete `light` and `dark` objects in your starter. Each needs
+    every role listed below.
+  </Step>
+  <Step title="Choose a default and review">
+    Set `default` to `"system"`, `"light"`, or `"dark"`. Inspect text, controls,
+    cards, and logos in both themes, including with JavaScript disabled.
+  </Step>
+</Steps>
+
+`brand.theme` requires `default`, `light`, and `dark`. `default` accepts `"light"`,
+`"dark"`, or `"system"`. The system setting follows the reader's operating-system
+preference. Theme CSS works before JavaScript runs.
+
+Both schemes must define **every role** in the following table, using palette
+references or `black`/`white`:
+
+| Group               | Required roles                                                                                                                                           |
+| ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Page                | `background`, `foreground`                                                                                                                               |
+| Cards               | `card`, `cardForeground`                                                                                                                                 |
+| Popovers            | `popover`, `popoverForeground`                                                                                                                           |
+| Main actions        | `primary`, `primaryForeground`                                                                                                                           |
+| Supporting surfaces | `secondary`, `secondaryForeground`, `muted`, `mutedForeground`                                                                                           |
+| Accent              | `accent`, `accentForeground`                                                                                                                             |
+| Destructive actions | `destructive`, `destructiveForeground`                                                                                                                   |
+| Controls            | `border`, `input`, `ring`                                                                                                                                |
+| Charts              | `chart1`, `chart2`, `chart3`, `chart4`, `chart5`                                                                                                         |
+| Sidebar             | `sidebar`, `sidebarForeground`, `sidebarPrimary`, `sidebarPrimaryForeground`, `sidebarAccent`, `sidebarAccentForeground`, `sidebarBorder`, `sidebarRing` |
+
+For example, a light scheme can use `background: "white"` and
+`foreground: "slate-950"`; the dark scheme can reverse those roles. Edit the
+complete schemes in the starter so no roles are lost.
+
+A foreground role is the text placed on its matching surface. Test the pair
+together, especially when changing accent colors. A valid color reference does
+not guarantee readable contrast.
+
+Brandtree generates `--color-slate-700` for a raw shade, and semantic properties
+such as `--background`, `--foreground`, `--primary`, and `--primary-foreground`.
+Camel-case role names become hyphenated CSS names. In custom components, use
+[semantic properties](/styling) so a single rule can work in either theme. If you add custom
+theme-dependent CSS, support the explicit `:root[data-theme='dark']` selector and
+the system dark fallback scoped to `:root:not([data-theme='light'])`.
+
+<Callout type="tip" title="Check pairs together">
+  Review foreground and background pairs using your contrast exhibits. A valid
+  palette reference can still produce text that is difficult to read.
+</Callout>

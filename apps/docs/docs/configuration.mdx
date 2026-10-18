@@ -1,0 +1,452 @@
+---
+title: Configuration
+description: The fields, defaults, and constraints accepted by brandtree.config.ts.
+---
+
+`brandtree.config.ts` is the single source of structured brand data and site
+settings. Use `defineConfig` from `brandtree` for editor completion; the CLI
+validates values when it loads the project. Unknown fields are rejected.
+
+For a guided setup, start with [Brand configuration](/brand-configuration).
+This page follows the config object's structure so you can find a field quickly.
+
+## Define and validate your config
+
+This is the shape of a config file, **not a complete runnable configuration**.
+Keep the required brand sections from the [Quickstart](/quickstart) starter.
+
+```ts title="brandtree.config.ts — structure only"
+import { defineConfig } from "brandtree";
+
+export default defineConfig({
+  brand: {
+    // Required: meta, colors, theme, typography, logo, and contact.
+  },
+  navigation: { numbering: true },
+});
+```
+
+The loader recognizes `brandtree.config.ts`, `.mts`, `.js`, `.mjs`, and `.cjs`,
+in that order. Keep one config file. A config-free project does not currently
+provide a complete brand automatically.
+
+<TypeTable
+  type={{
+    brand: {
+      type: "BrandConfig",
+      required: true,
+      description:
+        "Structured identity, colors, themes, typography, logos, contacts, and optional downloads and translations.",
+    },
+    fonts: {
+      type: "FontConfig[]",
+      default: "Inter (Google)",
+      description:
+        "Font loading declarations. An explicit array replaces the default; [] disables font downloads.",
+    },
+    basePath: {
+      type: "string",
+      default: '""',
+      description:
+        "Route mount point such as /guidelines, normalized to an empty string or /segment. Does not add a sidebar group.",
+    },
+    navigation: {
+      type: "{ numbering?: boolean }",
+      default: "{ numbering: false }",
+      description: "Whether sidebar sections display numbers. See Navigation.",
+    },
+    i18n: {
+      type: "I18nConfig",
+      description:
+        "Opt-in locales, content parser, URL prefix policy, and fallback. See Localization.",
+    },
+    seo: {
+      type: "{ og?: OgConfig }",
+      default: "{ og: { enabled: true } }",
+      description: "Generated social-card settings. See Social cards and SEO.",
+    },
+  }}
+/>
+
+<Callout type="note" title="Use Brandtree's config surface">
+  There is no top-level `title`, `content`, `deployment`, or arbitrary Astro
+  configuration block. See [Navigation](/navigation),
+  [Localization](/localization), and [Build and deployment](/publishing) for the
+  supported site workflows.
+</Callout>
+
+## Brand fields
+
+<TypeTable
+  type={{
+    meta: {
+      type: "BrandMeta",
+      required: true,
+      description: "Identity and document metadata.",
+    },
+    colors: {
+      type: "{ palette: PaletteFamily[]; swatches: Swatch[] }",
+      required: true,
+      description: "Authored color values and approved brand swatches.",
+    },
+    theme: {
+      type: "{ default: 'light' | 'dark' | 'system'; light: Scheme; dark: Scheme }",
+      required: true,
+      description: "Complete semantic color roles for both themes.",
+    },
+    typography: {
+      type: "BrandTypography",
+      required: true,
+      description: "Font stacks, family descriptions, weights, and type scale.",
+    },
+    logo: {
+      type: "BrandLogo",
+      required: true,
+      description: "Artwork variants and usage specifications.",
+    },
+    contact: {
+      type: "BrandContact",
+      required: true,
+      description:
+        "Optional public contact fields. An empty object is allowed.",
+    },
+    downloads: {
+      type: "BrandDownload[]",
+      description: "Shared downloadable resources and their display metadata.",
+    },
+    localeOverrides: {
+      type: "Record<string, BrandLocaleOverride>",
+      description:
+        "Reader-facing copy and typography stacks by configured locale code. Requires root i18n.",
+    },
+  }}
+/>
+
+## Brand metadata
+
+All paths below are relative to `brand.meta`.
+
+<TypeTable
+  type={{
+    name: { type: "string", required: true, description: "Public brand name." },
+    legalName: { type: "string", description: "Registered legal name." },
+    tagline: { type: "string", description: "Short brand tagline." },
+    documentTitle: {
+      type: "string",
+      required: true,
+      description: "Guidelines document label.",
+    },
+    version: {
+      type: "string",
+      required: true,
+      description:
+        "Brand-document version, independent of the package version.",
+    },
+    year: { type: "number", required: true, description: "Document year." },
+    url: {
+      type: "string",
+      required: true,
+      description:
+        "Production origin used by the generated site and absolute metadata URLs.",
+    },
+    description: {
+      type: "string",
+      required: true,
+      description: "Site description.",
+    },
+  }}
+/>
+
+See [Brand identity](/brand-identity) for an example and the distinction between
+structured identity and editorial brand stories.
+
+## Color families and swatches
+
+`brand.colors.palette` contains families with required `id`, `name`, and
+`shades`. Each `shades` object must contain all eleven stops: `50`, `100`, `200`,
+`300`, `400`, `500`, `600`, `700`, `800`, `900`, and `950`.
+
+A shade uses `{ space: "hex", value: "#64748b" }` or
+`{ space: "oklch", l: 0.55, c: 0.12, h: 250, alpha: 1 }`. For OKLCH, `alpha` is
+optional, lightness uses the 0–1 scale, and hue is in degrees.
+
+Other color fields take references such as `slate-700`, `black`, or `white`.
+`black` and `white` are built in. Raw hex strings are not valid references.
+
+<TypeTable
+  type={{
+    id: {
+      type: "string",
+      required: true,
+      description: "Swatch identifier, unique within swatches.",
+    },
+    name: {
+      type: "string",
+      required: true,
+      description: "Visible color name.",
+    },
+    color: {
+      type: "ColorReference",
+      required: true,
+      description: "Palette reference or black/white.",
+    },
+    cmyk: {
+      type: "[number, number, number, number]",
+      description: "Authored print specification.",
+    },
+    pantone: { type: "string", description: "Print reference label." },
+    usage: { type: "string", description: "Short usage guidance." },
+    category: {
+      type: '"primary" | "secondary"',
+      description: "Color category.",
+    },
+    span: { type: "1 | 2", description: "Horizontal swatch span." },
+    rows: { type: "1 | 2", description: "Vertical swatch span." },
+    on: { type: "ColorReference", description: "Explicit swatch foreground." },
+  }}
+/>
+
+The table describes an entry in `brand.colors.swatches`. See [Colors](/colors)
+for a complete palette example.
+
+## Light and dark themes
+
+`brand.theme.default` is `"light"`, `"dark"`, or `"system"`. Both `light` and
+`dark` require all of the following roles, each a color reference:
+
+| Group               | Required roles                                                                                                                                           |
+| ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Page                | `background`, `foreground`                                                                                                                               |
+| Cards               | `card`, `cardForeground`                                                                                                                                 |
+| Popovers            | `popover`, `popoverForeground`                                                                                                                           |
+| Main actions        | `primary`, `primaryForeground`                                                                                                                           |
+| Supporting surfaces | `secondary`, `secondaryForeground`, `muted`, `mutedForeground`                                                                                           |
+| Accent              | `accent`, `accentForeground`                                                                                                                             |
+| Destructive actions | `destructive`, `destructiveForeground`                                                                                                                   |
+| Controls            | `border`, `input`, `ring`                                                                                                                                |
+| Charts              | `chart1`, `chart2`, `chart3`, `chart4`, `chart5`                                                                                                         |
+| Sidebar             | `sidebar`, `sidebarForeground`, `sidebarPrimary`, `sidebarPrimaryForeground`, `sidebarAccent`, `sidebarAccentForeground`, `sidebarBorder`, `sidebarRing` |
+
+See [Themes](/themes) for how roles map to CSS variables and how to review both
+schemes without relying on JavaScript.
+
+## Typography specifications
+
+`brand.typography` requires the CSS font-family stacks `display`, `text`, and
+`mono`, plus `families`, `weights`, and `scale` arrays.
+
+- Family entries require `id` (`"display"`, `"text"`, or `"mono"`) and `name`.
+  Optional fields: `foundry`, `url`, `note`.
+- Weight entries require `name` and numeric `weight`. Optional: `italic`.
+  Weight numbers must be unique, including entries marked italic.
+- Scale entries follow the table below.
+
+<TypeTable
+  type={{
+    id: {
+      type: "string",
+      required: true,
+      description: "Stable style identifier, unique within scale.",
+    },
+    name: {
+      type: "string",
+      required: true,
+      description: "Visible style name.",
+    },
+    size: {
+      type: "string",
+      required: true,
+      description: "CSS font size, including responsive clamp expressions.",
+    },
+    lineHeight: {
+      type: "string",
+      required: true,
+      description: "CSS line-height value.",
+    },
+    tracking: {
+      type: "string",
+      required: true,
+      description: "CSS letter-spacing value.",
+    },
+    font: { type: '"display" | "text"', description: "Typography role." },
+    weight: { type: "number", description: "Font weight." },
+    role: { type: "string", description: "Short usage explanation." },
+    sample: { type: "string", description: "Specimen text." },
+    transform: {
+      type: '"none" | "uppercase" | "lowercase" | "capitalize"',
+      description: "Text transformation.",
+    },
+    print: {
+      type: "{ size: string; leading: string; tracking: string }",
+      description:
+        "Print specification. All three fields are required when present; this does not generate a PDF.",
+    },
+  }}
+/>
+
+See [Typography](/typography) for a complete example.
+
+## Load fonts
+
+Root-level `fonts` is an array; it is separate from `brand.typography`.
+When omitted, it declares Inter from Google with `"100 900"` weights, normal and
+italic styles, and system fallbacks. Supplying an array replaces that default.
+
+<TypeTable
+  type={{
+    name: {
+      type: "string",
+      required: true,
+      description: "Nonempty provider family name.",
+    },
+    cssVariable: {
+      type: "string",
+      required: true,
+      description:
+        "Unique CSS variable matching -- followed by a letter or underscore, then letters, numbers, underscores, or hyphens.",
+    },
+    provider: {
+      type: '"google" | "fontsource" | "bunny" | "fontshare" | "adobe" | "local"',
+      required: true,
+      description: "Serializable Astro font-provider declaration.",
+    },
+    id: {
+      type: "string",
+      description:
+        "Required nonempty Adobe project ID when provider is adobe; unsupported for other providers.",
+    },
+    options: {
+      type: "{ variants: FontVariant[] }",
+      description:
+        "Required for local fonts. Nonempty variants; each needs a nonempty src array relative to the client project root.",
+    },
+    weights: {
+      type: "(number | string)[]",
+      description:
+        "Nonempty list; variable ranges use a string such as 100 900.",
+    },
+    styles: {
+      type: '("normal" | "italic" | "oblique")[]',
+      description: "Nonempty style list.",
+    },
+    subsets: {
+      type: "string[]",
+      description: "Nonempty provider subset list.",
+    },
+    formats: {
+      type: '("woff2" | "woff" | "ttf" | "otf" | "eot")[]',
+      description: "Nonempty format list.",
+    },
+    fallbacks: { type: "string[]", description: "CSS fallback family names." },
+    optimizedFallbacks: {
+      type: "boolean",
+      description: "Whether to optimize fallback metrics.",
+    },
+    display: {
+      type: '"auto" | "block" | "swap" | "fallback" | "optional"',
+      description: "Font-display policy.",
+    },
+    stretch: { type: "string", description: "CSS stretch value." },
+    featureSettings: { type: "string", description: "CSS feature settings." },
+    variationSettings: {
+      type: "string",
+      description: "CSS variation settings.",
+    },
+    unicodeRange: {
+      type: "string[]",
+      description: "Nonempty CSS unicode-range list.",
+    },
+  }}
+/>
+
+Local variants accept optional `weight` and `style`, plus `display`, `stretch`,
+`featureSettings`, `variationSettings`, and `unicodeRange`. See [Fonts](/fonts)
+for hosted and local examples and warning behavior.
+
+## Logo specifications
+
+`brand.logo` requires `logotype`, `brandmark`, `clearspace`, `minSize`, and
+`colorways`. Optional fields are `favicon` and `pronunciation`.
+
+| Object                  | Required fields                                                     | Optional fields |
+| ----------------------- | ------------------------------------------------------------------- | --------------- |
+| `logotype`, `brandmark` | `onLight`, `onDark` (file paths); `aspect` (numeric width / height) | `altText`       |
+| `clearspace`            | `unit` (description), `ratio` (number)                              | —               |
+| `minSize`               | `digital`, `print` (descriptive strings)                            | —               |
+| Each `colorways` entry  | Unique `id`, `fg`, `bg` (color references)                          | `label`         |
+
+The generated site otherwise references `/favicon.svg`. Keep the preferred
+colorway first. See [Logos](/logos) for an example with artwork paths.
+
+## Contact and downloads
+
+`brand.contact` is required, but `{}` is allowed. Its optional fields are
+`email`, `website`, `phone`, `address` (string array), and `socials`.
+Each social entry requires a unique `id` plus `label`, `handle`, and `url`.
+See [Contact and social profiles](/contact).
+
+`brand.downloads` is optional. Entries require unique `id`, `label`, and `href`;
+`format`, `size`, and `note` are optional display strings. Brandtree does not
+create archives or calculate file sizes. See [Brand assets](/brand-assets).
+
+## Localized brand copy
+
+`brand.localeOverrides` is an optional record keyed by locale code. It requires
+root `i18n`, and each key must be configured in `i18n.locales`.
+
+Supported overrides are reader-facing metadata, palette names, swatch names and
+usage, typography stacks and labels, logo text, address lines, social labels,
+and download labels and notes. Array entries match canonical `id` values;
+weight entries match their numeric `weight`. Unknown and duplicate identifiers
+are invalid. Artwork paths, colors, URLs, measurements, and theme roles stay
+canonical. See [Localization](/localization) for the complete workflow.
+
+## Social preview settings
+
+`seo.og` accepts the following fields:
+
+<TypeTable
+  type={{
+    enabled: {
+      type: "boolean",
+      default: "true",
+      description:
+        "Generate per-page social cards. Explicit page SEO images still work when disabled.",
+    },
+    logo: {
+      type: "string | false",
+      description: "Local SVG override; false hides the logo.",
+    },
+    eyebrow: {
+      type: "string | false",
+      description:
+        "Label above the headline; defaults to the localized site title.",
+    },
+    description: {
+      type: "string | false",
+      description: "Subtitle; defaults to the site description.",
+    },
+    site: {
+      type: "string | false",
+      description: "Footer site text; false hides it.",
+    },
+    palette: {
+      type: "{ accent?: string; background?: string; border?: string; foreground?: string; muted?: string }",
+      description: "Actual CSS colors, unlike brand color-reference fields.",
+    },
+    titles: {
+      type: "Record<string, string>",
+      description:
+        "Card headlines for custom route paths. Content pages use their page title.",
+    },
+  }}
+/>
+
+See [Social cards and SEO](/social-cards) for generation and page-level overrides.
+
+## Check your changes
+
+Config validation checks unknown fields, duplicate IDs and weights, complete
+schemes, color references, font variables, and locale references. It also reports
+local asset warnings. See [Validation](/validation) for the checking workflow.
+Visual review still matters for contrast, artwork, and typography.

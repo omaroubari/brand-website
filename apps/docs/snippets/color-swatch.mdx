@@ -1,0 +1,9 @@
+<div data-color-palette>
+  <ColorSwatch
+    color={
+      props.brand.colors.swatches.find((swatch) => swatch.id === "blue") ??
+      props.brand.colors.swatches[0]
+    }
+    print={false}
+  />
+</div>

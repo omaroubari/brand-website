@@ -1,0 +1,15 @@
+---
+import { LayoutGrid } from "brandtree/components";
+import PreviewShell from "../previews/PreviewShell.astro";
+---
+
+<PreviewShell>
+  <LayoutGrid
+    columns={12}
+    gutter="24px"
+    margin="48px"
+    ratio="16 / 9"
+    label="Desktop composition"
+    specs={[{ term: "Alignment", value: "Content follows the column grid" }]}
+  />
+</PreviewShell>

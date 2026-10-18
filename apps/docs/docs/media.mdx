@@ -1,0 +1,190 @@
+---
+title: Media
+description: Add images, SVG icon specimens, and downloadable files to authored pages.
+---
+
+Use imported files for responsive image specimens and `public/` for files that
+need a predictable URL. Keep media in your consumer project; `.brandtree/` is
+generated output. Register shared logo artwork and download metadata once in
+[Brand assets](/brand-assets), then use them in your content.
+
+## File locations
+
+<Tree>
+  <Tree.Folder name="assets" defaultOpen>
+    <Tree.Folder name="photography">
+      <Tree.File name="team.jpg" />
+    </Tree.Folder>
+    <Tree.Folder name="icons">
+      <Tree.File name="arrow.svg" />
+      <Tree.File name="index.ts" />
+    </Tree.Folder>
+  </Tree.Folder>
+  <Tree.Folder name="public" defaultOpen>
+    <Tree.Folder name="downloads">
+      <Tree.File name="brand-guide.pdf" />
+    </Tree.Folder>
+  </Tree.Folder>
+  <Tree.Folder name="content">
+    <Tree.File name="02-photography.mdx" />
+  </Tree.Folder>
+</Tree>
+
+Imported images participate in Astro's image pipeline. Public files are served
+unchanged. An import path is relative to the MDX file, while a root-relative
+URL starts at the site's public root. Include your configured `basePath` in
+root-relative links when hosting below a path.
+
+## Imported photographs and mockups
+
+Imports resolve relative to the MDX file. For
+`content/02-photography.mdx`, a photograph in `assets/photography/` uses `../assets/`.
+For `content/en/02-photography.mdx`, it uses `../../assets/`.
+
+```mdx
+---
+title: Photography
+---
+
+import team from "../assets/photography/team.jpg";
+
+<Figure
+  src={team}
+  alt="The Acme team reviewing printed layouts around a table"
+  caption="Show people doing real work."
+  ratio="3 / 2"
+/>
+```
+
+The generated MDX runtime supplies built-in components such as `Figure` and
+`PhotoGrid` and automatically supplies their shared props. An imported image lets `Figure`
+use Astro's responsive image pipeline. `Figure` also accepts a public URL string,
+which renders a regular image:
+
+```mdx
+<Figure
+  src="/brand/storefront.jpg"
+  alt="Acme's wordmark above the store entrance"
+  fit="contain"
+/>
+```
+
+Use `fit="contain"` to show an entire mockup or mark; the default `cover` fills
+and crops the frame. A `Figure` without `src` renders a placeholder, useful while
+artwork is being prepared. Replace intentional draft placeholders before
+publishing final guidance.
+
+### Photography grids
+
+`PhotoGrid` expects imported image metadata, not URL strings:
+
+```mdx
+import team from "../assets/photography/team.jpg";
+import workshop from "../assets/photography/workshop.jpg";
+
+<PhotoGrid
+  images={[
+    { src: team, caption: "People collaborating in natural light" },
+    { src: workshop, caption: "Close details of the making process" },
+  ]}
+  cols={2}
+  ratio="4 / 3"
+  treatment="none"
+/>
+```
+
+It also accepts bare imports (`images={[team, workshop]}`), but those render with
+empty image alternatives. Supply wrapper objects with meaningful `caption`
+values when the image conveys information: the caption is also used as its alt
+text. Optional `span` controls an item's column span. Treatments are `none`,
+`mono`, and `duotone`; duotone uses the brand's primary color.
+
+Avoid putting full-page prose into captions. Write the photographic principles
+as MDX paragraphs beside the examples, keeping the shared images reusable across
+locales. See [Pages and MDX](/authoring) for MDX structure and [components](/components)
+for the complete component surface.
+
+## Brand icon specimens
+
+`IconGrid` displays an explicit array of names and raw SVG strings. It does not
+automatically scan an icon directory. Create a module such as
+`assets/icons/index.ts`:
+
+```ts
+import arrow from "./arrow.svg?raw";
+import document from "./document.svg?raw";
+
+export const icons = [
+  { name: "arrow", svg: arrow },
+  { name: "document", svg: document },
+];
+```
+
+Then import it into a content page:
+
+```mdx
+import { icons } from "../assets/icons/index.ts";
+
+<IconGrid icons={icons} unit={24} version="v1.0" cols={4} />
+
+<IconGrid icons={icons} only={["document", "arrow"]} />
+```
+
+Without `only`, icons are sorted by name. `only` selects and orders items; an
+unknown requested name throws an error. `unit` describes the drawing grid shown
+on the first tile. Include a suitable SVG `viewBox`; use `currentColor` for strokes
+or fills that should follow the page foreground.
+
+Raw SVG is inserted into the document as markup, so use artwork you maintain or
+trust. This is separate from navigation icons: page and folder metadata accept
+names from the bundled Phosphor Iconify collection, with bare names or a `ph:`
+prefix. Adding an SVG to `IconGrid` does not register a navigation icon.
+
+## Files and downloads
+
+<Steps>
+  <Step title="Add the file">
+
+Place a prepared file at `public/downloads/brand-guide.pdf` in your project.
+Brandtree copies it into the published site; it does not create or export PDFs,
+ZIP archives, or design files.
+
+  </Step>
+  <Step title="Link from a page">
+
+```md content/01-introduction.mdx
+[Download the brand guide (PDF)](/downloads/brand-guide.pdf)
+```
+
+Use descriptive text that identifies the file format. Add the site's base path
+when required; for example, `/guidelines/downloads/brand-guide.pdf`.
+
+  </Step>
+  <Step title="Reuse a download collection">
+
+Register shared packages in `brand.downloads`, as described in
+[Brand assets](/brand-assets), then render them with:
+
+```mdx
+<Downloads />
+```
+
+  </Step>
+</Steps>
+
+## Review your media
+
+Check informative images have useful alternatives, captions work in each locale,
+and each file URL opens in the built site. Test images in both themes and remove
+unwanted placeholders. Config checks warn about registered missing files; they
+do not validate every page-level link or remote URL. Read
+[Validation](/validation) before publishing.
+
+<Panel title="Related asset tasks">
+
+Use [Logos](/logos) for theme-specific artwork, [Fonts](/fonts) for typeface
+registration, and [Social cards and SEO](/social-cards) for generated previews.
+Astro's [image guide](https://docs.astro.build/en/guides/images/) explains the
+underlying image pipeline.
+
+</Panel>

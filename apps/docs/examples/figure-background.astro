@@ -1,0 +1,20 @@
+---
+import { Figure } from "brandtree/components";
+import PreviewShell from "../previews/PreviewShell.astro";
+import { demoBrand as brand, demoUI as ui } from "../previews/brand";
+import { demoPhoto as photo } from "../previews/media";
+---
+
+<PreviewShell>
+  <Figure
+    ui={ui}
+    src={photo}
+    alt="A photograph fitted inside a wide frame"
+    ratio="16 / 9"
+    fit="contain"
+    bg={brand.colors.palette[0]
+      ? `${brand.colors.palette[0].id}-50`
+      : undefined}
+    caption="The full photograph with a configured palette background"
+  />
+</PreviewShell>

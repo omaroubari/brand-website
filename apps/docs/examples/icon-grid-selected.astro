@@ -1,0 +1,17 @@
+---
+import { IconGrid } from "brandtree/components";
+import PreviewShell from "../previews/PreviewShell.astro";
+import { demoIcons as icons } from "../previews/media";
+---
+
+<PreviewShell>
+  <IconGrid
+    icons={icons}
+    only={icons
+      .slice(0, 2)
+      .map(({ name }) => name)
+      .reverse()}
+    cols={2}
+    version="v2.0"
+  />
+</PreviewShell>

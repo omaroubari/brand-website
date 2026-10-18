@@ -1,0 +1,101 @@
+---
+title: Persona Card
+description: Introduce an audience persona with a portrait, key facts, and supporting notes.
+sidebar:
+  order: 24
+---
+
+import previewCode from "../../snippets/persona-card.mdx?raw";
+import example0 from "../../snippets/persona-card-placeholder.mdx?raw";
+
+import PersonaCardUrlCode from "../../snippets/persona-card-url.mdx?raw";
+
+<ComponentPreview path="persona-card" code={previewCode} />
+
+## Usage
+
+Provide a name, portrait, and the current interface strings. Add prose in the
+default slot to describe the persona’s needs or motivations.
+
+```mdx
+import portrait from "../assets/photography/persona-portrait.jpg";
+
+<PersonaCard name="Maya" role="Brand designer" image={portrait}>
+
+Maya needs clear rules that a small team can apply without supervision.
+
+</PersonaCard>
+```
+
+The first preview adds a role and facts. Image imports assume a page at the
+content root; use your own asset and adjust the path for nested or localized
+content. The portrait is [stock photography by Anna Shvets on Pexels](https://www.pexels.com/photo/woman-in-white-crew-neck-t-shirt-using-silver-macbook-3986983/);
+Maya is a fictional example persona.
+
+## Examples
+
+### Write the persona before choosing a portrait
+
+Omit `image` while drafting. The portrait area displays a localized placeholder while the name, role, and notes remain available.
+
+<ComponentPreview path="persona-card-placeholder" code={example0} />
+
+### Use a URL and richer notes
+
+The first preview passes imported image metadata for Astro’s responsive image
+output. Pass a string URL instead when the image is already hosted; this example
+uses the imported image’s `src` URL to exercise that path. It renders a plain
+image element. Use your own URL or the content-root asset import shown in the
+Code tab.
+
+The default slot also accepts richer notes, such as a paragraph followed by a
+list. Facts and role are optional; the draft example above omits facts.
+
+<ComponentPreview path="persona-card-url" code={PersonaCardUrlCode} />
+
+## Images and notes
+
+Imported images use Astro’s responsive image output. URL strings render as plain
+image elements. Portraits crop to a `3 / 4` frame and use empty alt text because
+the adjacent name identifies the person. Missing images show the localized
+`ui.content.portraitPending` message.
+
+Facts render as term/value pairs. Use the default slot for richer prose, lists,
+or other MDX content.
+
+## API reference
+
+<TypeTable
+  type={{
+    ui: {
+      type: "UIStrings",
+      default: "props.ui",
+      description:
+        "Override interface strings for this component. Supplied automatically in Brandtree MDX.",
+    },
+    name: {
+      type: "string",
+      required: true,
+    },
+    role: {
+      type: "string",
+      description: 'e.g. "Target audience 1 — founders of small companies".',
+    },
+    image: {
+      type: "ImageMetadata | string",
+    },
+    facts: {
+      type: "Array<{ term: string; value: string }>",
+      description: "Demographic rows shown under the name.",
+      default: "[]",
+    },
+    class: {
+      type: "string",
+      description: "Additional class on the outer element.",
+    },
+  }}
+/>
+
+### Slots
+
+The default slot holds persona notes and supports prose, lists, and other MDX content.

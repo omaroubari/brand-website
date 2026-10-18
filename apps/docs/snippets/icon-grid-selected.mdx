@@ -1,0 +1,11 @@
+import { icons } from "../assets/icons";
+
+<IconGrid
+  icons={icons}
+  only={icons
+    .slice(0, 2)
+    .map(({ name }) => name)
+    .reverse()}
+  cols={2}
+  version="v2.0"
+/>

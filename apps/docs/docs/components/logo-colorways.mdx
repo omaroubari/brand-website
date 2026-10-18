@@ -1,0 +1,84 @@
+---
+title: Logo Colorways
+description: Display approved logo and background combinations from your brand configuration.
+sidebar:
+  order: 10
+---
+
+import previewCode from "../../snippets/logo-colorways.mdx?raw";
+import variantCode from "../../snippets/logo-colorways-brandmark.mdx?raw";
+
+<ComponentPreview path="logo-colorways" code={previewCode} />
+
+## Usage
+
+Display every approved colorway for the configured logotype.
+Define the foreground, background, and optional label of each combination in
+[Logos](/logos).
+
+```mdx
+<LogoColorways />
+```
+
+## Examples
+
+### Use two columns for the logotype
+
+The opening preview sets `cols={2}` to show approved logotype pairs in a compact
+grid. Compare it with the default three-column brandmark example below.
+
+```mdx
+<LogoColorways cols={2} />
+```
+
+### Show brandmark colorways
+
+Set `mark="brandmark"` to apply the same approved combinations to the standalone mark.
+
+<ComponentPreview path="logo-colorways-brandmark" code={variantCode} />
+
+### Publish approved combinations
+
+Replace `brand.logo.colorways` in `brandtree.config.ts` to change the rendered
+pairs. This fragment uses the universal `black` and `white` references. Add
+palette tokens from your own configuration for other approved combinations.
+An omitted label leaves just the generated foreground/background caption.
+
+```ts
+colorways: [
+  { id: "primary", fg: "black", bg: "white", label: "Light" },
+  { id: "reversed", fg: "white", bg: "black" },
+],
+```
+
+## Layout and selection
+
+Every entry in `brand.logo.colorways` is rendered in configuration order; there
+is no `only` filter. `cols` controls the layout from `48rem` up. Below that
+viewport width, the grid always uses two columns, including when `cols={1}`.
+
+## API reference
+
+<TypeTable
+  type={{
+    brand: {
+      type: "BrandConfig",
+      default: "props.brand",
+      description:
+        "Override the resolved brand for this component. Supplied automatically in Brandtree MDX.",
+    },
+    mark: {
+      type: '"logotype" | "brandmark"',
+      default: '"logotype"',
+    },
+    cols: {
+      type: "number",
+      description: "Columns from the medium breakpoint up.",
+      default: "3",
+    },
+    class: {
+      type: "string",
+      description: "Additional class on the outer element.",
+    },
+  }}
+/>

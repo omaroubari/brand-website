@@ -1,0 +1,126 @@
+---
+title: Figure
+description: Display an image in a consistent frame, or reserve space for artwork still in production.
+sidebar:
+  order: 4
+---
+
+import previewCode from "../../snippets/figure.mdx?raw";
+import example0 from "../../snippets/figure-placeholder.mdx?raw";
+
+import coverCode from "../../snippets/figure-cover.mdx?raw";
+import backgroundCode from "../../snippets/figure-background.mdx?raw";
+import pendingCode from "../../snippets/figure-pending.mdx?raw";
+
+<ComponentPreview path="figure" code={previewCode} />
+
+## Usage
+
+Import an image. Supply meaningful alt
+text when the image conveys information; leave it empty for decorative artwork.
+
+```mdx
+import photo from "../assets/photography/photo-01.jpg";
+
+<Figure
+  src={photo}
+  alt="A photograph demonstrating the brand's image treatment"
+/>
+```
+
+This import assumes a document at the content root. Use your own asset and adjust
+the path for nested or localized pages. Imported images use Astro's responsive
+image pipeline. A string `src`, such as a path under `public/`, produces an
+ordinary lazy-loaded image instead.
+
+## Examples
+
+### Keep the whole image visible
+
+Use `fit="contain"` with an imported image to preserve the full composition.
+This uses Astro's responsive image pipeline.
+
+<ComponentPreview path="figure" code={previewCode} />
+
+### Fill the frame with a crop
+
+Use `fit="cover"` to fill a different aspect ratio. Passing the imported image's
+`src` string demonstrates the plain-image path, which renders a lazy-loaded
+`img` rather than Astro's responsive `Image`.
+
+<ComponentPreview path="figure-cover" code={coverCode} />
+
+### Set the unused frame background
+
+With `contain`, a differently shaped frame leaves space around the image. `bg`
+selects a generated palette shade so that space follows the configured brand.
+
+<ComponentPreview path="figure-background" code={backgroundCode} />
+
+### Reserve space for pending artwork
+
+Omit `src` while preparing a mockup. Set `ratio` to the intended shape and use
+`caption` to identify the planned application.
+
+<ComponentPreview path="figure-placeholder" code={example0} />
+
+### Use the localized pending label
+
+Omit both `src` and `caption` for a neutral placeholder with the current
+interface's artwork-pending label.
+
+<ComponentPreview path="figure-pending" code={pendingCode} />
+
+## Image behavior
+
+`cover` fills the frame and can crop the image; `contain` keeps the whole image
+visible, as shown in the default preview. The default ratio applies to images
+and placeholders alike.
+
+An empty frame displays its caption, or the localized artwork-pending label
+when no caption is provided. A nonempty caption also renders below the frame.
+`bg` selects a generated CSS custom property directly; unlike `Panel.bg`, it
+does not validate the token. The component has no content slots.
+
+## API reference
+
+<TypeTable
+  type={{
+    ui: {
+      type: "UIStrings",
+      default: "props.ui",
+      description:
+        "Override interface strings for this component. Supplied automatically in Brandtree MDX.",
+    },
+    src: {
+      type: "ImageMetadata | string",
+      description:
+        "An imported image (optimised, responsive) or a path under public/. Leave it out to get a labelled placeholder frame — useful while the client's mockups are still being produced.",
+    },
+    alt: {
+      type: "string",
+      default: '""',
+    },
+    caption: {
+      type: "string",
+    },
+    ratio: {
+      type: "string",
+      description: "Frame aspect ratio for images and placeholders.",
+      default: '"4 / 3"',
+    },
+    fit: {
+      type: '"cover" | "contain"',
+      description: "Fill the frame (default) or fit the whole image inside it.",
+      default: '"cover"',
+    },
+    bg: {
+      type: "string",
+      description: "Generated --color-* suffix for the frame background.",
+    },
+    class: {
+      type: "string",
+      description: "Additional class on the outer element.",
+    },
+  }}
+/>

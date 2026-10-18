@@ -1,0 +1,14 @@
+import photo from "../assets/photography/photo-01.jpg";
+
+<Figure
+  src={photo}
+  alt="A photograph fitted inside a wide frame"
+  ratio="16 / 9"
+  fit="contain"
+  bg={
+    props.brand.colors.palette[0]
+      ? `${props.brand.colors.palette[0].id}-50`
+      : undefined
+  }
+  caption="The full photograph with a configured palette background"
+/>

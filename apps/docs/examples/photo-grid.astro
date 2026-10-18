@@ -1,0 +1,11 @@
+---
+import { PhotoGrid } from "brandtree/components";
+import PreviewShell from "../previews/PreviewShell.astro";
+import { demoPhoto as photo } from "../previews/media";
+---
+
+<PreviewShell>
+  <PhotoGrid
+    images={[{ src: photo, caption: "The original composition" }, photo]}
+  />
+</PreviewShell>

@@ -1,0 +1,12 @@
+---
+import type { ComponentProps } from "astro/types";
+import NavTree from "blume/components/layout/NavTree.astro";
+
+type Props = ComponentProps<typeof NavTree>;
+---
+
+{
+  /* Keep the native collapsed groups, but render their links upfront. Opening
+    a category must not depend on JavaScript or a sidebar-fragment request. */
+}
+<NavTree {...Astro.props} fragmentBase={undefined} />

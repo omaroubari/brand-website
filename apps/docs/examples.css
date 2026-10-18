@@ -1,0 +1,10 @@
+/* Import into Blume's existing Tailwind entry so Brandtree's design tokens and
+ * utilities share one CSS pipeline rather than loading two independent resets. */
+@import "brandtree/styles.css";
+
+/* Blume centers examples at their intrinsic width. Exhibits need the complete
+ * available width, while their own container handles horizontal overflow. */
+[data-blume-example] {
+  inline-size: 100%;
+  min-inline-size: 0;
+}
