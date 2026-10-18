@@ -5,37 +5,93 @@ sidebar:
   order: 9
 ---
 
-Run every command from the **consumer root**, the directory containing your
-`brandtree.config.ts` and `content/`. The CLI uses the current working directory;
-it does not search parent directories.
+Run `dev`, `check`, `build`, and `preview` from the **consumer root**, the directory
+containing your `brandtree.config.ts` and `content/`. They use the current working
+directory and do not search parent directories. `init` creates a project in the
+current directory or a supplied destination and does not require an existing config.
 
 ```sh
-pnpm exec brandtree --help
-pnpm exec brandtree --version
-pnpm exec brandtree dev
-pnpm exec brandtree check --strict
-pnpm exec brandtree build
-pnpm exec brandtree preview
+pnpm brandtree --help
+pnpm brandtree --version
+pnpm brandtree dev
+pnpm brandtree check --strict
+pnpm brandtree build
+pnpm brandtree preview
 ```
 
-In this repository, use `pnpm --filter web exec brandtree …` to select the
-example consumer. The committed CLI launcher prefers compiled output and can
-load the TypeScript source before compilation. After framework changes, build
-with `pnpm --filter brandtree build` to refresh that output. The root `pnpm dev`,
-`pnpm build`, and `pnpm check` scripts do that preparation for you.
+Before you have a project dependency, run the package directly with
+`pnpm dlx brandtree`, `npx brandtree`, or `bunx brandtree`. After installing your
+project dependencies, `pnpm brandtree …` runs the version recorded by that project.
 
 ## Available commands
 
-| Command   | Result                                                                           |
-| --------- | -------------------------------------------------------------------------------- |
-| `dev`     | Scan authored inputs, generate `.brandtree/`, start Astro, and watch changes.    |
-| `check`   | Prepare a runtime, run Astro sync, and type-check once; leave `dist/` unchanged. |
-| `build`   | Prepare `.brandtree/` and build a static website into `dist/`.                   |
-| `preview` | Serve the existing production output through the generated Astro app.            |
+| Command      | Result                                                                           |
+| ------------ | -------------------------------------------------------------------------------- |
+| `init [dir]` | Create missing starter files in the target directory and print next steps.       |
+| `dev`        | Scan authored inputs, generate `.brandtree/`, start Astro, and watch changes.    |
+| `check`      | Prepare a runtime, run Astro sync, and type-check once; leave `dist/` unchanged. |
+| `build`      | Prepare `.brandtree/` and build a static website into `dist/`.                   |
+| `preview`    | Serve the existing production output through the generated Astro app.            |
 
-`init`, `deploy`, `doctor`, and translation commands are not implemented
+`deploy`, `doctor`, and translation commands are not implemented
 Brandtree subcommands. Blume's docs-app commands are a separate CLI and are not
 Brandtree features.
+
+## Initialize a project
+
+Create a project without installing Brandtree first:
+
+<CodeGroup>
+
+```sh title="pnpm"
+pnpm dlx brandtree
+```
+
+```sh title="npm"
+npx brandtree
+```
+
+```sh title="bun"
+bunx brandtree
+```
+
+</CodeGroup>
+
+For a noninteractive setup:
+
+```sh
+pnpm dlx brandtree init my-brand --yes --title Acme --package-manager pnpm
+```
+
+If Brandtree is already installed in your project, use
+`pnpm brandtree init my-brand` to run that installed version.
+[Quickstart](/quickstart) walks through installation and the first page.
+
+| Argument or option  | Behavior                                                                                                                                      |
+| ------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| `[dir]`             | Destination relative to the working directory, or an absolute path. Defaults to `.` when prompts are skipped.                                 |
+| `--title`           | Brand name written to a new config. Defaults to `My Brand` without prompts; interactive mode suggests a name derived from the destination.    |
+| `--package-manager` | `npm`, `pnpm`, `yarn`, or `bun` for the generated next steps. Otherwise detected from the invoking package manager, with npm as the fallback. |
+| `--yes`             | Skip prompts. It does not authorize overwriting files.                                                                                        |
+
+An interactive terminal asks for the directory and brand name when those values
+are missing. Cancelling a prompt writes nothing. CI and noninteractive runs skip
+prompts automatically. An unknown package manager or blank title is rejected.
+
+Init creates a minimal `brandtree.config.ts`, three numbered pages in `content/`,
+placeholder logo SVGs in `public/brand/`, a favicon, and a `package.json` when
+absent. The new manifest includes `dev`, `build`, `check`, and `preview` scripts.
+The starter uses system fonts and has no locale folders. Configure additional
+languages later with [Localization](/localization).
+
+Existing files are skipped. An existing supported config is preserved even when
+it uses another extension. Init appends missing `node_modules/`, `.brandtree/`,
+and `dist/` ignores to `.gitignore`; it does not merge an existing manifest or
+config. With a new manifest it prints install/dev script commands. With an
+existing manifest it prints commands to add Brandtree and invoke its CLI directly.
+
+Init does not install dependencies, start a server, or initialize Git. Review
+its output, install dependencies, then run from the target project directory. [Project structure](/project-structure) explains ownership.
 
 ## Development options
 
@@ -80,8 +136,8 @@ Other commands do not acquire this lock. Stop dev before an ordinary `check` or
 ## Check options and failure behavior
 
 ```sh
-pnpm exec brandtree check --strict --isolated
-pnpm exec brandtree check --strict --isolated --preview
+pnpm brandtree check --strict --isolated
+pnpm brandtree check --strict --isolated --preview
 ```
 
 | Option       | Behavior                                                                            |
@@ -111,7 +167,7 @@ options. Check strictly first, then build normally.
 Build first, then run from the consumer root:
 
 ```sh
-pnpm exec brandtree preview --port 4322
+pnpm brandtree preview --port 4322
 ```
 
 Preview accepts `--host [address]`, `--port` (1–65535, default 4321), and
