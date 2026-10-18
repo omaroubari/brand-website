@@ -9,14 +9,14 @@ a font that silently fell back.
 
 ## Check your inputs
 
-Run these commands from a standalone consumer's root, containing
+Run these commands from your project root, containing
 `brandtree.config.ts`:
 
 <Steps>
   <Step title="Run strict checking">
 
 ```sh
-pnpm exec brandtree check --strict
+pnpm brandtree check --strict
 ```
 
 Strict checking fails preparation on content error diagnostics, including
@@ -28,7 +28,7 @@ also fail checking. Warnings alone remain nonfatal.
   <Step title="Build the production site">
 
 ```sh
-pnpm exec brandtree build
+pnpm brandtree build
 ```
 
 This generates static output in `dist/`. Draft pages are omitted. The build
@@ -39,7 +39,7 @@ release gate.
   <Step title="Serve the generated output">
 
 ```sh
-pnpm exec brandtree preview --port 4322
+pnpm brandtree preview --port 4322
 ```
 
 Open the printed URL and follow real page links. Preview serves the build through
@@ -51,23 +51,25 @@ from the build; if either is missing, build again.
 
 <Callout type="info">
   Stop development before ordinary check and build commands: they regenerate
-  `.brandtree/`. To check while dev runs, use `pnpm exec brandtree check
-  --strict --isolated`. There is no isolated build flag.
+  `.brandtree/`. To check while dev runs, use `pnpm brandtree check --strict
+  --isolated`. There is no isolated build flag.
 </Callout>
 
-## Check the repository example
+## Use your project scripts
 
-From the monorepo root:
+Init adds `check`, `build`, and `preview` scripts to a new project's manifest.
+The generated `check` script does not include `--strict`, so supply it when
+preparing a release:
 
 ```sh
-pnpm check
-pnpm --filter web exec brandtree check --strict
+pnpm check --strict
 pnpm build
 pnpm preview --port 4322
 ```
 
-The root scripts also build the framework. The example output is
-`apps/web/dist/`; a standalone consumer uses its own `dist/`.
+These scripts use the Brandtree version installed in your project. Keep the
+lockfile committed so your team and CI resolve the same dependency versions.
+Production output is always in your project's `dist/`.
 
 ## Review the output
 

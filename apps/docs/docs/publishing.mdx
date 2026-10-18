@@ -34,46 +34,39 @@ authentication if they require private access.
 ## Build a reviewed release
 
 Follow [Validation](/validation) to run strict checking, build, and inspect the
-static output. A standalone consumer runs `pnpm exec brandtree build`; this
-repository uses `pnpm build`. Stop development before building because it
+static output. Run `pnpm build` using the script created by init, or invoke
+`pnpm brandtree build` directly. Stop development before building because it
 shares the generated runtime.
 
-Upload the contents of `dist/` (or `apps/web/dist/` in this repository). The
+Upload the contents of your project’s `dist/`. The
 `.brandtree/` directory contains generated source, not the release artifact.
 
 ## Use a static host
 
-Configure your host with the appropriate project directory and commands:
+Point your host at your Brandtree project directory, where `package.json` and
+`brandtree.config.ts` live. For a project using pnpm and the generated scripts:
 
-| Project layout            | Build command               | Publish directory |
-| ------------------------- | --------------------------- | ----------------- |
-| This monorepo, root build | `pnpm build`                | `apps/web/dist`   |
-| Separate consumer         | `pnpm exec brandtree build` | `dist`            |
+| Setting           | Value                            |
+| ----------------- | -------------------------------- |
+| Install command   | `pnpm install --frozen-lockfile` |
+| Build command     | `pnpm build`                     |
+| Publish directory | `dist`                           |
 
-Install dependencies before building and use a compatible Node/pnpm version.
-Keep the lockfile committed. Since Brandtree is private alpha, a clean CI checkout
-must have access to its package: build it from this workspace or provide the
-local archive/private distribution you use. An unpublished dependency cannot be
-resolved by a host simply running a public registry install.
+Use Node.js 22.12 or newer. Commit `package.json` and your lockfile so CI installs
+the same Brandtree version and author dependencies. With npm or Bun, use the
+corresponding install and build commands for your lockfile.
 
 The site contains real generated nested routes. Preserve them and the emitted
 asset directories when uploading. Configure your host to serve directory index
 files, and test a direct visit and refresh on a nested URL after deployment.
 A single-page-app fallback is unnecessary for this static output.
 
-## Deploy the included Cloudflare example
+## Publish the static output
 
-The example already includes Wrangler and `apps/web/wrangler.jsonc` with
-`assets.directory: "./dist"`. Change its Worker `name` for the client and configure
-your own Cloudflare account/domain. When ready to publish, run from the root:
-
-```sh
-pnpm deploy
-```
-
-This script builds the framework, builds the example, and invokes Wrangler to
-publish it. Authentication and account access are handled by Wrangler. This is
-a repository script, not a `brandtree deploy` subcommand.
+Use your host's deployment workflow to publish `dist/`. Brandtree does not have
+a `deploy` subcommand or require a particular provider. If your host supplies a
+CLI, install and configure it in your own project; deployment credentials and
+access are managed by the host.
 
 ## A repeatable release routine
 
