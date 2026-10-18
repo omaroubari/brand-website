@@ -1,0 +1,112 @@
+---
+title: Project structure
+description: Understand authored files, generated output, and how to create another client project.
+---
+
+Your Brandtree project is the directory containing `brandtree.config.ts`,
+`content/`, and `package.json`. Run site commands from that directory. Init can
+create a new project in any destination you choose.
+
+## Files you own
+
+A new `brandtree init` project starts with these files:
+
+<Tree>
+  <Tree.Folder name="my-brand" defaultOpen>
+    <Tree.File name=".gitignore" />
+    <Tree.File name="brandtree.config.ts" />
+    <Tree.Folder name="content" defaultOpen>
+      <Tree.File name="01-introduction.mdx" />
+      <Tree.File name="02-colour.mdx" />
+      <Tree.File name="03-typography.mdx" />
+    </Tree.Folder>
+    <Tree.Folder name="public" defaultOpen>
+      <Tree.Folder name="brand" defaultOpen>
+        <Tree.File name="placeholder-dark.svg" />
+        <Tree.File name="placeholder-light.svg" />
+      </Tree.Folder>
+      <Tree.File name="favicon.svg" />
+    </Tree.Folder>
+    <Tree.File name="package.json" />
+  </Tree.Folder>
+</Tree>
+
+| Location              | Responsibility                                                  |
+| --------------------- | --------------------------------------------------------------- |
+| `brandtree.config.ts` | Structured brand data and site-wide settings.                   |
+| `content/`            | Markdown/MDX guidelines, locale folders, and folder metadata.   |
+| `components/`         | Optional custom components imported by your MDX.                |
+| `assets/`             | Imported media and local font files referenced by your project. |
+| `public/`             | Files copied unchanged, including downloadable archives.        |
+| `package.json`        | Your scripts and direct dependencies.                           |
+
+Add `components/` and `assets/` when you need custom components or imported media;
+init does not create them. These names are organizational conventions. You import
+custom components and media explicitly; Brandtree does not discover exhibits by
+scanning those directories. The `content/` root is fixed.
+
+<Panel title="Brand facts and prose have different homes">
+
+Keep a palette or logo path in config so several pages can reuse it. Put the
+explanation of when to use that color or logo in MDX. See
+[Brand configuration](/brand-configuration) and [Pages and MDX](/authoring).
+
+</Panel>
+
+## Generated files
+
+The CLI creates a disposable `.brandtree/` Astro application. A production build
+writes the static website into `dist/`; isolated checking uses
+`.brandtree-verify/`. Keep all three out of version control.
+
+<Callout type="warning" title="Edit the authored inputs">
+
+Changes inside `.brandtree/` are replaced on regeneration. Fix your config,
+content, or imported component instead. The CLI owns Astro composition; a
+consumer does not need its own Astro routes or config.
+
+</Callout>
+
+The site root is a generated brand cover. Use a named page for introductory
+prose; a root `content/index.mdx` does not replace that cover. Nested index pages
+work as folder overviews. See [Navigation](/navigation).
+
+## Start another client site
+
+Run the package directly to create another project:
+
+```sh
+pnpm dlx brandtree init another-brand --title "Another Brand" --package-manager pnpm
+cd another-brand
+pnpm install
+pnpm dev
+```
+
+Use `npx brandtree init` or `bunx brandtree init` if you prefer npm or Bun.
+[Quickstart](/quickstart) explains the complete new-project workflow.
+
+### Add starter files to an existing project
+
+If Brandtree is already a dependency, target the current directory:
+
+```sh
+pnpm brandtree init . --title Acme --package-manager pnpm
+```
+
+If it is not installed yet, run `pnpm dlx brandtree init .` instead, then
+`pnpm add brandtree` to add the project dependency.
+
+Init preserves existing files, including `package.json` and any supported
+Brandtree config. It creates missing starter files and appends missing
+`node_modules/`, `.brandtree/`, and `dist/` entries to `.gitignore`. It does not
+merge package scripts, dependencies, or configuration fields into existing files.
+
+If your manifest already exists, add your own `dev`, `check`, `build`, and
+`preview` scripts for the corresponding Brandtree commands, or run
+`pnpm brandtree dev` directly. Add `.brandtree-verify/` to `.gitignore` if
+you use isolated checking. Declare libraries imported by your own code as direct
+dependencies; see [Custom components](/customization).
+
+You can still copy authored inputs from an existing client when deliberately
+reusing that identity and content. Leave `node_modules/`, `.brandtree/`, and
+`dist/` behind. Init does not migrate copied content or replace existing brand data.

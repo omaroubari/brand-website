@@ -1,0 +1,148 @@
+---
+title: Navigation
+description: Organize pages, control sidebar order, and keep published URLs stable.
+sidebar:
+  order: 4
+---
+
+Brandtree builds a sidebar from your content folders. A filename decides where a
+page lives; frontmatter decides how it is described; `meta.ts` describes a folder.
+These choices let you reorganize a document without maintaining a second list
+of links by hand.
+
+## How a file becomes a URL
+
+Paths below are relative to the project's `content/` directory, assuming no
+localization or `basePath`:
+
+| Source file                                             | Published path         |
+| ------------------------------------------------------- | ---------------------- |
+| `index.mdx`                                             | `/`                    |
+| `01-the-brand.mdx`                                      | `/the-brand`           |
+| `03-logo/index.mdx`                                     | `/logo`                |
+| `03-logo/01-logotype.mdx`                               | `/logo/logotype`       |
+| `(resources)/downloads.mdx`                             | `/downloads`           |
+| `03-logo/02-clearspace.mdx` with `slug: protected-area` | `/logo/protected-area` |
+
+Each leading number followed by `-`, `_`, or `.` is stripped from its path
+segment. An `index` segment is omitted. Prefer lowercase, hyphenated names so
+URLs remain easy to type. Changing a file's numeric rank keeps its URL stable;
+renaming its meaningful segment changes the URL.
+
+An index page is the folder's overview. It sorts first and its link is promoted
+to the sidebar group, so the group itself can open that overview.
+
+<Callout type="info">
+  The site root is a special case: Brandtree generates a brand cover page there.
+  A `content/index.mdx` file maps to `/` in the content graph, but its body does
+  not replace that cover. Put introductory prose in a named page such as
+  `01-the-brand.mdx`. Nested index pages render their MDX normally.
+</Callout>
+
+## Order pages with numeric prefixes
+
+<Tree>
+  <Tree.Folder name="content" defaultOpen>
+    <Tree.File name="01-the-brand.mdx" />
+    <Tree.File name="02-tone-and-voice.mdx" />
+    <Tree.Folder name="03-logo" defaultOpen>
+      <Tree.File name="index.mdx" />
+      <Tree.File name="01-logotype.mdx" />
+      <Tree.File name="02-brandmark.mdx" />
+    </Tree.Folder>
+    <Tree.File name="04-colour.mdx" />
+  </Tree.Folder>
+</Tree>
+
+Numbers are local to each sibling set. A page and a folder at the same level
+share the same ordering space. Items with no rank sort after ranked items;
+items with equal ranks sort by their display labels.
+
+The current Brandtree frontmatter schema has no `sidebar.order`. Use filenames
+or a folder's `pages` array instead.
+
+## Describe a folder with meta.ts
+
+Place `meta.ts` inside the folder it describes. For example,
+`content/03-logo/meta.ts`:
+
+```ts
+import { defineMeta } from "brandtree";
+
+export default defineMeta({
+  title: "Logo system",
+  order: 3,
+  icon: "ph:shapes",
+  collapsed: false,
+  pages: ["index", "logotype", "brandmark", "usage-rules"],
+});
+```
+
+The `pages` list ranks children by source names without numeric prefixes.
+It does not filter or hide unlisted pages. For an explicit order, list every
+child and put `index` first. See [Folder metadata](/folder-metadata) for all
+fields, matching rules, shared metadata, and factories.
+
+## Group pages without adding a URL segment
+
+Parentheses make a folder a sidebar group without contributing a URL segment:
+
+```text
+content/
+├── (foundations)/
+│   ├── meta.ts
+│   ├── 01-colour.mdx
+│   └── 02-typography.mdx
+└── (resources)/
+    └── downloads.mdx
+```
+
+The pages publish at `/colour`, `/typography`, and `/downloads`. Group labels
+default to “Foundations” and “Resources”; customize them in each `meta.ts`.
+Use the group's metadata `order` to rank a parenthesized folder.
+
+Grouping folders do not create a unique namespace. Two pages in different
+groups can therefore resolve to the same URL. Brandtree warns about duplicate
+routes and keeps the first owner; change a filename or slug so every page has
+one distinct URL.
+
+## Control visibility and numbering
+
+Use `hidden: true` or `sidebar.hidden: true` in page frontmatter to keep a page
+out of navigation while retaining its route. Use `draft: true` to exclude the
+page from normal production builds. See [Frontmatter](/frontmatter) for the
+complete field reference.
+
+To display section numbering, add this top-level block to your existing
+`brandtree.config.ts` config object:
+
+```ts
+navigation: {
+  numbering: true,
+},
+```
+
+Numbering defaults to `false`. It is a presentation setting; numeric filenames
+still control ordering when numbering is disabled.
+
+## Mount the whole site below a path
+
+Add `basePath` to your existing config when the published guidelines need to
+live below a shared path:
+
+```ts
+basePath: "/guidelines",
+```
+
+`content/03-logo/01-logotype.mdx` now publishes at
+`/guidelines/logo/logotype`. The base path is added to generated routes and
+navigation without creating a sidebar group. Include it in links you author
+yourself. With localization, it comes before the locale prefix, for example
+`/guidelines/ar/logo/logotype`.
+
+See [Configuration](/configuration) for site settings,
+[Localization](/localization) for translated routes, and
+[Publishing](/publishing) before deploying. Astro's
+[routing guide](https://docs.astro.build/en/guides/routing/) explains the static
+page generation underneath Brandtree; you do not need to create Astro routes
+inside a consumer project.

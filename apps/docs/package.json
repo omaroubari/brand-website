@@ -1,0 +1,27 @@
+{
+  "name": "docs",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.19.0"
+  },
+  "scripts": {
+    "dev": "blume dev --port 4323",
+    "build": "blume build",
+    "preview": "blume preview --port 4323",
+    "check": "blume check --strict",
+    "doctor": "blume doctor"
+  },
+  "dependencies": {
+    "blume": "^2.2.3",
+    "astro": "^7.1.6",
+    "brandtree": "workspace:*",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.4"
+  }
+}

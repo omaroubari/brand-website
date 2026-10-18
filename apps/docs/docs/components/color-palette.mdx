@@ -1,0 +1,113 @@
+---
+title: Color Palette
+description: Display your brand’s named color swatches with optional print values.
+sidebar:
+  order: 14
+---
+
+import previewCode from "../../snippets/color-palette.mdx?raw";
+import secondaryCode from "../../snippets/color-palette-secondary.mdx?raw";
+import example0 from "../../snippets/color-palette-primary.mdx?raw";
+import example1 from "../../snippets/color-palette-selected.mdx?raw";
+import example2 from "../../snippets/color-palette-screen.mdx?raw";
+
+import brandOverrideCode from "../../snippets/color-palette-brand-override.mdx?raw";
+
+<ComponentPreview path="color-palette" code={previewCode} />
+
+## Usage
+
+Display every configured swatch using the current page’s brand.
+Define their names, categories, and color values in [Colors](/colors).
+
+```mdx
+<ColorPalette />
+```
+
+## Examples
+
+### Show primary colors
+
+Use `category` to show one configured group of swatches.
+
+<ComponentPreview path="color-palette-primary" code={example0} />
+
+### Show secondary colors
+
+Use `category="secondary"` for supporting colors. Each swatch’s `category` is
+set in `brand.colors.swatches`; the sample brand assigns Gray to this group.
+The primary and secondary examples filter the same configured palette.
+
+<ComponentPreview path="color-palette-secondary" code={secondaryCode} />
+
+### Select and order swatches
+
+Pass swatch IDs to `only` in the order you want them displayed. This example takes the first two configured swatches and reverses their order.
+
+<ComponentPreview path="color-palette-selected" code={example1} />
+
+### Hide print values
+
+Set `print={false}` for a simpler palette without the CMYK and RGB breakdowns.
+
+<ComponentPreview path="color-palette-screen" code={example2} />
+
+### Override the brand for one palette
+
+Pass `brand` to replace the automatic brand value for this component. This
+example derives a brand with just its first configured swatch. Spread both the
+brand and its `colors` object to preserve the remaining fields; overrides are
+not deep-merged. For ordinary filtering, prefer `only` or `category`.
+The page and other components continue using the original brand.
+
+<ComponentPreview
+  path="color-palette-brand-override"
+  code={brandOverrideCode}
+/>
+
+## Selection behavior
+
+Without a selector, the palette shows every entry in `brand.colors.swatches`.
+`only` takes precedence over `category`, even when both are provided. An unknown
+ID in `only` throws an error; a category with no matching swatches renders no swatches.
+
+These selectors use named swatch IDs. For shade families from
+`brand.colors.palette`, use [ColorScale](/components/color-scale).
+
+## API reference
+
+<TypeTable
+  type={{
+    brand: {
+      type: "BrandConfig",
+      default: "props.brand",
+      description:
+        "Override the resolved brand for this component. Supplied automatically in Brandtree MDX.",
+    },
+    ui: {
+      type: "UIStrings",
+      default: "props.ui",
+      description:
+        "Override interface strings for this component. Supplied automatically in Brandtree MDX.",
+    },
+    only: {
+      type: "string[]",
+      description:
+        "Limit and order named swatches by id. Defaults to every configured swatch.",
+    },
+    category: {
+      type: '"primary" | "secondary"',
+      description:
+        "Limit the palette to a named group from the brand configuration.",
+    },
+    print: {
+      type: "boolean",
+      description: "Show CMYK / RGB breakdowns alongside the hex.",
+      default: "true",
+    },
+    class: {
+      type: "string",
+      description: "Additional class on the outer element.",
+    },
+  }}
+/>

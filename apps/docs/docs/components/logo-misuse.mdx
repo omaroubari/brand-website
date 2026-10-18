@@ -1,0 +1,110 @@
+---
+title: Logo Misuse
+description: Illustrate incorrect logo treatments with numbered rules and explanatory notes.
+sidebar:
+  order: 13
+---
+
+import previewCode from "../../snippets/logo-misuse.mdx?raw";
+import legibilityCode from "../../snippets/logo-misuse-legibility.mdx?raw";
+import treatmentsCode from "../../snippets/logo-misuse-treatments.mdx?raw";
+
+<ComponentPreview path="logo-misuse" code={previewCode} />
+
+## Usage
+
+Pass at least one misuse rule. The effect creates the visual
+mistake; the title and note explain what readers should do instead.
+The artwork comes from [Logos](/logos).
+
+```mdx
+<LogoMisuse
+  items={[
+    {
+      effect: "stretch",
+      title: "Do not stretch",
+      note: "Keep the original proportions.",
+    },
+  ]}
+/>
+```
+
+## Examples
+
+### Pair each mistake with a rule
+
+Add entries in the order you want readers to encounter them. The opening
+preview pairs stretching and rotation in a two-column grid.
+
+```mdx
+<LogoMisuse
+  cols={2}
+  items={[
+    {
+      effect: "stretch",
+      title: "Do not stretch",
+      note: "Keep the original proportions.",
+    },
+    {
+      effect: "rotate",
+      title: "Do not rotate",
+      note: "Keep the artwork upright.",
+    },
+  ]}
+/>
+```
+
+### Show legibility mistakes
+
+Compare `low-contrast`, `too-small`, and `obstruct` to explain how a logo can
+become hard to recognize even when its shape remains intact. This group uses
+three columns on wider screens.
+
+<ComponentPreview path="logo-misuse-legibility" code={legibilityCode} />
+
+### Show unapproved treatments on the brandmark
+
+The same effects work with `mark="brandmark"`. This group demonstrates `recolor`,
+`outline`, `shadow`, and `pattern` in two columns. Together with the opening
+preview and legibility group, it covers every preset effect.
+
+<ComponentPreview path="logo-misuse-treatments" code={treatmentsCode} />
+
+## Effects and layout
+
+`MisuseEffect` accepts `"stretch"`, `"recolor"`, `"low-contrast"`, `"too-small"`,
+`"obstruct"`, `"rotate"`, `"outline"`, `"shadow"`, and `"pattern"`. These are preset
+visual treatments, not measurements or validators for uploaded artwork.
+
+Items are numbered automatically from one in array order. `cols` applies from
+`48rem` up; narrower viewports always use two columns. An empty `items` array
+renders an empty grid.
+
+## API reference
+
+<TypeTable
+  type={{
+    brand: {
+      type: "BrandConfig",
+      default: "props.brand",
+      description:
+        "Override the resolved brand for this component. Supplied automatically in Brandtree MDX.",
+    },
+    items: {
+      type: "Array<{ effect: MisuseEffect; title: string; note: string }>",
+      required: true,
+    },
+    mark: {
+      type: '"logotype" | "brandmark"',
+      default: '"logotype"',
+    },
+    cols: {
+      type: "number",
+      default: "3",
+    },
+    class: {
+      type: "string",
+      description: "Additional class on the outer element.",
+    },
+  }}
+/>

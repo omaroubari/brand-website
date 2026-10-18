@@ -1,0 +1,29 @@
+---
+import { Grid, Panel, Logo } from "brandtree/components";
+import PreviewShell from "../previews/PreviewShell.astro";
+import { demoBrand as brand } from "../previews/brand";
+---
+
+<PreviewShell>
+  <Grid cols={2} colsSm={1}>
+    <Panel
+      brand={brand}
+      bg="neutral-50"
+      fg="neutral-950"
+      ratio="5 / 1"
+      caption="Artwork for a light background">
+      <Logo brand={brand} on="light" width="60%" />
+    </Panel>
+    <Panel
+      brand={brand}
+      bg="neutral-950"
+      fg="neutral-50"
+      ratio="5 / 1"
+      caption="Artwork for a dark background">
+      <Logo brand={brand} on="dark" width="60%" />
+    </Panel>
+    <Panel brand={brand} ratio="5 / 1" caption="Artwork follows the page theme">
+      <Logo brand={brand} on="auto" width="60%" />
+    </Panel>
+  </Grid>
+</PreviewShell>

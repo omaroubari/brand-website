@@ -1,0 +1,189 @@
+---
+title: Components
+description: Built-in MDX components for composing Brandtree brand websites.
+sidebar:
+  label: Overview
+  order: 0
+---
+
+Start with a live preview, copy the minimal Usage example, then explore the
+variations and API reference. Previews use the included sample brand; each Code
+tab shows the MDX for its displayed example. Use the site’s theme control to
+compare light and dark.
+
+## How components receive your brand
+
+Brandtree makes the 28 components in this reference available by name in content
+MDX. You do not need imports or shared props: built-ins automatically receive the
+resolved brand, interface strings, and text direction for the current page.
+This also works for built-ins nested inside other components in your MDX.
+
+```mdx
+<Logo />
+<ColorPalette />
+<Glyphs />
+```
+
+### Override a value for one component
+
+Pass `brand`, `ui`, or `dir` explicitly when a specimen needs a different value.
+Your prop takes precedence over the page’s value for that component. Overrides
+replace the supplied object; they are not deep-merged. Spread the page value
+when changing only part of it:
+
+```mdx
+<Callout ui={{ ...props.ui, content: { ...props.ui.content, note: "Design note" } }}>
+
+Keep the original proportions.
+
+</Callout>
+
+<Glyphs dir="rtl" />
+```
+
+`props.brand`, `props.ui`, and `props.dir` remain available for expressions,
+selectors, and custom components. An override affects only the component that
+receives it; it does not change the page or nested components’ defaults.
+
+Automatic shared props apply to built-ins rendered in Brandtree content MDX.
+Custom components still need explicit inputs. Inside an Astro component, import
+built-ins and pass the values they require; MDX does not inject props into an
+Astro template. See [Custom components](/customization).
+
+All component examples belong in a Brandtree content `.mdx` file. Import statements go after YAML frontmatter. Strings use quotes; numbers, booleans, objects, and arrays use braces. A self-closing component has no children; a paired component wraps prose or other components. Leave blank lines around Markdown inside paired tags so paragraphs and lists are parsed correctly. See [Pages and MDX](/authoring) for complete page examples and [Astro's MDX guide](https://docs.astro.build/en/guides/integrations-guide/mdx/) for the underlying syntax.
+
+The API tables describe authoring in Brandtree MDX. Shared `brand`, `ui`, and
+`dir` props are optional overrides with page-level defaults. Props listed as
+**required** still need an authored value. All components accept an optional `class` string except `ColorSwatch`. A `class` adds a hook to the outer element; it does not add arbitrary HTML props or inline styles to the public API.
+
+Component selectors refer to configured IDs, not display labels, unless explicitly stated. Use [Configuration](/configuration) to define brand data, and [Media](/media) for image imports, SVGs, and downloadable files.
+
+## Layout and prose
+
+<CardGroup cols={2}>
+  <Card title="Block" href="/components/block">
+    Place explanatory copy beside a specimen.
+  </Card>
+  <Card title="Grid" href="/components/grid">
+    Arrange related exhibits in responsive columns.
+  </Card>
+  <Card title="Panel" href="/components/panel">
+    Frame artwork with configured color pairings.
+  </Card>
+  <Card title="Figure" href="/components/figure">
+    Display images, captions, and draft placeholders.
+  </Card>
+  <Card title="Callout" href="/components/callout">
+    Explain approved usage, mistakes, or notes.
+  </Card>
+  <Card title="Spec List" href="/components/spec-list">
+    Present dimensions and other key/value specifications.
+  </Card>
+  <Card title="Statement" href="/components/statement">
+    Give an important brand statement room to stand out.
+  </Card>
+</CardGroup>
+
+## Logo system
+
+<CardGroup cols={2}>
+  <Card title="Logo" href="/components/logo">
+    Render approved theme-aware artwork.
+  </Card>
+  <Card title="Logo Clearspace" href="/components/logo-clearspace">
+    Demonstrate the protected area around a mark.
+  </Card>
+  <Card title="Logo Colorways" href="/components/logo-colorways">
+    Show approved foreground and background combinations.
+  </Card>
+  <Card title="Logo Scaling" href="/components/logo-scaling">
+    Compare the mark at specified sizes.
+  </Card>
+  <Card title="Construction Grid" href="/components/construction-grid">
+    Overlay a drawing grid on logo artwork.
+  </Card>
+  <Card title="Logo Misuse" href="/components/logo-misuse">
+    Show transformations readers should avoid.
+  </Card>
+</CardGroup>
+
+## Color
+
+<CardGroup cols={2}>
+  <Card title="Color Palette" href="/components/color-palette">
+    Display approved swatches and print values.
+  </Card>
+  <Card title="Color Swatch" href="/components/color-swatch">
+    Show one configured swatch.
+  </Card>
+  <Card title="Color Scale" href="/components/color-scale">
+    Explore shade families and tint ramps.
+  </Card>
+  <Card title="Contrast Matrix" href="/components/contrast-matrix">
+    Compare contrast ratios across the palette.
+  </Card>
+</CardGroup>
+
+## Typography
+
+<CardGroup cols={2}>
+  <Card title="Type Specimen" href="/components/type-specimen">
+    Introduce a configured display or text family.
+  </Card>
+  <Card title="Type Scale" href="/components/type-scale">
+    Document hierarchy, styles, and print specifications.
+  </Card>
+  <Card title="Font Weights" href="/components/font-weights">
+    Compare configured typeface weights.
+  </Card>
+  <Card title="Glyphs" href="/components/glyphs">
+    Inspect character coverage and writing direction.
+  </Card>
+</CardGroup>
+
+## Voice and audience
+
+<CardGroup cols={2}>
+  <Card title="Tone Sliders" href="/components/tone-sliders">
+    Locate the brand voice between contrasting traits.
+  </Card>
+  <Card title="Value Grid" href="/components/value-grid">
+    Explain the principles that guide the brand.
+  </Card>
+  <Card title="Persona Card" href="/components/persona-card">
+    Describe audiences with facts and supporting prose.
+  </Card>
+</CardGroup>
+
+## Asset collections
+
+<CardGroup cols={2}>
+  <Card title="Icon Grid" href="/components/icon-grid">
+    Present a named collection of SVG icon specimens.
+  </Card>
+  <Card title="Photo Grid" href="/components/photo-grid">
+    Compare photography and image treatments.
+  </Card>
+  <Card title="Downloads" href="/components/downloads">
+    Link reusable packages registered in brand config.
+  </Card>
+  <Card title="Layout Grid" href="/components/layout-grid">
+    Document columns, gutters, margins, and proportions.
+  </Card>
+</CardGroup>
+
+## Custom components and layouts
+
+See [Custom components](/customization) for custom components and prop forwarding, and [Styling and tokens](/styling) for CSS, local scrolling, and theme support. Keep structured brand facts in configuration and editorial explanations in MDX.
+
+`CoverPage` and `SectionOpener` are internal layout components, not built-in MDX names. The generated runtime owns the site shell, navigation, theme controls, and cover composition. Do not add application routes or edit generated `.brandtree/` files to use the authoring components.
+
+<Panel title="Documentation components and Brandtree components">
+
+This documentation uses Blume components for cards, steps, and reference tables.
+The catalog above documents Brandtree components used inside your brand site.
+Their APIs differ: Brandtree's `Callout` takes `tone` and an optional `ui` override, while Blume's
+documentation callouts take `type`. Copy the catalog's MDX examples into your
+Brandtree pages.
+
+</Panel>

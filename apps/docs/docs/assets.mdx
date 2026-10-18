@@ -1,0 +1,38 @@
+---
+title: Assets
+description: Find the guide for brand resources, page media, fonts, and social preview images.
+---
+
+Choose a guide based on how the file is used. Shared brand resources belong in
+configuration; photographs, icon specimens, and links belong in authored pages.
+
+<CardGroup cols={2}>
+  <Card title="Brand assets" href="/brand-assets">
+    Organize reusable resources, public paths, and downloadable brand packages.
+  </Card>
+  <Card title="Media" href="/media">
+    Import photographs, display SVG icon sets, and link files from MDX.
+  </Card>
+  <Card title="Logos" href="/logos">
+    Prepare artwork for both themes and configure the favicon and logo
+    specifications.
+  </Card>
+  <Card title="Fonts" href="/fonts">
+    Register local or hosted fonts and connect them to typography roles.
+  </Card>
+  <Card title="Social cards and SEO" href="/social-cards">
+    Generate per-page previews or supply a custom social image.
+  </Card>
+  <Card title="Validation" href="/validation">
+    Check registered files and review the published URLs before launch.
+  </Card>
+</CardGroup>
+
+<Callout type="note" title="Source paths and public URLs differ">
+
+A config path beginning with `/` identifies a file under the consumer's `public/`
+folder. A path beginning with `./` identifies a project-relative source file.
+The [Brand assets guide](/brand-assets) explains every supported path form and
+which pipelines can read filesystem sources.
+
+</Callout>

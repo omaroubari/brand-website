@@ -1,0 +1,99 @@
+---
+title: Type Scale
+description: Show your configured type styles at their actual sizes alongside screen and print specifications.
+sidebar:
+  order: 19
+---
+
+import previewCode from "../../snippets/type-scale.mdx?raw";
+import example0 from "../../snippets/type-scale-selected.mdx?raw";
+
+import TypeScaleNamesCode from "../../snippets/type-scale-names.mdx?raw";
+
+import TypeScaleSamplesCode from "../../snippets/type-scale-samples.mdx?raw";
+
+<ComponentPreview path="type-scale" code={previewCode} />
+
+## Usage
+
+Show every configured type style
+in configuration order. Define the styles in [Typography](/typography).
+
+```mdx
+<TypeScale />
+```
+
+## Examples
+
+### Focus on a few styles
+
+This example takes the last three configured styles by ID and hides print specifications. Pass names or IDs to `only` to choose a different order.
+
+<ComponentPreview path="type-scale-selected" code={example0} />
+
+### Select by name and keep print specifications
+
+The preceding example selects by ID and hides print specifications. This one
+selects by name, reverses the first two configured styles, and keeps print
+specifications enabled. Only styles with configured print values display them.
+
+<ComponentPreview path="type-scale-names" code={TypeScaleNamesCode} />
+
+### Compare sample-text fallbacks
+
+A style’s configured `sample` wins, as shown by the display, heading, and body
+styles in the first preview. The sample brand’s `caption` style deliberately
+omits `sample` in `brandtree.config.ts`, so it can use a component fallback.
+
+The first row below passes a custom `sample`; the second omits it and uses the
+built-in sentence. Both select the same configured `caption` style. In your own
+brand, select a style that has no configured sample to use this pattern.
+
+<ComponentPreview path="type-scale-samples" code={TypeScaleSamplesCode} />
+
+## Selection and sample text
+
+`only` preserves the order you supply. Unknown names or IDs throw an error; an
+empty array renders no rows. Without `only`, every configured style appears.
+
+A style’s own `sample` takes precedence over the component’s `sample` prop.
+Print specifications appear only when `print` is enabled and the style has a
+`print` entry.
+
+## API reference
+
+<TypeTable
+  type={{
+    brand: {
+      type: "BrandConfig",
+      default: "props.brand",
+      description:
+        "Override the resolved brand for this component. Supplied automatically in Brandtree MDX.",
+    },
+    ui: {
+      type: "UIStrings",
+      default: "props.ui",
+      description:
+        "Override interface strings for this component. Supplied automatically in Brandtree MDX.",
+    },
+    only: {
+      type: "string[]",
+      description:
+        "Select style names or IDs in display order. Defaults to all configured styles.",
+    },
+    print: {
+      type: "boolean",
+      description: "Show the original print spec beside each step.",
+      default: "true",
+    },
+    sample: {
+      type: "string",
+      description: "Sentence used when a step has no sample of its own.",
+      default: '"Crafting strategic visual brand identities"',
+    },
+    class: {
+      type: "string",
+      description: "Additional class on the outer element.",
+    },
+  }}
+/>

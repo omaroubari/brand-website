@@ -1,0 +1,96 @@
+---
+title: Logo
+description: Display approved logo artwork that follows the page theme.
+sidebar:
+  order: 8
+---
+
+import previewCode from "../../snippets/logo.mdx?raw";
+import example0 from "../../snippets/logo-brandmark.mdx?raw";
+import example1 from "../../snippets/logo-background.mdx?raw";
+import example2 from "../../snippets/logo-tint.mdx?raw";
+
+<ComponentPreview path="logo" code={previewCode} />
+
+## Usage
+
+Render the current brand’s logotype. Configure artwork, aspect ratios,
+and alternative text in [Logos](/logos).
+
+```mdx
+<Logo />
+```
+
+## Examples
+
+### Show the brandmark
+
+Select `brandmark` for the symbol alone. Use `width` to size either mark; its height follows the configured aspect ratio.
+
+<ComponentPreview path="logo-brandmark" code={example0} />
+
+### Choose artwork for the background
+
+Set `on="light"` or `on="dark"` to match a fixed panel background. The light and dark panels keep their artwork when you switch the page theme; the automatic example follows it. These neutral shade tokens come from the sample palette; use tokens from your own configuration.
+
+The opening preview uses `on="auto"`, the default, to follow the page theme instead.
+
+<ComponentPreview path="logo-background" code={example1} />
+
+### Tint a single-color mark
+
+Use a configured CSS token to recolor a single-color SVG.
+
+<ComponentPreview path="logo-tint" code={example2} />
+
+## Artwork and theme behavior
+
+`on="auto"` switches between the configured light and dark artwork with the page
+theme, including the system preference when no explicit theme is selected. It
+works without JavaScript. `on="light"` and `on="dark"` choose artwork for a fixed
+background; they do not paint that background.
+
+`tint` takes precedence over `on` and uses the light-background SVG as a mask.
+It replaces all artwork colors with one color, so avoid it for multicolor marks.
+For approved pairings and protected space, see
+[LogoColorways](/components/logo-colorways) and
+[LogoClearspace](/components/logo-clearspace).
+
+## API reference
+
+<TypeTable
+  type={{
+    brand: {
+      type: "BrandConfig",
+      default: "props.brand",
+      description:
+        "Override the resolved brand for this component. Supplied automatically in Brandtree MDX.",
+    },
+    mark: {
+      type: '"logotype" | "brandmark"',
+      description: "Which piece of artwork to draw.",
+      default: '"logotype"',
+    },
+    on: {
+      type: '"auto" | "light" | "dark"',
+      description:
+        "Which background the logo sits on. auto follows the page theme; light/dark pin it, for panels with a fixed background.",
+      default: '"auto"',
+    },
+    tint: {
+      type: "string",
+      description:
+        "Paint the artwork in an arbitrary colour (any CSS colour or custom property). Uses the SVG as a mask, so it only suits single-colour marks.",
+    },
+    width: {
+      type: "string",
+      description:
+        "Any CSS width. Height follows from the artwork's aspect ratio.",
+      default: '"12rem"',
+    },
+    class: {
+      type: "string",
+      description: "Additional class on the outer element.",
+    },
+  }}
+/>

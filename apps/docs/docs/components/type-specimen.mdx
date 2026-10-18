@@ -1,0 +1,72 @@
+---
+title: Type Specimen
+description: Introduce a type family with oversized characters, foundry details, and a licence link.
+sidebar:
+  order: 18
+---
+
+import previewCode from "../../snippets/type-specimen.mdx?raw";
+import example0 from "../../snippets/type-specimen-text.mdx?raw";
+
+<ComponentPreview path="type-specimen" code={previewCode} />
+
+## Usage
+
+Introduce the configured display family.
+Family names, foundries, notes, and links come from `brand.typography.families`;
+see [Typography](/typography) for configuration.
+
+```mdx
+<TypeSpecimen />
+```
+
+## Examples
+
+### Introduce the text family
+
+The first preview uses the display family with `glyph="Aa"` at weight `500`. Switch to the text family and use `glyph="Ag"` at weight `400` to compare its letterforms. Both family entries in the sample brand use DM Sans; their labels and metadata identify their different roles.
+
+<ComponentPreview path="type-specimen-text" code={example0} />
+
+## Family metadata
+
+`font` selects both the CSS family token and the matching family metadata. Foundry,
+note, and licence/download link appear only when configured. The component uses
+the fonts already loaded by the site; it does not download fonts from the family link.
+
+## API reference
+
+<TypeTable
+  type={{
+    brand: {
+      type: "BrandConfig",
+      default: "props.brand",
+      description:
+        "Override the resolved brand for this component. Supplied automatically in Brandtree MDX.",
+    },
+    ui: {
+      type: "UIStrings",
+      default: "props.ui",
+      description:
+        "Override interface strings for this component. Supplied automatically in Brandtree MDX.",
+    },
+    font: {
+      type: '"display" | "text"',
+      description: "Which family to show.",
+      default: '"display"',
+    },
+    glyph: {
+      type: "string",
+      description: "The oversized characters.",
+      default: '"Aa"',
+    },
+    weight: {
+      type: "number",
+      default: "500",
+    },
+    class: {
+      type: "string",
+      description: "Additional class on the outer element.",
+    },
+  }}
+/>

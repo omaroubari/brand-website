@@ -1,0 +1,124 @@
+---
+title: Panel
+description: Frame artwork with a configured color pairing, consistent proportions, and an optional caption.
+sidebar:
+  order: 3
+---
+
+import previewCode from "../../snippets/panel.mdx?raw";
+
+import surfaceCode from "../../snippets/panel-surface.mdx?raw";
+import backgroundCode from "../../snippets/panel-background.mdx?raw";
+import flushCode from "../../snippets/panel-flush.mdx?raw";
+import captionCode from "../../snippets/panel-caption.mdx?raw";
+
+<ComponentPreview path="panel" code={previewCode} />
+
+## Usage
+
+Put artwork in the default slot. Omitting `ratio` lets the
+content determine the frame height.
+
+```mdx
+<Panel>
+  <Logo width="60%" />
+</Panel>
+```
+
+The preview uses the first configured logo colorway, a `16 / 9` frame, and a
+label and caption. Define approved pairs in [Logo configuration](/logos).
+
+## Examples
+
+### Let the artwork determine the height
+
+Omit `ratio` and color props to use a padded frame on the page surface.
+
+<ComponentPreview path="panel-surface" code={surfaceCode} />
+
+### Apply an approved color pairing
+
+Pass a configured background and foreground together. `ratio` holds the frame's
+shape; `label` identifies the specimen and `caption` adds text below it.
+
+<ComponentPreview path="panel" code={previewCode} />
+
+### Derive text contrast from the background
+
+Supply only `bg` to use CSS `contrast-color()` for the foreground. This example
+requires a configured logo colorway and browser support for `contrast-color()`.
+
+<ComponentPreview path="panel-background" code={backgroundCode} />
+
+### Let artwork reach the edges
+
+Set `flush` to remove the padding. This image fills the panel width and keeps
+its original aspect ratio. The import assumes a content-root document;
+substitute your own asset and adjust its relative path.
+
+<ComponentPreview path="panel-flush" code={flushCode} />
+
+### Add rich caption content
+
+Use the named `caption` slot for emphasis or links in a caption. Keep a nonempty
+`caption` prop so the caption element is created.
+
+<ComponentPreview path="panel-caption" code={captionCode} />
+
+## Color and caption behavior
+
+With `bg` set and `fg` omitted, the foreground uses CSS `contrast-color()`.
+With neither prop, the implementation sets the foreground to black. For a
+text-bearing panel with fixed colors, supply both configured `bg` and `fg`.
+An unknown color token throws an error during rendering.
+
+Set `flush` to remove the frame's padding when artwork should reach its edges.
+
+The default slot contains the artwork. The named `caption` slot replaces the
+caption text; it does not create a caption without the `caption` prop.
+
+## API reference
+
+<TypeTable
+  type={{
+    brand: {
+      type: "BrandConfig",
+      default: "props.brand",
+      description:
+        "Override the resolved brand for this component. Supplied automatically in Brandtree MDX.",
+    },
+    bg: {
+      type: "BrandColorToken",
+      description:
+        "Palette shade reference for the background. Defaults to the page surface.",
+    },
+    fg: {
+      type: "BrandColorToken",
+      description:
+        "Palette shade for contents. Uses contrast-color(bg) when bg is set, otherwise black.",
+    },
+    ratio: {
+      type: "string",
+      description:
+        "width / height. Use to hold a consistent shape across a row.",
+    },
+    flush: {
+      type: "boolean",
+      description:
+        "Remove the internal padding — for artwork that should bleed.",
+      default: "false",
+    },
+    caption: {
+      type: "string",
+      description: "Caption under the panel.",
+    },
+    label: {
+      type: "string",
+      description: "Small label in the panel's top-left corner.",
+    },
+    class: {
+      type: "string",
+      description: "Additional class on the outer element.",
+    },
+  }}
+/>

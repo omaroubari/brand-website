@@ -1,0 +1,74 @@
+---
+title: Overview
+description: Configure your brand identity and connect shared brand data to your guidelines.
+---
+
+Your `brandtree.config.ts` is the source of truth for reusable brand data.
+Start with the complete config in the example site, replace its values, and
+keep required sections intact. The [configuration reference](/configuration)
+lists the supported fields.
+
+## Configure your identity
+
+<CardGroup cols={2}>
+  <Card title="Brand identity" href="/brand-identity" icon="building">
+    Set the brand name, description, and guidelines metadata.
+  </Card>
+  <Card title="Colors" href="/colors" icon="palette">
+    Define palette families, shades, and approved swatches.
+  </Card>
+  <Card title="Themes" href="/themes" icon="sun-moon">
+    Map your palette to light and dark interface roles.
+  </Card>
+  <Card title="Typography" href="/typography" icon="type">
+    Define font roles, weights, and the type scale.
+  </Card>
+  <Card title="Fonts" href="/fonts" icon="file-type">
+    Register local or hosted fonts and connect their CSS variables.
+  </Card>
+  <Card title="Logos" href="/logos" icon="shapes">
+    Configure artwork, colorways, clearspace, and minimum sizes.
+  </Card>
+  <Card title="Brand assets" href="/brand-assets" icon="download">
+    Reference shared resources and register downloadable packages.
+  </Card>
+  <Card title="Contact and social profiles" href="/contact" icon="contact">
+    Provide the contacts and accounts readers need.
+  </Card>
+</CardGroup>
+
+## Connect the config to your pages
+
+A config describes the brand; an MDX page explains its use. Add a component to
+show that shared data within your explanation:
+
+```mdx
+## Approved colors
+
+Use the primary palette for our most recognizable applications.
+
+<ColorPalette category="primary" />
+```
+
+The runtime supplies the resolved brand, interface strings, and direction for
+the active locale to built-in MDX components automatically. Pass an explicit
+prop to override a value for one component. See [Components](/components) for
+examples, previews, and prop definitions.
+
+<Panel title="Some tasks cross config sections">
+
+Fonts are registered at `config.fonts` and referenced by `brand.typography`.
+Brand translations live at `brand.localeOverrides` and require root `i18n`
+settings. [Localization](/localization) walks through both together.
+[Social cards and SEO](/social-cards) explains how generated cards inherit brand
+values and where to override them.
+
+</Panel>
+
+<Callout type="tip" title="Keep editorial guidance in your pages">
+
+Voice, values, photography direction, iconography, and layout principles are
+written in MDX with the relevant components. They do not have dedicated fields
+in the current brand schema. Start with [Pages and MDX](/authoring).
+
+</Callout>

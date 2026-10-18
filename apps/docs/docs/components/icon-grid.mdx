@@ -1,0 +1,82 @@
+---
+title: Icon Grid
+description: Show a named SVG icon set with version labels and a construction-grid overlay.
+sidebar:
+  order: 25
+---
+
+import previewCode from "../../snippets/icon-grid.mdx?raw";
+import example0 from "../../snippets/icon-grid-selected.mdx?raw";
+
+<ComponentPreview path="icon-grid" code={previewCode} />
+
+## Usage
+
+Supply an array of named SVG source strings. This inline example is complete;
+for larger sets, export the array from your own asset module as in the preview.
+
+```mdx
+<IconGrid
+  icons={[
+    {
+      name: "circle",
+      svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="8" /></svg>',
+    },
+  ]}
+/>
+```
+
+The preview’s import assumes a page at the content root. Adjust the path for
+nested or localized content. The component does not discover SVG files.
+
+## Examples
+
+### Select and order icons
+
+Pass icon names to `only` in display order. This example takes the first two supplied icons and reverses them, uses two columns, and sets the version label to `v2.0`. The construction overlay remains a 24-unit grid to match the supplied SVG view boxes.
+
+<ComponentPreview path="icon-grid-selected" code={example0} />
+
+## Selection and construction grid
+
+Without `only`, icons sort alphabetically by name. An unknown selected name throws
+an error; an empty selection renders no tiles. The first displayed tile gets the
+construction grid; `unit` changes the overlay divisions, not the SVG’s view box.
+
+Below `48rem`, the layout uses two columns regardless of `cols`. SVG strings render
+as HTML, so supply trusted project assets.
+
+## API reference
+
+<TypeTable
+  type={{
+    icons: {
+      type: "Array<{ name: string; svg: string }>",
+      required: true,
+      description: "Explicit named SVG data supplied by the author.",
+    },
+    only: {
+      type: "string[]",
+      description: "Restrict and order by names in the supplied icon set.",
+    },
+    unit: {
+      type: "number",
+      description:
+        "Grid the icons are drawn on, shown as an overlay on the first tile.",
+      default: "24",
+    },
+    version: {
+      type: "string",
+      description: "Version label printed under each icon.",
+      default: '"v1.0"',
+    },
+    cols: {
+      type: "number",
+      default: "4",
+    },
+    class: {
+      type: "string",
+      description: "Additional class on the outer element.",
+    },
+  }}
+/>
