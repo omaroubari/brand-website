@@ -58,9 +58,8 @@ const localeSchema = z.strictObject({
   dir: z.enum(["ltr", "rtl"]).default("ltr"),
   label: z.string(),
   /**
-   * Freeform style guidance for `brandtree translate`, e.g. "Brazilian
-   * Portuguese, informal você". Pins register and dialect from the first
-   * translation and wins over an existing translation's style on reruns.
+   * Freeform translation style guidance, e.g. "Brazilian Portuguese,
+   * informal você". Records the intended register and dialect for authors.
    */
   style: z.string().optional(),
 });

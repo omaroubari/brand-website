@@ -224,6 +224,15 @@ an installed dependency, use the
 The [consumer contract](https://github.com/omaroubari/brandtree/blob/main/docs/adr/0017-define-the-brandtree-consumer-project-contract.md)
 describes ownership and extension rules in more detail.
 
+## Acknowledgements
+
+Brandtree incorporates substantial code adapted from
+[Blume](https://github.com/haydenbleasel/blume), the open-source documentation
+framework created by [Hayden Bleasel](https://github.com/haydenbleasel). Thank you
+to Hayden and the Blume contributors for their work. The adapted code is
+licensed under MIT; its copyright and permission notice are retained in
+[LICENSE](./LICENSE).
+
 ## License
 
 [MIT](./LICENSE) © 2026 Omar Oubari.

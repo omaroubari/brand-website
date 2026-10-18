@@ -24,9 +24,8 @@ const groupLabel = (segment: string): string | null =>
 
 /**
  * Slugify a content/route slug (Sanity, Notion, frontmatter `slug`). Heading
- * anchor ids are *not* slugged here — they use a `github-slugger` in
- * {@link extractHeadings}, matching the renderer (see `markdown/heading-anchors`)
- * so `brandtree validate` checks anchors against the exact rendered heading ids.
+ * anchor ids are *not* slugged here — they use `github-slugger` in
+ * {@link extractHeadings} so repeated headings receive distinct anchor ids.
  *
  * The keep-class is Unicode letters/marks/numbers, not `\w`: ASCII slugs are
  * unchanged, but a CJK/Cyrillic/accented slug keeps its characters instead of
