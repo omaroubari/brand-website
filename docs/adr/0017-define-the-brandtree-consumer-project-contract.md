@@ -2,7 +2,7 @@
 
 - Status: accepted
 - Date: 2026-10-01
-- Tracking: [Define the project contract, issue #4](https://github.com/omaroubari/brand-website/issues/4)
+- Tracking: [Define the project contract, issue #4](https://github.com/omaroubari/brandtree/issues/4)
 
 ## Context
 
@@ -16,7 +16,7 @@ web app and intended to grow as framework features are implemented.
 This is the agreed alpha contract, not a claim that the CLI already exists.
 Package consumption and one-page generation are the next implementation gates.
 The current `apps/web` keeps its maintained Astro composition until its later
-[migration issue #10](https://github.com/omaroubari/brand-website/issues/10).
+[migration issue #10](https://github.com/omaroubari/brandtree/issues/10).
 
 ## Decision
 
@@ -204,7 +204,7 @@ Search, hosted editing, remote sources, and a general plugin system also remain
 outside alpha. See [Future work](../FUTURE-WORK.md).
 
 Implementation order and completion are managed by
-[GitHub's Framework alpha milestone](https://github.com/omaroubari/brand-website/milestone/9),
+[GitHub's Framework alpha milestone](https://github.com/omaroubari/brandtree/milestone/9),
 not a duplicate local roadmap. Packed-package consumption is verified outside
 the monorepo before expanding the generator or migrating the current app.
 
