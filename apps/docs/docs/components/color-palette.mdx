@@ -6,6 +6,7 @@ sidebar:
 ---
 
 import previewCode from "../../snippets/color-palette.mdx?raw";
+import secondaryCode from "../../snippets/color-palette-secondary.mdx?raw";
 import example0 from "../../snippets/color-palette-primary.mdx?raw";
 import example1 from "../../snippets/color-palette-selected.mdx?raw";
 import example2 from "../../snippets/color-palette-screen.mdx?raw";
@@ -28,6 +29,14 @@ Define their names, categories, and color values in [Colors](/colors).
 Use `category` to show one configured group of swatches.
 
 <ComponentPreview path="color-palette-primary" code={example0} />
+
+### Show secondary colors
+
+Use `category="secondary"` for supporting colors. Each swatch’s `category` is
+set in `brand.colors.swatches`; the sample brand assigns Gray to this group.
+The primary and secondary examples filter the same configured palette.
+
+<ComponentPreview path="color-palette-secondary" code={secondaryCode} />
 
 ### Select and order swatches
 

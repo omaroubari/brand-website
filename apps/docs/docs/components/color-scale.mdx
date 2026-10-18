@@ -21,6 +21,15 @@ Pass the current brand and interface strings to display all families from
 
 ## Examples
 
+### Show every shade family
+
+The opening preview omits `only`, so every configured palette family appears in
+configuration order. Each family supplies its own eleven published shade values.
+
+```mdx
+<ColorScale brand={props.brand} ui={props.ui} />
+```
+
 ### Select and order families
 
 Pass palette family IDs to `only` in display order. This example takes the first

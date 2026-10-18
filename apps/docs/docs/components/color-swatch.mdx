@@ -28,6 +28,25 @@ The wrapper scopes the built-in copy interaction to this swatch.
 
 ## Examples
 
+### Show the source color only
+
+The opening preview selects the configured Blue swatch and sets `print={false}`
+for a compact display. The source value and usage note remain visible.
+
+```mdx
+<div data-color-palette>
+  <ColorSwatch
+    brand={props.brand}
+    ui={props.ui}
+    color={
+      props.brand.colors.swatches.find((swatch) => swatch.id === "blue") ??
+      props.brand.colors.swatches[0]
+    }
+    print={false}
+  />
+</div>
+```
+
 ### Include print specifications
 
 The opening preview hides supplementary values with `print={false}`. Omit that
@@ -35,6 +54,21 @@ prop to show RGB, any configured CMYK and Pantone values, and a hex conversion
 when the source color uses a different color space.
 
 <ComponentPreview path="color-swatch-print" code={variantCode} />
+
+### Supply production specifications
+
+Add `cmyk` and `pantone` to the relevant object in `brand.colors.swatches` to
+include production specifications when `print` is enabled. For example, the
+optional fields have this shape; replace the values with approved print data
+rather than treating them as a conversion of the preview blue:
+
+```ts
+cmyk: [100, 75, 0, 0],
+pantone: "Your approved Pantone reference",
+```
+
+`usage`, `name`, and `on` also come from that swatch entry. Color values may use
+any supported source color space; see [Colors](/colors) for the complete schema.
 
 ## Swatch resolution
 

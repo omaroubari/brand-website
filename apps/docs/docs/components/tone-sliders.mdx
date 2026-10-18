@@ -7,6 +7,8 @@ sidebar:
 
 import previewCode from "../../snippets/tone-sliders.mdx?raw";
 
+import ToneSlidersPositionsCode from "../../snippets/tone-sliders-positions.mdx?raw";
+
 <ComponentPreview path="tone-sliders" code={previewCode} />
 
 ## Usage
@@ -17,6 +19,19 @@ Supply one row per pair of traits. A position of `0` sits at the left label,
 ```mdx
 <ToneSliders items={[{ left: "Formal", right: "Conversational", at: 70 }]} />
 ```
+
+## Examples
+
+### Compare the endpoints and midpoint
+
+Use `0` to align with the left trait, `50` for a balanced position, or `100` to
+align with the right trait. The rows below use the same labels so you can compare
+the positions directly.
+
+<ComponentPreview
+  path="tone-sliders-positions"
+  code={ToneSlidersPositionsCode}
+/>
 
 ## Reading the scale
 

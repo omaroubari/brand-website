@@ -1,0 +1,17 @@
+---
+import { TypeScale } from "brandtree/components";
+import PreviewShell from "../previews/PreviewShell.astro";
+import { demoBrand as brand, demoUI as ui } from "../previews/brand";
+---
+
+<PreviewShell>
+  <TypeScale
+    brand={brand}
+    ui={ui}
+    only={brand.typography.scale
+      .slice(0, 2)
+      .map(({ name }) => name)
+      .reverse()}
+    print={true}
+  />
+</PreviewShell>

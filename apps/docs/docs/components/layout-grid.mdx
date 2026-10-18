@@ -8,6 +8,8 @@ sidebar:
 import previewCode from "../../snippets/layout-grid.mdx?raw";
 import example0 from "../../snippets/layout-grid-mobile.mdx?raw";
 
+import defaultCode from "../../snippets/layout-grid-default.mdx?raw";
+
 <ComponentPreview path="layout-grid" code={previewCode} />
 
 ## Usage
@@ -23,6 +25,19 @@ The default preview adds a label and specification row. This diagram describes
 a composition; to arrange actual page content, use [Grid](/components/grid).
 
 ## Examples
+
+### Start with the default grid
+
+With no props, the diagram uses its default columns, gutter, margin, and canvas
+ratio, without a label or specification rows.
+
+<ComponentPreview path="layout-grid-default" code={defaultCode} />
+
+### Annotate a desktop composition
+
+Supply a label, explicit dimensions, and `specs` to explain the intended layout.
+
+<ComponentPreview path="layout-grid" code={previewCode} />
 
 ### Describe a mobile composition
 

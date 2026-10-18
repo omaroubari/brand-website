@@ -8,6 +8,8 @@ sidebar:
 import previewCode from "../../snippets/font-weights.mdx?raw";
 import example0 from "../../snippets/font-weights-text.mdx?raw";
 
+import FontWeightsItalicCode from "../../snippets/font-weights-italic.mdx?raw";
+
 <ComponentPreview path="font-weights" code={previewCode} />
 
 ## Usage
@@ -27,6 +29,25 @@ sample text. Weights come from `brand.typography.weights`; see
 Choose the text family and repeat the same phrase so changes in weight are easier to compare.
 
 <ComponentPreview path="font-weights-text" code={example0} />
+
+### Show configured italic weights
+
+The sample brand configures upright weights and an italic entry. Repeat
+the same phrase to compare them in the display family. The first preview uses
+the configured weight names instead, and the preceding example selects the text
+family.
+
+To include an italic row, add an entry like this to
+`brand.typography.weights` in `brandtree.config.ts`:
+
+```ts
+{ name: "Book Italic", weight: 450, italic: true }
+```
+
+Load the matching italic font files alongside the configuration. The documentation’s
+sample font only has upright files, so its italic row is synthesized by the browser.
+
+<ComponentPreview path="font-weights-italic" code={FontWeightsItalicCode} />
 
 ## Font availability
 

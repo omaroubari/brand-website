@@ -7,6 +7,8 @@ sidebar:
 
 import previewCode from "../../snippets/block.mdx?raw";
 
+import simpleCode from "../../snippets/block-simple.mdx?raw";
+
 <ComponentPreview path="block" code={previewCode} />
 
 ## Usage
@@ -28,6 +30,21 @@ content to a named region without adding an HTML wrapper.
 
 The preview adds a `note` slot for a supporting rule and wraps the logo in a
 [Panel](/components/panel) to give the artwork a frame.
+
+## Examples
+
+### Keep the split layout minimal
+
+Use only `copy` and `content` when no supporting note is needed.
+
+<ComponentPreview path="block-simple" code={simpleCode} />
+
+### Add a supporting note
+
+Place a usage rule in `note` beneath the copy. This example also shows an `id`
+for a direct section link and a [Panel](/components/panel) around the specimen.
+
+<ComponentPreview path="block" code={previewCode} />
 
 ## Layout and slots
 

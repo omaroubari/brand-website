@@ -1,0 +1,11 @@
+---
+import { Panel } from "brandtree/components";
+import PreviewShell from "../previews/PreviewShell.astro";
+import { demoBrand as brand } from "../previews/brand";
+---
+
+<PreviewShell>
+  <Panel brand={brand} bg={brand.logo.colorways[0]?.bg} ratio="3 / 1">
+    <p>Use an approved background for the composition.</p>
+  </Panel>
+</PreviewShell>

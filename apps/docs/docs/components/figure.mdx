@@ -8,6 +8,10 @@ sidebar:
 import previewCode from "../../snippets/figure.mdx?raw";
 import example0 from "../../snippets/figure-placeholder.mdx?raw";
 
+import coverCode from "../../snippets/figure-cover.mdx?raw";
+import backgroundCode from "../../snippets/figure-background.mdx?raw";
+import pendingCode from "../../snippets/figure-pending.mdx?raw";
+
 <ComponentPreview path="figure" code={previewCode} />
 
 ## Usage
@@ -32,12 +36,41 @@ ordinary lazy-loaded image instead.
 
 ## Examples
 
+### Keep the whole image visible
+
+Use `fit="contain"` with an imported image to preserve the full composition.
+This uses Astro's responsive image pipeline.
+
+<ComponentPreview path="figure" code={previewCode} />
+
+### Fill the frame with a crop
+
+Use `fit="cover"` to fill a different aspect ratio. Passing the imported image's
+`src` string demonstrates the plain-image path, which renders a lazy-loaded
+`img` rather than Astro's responsive `Image`.
+
+<ComponentPreview path="figure-cover" code={coverCode} />
+
+### Set the unused frame background
+
+With `contain`, a differently shaped frame leaves space around the image. `bg`
+selects a generated palette shade so that space follows the configured brand.
+
+<ComponentPreview path="figure-background" code={backgroundCode} />
+
 ### Reserve space for pending artwork
 
 Omit `src` while preparing a mockup. Set `ratio` to the intended shape and use
 `caption` to identify the planned application.
 
 <ComponentPreview path="figure-placeholder" code={example0} />
+
+### Use the localized pending label
+
+Omit both `src` and `caption` for a neutral placeholder with the current
+interface's artwork-pending label.
+
+<ComponentPreview path="figure-pending" code={pendingCode} />
 
 ## Image behavior
 

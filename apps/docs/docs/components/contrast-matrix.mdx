@@ -6,6 +6,7 @@ sidebar:
 ---
 
 import previewCode from "../../snippets/contrast-matrix.mdx?raw";
+import allCode from "../../snippets/contrast-matrix-all.mdx?raw";
 import variantCode from "../../snippets/contrast-matrix-strict.mdx?raw";
 
 <ComponentPreview path="contrast-matrix" code={previewCode} />
@@ -21,6 +22,14 @@ swatches to keep it compact.
 ```
 
 ## Examples
+
+### Compare every named swatch
+
+Omit `only` to include the complete configured swatch set on both axes. The
+opening preview instead selects the first three IDs; use that approach to focus
+on a subset without changing configuration order.
+
+<ComponentPreview path="contrast-matrix-all" code={allCode} />
 
 ### Raise the pass threshold
 

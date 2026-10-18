@@ -140,4 +140,6 @@ task-focused Examples, Behavior only where needed, and an API reference last.
 Keep shared MDX conventions in the component overview. Do not repeat the props
 table in prose. Each visual variation has a matching `snippets/` MDX file and
 `examples/` Astro harness; keep their props and children synchronized. Simple
-components need fewer examples, not empty template sections.
+components need fewer examples, not empty template sections. Audit public enum
+values, meaningful booleans, slot layouts, and configuration sources against
+labeled examples; mentioning an option in the API table is not example coverage.
