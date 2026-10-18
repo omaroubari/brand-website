@@ -49,17 +49,36 @@ for detailed authoring and ownership rules.
 
 ## CLI commands
 
+Create a consumer project with an installed or locally packed Brandtree CLI:
+
+```sh
+brandtree init my-brand
+# Or skip prompts:
+brandtree init my-brand --yes --title "My Brand" --package-manager pnpm
+```
+
+Init creates a typed brand config, numbered MDX pages under `content/`, placeholder
+SVG artwork, and a package manifest with dev/build/check/preview scripts. It adds
+`node_modules/`, `.brandtree/`, and `dist/` to `.gitignore`, preserves existing
+files, and prints install and dev commands without running them. When a manifest
+already exists, it prints commands to add Brandtree and run its CLI directly.
+Prompts are skipped in CI or when input/output is not a terminal. `--title`
+sets the brand name (default: `My Brand` without prompts); `--package-manager`
+accepts npm, pnpm, yarn, or bun and otherwise follows the invoking package manager.
+Brandtree is a private alpha, so use a workspace or packed package until published.
+
 Run the CLI from the consumer root containing `brandtree.config.ts`; it does not
 search parent directories. Brandtree supplies Astro and its integrations.
 
-| Command               | Action                                                      |
-| --------------------- | ----------------------------------------------------------- |
-| `brandtree dev`       | Generate the runtime and start the development server       |
-| `brandtree build`     | Regenerate the runtime and build the static site to `dist/` |
-| `brandtree check`     | Validate inputs and check types without a production build  |
-| `brandtree preview`   | Serve the existing production build through the generated app |
-| `brandtree --help`    | Show available commands                                     |
-| `brandtree --version` | Show the installed version                                  |
+| Command                | Action                                                           |
+| ---------------------- | ---------------------------------------------------------------- |
+| `brandtree init [dir]` | Scaffold a brand-guidelines project (default: current directory) |
+| `brandtree dev`        | Generate the runtime and start the development server            |
+| `brandtree build`      | Regenerate the runtime and build the static site to `dist/`      |
+| `brandtree check`      | Validate inputs and check types without a production build       |
+| `brandtree preview`    | Serve the existing production build through the generated app    |
+| `brandtree --help`     | Show available commands                                          |
+| `brandtree --version`  | Show the installed version                                       |
 
 Brandtree supplies Astro, React, integrations, styling, and check tooling.
 Dependencies imported by custom author code remain the author's responsibility:
