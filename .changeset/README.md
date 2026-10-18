@@ -76,7 +76,7 @@ and enter these exact values:
 | Field                | Value                                          |
 | -------------------- | ---------------------------------------------- |
 | Organization or user | `omaroubari`                                   |
-| Repository           | `brand-website`                                |
+| Repository           | `brandtree`                                    |
 | Workflow filename    | `release.yml`                                  |
 | Environment          | Leave empty; the workflow doesn't declare one. |
 | Allowed actions      | Allow direct publishing with `npm publish`.    |

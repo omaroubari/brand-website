@@ -175,7 +175,7 @@ Deploy at the domain root, such as `https://brand.example.com/`; hosting beneath
 an infrastructure subpath such as `/client-site/` is currently unsupported.
 
 The repository's example site includes a Cloudflare deployment configuration.
-See its [deployment guide](https://github.com/omaroubari/brand-website/blob/main/apps/web/README.md#deployment)
+See its [deployment guide](https://github.com/omaroubari/brandtree/blob/main/apps/web/README.md#deployment)
 for that specific setup.
 
 ## Compatibility
@@ -200,8 +200,8 @@ To work on Brandtree itself, clone the monorepo. Use Node.js 22.12 or later and
 the pinned pnpm version, **11.18.0**:
 
 ```sh
-git clone https://github.com/omaroubari/brand-website.git
-cd brand-website
+git clone https://github.com/omaroubari/brandtree.git
+cd brandtree
 pnpm install
 pnpm dev
 ```
@@ -220,8 +220,8 @@ site through the same CLI used by external projects.
 
 Run `pnpm check` before considering a change complete. To verify the package as
 an installed dependency, use the
-[packed consumer sandbox](https://github.com/omaroubari/brand-website/blob/main/apps/sandbox/README.md).
-The [consumer contract](https://github.com/omaroubari/brand-website/blob/main/docs/adr/0017-define-the-brandtree-consumer-project-contract.md)
+[packed consumer sandbox](https://github.com/omaroubari/brandtree/blob/main/apps/sandbox/README.md).
+The [consumer contract](https://github.com/omaroubari/brandtree/blob/main/docs/adr/0017-define-the-brandtree-consumer-project-contract.md)
 describes ownership and extension rules in more detail.
 
 ## License

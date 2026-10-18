@@ -2,8 +2,8 @@
 
 - Status: accepted
 - Date: 2026-10-07
-- Tracking: issues [#8](https://github.com/omaroubari/brand-website/issues/8) and
-  [#13](https://github.com/omaroubari/brand-website/issues/13)
+- Tracking: issues [#8](https://github.com/omaroubari/brandtree/issues/8) and
+  [#13](https://github.com/omaroubari/brandtree/issues/13)
 
 ## Context
 
@@ -16,7 +16,7 @@ would also duplicate diagnostics and recovery plumbing.
 Use one explicit prefix convention and a shared local asset checker. This
 refines the consumer path conventions in
 [ADR 0017](0017-define-the-brandtree-consumer-project-contract.md) and establishes a foundation that the separate
-[font configuration PR #29](https://github.com/omaroubari/brand-website/pull/29)
+[font configuration PR #29](https://github.com/omaroubari/brandtree/pull/29)
 can consume.
 
 ## Decision
