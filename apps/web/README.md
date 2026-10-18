@@ -20,13 +20,13 @@ before invoking the site. The committed CLI launcher also lets workspace consume
 run direct `pnpm --filter web ...` commands immediately after installation: it
 prefers the compiled CLI when available and otherwise loads the TypeScript source.
 
-| Command        | Action                                                                             |
-| -------------- | ---------------------------------------------------------------------------------- |
-| `pnpm dev`     | Start the site on `localhost:4321`                                                 |
-| `pnpm build`   | Build static output to `apps/web/dist/`                                            |
-| `pnpm check`   | Check framework and site types |
-| `pnpm preview` | Serve the existing production build through the generated Astro app               |
-| `pnpm deploy`  | Build and deploy the site to Cloudflare                                            |
+| Command        | Action                                                              |
+| -------------- | ------------------------------------------------------------------- |
+| `pnpm dev`     | Start the site on `localhost:4321`                                  |
+| `pnpm build`   | Build static output to `apps/web/dist/`                             |
+| `pnpm check`   | Check framework and site types                                      |
+| `pnpm preview` | Serve the existing production build through the generated Astro app |
+| `pnpm deploy`  | Build and deploy the site to Cloudflare                             |
 
 Run `pnpm build` before preview. Both `.brandtree/` and `dist/` must exist.
 
@@ -217,7 +217,7 @@ Two colour families, one signal colour, and the ratios that hold them together.
 
 <Fragment slot="content">
 
-<ColorPalette brand={props.brand} ui={props.ui} />
+<ColorPalette />
 
 </Fragment>
 
@@ -254,16 +254,16 @@ split blocks:
 
 The primary logo is a logotype. Always place the supplied artwork.
 
-<Panel brand={props.brand} ratio="16 / 9">
-  <Logo brand={props.brand} mark="logotype" width="66%" />
+<Panel ratio="16 / 9">
+  <Logo mark="logotype" width="66%" />
 </Panel>
 
 ### On black
 
 On dark surfaces the logotype reverses to white.
 
-<Panel brand={props.brand} bg="black" ratio="16 / 9">
-  <Logo brand={props.brand} mark="logotype" on="dark" width="66%" />
+<Panel bg="black" ratio="16 / 9">
+  <Logo mark="logotype" on="dark" width="66%" />
 </Panel>
 ```
 
@@ -316,11 +316,80 @@ availability.
 
 ## Components
 
-Brand guideline MDX files can use built-in components directly. Brandtree's generated
-route supplies `brandtree/components` through the MDX `components` prop. Brand-aware
-components receive `brand={props.brand}` and UI-aware components receive
-`ui={props.ui}`. Import custom components explicitly from the author-owned
-`components/` directory; there is no app-specific component barrel.
+Brand guideline MDX files can use built-in components directly:
+
+```mdx
+<ColorPalette />
+<ColorPalette category="primary" />
+<Logo mark="brandmark" />
+<Glyphs />
+```
+
+The generated route supplies the built-in component map and resolves `brand`,
+`ui`, and `dir` once. The MDX compiler injects `brand`, `ui`, and `dir` into every
+built-in component. `ColorPalette` without `category` displays all configured
+swatches; content and asset props such as `IconGrid`'s `icons` remain required.
+Components still require typed framework props internally and forward those
+props explicitly to children. Ordinary usage outside MDX also requires explicit
+props.
+
+Custom components use explicit imports relative to the original MDX file and
+receive framework values through ordinary props:
+
+```astro
+---
+import type { BrandtreeBaseComponentProps } from "brandtree/core/mdx";
+interface Props extends Pick<BrandtreeBaseComponentProps, "brand" | "ui"> {
+  heading?: string;
+}
+const { brand, ui, heading = "Our identity" } = Astro.props;
+---
+
+<section aria-label={heading}>
+  <h2>{brand.meta.name}</h2>
+  <p>{ui.typography.letters}</p>
+</section>
+```
+
+```mdx
+import Identity from "../../components/BrandSummary.astro";
+
+<Identity brand={props.brand} ui={props.ui} />
+<Identity brand={props.brand} ui={props.ui} heading="A different heading" />
+```
+
+Custom components receive no automatically injected props. Pass `props.brand`,
+`props.ui`, and `props.dir` explicitly as needed. `BrandtreeBaseComponentProps` is a shared
+TypeScript type for declaring these dependencies; it does not enable injection.
+Native HTML also receives no injected props. Built-ins are recognized by
+component identity, so aliases work and custom components sharing a built-in
+name remain unaffected.
+
+Injected props are defaults, placed before all author attributes and JSX
+spreads. Author attributes and spreads retain their usual left-to-right order:
+
+```mdx
+<ColorPalette {...overrides} brand={props.brand} />
+<ColorPalette brand={otherBrand} {...overrides} />
+```
+
+In the first example the final `brand` wins; in the second, `overrides.brand`
+wins if present. Explicit `undefined` also overrides a default. Existing
+`brand={props.brand}` / `ui={props.ui}` / `dir={props.dir}` forwarding still works.
+Nested usages receive the same exact route values. On fallback pages, brand and
+UI follow the requested locale while `dir` follows the fallback content locale.
+
+Injection runs on the server in generated development and static builds, with
+no injection JavaScript shipped to the browser and no shared page context.
+Built-ins imported from `brandtree/components` also support named aliases.
+
+Imported MDX partials are separate content roots: use `<Partial {...props} />`
+to forward both the route values and `components` map. The partial then injects
+props into its own children. Injection does not cross into an Astro or React
+component's implementation: forward required child props there explicitly.
+When manually passing framework values to hydrated components, Astro's normal
+serialization rules apply. Pass only the serializable data the island needs;
+`client:only` still requires its renderer hint.
 
 **Layout** — `Block` (split layouts with `copy`, `note`, and `content` slots),
 `Statement` (the one oversized paragraph that carries a page), `Grid`, `Panel`,
@@ -383,11 +452,11 @@ directly; this app does not deploy an Astro server entry point or an asset bindi
 
 For Git-connected Cloudflare Workers Builds, use these dashboard settings:
 
-| Setting | Value |
-| --- | --- |
-| Root directory | Repository root (`/`) |
-| Build command | `pnpm --filter brandtree build && pnpm --filter web build` |
-| Deploy command | `pnpm --filter web exec wrangler deploy` |
+| Setting        | Value                                                      |
+| -------------- | ---------------------------------------------------------- |
+| Root directory | Repository root (`/`)                                      |
+| Build command  | `pnpm --filter brandtree build && pnpm --filter web build` |
+| Deploy command | `pnpm --filter web exec wrangler deploy`                   |
 
 The two commands build the framework and site separately, in order, so deployment
 uses the freshly compiled CLI. The committed `bin/brandtree.mjs` launcher lets pnpm

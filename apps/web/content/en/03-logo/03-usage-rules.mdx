@@ -10,14 +10,14 @@ description: Clear space, approved combinations, minimum sizes, and misuse to av
 Clear space is a protective buffer. It keeps the logo legible and stops surrounding
 elements from crowding it, whatever the layout.
 
-<LogoClearspace brand={props.brand} ui={props.ui} mark="logotype" />
+<LogoClearspace mark="logotype" />
 
 ### Usage
 
 Three approved combinations, and no others. The first is primary; reach for the rest only
 when the background forces it.
 
-<LogoColorways brand={props.brand} mark="logotype" cols={3} />
+<LogoColorways mark="logotype" cols={3} />
 
 ### Scaling
 
@@ -37,7 +37,7 @@ further.
 
 Six ways to break the logo. Each one is a real mistake we have had to correct.
 
-<Callout ui={props.ui} tone="dont" title="Also never">
+<Callout tone="dont" title="Also never">
 
 Add a drop shadow, outline, gradient or bevel. Place the logo on a busy photograph without
 a solid field behind it. Redraw or trace any part of the artwork.
@@ -45,7 +45,6 @@ a solid field behind it. Redraw or trace any part of the artwork.
 </Callout>
 
 <LogoMisuse
-  brand={props.brand}
   mark="logotype"
   items={[
     {
