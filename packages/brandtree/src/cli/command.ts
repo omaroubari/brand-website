@@ -12,6 +12,7 @@ export const mainCommand = defineCommand({
     build: async () => (await import("./build.ts")).buildCommand,
     check: async () => (await import("./check.ts")).checkCommand,
     dev: async () => (await import("./dev.ts")).devCommand,
+    init: async () => (await import("./init.ts")).initCommand,
     preview: async () => (await import("./preview.ts")).previewCommand,
   },
 });
