@@ -3,10 +3,10 @@
 - Status: accepted
 - Date: 2026-10-06
 - Revised: 2026-10-07
-- Tracking: issues [#8](https://github.com/omaroubari/brand-website/issues/8),
-  [#13](https://github.com/omaroubari/brand-website/issues/13),
-  [#14](https://github.com/omaroubari/brand-website/issues/14), and
-  [#15](https://github.com/omaroubari/brand-website/issues/15)
+- Tracking: issues [#8](https://github.com/omaroubari/brandtree/issues/8),
+  [#13](https://github.com/omaroubari/brandtree/issues/13),
+  [#14](https://github.com/omaroubari/brandtree/issues/14), and
+  [#15](https://github.com/omaroubari/brandtree/issues/15)
 
 ## Context
 
