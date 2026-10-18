@@ -13,11 +13,11 @@ import brandmarkCode from "../../snippets/logo-scaling-brandmark.mdx?raw";
 
 ## Usage
 
-Pass the current brand to show the built-in demonstration sizes.
+Show the configured mark at the built-in demonstration sizes.
 Set the published digital and print minimums in [Logos](/logos).
 
 ```mdx
-<LogoScaling brand={props.brand} />
+<LogoScaling />
 ```
 
 ## Examples
@@ -36,7 +36,6 @@ Each label is editorial copy; the component does not convert CSS lengths to prin
 
 ```mdx
 <LogoScaling
-  brand={props.brand}
   sizes={[
     { width: "12rem", label: "Standard application" },
     { width: "4rem", label: "Small digital application" },
@@ -86,8 +85,9 @@ values or prevent artwork from rendering below the stated minimum.
   type={{
     brand: {
       type: "BrandConfig",
-      required: true,
-      description: "Resolved brand for the current locale. Pass props.brand.",
+      default: "props.brand",
+      description:
+        "Override the resolved brand for this component. Supplied automatically in Brandtree MDX.",
     },
     mark: {
       type: '"logotype" | "brandmark"',

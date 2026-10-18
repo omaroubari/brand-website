@@ -49,7 +49,6 @@ title: Photography
 import team from "../assets/photography/team.jpg";
 
 <Figure
-  ui={props.ui}
   src={team}
   alt="The Acme team reviewing printed layouts around a table"
   caption="Show people doing real work."
@@ -58,13 +57,12 @@ import team from "../assets/photography/team.jpg";
 ```
 
 The generated MDX runtime supplies built-in components such as `Figure` and
-`PhotoGrid`, but you must forward required shared props explicitly. An imported image lets `Figure`
+`PhotoGrid` and automatically supplies their shared props. An imported image lets `Figure`
 use Astro's responsive image pipeline. `Figure` also accepts a public URL string,
 which renders a regular image:
 
 ```mdx
 <Figure
-  ui={props.ui}
   src="/brand/storefront.jpg"
   alt="Acme's wordmark above the store entrance"
   fit="contain"
@@ -168,7 +166,7 @@ Register shared packages in `brand.downloads`, as described in
 [Brand assets](/brand-assets), then render them with:
 
 ```mdx
-<Downloads brand={props.brand} />
+<Downloads />
 ```
 
   </Step>

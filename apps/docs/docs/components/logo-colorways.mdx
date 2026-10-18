@@ -12,12 +12,12 @@ import variantCode from "../../snippets/logo-colorways-brandmark.mdx?raw";
 
 ## Usage
 
-Pass the current brand to display every approved colorway for the logotype.
+Display every approved colorway for the configured logotype.
 Define the foreground, background, and optional label of each combination in
 [Logos](/logos).
 
 ```mdx
-<LogoColorways brand={props.brand} />
+<LogoColorways />
 ```
 
 ## Examples
@@ -28,7 +28,7 @@ The opening preview sets `cols={2}` to show approved logotype pairs in a compact
 grid. Compare it with the default three-column brandmark example below.
 
 ```mdx
-<LogoColorways brand={props.brand} cols={2} />
+<LogoColorways cols={2} />
 ```
 
 ### Show brandmark colorways
@@ -63,8 +63,9 @@ viewport width, the grid always uses two columns, including when `cols={1}`.
   type={{
     brand: {
       type: "BrandConfig",
-      required: true,
-      description: "Resolved brand for the current locale. Pass props.brand.",
+      default: "props.brand",
+      description:
+        "Override the resolved brand for this component. Supplied automatically in Brandtree MDX.",
     },
     mark: {
       type: '"logotype" | "brandmark"',

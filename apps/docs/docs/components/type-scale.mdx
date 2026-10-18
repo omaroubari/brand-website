@@ -16,11 +16,11 @@ import TypeScaleSamplesCode from "../../snippets/type-scale-samples.mdx?raw";
 
 ## Usage
 
-Pass the current brand and interface strings to show every configured type style
+Show every configured type style
 in configuration order. Define the styles in [Typography](/typography).
 
 ```mdx
-<TypeScale brand={props.brand} ui={props.ui} />
+<TypeScale />
 ```
 
 ## Examples
@@ -66,13 +66,15 @@ Print specifications appear only when `print` is enabled and the style has a
   type={{
     brand: {
       type: "BrandConfig",
-      required: true,
-      description: "Resolved brand for the current locale. Pass props.brand.",
+      default: "props.brand",
+      description:
+        "Override the resolved brand for this component. Supplied automatically in Brandtree MDX.",
     },
     ui: {
       type: "UIStrings",
-      required: true,
-      description: "Resolved interface strings. Pass props.ui.",
+      default: "props.ui",
+      description:
+        "Override interface strings for this component. Supplied automatically in Brandtree MDX.",
     },
     only: {
       type: "string[]",

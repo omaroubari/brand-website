@@ -14,11 +14,11 @@ import example2 from "../../snippets/logo-tint.mdx?raw";
 
 ## Usage
 
-Pass the current brand to render its logotype. Configure artwork, aspect ratios,
+Render the current brand’s logotype. Configure artwork, aspect ratios,
 and alternative text in [Logos](/logos).
 
 ```mdx
-<Logo brand={props.brand} />
+<Logo />
 ```
 
 ## Examples
@@ -62,8 +62,9 @@ For approved pairings and protected space, see
   type={{
     brand: {
       type: "BrandConfig",
-      required: true,
-      description: "Resolved brand for the current locale. Pass props.brand.",
+      default: "props.brand",
+      description:
+        "Override the resolved brand for this component. Supplied automatically in Brandtree MDX.",
     },
     mark: {
       type: '"logotype" | "brandmark"',

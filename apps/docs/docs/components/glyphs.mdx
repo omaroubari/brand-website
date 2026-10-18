@@ -14,11 +14,11 @@ import GlyphsRtlCode from "../../snippets/glyphs-rtl.mdx?raw";
 
 ## Usage
 
-Forward the current interface strings and text direction. The default character
-sets adapt to the content’s direction.
+The default character sets adapt to the current page’s direction and use its
+localized interface labels automatically.
 
 ```mdx
-<Glyphs ui={props.ui} dir={props.dir} />
+<Glyphs />
 ```
 
 ## Examples
@@ -31,14 +31,16 @@ Supply labeled character sets to replace the defaults. Use this for numerals, sy
 
 ### Show Arabic letters in the text family
 
-Set `dir="rtl"` to select Arabic letters and both Arabic and Latin numerals.
+In an Arabic page configured with RTL direction, `<Glyphs />` selects Arabic
+letters and both Arabic and Latin numerals automatically. Here, explicit `dir`
+and `ui` overrides demonstrate an Arabic specimen within an English page.
 This example also switches from the default display family to `font="text"`
 and uses a medium weight. The wrapper sets the reading direction of the example;
 `Glyphs` uses its `dir` prop to choose the character sets.
 
-The preview resolves Arabic interface strings with `resolveUIStrings("ar", ...)`
-and passes them as `ui`. In an Arabic content page, the corresponding value is
-that page’s `props.ui`, as shown in the Code tab. The sample brand has no Arabic font file, so
+Both the snippet and preview resolve Arabic labels with
+`resolveUIStrings("ar", ...)` and pass them as `ui`. Overriding direction alone
+does not change the interface language. The sample brand has no Arabic font file, so
 unsupported Arabic characters use the browser’s font fallback; load a family
 with Arabic coverage when documenting your own brand.
 
@@ -61,13 +63,15 @@ supports those characters. Configure and load the selected family through
   type={{
     ui: {
       type: "UIStrings",
-      required: true,
-      description: "Resolved interface strings. Pass props.ui.",
+      default: "props.ui",
+      description:
+        "Override interface strings for this component. Supplied automatically in Brandtree MDX.",
     },
     dir: {
       type: '"ltr" | "rtl"',
-      required: true,
-      description: "Current text direction. Pass props.dir.",
+      default: "props.dir",
+      description:
+        "Override text direction for this component. Supplied automatically in Brandtree MDX.",
     },
     font: {
       type: '"display" | "text"',

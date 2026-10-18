@@ -13,22 +13,48 @@ compare light and dark.
 
 ## How components receive your brand
 
-Brandtree makes the 28 components in this reference available by name in content MDX. You do not need to import them. The generated route also passes the resolved, localized brand, interface strings, and content direction into the MDX document as `props.brand`, `props.ui`, and `props.dir`.
+Brandtree makes the 28 components in this reference available by name in content
+MDX. You do not need imports or shared props: built-ins automatically receive the
+resolved brand, interface strings, and text direction for the current page.
+This also works for built-ins nested inside other components in your MDX.
 
-<Callout type="warning" title="Forward required props">
+```mdx
+<Logo />
+<ColorPalette />
+<Glyphs />
+```
 
-You must forward these values to each component that needs them. Making a component name available does not bind its props. For example, `<Logo />` is incomplete; use `<Logo brand={props.brand} />`. Use the same forwarding inside any custom wrapper so translated content and interface labels stay aligned.
+### Override a value for one component
+
+Pass `brand`, `ui`, or `dir` explicitly when a specimen needs a different value.
+Your prop takes precedence over the page’s value for that component. Overrides
+replace the supplied object; they are not deep-merged. Spread the page value
+when changing only part of it:
+
+```mdx
+<Callout ui={{ ...props.ui, content: { ...props.ui.content, note: "Design note" } }}>
+
+Keep the original proportions.
 
 </Callout>
 
-```mdx
-<ColorPalette brand={props.brand} ui={props.ui} />
-<Glyphs ui={props.ui} dir={props.dir} />
+<Glyphs dir="rtl" />
 ```
+
+`props.brand`, `props.ui`, and `props.dir` remain available for expressions,
+selectors, and custom components. An override affects only the component that
+receives it; it does not change the page or nested components’ defaults.
+
+Automatic shared props apply to built-ins rendered in Brandtree content MDX.
+Custom components still need explicit inputs. Inside an Astro component, import
+built-ins and pass the values they require; MDX does not inject props into an
+Astro template. See [Custom components](/customization).
 
 All component examples belong in a Brandtree content `.mdx` file. Import statements go after YAML frontmatter. Strings use quotes; numbers, booleans, objects, and arrays use braces. A self-closing component has no children; a paired component wraps prose or other components. Leave blank lines around Markdown inside paired tags so paragraphs and lists are parsed correctly. See [Pages and MDX](/authoring) for complete page examples and [Astro's MDX guide](https://docs.astro.build/en/guides/integrations-guide/mdx/) for the underlying syntax.
 
-Props listed as **required** have no default. All components accept an optional `class` string except `ColorSwatch`. A `class` adds a hook to the outer element; it does not add arbitrary HTML props or inline styles to the public API.
+The API tables describe authoring in Brandtree MDX. Shared `brand`, `ui`, and
+`dir` props are optional overrides with page-level defaults. Props listed as
+**required** still need an authored value. All components accept an optional `class` string except `ColorSwatch`. A `class` adds a hook to the outer element; it does not add arbitrary HTML props or inline styles to the public API.
 
 Component selectors refer to configured IDs, not display labels, unless explicitly stated. Use [Configuration](/configuration) to define brand data, and [Media](/media) for image imports, SVGs, and downloadable files.
 
@@ -156,7 +182,7 @@ See [Custom components](/customization) for custom components and prop forwardin
 
 This documentation uses Blume components for cards, steps, and reference tables.
 The catalog above documents Brandtree components used inside your brand site.
-Their APIs differ: Brandtree's `Callout` takes `tone` and `ui`, while Blume's
+Their APIs differ: Brandtree's `Callout` takes `tone` and an optional `ui` override, while Blume's
 documentation callouts take `type`. Copy the catalog's MDX examples into your
 Brandtree pages.
 

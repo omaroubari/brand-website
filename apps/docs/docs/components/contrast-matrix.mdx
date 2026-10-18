@@ -13,12 +13,12 @@ import variantCode from "../../snippets/contrast-matrix-strict.mdx?raw";
 
 ## Usage
 
-Pass the current brand and interface strings to compare all named swatches from
+Compare all named swatches from
 [Colors](/colors). The opening preview limits the matrix to the first three
 swatches to keep it compact.
 
 ```mdx
-<ContrastMatrix brand={props.brand} ui={props.ui} />
+<ContrastMatrix />
 ```
 
 ## Examples
@@ -56,13 +56,15 @@ reordering IDs in `only` does not reorder the matrix.
   type={{
     brand: {
       type: "BrandConfig",
-      required: true,
-      description: "Resolved brand for the current locale. Pass props.brand.",
+      default: "props.brand",
+      description:
+        "Override the resolved brand for this component. Supplied automatically in Brandtree MDX.",
     },
     ui: {
       type: "UIStrings",
-      required: true,
-      description: "Resolved interface strings. Pass props.ui.",
+      default: "props.ui",
+      description:
+        "Override interface strings for this component. Supplied automatically in Brandtree MDX.",
     },
     only: {
       type: "string[]",

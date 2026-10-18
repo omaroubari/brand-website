@@ -47,12 +47,13 @@ show that shared data within your explanation:
 
 Use the primary palette for our most recognizable applications.
 
-<ColorPalette brand={props.brand} ui={props.ui} category="primary" />
+<ColorPalette category="primary" />
 ```
 
-The runtime supplies a resolved brand for the active locale. Forward the required
-props explicitly to each component. See [Components](/components) for examples,
-previews, and required props.
+The runtime supplies the resolved brand, interface strings, and direction for
+the active locale to built-in MDX components automatically. Pass an explicit
+prop to override a value for one component. See [Components](/components) for
+examples, previews, and prop definitions.
 
 <Panel title="Some tasks cross config sections">
 

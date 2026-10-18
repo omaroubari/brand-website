@@ -102,8 +102,11 @@ and synchronizes their theme with the docs. `examples.css` loads Brandtree's
 stylesheet into the preview-only Tailwind pipeline.
 
 Each guide imports its displayed MDX from `snippets/*.mdx?raw`. Keep
-the snippet's props aligned with its matching Astro example; snippets use
-`props.brand`, `props.ui`, and `props.dir`, while examples pass resolved fixtures.
+the snippet's props aligned with its matching Astro example. Snippets omit
+`brand`, `ui`, and `dir` unless demonstrating an override: Brandtree supplies
+these automatically in content MDX. The Astro harnesses still pass resolved
+fixtures explicitly because the MDX transform does not run in Astro templates.
+Page props remain available in snippets for selectors and derived values.
 Media snippets include authored asset imports relative to a content-root page;
 adjust those paths for nested or localized content. Other Usage examples may
 demonstrate additional variants.

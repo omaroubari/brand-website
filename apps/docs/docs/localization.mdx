@@ -244,8 +244,9 @@ English, then applies the default locale's pack, then the requested locale's
 pack. Other languages do not currently have built-in packs. There is no
 supported `i18n.ui` option for custom string overrides in the current schema.
 
-Setting `dir: "rtl"` configures the document direction. Pass the supplied
-`props.dir` and localized props to components that accept them. In your own
+Setting `dir: "rtl"` configures the document direction. Built-in MDX components
+receive the localized brand, interface labels, and direction automatically.
+Explicit `brand`, `ui`, or `dir` props override those defaults for one component. In your own
 styles, prefer CSS logical properties such as `margin-inline-start` over
 `margin-left`; they follow the reader's writing direction. Test mixed content
 such as Arabic text, Latin URLs, numbers, and logo artwork in the browser.

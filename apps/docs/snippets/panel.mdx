@@ -1,12 +1,10 @@
 <Panel
-  brand={props.brand}
   bg={props.brand.logo.colorways[0]?.bg}
   fg={props.brand.logo.colorways[0]?.fg}
   ratio="16 / 9"
   caption="An approved color pairing."
   label="Primary">
   <Logo
-    brand={props.brand}
     tint={
       props.brand.logo.colorways[0]
         ? `var(--color-${props.brand.logo.colorways[0].fg})`

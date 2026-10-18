@@ -10,15 +10,17 @@ import example0 from "../../snippets/callout-recommended.mdx?raw";
 
 import prohibitedCode from "../../snippets/callout-prohibited.mdx?raw";
 
+import uiOverrideCode from "../../snippets/callout-ui-override.mdx?raw";
+
 <ComponentPreview path="callout" code={previewCode} />
 
 ## Usage
 
-Pass the interface strings and put the explanation in the default slot. Without
+Put the explanation in the default slot. Without
 a title or tone, the heading uses the localized note label.
 
 ```mdx
-<Callout ui={props.ui}>
+<Callout>
 
 Use the supplied artwork for every application.
 
@@ -50,14 +52,24 @@ The title replaces the localized heading and is rendered exactly as supplied.
 
 <ComponentPreview path="callout-prohibited" code={prohibitedCode} />
 
+### Override interface labels
+
+The page’s localized labels are supplied automatically. Pass a complete `ui`
+value to override them for this callout. Spread the existing value and its
+`content` group to change the note label while preserving all other strings.
+For a single heading, `title` is the simpler option.
+
+<ComponentPreview path="callout-ui-override" code={uiOverrideCode} />
+
 ## API reference
 
 <TypeTable
   type={{
     ui: {
       type: "UIStrings",
-      required: true,
-      description: "Resolved interface strings. Pass props.ui.",
+      default: "props.ui",
+      description:
+        "Override interface strings for this component. Supplied automatically in Brandtree MDX.",
     },
     tone: {
       type: '"note" | "do" | "dont"',

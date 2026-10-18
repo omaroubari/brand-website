@@ -12,11 +12,11 @@ import variantCode from "../../snippets/logo-clearspace-logotype.mdx?raw";
 
 ## Usage
 
-Pass the current brand and interface strings to display the logotype’s clearspace.
+Display the configured logotype’s clearspace.
 Configure the artwork and `logo.clearspace` in [Logos](/logos).
 
 ```mdx
-<LogoClearspace brand={props.brand} ui={props.ui} />
+<LogoClearspace />
 ```
 
 ## Examples
@@ -27,7 +27,7 @@ The opening preview uses `mark="brandmark"`. Both marks share the same
 configured clearspace rule; choose the artwork needed for the current section.
 
 ```mdx
-<LogoClearspace brand={props.brand} ui={props.ui} mark="brandmark" />
+<LogoClearspace mark="brandmark" />
 ```
 
 ### Show the logotype
@@ -60,13 +60,15 @@ the protected zone and caption remain visible.
   type={{
     brand: {
       type: "BrandConfig",
-      required: true,
-      description: "Resolved brand for the current locale. Pass props.brand.",
+      default: "props.brand",
+      description:
+        "Override the resolved brand for this component. Supplied automatically in Brandtree MDX.",
     },
     ui: {
       type: "UIStrings",
-      required: true,
-      description: "Resolved interface strings. Pass props.ui.",
+      default: "props.ui",
+      description:
+        "Override interface strings for this component. Supplied automatically in Brandtree MDX.",
     },
     mark: {
       type: '"logotype" | "brandmark"',

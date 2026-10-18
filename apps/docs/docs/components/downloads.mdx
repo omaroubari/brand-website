@@ -14,11 +14,11 @@ import emptyCode from "../../snippets/downloads-empty.mdx?raw";
 
 ## Usage
 
-Pass the current brand to list its configured downloads. Maintain file URLs and
+List the current brand’s configured downloads. Maintain file URLs and
 metadata in configuration; see [Assets](/assets) for preparing the files.
 
 ```mdx
-<Downloads brand={props.brand} />
+<Downloads />
 ```
 
 ## Examples
@@ -64,8 +64,9 @@ archives or collect assets, so each configured URL must point to a real file.
   type={{
     brand: {
       type: "BrandConfig",
-      required: true,
-      description: "Resolved brand for the current locale. Pass props.brand.",
+      default: "props.brand",
+      description:
+        "Override the resolved brand for this component. Supplied automatically in Brandtree MDX.",
     },
     items: {
       type: "BrandDownload[]",

@@ -8,7 +8,7 @@ sidebar:
 Brandtree keeps two kinds of information separate. Put reusable brand facts, such
 as colors, fonts, artwork paths, and download URLs, in `brandtree.config.ts`.
 Put explanations and examples in Markdown or MDX. A component reads the brand
-data you pass it, so updating the config updates every specimen that uses it.
+data supplied by the runtime, so updating the config updates every specimen that uses it.
 
 Start with [Quickstart](/quickstart), then keep the
 [configuration reference](/configuration) nearby as you write.
@@ -69,7 +69,7 @@ Our identity should feel clear, warm, and consistent.
 
 [Read the logo guidelines](/logo)
 
-<Callout ui={props.ui} tone="note">
+<Callout tone="note">
 
 Use the supplied artwork files when preparing a new application.
 
@@ -106,25 +106,24 @@ Brandtree page frontmatter does not support `sidebar.order`.
 ## Connect prose to brand data
 
 Built-in components are available in MDX without imports. The runtime supplies
-`props.brand`, `props.ui`, and `props.dir` to every page. Pass the props required
-by the component explicitly:
+the current page’s brand, interface strings, and direction automatically:
 
 ```mdx
 ## Approved palette
 
-<ColorPalette brand={props.brand} ui={props.ui} category="primary" />
+<ColorPalette category="primary" />
 
 ## Contrast
 
-<ContrastMatrix brand={props.brand} ui={props.ui} />
+<ContrastMatrix />
 ```
 
 `props.brand` contains the resolved brand for the current locale. `props.ui`
 contains interface labels such as “Copy” and “Do”. `props.dir` is the direction
 of the rendered content, either `ltr` or `rtl`.
 
-Read [Components](/components) for the full component catalog and required
-props. Import custom components explicitly, using a path relative to your MDX
+These values remain available for expressions and explicit component overrides.
+Read [Components](/components) for the full catalog and override examples. Import custom components explicitly, using a path relative to your MDX
 file. Keep their reusable data in config and pass it through props.
 
 ## Link to pages and assets

@@ -53,7 +53,8 @@ Imports resolve relative to the original MDX file, not `.brandtree/`. Adjust the
 number of `../` segments when moving a page. The [Astro component guide](https://docs.astro.build/en/basics/astro-components/)
 explains props, slots, and scoped styles.
 
-If a custom component needs brand data, accept it as a required prop and forward
+Built-in MDX components receive shared props automatically; custom components
+do not. If a custom component needs brand data, accept it as a required prop and forward
 `props.brand` from MDX. Do the same for UI strings (`props.ui`) and content
 direction (`props.dir`). These are already resolved for the rendered page;
 importing the canonical config inside a component would bypass locale overrides.

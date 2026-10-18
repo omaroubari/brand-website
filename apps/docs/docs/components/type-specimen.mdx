@@ -12,12 +12,12 @@ import example0 from "../../snippets/type-specimen-text.mdx?raw";
 
 ## Usage
 
-Pass the current brand and interface strings to introduce the display family.
+Introduce the configured display family.
 Family names, foundries, notes, and links come from `brand.typography.families`;
 see [Typography](/typography) for configuration.
 
 ```mdx
-<TypeSpecimen brand={props.brand} ui={props.ui} />
+<TypeSpecimen />
 ```
 
 ## Examples
@@ -40,13 +40,15 @@ the fonts already loaded by the site; it does not download fonts from the family
   type={{
     brand: {
       type: "BrandConfig",
-      required: true,
-      description: "Resolved brand for the current locale. Pass props.brand.",
+      default: "props.brand",
+      description:
+        "Override the resolved brand for this component. Supplied automatically in Brandtree MDX.",
     },
     ui: {
       type: "UIStrings",
-      required: true,
-      description: "Resolved interface strings. Pass props.ui.",
+      default: "props.ui",
+      description:
+        "Override interface strings for this component. Supplied automatically in Brandtree MDX.",
     },
     font: {
       type: '"display" | "text"',

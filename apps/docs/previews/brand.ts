@@ -8,7 +8,7 @@ import { withBase } from "blume/components/islands/base-path.ts";
 import docsConfig from "../brandtree.config";
 
 // Resolve the sample once at the preview's composition boundary. Components
-// receive props, just as they do in a generated Brandtree content page.
+// receive explicit fixtures in Astro; Brandtree content MDX injects them automatically.
 export const demoConfig = brandtreeConfigSchema.parse(docsConfig);
 const brand = resolveBrand(demoConfig.brand, "en", demoConfig.i18n);
 const artwork = (value: BrandConfig["logo"]["logotype"]) => ({
