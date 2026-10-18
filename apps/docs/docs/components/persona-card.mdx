@@ -8,24 +8,29 @@ sidebar:
 import previewCode from "../../snippets/persona-card.mdx?raw";
 import example0 from "../../snippets/persona-card-placeholder.mdx?raw";
 
+import PersonaCardUrlCode from "../../snippets/persona-card-url.mdx?raw";
+
 <ComponentPreview path="persona-card" code={previewCode} />
 
 ## Usage
 
-Provide a name and the current interface strings. Add prose in the default slot
-to describe the persona’s needs or motivations.
+Provide a name, portrait, and the current interface strings. Add prose in the
+default slot to describe the persona’s needs or motivations.
 
 ```mdx
-<PersonaCard ui={props.ui} name="Maya">
+import portrait from "../assets/photography/persona-portrait.jpg";
+
+<PersonaCard ui={props.ui} name="Maya" role="Brand designer" image={portrait}>
 
 Maya needs clear rules that a small team can apply without supervision.
 
 </PersonaCard>
 ```
 
-The first preview adds a portrait and facts. Its image import assumes a page at
-the content root; use your own asset and adjust the path for nested or localized
-content.
+The first preview adds a role and facts. Image imports assume a page at the
+content root; use your own asset and adjust the path for nested or localized
+content. The portrait is [stock photography by Pavel Danilyuk on Pexels](https://www.pexels.com/photo/a-woman-using-a-laptop-6764180/);
+Maya is a fictional example persona.
 
 ## Examples
 
@@ -34,6 +39,19 @@ content.
 Omit `image` while drafting. The portrait area displays a localized placeholder while the name, role, and notes remain available.
 
 <ComponentPreview path="persona-card-placeholder" code={example0} />
+
+### Use a URL and richer notes
+
+The first preview passes imported image metadata for Astro’s responsive image
+output. Pass a string URL instead when the image is already hosted; this example
+uses the imported image’s `src` URL to exercise that path. It renders a plain
+image element. Use your own URL or the content-root asset import shown in the
+Code tab.
+
+The default slot also accepts richer notes, such as a paragraph followed by a
+list. Facts and role are optional; the draft example above omits facts.
+
+<ComponentPreview path="persona-card-url" code={PersonaCardUrlCode} />
 
 ## Images and notes
 

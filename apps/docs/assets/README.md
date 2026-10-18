@@ -5,7 +5,7 @@ or brand configuration from another app.
 
 - `fonts/`: DM Sans and DM Mono from Google Fonts. Their SIL Open Font License
   files are included alongside the font files.
-- `photography/`: a sample photograph with attribution in `CREDITS.md`.
+- `photography/`: sample photography and a persona portrait with attribution in `CREDITS.md`.
 - `icons/`: Phosphor SVG samples, distributed under the included MIT license.
 
 `public/brand/` contains light/dark variants of the supplied Brandtree wordmark
