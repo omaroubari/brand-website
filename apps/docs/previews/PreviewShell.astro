@@ -12,6 +12,8 @@ interface Props {
 
 const { colorInteractions = false } = Astro.props;
 
+// Examples are Astro templates, so they still pass required fixture props.
+// Author-facing MDX snippets rely on Brandtree’s automatic shared props.
 // The stylesheet is loaded once through examples.css. Keep shared preview
 // styling and interactions outside the individual runnable examples.
 const fontUrls = new Map([

@@ -12,11 +12,11 @@ import variantCode from "../../snippets/color-scale-selected.mdx?raw";
 
 ## Usage
 
-Pass the current brand and interface strings to display all families from
+Display all families from
 `brand.colors.palette`. Define the shade values in [Colors](/colors).
 
 ```mdx
-<ColorScale brand={props.brand} ui={props.ui} />
+<ColorScale />
 ```
 
 ## Examples
@@ -27,7 +27,7 @@ The opening preview omits `only`, so every configured palette family appears in
 configuration order. Each family supplies its own eleven published shade values.
 
 ```mdx
-<ColorScale brand={props.brand} ui={props.ui} />
+<ColorScale />
 ```
 
 ### Select and order families
@@ -53,13 +53,15 @@ ramp. Each shade is a copy button in the standard Brandtree runtime.
   type={{
     brand: {
       type: "BrandConfig",
-      required: true,
-      description: "Resolved brand for the current locale. Pass props.brand.",
+      default: "props.brand",
+      description:
+        "Override the resolved brand for this component. Supplied automatically in Brandtree MDX.",
     },
     ui: {
       type: "UIStrings",
-      required: true,
-      description: "Resolved interface strings. Pass props.ui.",
+      default: "props.ui",
+      description:
+        "Override interface strings for this component. Supplied automatically in Brandtree MDX.",
     },
     only: {
       type: "string[]",

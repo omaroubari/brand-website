@@ -18,11 +18,7 @@ The wrapper scopes the built-in copy interaction to this swatch.
 
 ```mdx
 <div data-color-palette>
-  <ColorSwatch
-    brand={props.brand}
-    ui={props.ui}
-    color={props.brand.colors.swatches[0]}
-  />
+  <ColorSwatch color={props.brand.colors.swatches[0]} />
 </div>
 ```
 
@@ -36,8 +32,6 @@ for a compact display. The source value and usage note remain visible.
 ```mdx
 <div data-color-palette>
   <ColorSwatch
-    brand={props.brand}
-    ui={props.ui}
     color={
       props.brand.colors.swatches.find((swatch) => swatch.id === "blue") ??
       props.brand.colors.swatches[0]
@@ -86,13 +80,15 @@ swatches with selection and ordering, use [Color Palette](/components/color-pale
   type={{
     brand: {
       type: "BrandConfig",
-      required: true,
-      description: "Resolved brand for the current locale. Pass props.brand.",
+      default: "props.brand",
+      description:
+        "Override the resolved brand for this component. Supplied automatically in Brandtree MDX.",
     },
     ui: {
       type: "UIStrings",
-      required: true,
-      description: "Resolved interface strings. Pass props.ui.",
+      default: "props.ui",
+      description:
+        "Override interface strings for this component. Supplied automatically in Brandtree MDX.",
     },
     color: {
       type: "BrandSwatch",

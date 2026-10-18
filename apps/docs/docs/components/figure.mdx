@@ -16,14 +16,13 @@ import pendingCode from "../../snippets/figure-pending.mdx?raw";
 
 ## Usage
 
-Import an image and pass the current interface strings. Supply meaningful alt
+Import an image. Supply meaningful alt
 text when the image conveys information; leave it empty for decorative artwork.
 
 ```mdx
 import photo from "../assets/photography/photo-01.jpg";
 
 <Figure
-  ui={props.ui}
   src={photo}
   alt="A photograph demonstrating the brand's image treatment"
 />
@@ -89,8 +88,9 @@ does not validate the token. The component has no content slots.
   type={{
     ui: {
       type: "UIStrings",
-      required: true,
-      description: "Resolved interface strings. Pass props.ui.",
+      default: "props.ui",
+      description:
+        "Override interface strings for this component. Supplied automatically in Brandtree MDX.",
     },
     src: {
       type: "ImageMetadata | string",

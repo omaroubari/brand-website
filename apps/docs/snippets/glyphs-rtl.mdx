@@ -1,3 +1,10 @@
+import { resolveUIStrings } from "brandtree";
+
 <div dir="rtl" lang="ar">
-  <Glyphs ui={props.ui} dir="rtl" font="text" weight={500} />
+  <Glyphs
+    ui={resolveUIStrings("ar", { defaultLocale: "en" })}
+    dir="rtl"
+    font="text"
+    weight={500}
+  />
 </div>

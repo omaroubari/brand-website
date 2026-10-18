@@ -16,12 +16,12 @@ import captionCode from "../../snippets/panel-caption.mdx?raw";
 
 ## Usage
 
-Pass the brand and put artwork in the default slot. Omitting `ratio` lets the
+Put artwork in the default slot. Omitting `ratio` lets the
 content determine the frame height.
 
 ```mdx
-<Panel brand={props.brand}>
-  <Logo brand={props.brand} width="60%" />
+<Panel>
+  <Logo width="60%" />
 </Panel>
 ```
 
@@ -83,8 +83,9 @@ caption text; it does not create a caption without the `caption` prop.
   type={{
     brand: {
       type: "BrandConfig",
-      required: true,
-      description: "Resolved brand for the current locale. Pass props.brand.",
+      default: "props.brand",
+      description:
+        "Override the resolved brand for this component. Supplied automatically in Brandtree MDX.",
     },
     bg: {
       type: "BrandColorToken",

@@ -13,13 +13,12 @@ import treatmentsCode from "../../snippets/logo-misuse-treatments.mdx?raw";
 
 ## Usage
 
-Pass the brand and at least one misuse rule. The effect creates the visual
+Pass at least one misuse rule. The effect creates the visual
 mistake; the title and note explain what readers should do instead.
 The artwork comes from [Logos](/logos).
 
 ```mdx
 <LogoMisuse
-  brand={props.brand}
   items={[
     {
       effect: "stretch",
@@ -39,7 +38,6 @@ preview pairs stretching and rotation in a two-column grid.
 
 ```mdx
 <LogoMisuse
-  brand={props.brand}
   cols={2}
   items={[
     {
@@ -88,8 +86,9 @@ renders an empty grid.
   type={{
     brand: {
       type: "BrandConfig",
-      required: true,
-      description: "Resolved brand for the current locale. Pass props.brand.",
+      default: "props.brand",
+      description:
+        "Override the resolved brand for this component. Supplied automatically in Brandtree MDX.",
     },
     items: {
       type: "Array<{ effect: MisuseEffect; title: string; note: string }>",

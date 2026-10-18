@@ -14,12 +14,12 @@ import FontWeightsItalicCode from "../../snippets/font-weights-italic.mdx?raw";
 
 ## Usage
 
-Pass the current brand to display each configured weight using its name as the
+Display each configured weight using its name as the
 sample text. Weights come from `brand.typography.weights`; see
 [Typography](/typography) for font setup.
 
 ```mdx
-<FontWeights brand={props.brand} />
+<FontWeights />
 ```
 
 ## Examples
@@ -61,8 +61,9 @@ specimen; adding a configuration entry alone does not load a font file.
   type={{
     brand: {
       type: "BrandConfig",
-      required: true,
-      description: "Resolved brand for the current locale. Pass props.brand.",
+      default: "props.brand",
+      description:
+        "Override the resolved brand for this component. Supplied automatically in Brandtree MDX.",
     },
     font: {
       type: '"display" | "text"',

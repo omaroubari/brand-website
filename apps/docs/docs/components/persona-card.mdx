@@ -20,7 +20,7 @@ default slot to describe the persona’s needs or motivations.
 ```mdx
 import portrait from "../assets/photography/persona-portrait.jpg";
 
-<PersonaCard ui={props.ui} name="Maya" role="Brand designer" image={portrait}>
+<PersonaCard name="Maya" role="Brand designer" image={portrait}>
 
 Maya needs clear rules that a small team can apply without supervision.
 
@@ -69,8 +69,9 @@ or other MDX content.
   type={{
     ui: {
       type: "UIStrings",
-      required: true,
-      description: "Resolved interface strings. Pass props.ui.",
+      default: "props.ui",
+      description:
+        "Override interface strings for this component. Supplied automatically in Brandtree MDX.",
     },
     name: {
       type: "string",

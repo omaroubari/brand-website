@@ -13,13 +13,13 @@ import example0 from "../../snippets/grid-compact.mdx?raw";
 
 ## Usage
 
-Wrap prose or other components in `Grid`. The grid itself needs no brand or
-interface props; forward those to children that require them.
+Wrap prose or other components in `Grid`. Nested built-in components receive
+the current page’s brand, interface strings, and direction automatically.
 
 ```mdx
 <Grid cols={2}>
-  <Figure ui={props.ui} caption="Front" />
-  <Figure ui={props.ui} caption="Back" />
+  <Figure caption="Front" />
+  <Figure caption="Back" />
 </Grid>
 ```
 

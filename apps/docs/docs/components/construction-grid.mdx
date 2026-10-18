@@ -13,11 +13,11 @@ import variantCode from "../../snippets/construction-grid-logotype.mdx?raw";
 
 ## Usage
 
-Pass the current brand to show the brandmark on a square, ten-by-ten field.
+Show the configured brandmark on a square, ten-by-ten field.
 Configure the source artwork in [Logos](/logos).
 
 ```mdx
-<ConstructionGrid brand={props.brand} />
+<ConstructionGrid />
 ```
 
 ## Examples
@@ -29,7 +29,6 @@ Omitting these options uses ten divisions and a generated caption instead.
 
 ```mdx
 <ConstructionGrid
-  brand={props.brand}
   mark="brandmark"
   cols={8}
   rows={8}
@@ -65,8 +64,9 @@ Use positive division counts.
   type={{
     brand: {
       type: "BrandConfig",
-      required: true,
-      description: "Resolved brand for the current locale. Pass props.brand.",
+      default: "props.brand",
+      description:
+        "Override the resolved brand for this component. Supplied automatically in Brandtree MDX.",
     },
     mark: {
       type: '"logotype" | "brandmark"',

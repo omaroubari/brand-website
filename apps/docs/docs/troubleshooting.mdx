@@ -7,19 +7,19 @@ Start with the first diagnostic and follow its file and field path to the author
 
 ## Common fixes
 
-| Symptom                                         | What to check                                                                                                                                                     |
-| ----------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Preview reports no build                        | Run `brandtree build` from the consumer root. Keep both the generated `.brandtree/astro.config.mjs` and nonempty `dist/`; preview does not rebuild them.          |
-| A page is missing                               | Check draft flags, underscores/partials, locale filenames, malformed frontmatter, duplicate normalized routes, and dropped-page diagnostics. Run strict checking. |
-| Config rejects an unfamiliar field              | Use the [configuration reference](/configuration). Schemas reject unknown keys; an ADR may describe a future API.                                                 |
-| A component fails reading `brand` or `ui`       | Built-in names are supplied, but values are explicit: forward `brand={props.brand}` and/or `ui={props.ui}` as required.                                           |
-| Metadata is ignored                             | Export valid folder metadata or a factory returning it; see [navigation](/navigation).                                                                            |
-| A local asset is missing                        | Check filename case, project-root config paths, public URLs versus imported files, and diagnostic paths.                                                          |
-| Remote fonts time out                           | Check build network access or register readable, licensed local fonts; verify the actual emitted font files.                                                      |
-| Arabic characters disappear in social cards     | Use a working Arabic-capable font. Inter fallback does not cover Arabic.                                                                                          |
-| Types miss an author file                       | Inspect your own tsconfig's include/exclude rules; it replaces the generated check project.                                                                       |
-| An installed version lacks a documented feature | Check `pnpm brandtree --version`. Update the project dependency and lockfile when upgrading, then regenerate the site.                                            |
-| Changes in generated files disappear            | Move the fix into config, MDX, or your imported component. `.brandtree/` is recreated.                                                                            |
+| Symptom                                         | What to check                                                                                                                                                                       |
+| ----------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Preview reports no build                        | Run `brandtree build` from the consumer root. Keep both the generated `.brandtree/astro.config.mjs` and nonempty `dist/`; preview does not rebuild them.                            |
+| A page is missing                               | Check draft flags, underscores/partials, locale filenames, malformed frontmatter, duplicate normalized routes, and dropped-page diagnostics. Run strict checking.                   |
+| Config rejects an unfamiliar field              | Use the [configuration reference](/configuration). Schemas reject unknown keys; an ADR may describe a future API.                                                                   |
+| A component fails reading `brand` or `ui`       | Built-ins receive shared props automatically in Brandtree content MDX. Check explicit overrides for incomplete values. In custom Astro templates, pass the required props yourself. |
+| Metadata is ignored                             | Export valid folder metadata or a factory returning it; see [navigation](/navigation).                                                                                              |
+| A local asset is missing                        | Check filename case, project-root config paths, public URLs versus imported files, and diagnostic paths.                                                                            |
+| Remote fonts time out                           | Check build network access or register readable, licensed local fonts; verify the actual emitted font files.                                                                        |
+| Arabic characters disappear in social cards     | Use a working Arabic-capable font. Inter fallback does not cover Arabic.                                                                                                            |
+| Types miss an author file                       | Inspect your own tsconfig's include/exclude rules; it replaces the generated check project.                                                                                         |
+| An installed version lacks a documented feature | Check `pnpm brandtree --version`. Update the project dependency and lockfile when upgrading, then regenerate the site.                                                              |
+| Changes in generated files disappear            | Move the fix into config, MDX, or your imported component. `.brandtree/` is recreated.                                                                                              |
 
 Some diagnostics retain a `BLUME_` prefix from shared implementation history;
 use the accompanying file, field path, and message to locate the problem.
