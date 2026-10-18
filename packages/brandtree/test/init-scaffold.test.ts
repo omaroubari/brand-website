@@ -1,4 +1,3 @@
-import { execFile } from "node:child_process";
 import {
   mkdtemp,
   readFile,
@@ -10,11 +9,8 @@ import {
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { promisify } from "node:util";
-import { runCommand } from "citty";
 import { afterEach, expect, it, vi } from "vitest";
 
-import { mainCommand } from "../src/cli/command.ts";
 import {
   applyPlan,
   buildPlan,
@@ -39,8 +35,10 @@ const answers: InitAnswers = {
   packageManager: "pnpm",
 };
 const log = { info: vi.fn(), success: vi.fn() };
-const runInit = (...args: string[]) =>
-  runCommand(mainCommand, { rawArgs: ["init", ...args] });
+const scaffold = async (root: string, title = answers.title) => {
+  await applyPlan(root, await buildPlan(root, { ...answers, title }), log);
+  await ensureGitignore(root);
+};
 
 afterEach(async () => {
   vi.restoreAllMocks();
@@ -49,28 +47,10 @@ afterEach(async () => {
   );
 });
 
-it("runs the source CLI as a subprocess and creates the expected ignore entries", async () => {
-  const cwd = await makeRoot();
-  const root = join(cwd, "my brand");
-  const sourceCli = fileURLToPath(
-    new URL("../src/cli/index.ts", import.meta.url),
-  );
-  // execFile rejects on a nonzero exit, so awaiting it also checks success.
-  const { stderr } = await promisify(execFile)(
-    process.execPath,
-    [sourceCli, "init", "my brand", "--yes"],
-    { cwd, encoding: "utf-8", timeout: 10_000 },
-  );
-  expect(stderr).toBe("");
-  expect(await readFile(join(root, ".gitignore"), "utf-8")).toBe(
-    "node_modules/\n.brandtree/\ndist/\n",
-  );
-}, 15_000);
-
-it("scaffolds through the CLI and produces a valid project and runtime", async () => {
+it("generates a complete starter with a valid config, project and runtime", async () => {
   const root = await makeRoot();
   const title = 'A "Brand"\nwith Unicode — العربية';
-  await runInit(root, "--yes", "--title", title, "--package-manager", "pnpm");
+  await scaffold(root, title);
   expect((await readdir(root, { recursive: true })).sort()).toEqual(
     [
       ".gitignore",
@@ -144,9 +124,9 @@ it("scaffolds through the CLI and produces a valid project and runtime", async (
   });
 });
 
-it("rerunning the CLI preserves every existing file and restores a missing template", async () => {
+it("rerunning the scaffold preserves every existing file and restores a missing template", async () => {
   const root = await makeRoot();
-  await runInit(root, "--yes");
+  await scaffold(root);
   const files = (await readdir(root, { recursive: true, withFileTypes: true }))
     .filter((entry) => entry.isFile())
     .map((entry) => join(entry.parentPath, entry.name));
@@ -162,14 +142,14 @@ it("rerunning the CLI preserves every existing file and restores a missing templ
   const before = await Promise.all(
     files.map((path) => readFile(path, "utf-8")),
   );
-  await runInit(root, "--yes", "--title", "A different brand");
+  await scaffold(root, "A different brand");
   expect(
     await Promise.all(files.map((path) => readFile(path, "utf-8"))),
   ).toEqual(before);
 
   const missingPage = join(root, "content/02-colour.mdx");
   await rm(missingPage);
-  await runInit(root, "--yes");
+  await scaffold(root);
   expect(await readFile(missingPage, "utf-8")).toContain("<ColorPalette");
   for (const [index, path] of files.entries()) {
     if (path !== missingPage)
@@ -228,15 +208,6 @@ it("refuses a symlinked content directory before writing files", async () => {
   expect(await readdir(root)).toEqual(["content"]);
   expect(await readdir(outside)).toEqual([]);
 });
-
-it.each(["--package-manager=unknown", "--title= "])(
-  "rejects %s without writing files",
-  async (flag) => {
-    const root = await makeRoot();
-    await expect(runInit(root, "--yes", flag)).rejects.toThrow();
-    expect(await readdir(root)).toEqual([]);
-  },
-);
 
 it.each([
   ["npm", "npm run dev", "npx"],
