@@ -17,7 +17,7 @@
     "./brand": "./src/brand/index.ts",
     "./components": "./src/components/mdx.ts",
     "./components/*": "./src/components/*",
-    "./core/*": "./src/core/*",
+    "./core/*": "./src/core/*.ts",
     "./runtime": "./src/runtime.ts",
     "./og/*": "./src/og/*.ts",
     "./astro/*": "./src/astro/*.ts",
@@ -31,6 +31,7 @@
   },
   "dependencies": {
     "@astrojs/check": "^0.9.10",
+    "@astrojs/markdown-remark": "^7.2.2",
     "@astrojs/mdx": "^7.0.5",
     "@astrojs/react": "^6.0.2",
     "@base-ui/react": "^1.7.0",
@@ -66,7 +67,8 @@
   "devDependencies": {
     "@types/node": "^22.20.1",
     "@types/react": "^19.2.18",
-    "@types/react-dom": "^19.2.4"
+    "@types/react-dom": "^19.2.4",
+    "@types/estree": "^1.0.9"
   },
   "types": "./dist/index.d.ts",
   "files": [
