@@ -101,14 +101,33 @@ independent page orders or collision winners in separate renderers.
 
 Route/layout composition roots resolve active brand, UI strings, and navigation
 settings once and forward the values through required props. Rendered MDX
-receives those values in `props`; a brand-aware exhibit uses, for example:
+receives those values in `props`; the generated MDX compiler injects `brand`, `ui`, and `dir`
+into every built-in as defaults at the authoring boundary:
 
 ```mdx
-<ColorPalette brand={props.brand} ui={props.ui} />
+<ColorPalette />
 ```
 
 Built-in MDX components are supplied centrally. Custom components use explicit
 MDX imports; there is no global custom registration or built-in override API.
+Custom components receive framework values explicitly from the MDX page's
+`props` object. `brandtree/core/mdx` exports the shared `BrandtreeBaseComponentProps` type.
+Implementation props stay required; the compiler supplies defaults only for
+built-ins in MDX. Recma operates on resolved JSX-runtime component bindings.
+Built-ins are registered by identity, so aliases work without injecting
+values into unrelated custom components with matching names.
+The generated MDX integration explicitly selects Unified because Astro's default
+Sätteri processor does not execute recma plugins. Plain Markdown retains its
+existing processor. Compiler-inserted runtime imports resolve from the generating
+framework package, even when the author content has another installed version.
+Explicit author attributes/spreads override defaults in normal JSX order,
+including explicit `undefined`. Route values are captured per content render;
+there is no shared mutable page context or additional browser JavaScript.
+Fallback pages retain requested-locale brand/UI and source-locale direction.
+Imported MDX partials require `<Partial {...props} />` to pass context and the
+component map. Custom named/namespace imports require a default-export adapter
+or explicit forwarding. Hydrated islands retain Astro serialization constraints.
+See `apps/web/README.md` for examples and supported boundaries.
 Astro and React components are supported, with the React integration supplied
 by Brandtree in generated configuration. IconGrid requires an explicit `icons`
 array of records containing `name` and raw `svg` data; no default icon set is

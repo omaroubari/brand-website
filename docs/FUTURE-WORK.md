@@ -79,8 +79,10 @@ Consider a shared author component registry or automatic component exposure
 if repeated MDX imports justify an additional API. Define collision and
 built-in override rules before introducing it.
 
-Current boundary: custom components require explicit imports; built-in
-Brandtree MDX components remain automatically available. See
+Current boundary: custom components require explicit imports and explicit
+framework props from the MDX page's `props` object. Built-in Brandtree MDX
+components remain automatically available and receive `brand`, `ui`, and `dir`
+automatically. See
 [Consumer contract](adr/0017-define-the-brandtree-consumer-project-contract.md).
 
 ## Server-rendered sites
