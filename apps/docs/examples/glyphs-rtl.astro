@@ -1,0 +1,12 @@
+---
+import { Glyphs } from "brandtree/components";
+import PreviewShell from "../previews/PreviewShell.astro";
+import { resolveUIStrings } from "brandtree";
+const ui = resolveUIStrings("ar", { defaultLocale: "en" });
+---
+
+<PreviewShell>
+  <div dir="rtl" lang="ar">
+    <Glyphs ui={ui} dir="rtl" font="text" weight={500} />
+  </div>
+</PreviewShell>

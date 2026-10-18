@@ -8,6 +8,8 @@ sidebar:
 import previewCode from "../../snippets/glyphs.mdx?raw";
 import example0 from "../../snippets/glyphs-numerals.mdx?raw";
 
+import GlyphsRtlCode from "../../snippets/glyphs-rtl.mdx?raw";
+
 <ComponentPreview path="glyphs" code={previewCode} />
 
 ## Usage
@@ -26,6 +28,21 @@ sets adapt to the content’s direction.
 Supply labeled character sets to replace the defaults. Use this for numerals, symbols, or characters relevant to your brand’s languages.
 
 <ComponentPreview path="glyphs-numerals" code={example0} />
+
+### Show Arabic letters in the text family
+
+Set `dir="rtl"` to select Arabic letters and both Arabic and Latin numerals.
+This example also switches from the default display family to `font="text"`
+and uses a medium weight. The wrapper sets the reading direction of the example;
+`Glyphs` uses its `dir` prop to choose the character sets.
+
+The preview resolves Arabic interface strings with `resolveUIStrings("ar", ...)`
+and passes them as `ui`. In an Arabic content page, the corresponding value is
+that page’s `props.ui`, as shown in the Code tab. The sample brand has no Arabic font file, so
+unsupported Arabic characters use the browser’s font fallback; load a family
+with Arabic coverage when documenting your own brand.
+
+<ComponentPreview path="glyphs-rtl" code={GlyphsRtlCode} />
 
 ## Character sets and direction
 

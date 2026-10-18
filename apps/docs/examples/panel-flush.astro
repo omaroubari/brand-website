@@ -1,0 +1,18 @@
+---
+import { Panel } from "brandtree/components";
+import PreviewShell from "../previews/PreviewShell.astro";
+import { demoBrand as brand } from "../previews/brand";
+import { demoPhoto as photo } from "../previews/media";
+---
+
+<PreviewShell>
+  <Panel brand={brand} flush>
+    <img
+      src={photo.src}
+      alt="A photograph filling the panel without additional padding"
+      width={photo.width}
+      height={photo.height}
+      style="width: 100%; height: auto;"
+    />
+  </Panel>
+</PreviewShell>

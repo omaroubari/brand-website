@@ -6,6 +6,8 @@ sidebar:
 ---
 
 import previewCode from "../../snippets/logo-scaling.mdx?raw";
+import defaultCode from "../../snippets/logo-scaling-default.mdx?raw";
+import brandmarkCode from "../../snippets/logo-scaling-brandmark.mdx?raw";
 
 <ComponentPreview path="logo-scaling" code={previewCode} />
 
@@ -19,6 +21,13 @@ Set the published digital and print minimums in [Logos](/logos).
 ```
 
 ## Examples
+
+### Compare the demonstration sizes
+
+Omit `sizes` to display the five built-in widths. Treat these as a starting point
+for the layout, then publish sizes approved for your own brand.
+
+<ComponentPreview path="logo-scaling-default" code={defaultCode} />
 
 ### Publish application sizes
 
@@ -37,6 +46,23 @@ Each label is editorial copy; the component does not convert CSS lengths to prin
 
 This is the size set shown in the opening preview. Supply sizes largest first;
 the component preserves the array order rather than sorting it.
+
+### Compare brandmark sizes
+
+Set `mark="brandmark"` and supply widths appropriate for compact applications.
+The configured minimum-size caption is shared with the logotype; it is not
+calculated from these examples.
+
+<ComponentPreview path="logo-scaling-brandmark" code={brandmarkCode} />
+
+### Set the minimum-size guidance
+
+Replace `brand.logo.minSize` in `brandtree.config.ts`. These descriptive strings
+change the caption below every size comparison; they do not enforce widths.
+
+```ts
+minSize: { digital: "96 px wide", print: "20 mm wide" },
+```
 
 ## Size behavior
 

@@ -8,6 +8,8 @@ sidebar:
 import previewCode from "../../snippets/callout.mdx?raw";
 import example0 from "../../snippets/callout-recommended.mdx?raw";
 
+import prohibitedCode from "../../snippets/callout-prohibited.mdx?raw";
+
 <ComponentPreview path="callout" code={previewCode} />
 
 ## Usage
@@ -23,9 +25,16 @@ Use the supplied artwork for every application.
 </Callout>
 ```
 
-The default preview adds a custom title and the `dont` tone for a prohibited use.
+The default preview sets `tone="note"` explicitly; omitting it produces the same note treatment.
 
 ## Examples
+
+### Add an editorial note
+
+Use `tone="note"` for supporting information. Leaving out `title` keeps the
+localized note heading.
+
+<ComponentPreview path="callout" code={previewCode} />
 
 ### Mark a recommended use
 
@@ -33,6 +42,13 @@ Use `tone="do"` for a positive rule. Omit `title` to keep the localized heading
 for that tone; a custom title replaces that heading rather than translating it.
 
 <ComponentPreview path="callout-recommended" code={example0} />
+
+### Explain a prohibited use
+
+Use `tone="dont"` for a prohibition and a custom `title` to name the rule.
+The title replaces the localized heading and is rendered exactly as supplied.
+
+<ComponentPreview path="callout-prohibited" code={prohibitedCode} />
 
 ## API reference
 

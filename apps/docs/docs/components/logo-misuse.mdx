@@ -6,6 +6,8 @@ sidebar:
 ---
 
 import previewCode from "../../snippets/logo-misuse.mdx?raw";
+import legibilityCode from "../../snippets/logo-misuse-legibility.mdx?raw";
+import treatmentsCode from "../../snippets/logo-misuse-treatments.mdx?raw";
 
 <ComponentPreview path="logo-misuse" code={previewCode} />
 
@@ -53,6 +55,22 @@ preview pairs stretching and rotation in a two-column grid.
   ]}
 />
 ```
+
+### Show legibility mistakes
+
+Compare `low-contrast`, `too-small`, and `obstruct` to explain how a logo can
+become hard to recognize even when its shape remains intact. This group uses
+three columns on wider screens.
+
+<ComponentPreview path="logo-misuse-legibility" code={legibilityCode} />
+
+### Show unapproved treatments on the brandmark
+
+The same effects work with `mark="brandmark"`. This group demonstrates `recolor`,
+`outline`, `shadow`, and `pattern` in two columns. Together with the opening
+preview and legibility group, it covers every preset effect.
+
+<ComponentPreview path="logo-misuse-treatments" code={treatmentsCode} />
 
 ## Effects and layout
 

@@ -21,12 +21,31 @@ Configure the artwork and `logo.clearspace` in [Logos](/logos).
 
 ## Examples
 
+### Show the brandmark
+
+The opening preview uses `mark="brandmark"`. Both marks share the same
+configured clearspace rule; choose the artwork needed for the current section.
+
+```mdx
+<LogoClearspace brand={props.brand} ui={props.ui} mark="brandmark" />
+```
+
 ### Show the logotype
 
 The opening preview uses the brandmark. Omit `mark` to show the wider logotype
 with the same configured clearspace rule.
 
 <ComponentPreview path="logo-clearspace-logotype" code={variantCode} />
+
+### Configure the protected space
+
+Set this property inside `brand.logo` in `brandtree.config.ts` to update both
+mark diagrams. The ratio controls the diagram padding; the unit provides the
+human-readable measurement in its caption. Keep both aligned with your rule.
+
+```ts
+clearspace: { ratio: 0.5, unit: "the height of the lowercase b" },
+```
 
 ## Clearspace behavior
 

@@ -29,9 +29,11 @@ Select `brandmark` for the symbol alone. Use `width` to size either mark; its he
 
 <ComponentPreview path="logo-brandmark" code={example0} />
 
-### Use a fixed background
+### Choose artwork for the background
 
-Match `on` to the panel’s background so the artwork stays legible when the page theme changes. This example uses configured neutral shades; choose palette tokens from your own brand.
+Set `on="light"` or `on="dark"` to match a fixed panel background. The light and dark panels keep their artwork when you switch the page theme; the automatic example follows it. These neutral shade tokens come from the sample palette; use tokens from your own configuration.
+
+The opening preview uses `on="auto"`, the default, to follow the page theme instead.
 
 <ComponentPreview path="logo-background" code={example1} />
 

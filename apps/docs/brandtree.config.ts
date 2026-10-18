@@ -113,6 +113,14 @@ export default defineConfig({
           category: "primary",
           usage: "Actions, links, and focused brand highlights.",
         },
+        {
+          id: "gray",
+          name: "Gray",
+          color: "neutral-500",
+          on: "white",
+          category: "secondary",
+          usage: "Supporting information and secondary brand surfaces.",
+        },
       ],
     },
     theme: {
@@ -212,6 +220,7 @@ export default defineConfig({
       ],
       weights: [
         { name: "Regular", weight: 400 },
+        { name: "Book Italic", weight: 450, italic: true },
         { name: "Medium", weight: 500 },
         { name: "Semibold", weight: 600 },
         { name: "Bold", weight: 700 },
@@ -261,7 +270,6 @@ export default defineConfig({
           size: "0.75rem",
           lineHeight: "1.5",
           tracking: "0",
-          sample: "Brandtree component examples",
           print: { size: "9pt", leading: "13.5pt", tracking: "0" },
         },
       ],

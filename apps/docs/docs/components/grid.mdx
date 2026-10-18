@@ -6,6 +6,7 @@ sidebar:
 ---
 
 import previewCode from "../../snippets/grid.mdx?raw";
+import threeColumnsCode from "../../snippets/grid-three-columns.mdx?raw";
 import example0 from "../../snippets/grid-compact.mdx?raw";
 
 <ComponentPreview path="grid" code={previewCode} />
@@ -28,6 +29,14 @@ includes an image import relative to a content-root page; use your own asset and
 adjust the path for nested or localized content.
 
 ## Examples
+
+### Arrange three specimens
+
+Use `cols` to choose the column count from `48rem` upward. This example uses the
+standard three-column layout and default spacing, then stacks its draft figures
+on smaller screens. The opening preview demonstrates two columns and a larger gap.
+
+<ComponentPreview path="grid-three-columns" code={threeColumnsCode} />
 
 ### Keep two columns on small screens
 

@@ -6,6 +6,7 @@ sidebar:
 ---
 
 import previewCode from "../../snippets/construction-grid.mdx?raw";
+import defaultCode from "../../snippets/construction-grid-default.mdx?raw";
 import variantCode from "../../snippets/construction-grid-logotype.mdx?raw";
 
 <ComponentPreview path="construction-grid" code={previewCode} />
@@ -20,6 +21,29 @@ Configure the source artwork in [Logos](/logos).
 ```
 
 ## Examples
+
+### Show the brandmark on a square field
+
+The opening preview uses eight divisions on each axis and a custom caption.
+Omitting these options uses ten divisions and a generated caption instead.
+
+```mdx
+<ConstructionGrid
+  brand={props.brand}
+  mark="brandmark"
+  cols={8}
+  rows={8}
+  caption="Construction grid for the mark"
+/>
+```
+
+### Use the generated caption
+
+Omit `cols`, `rows`, and `caption` for a ten-by-ten brandmark field with the
+built-in construction explanation. Replace that caption when it does not
+accurately describe your artwork.
+
+<ComponentPreview path="construction-grid-default" code={defaultCode} />
 
 ### Use a rectangular field
 

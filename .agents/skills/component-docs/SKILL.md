@@ -48,7 +48,11 @@ Use this sequence; omit optional sections when they add no value:
 4. **Examples.** Use task-focused headings such as “Select and order swatches” or
    “Keep two columns on small screens.” Explain the change briefly, then show
    matching preview and code. Choose useful variations rather than every prop
-   permutation. Simple components may need only the default preview and Usage.
+   permutation. Audit every public enum value and meaningful boolean against
+   the previews; cover distinct tones, modes, selectors, slots, and configuration
+   sources with labeled examples. A props-table entry alone is not coverage.
+   Group related modes to compare them, and record intentional omissions.
+   Simple components may need only the default preview and Usage.
 5. **Behavior, when needed.** Explain interactions: selector precedence, theme
    switching, breakpoint boundaries, empty states, invalid values, accessibility,
    or limitations. Use a precise heading such as “Selection behavior.”
