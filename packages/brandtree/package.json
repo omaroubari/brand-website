@@ -1,34 +1,9 @@
 {
-  "name": "brandtree",
-  "type": "module",
-  "version": "0.0.1",
-  "private": true,
-  "engines": {
-    "node": ">=22.12.0"
-  },
+  "author": "Omar Oubari",
   "bin": {
     "brandtree": "./bin/brandtree.mjs"
   },
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "default": "./src/index.ts"
-    },
-    "./brand": "./src/brand/index.ts",
-    "./components": "./src/components/mdx.ts",
-    "./components/*": "./src/components/*",
-    "./core/*": "./src/core/*.ts",
-    "./runtime": "./src/runtime.ts",
-    "./og/*": "./src/og/*.ts",
-    "./astro/*": "./src/astro/*.ts",
-    "./styles.css": "./src/styles/global.css"
-  },
-  "scripts": {
-    "build": "node scripts/build.mjs",
-    "check": "astro check",
-    "prepack": "pnpm run build",
-    "test": "vitest run"
-  },
+  "description": "Fast, beautiful, and agent-friendly brand websites.",
   "dependencies": {
     "@astrojs/check": "^0.9.10",
     "@astrojs/markdown-remark": "^7.2.2",
@@ -70,10 +45,46 @@
     "@types/react-dom": "^19.2.4",
     "@types/estree": "^1.0.9"
   },
-  "types": "./dist/index.d.ts",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./src/index.ts"
+    },
+    "./brand": "./src/brand/index.ts",
+    "./components": "./src/components/mdx.ts",
+    "./components/*": "./src/components/*",
+    "./core/*": "./src/core/*.ts",
+    "./runtime": "./src/runtime.ts",
+    "./og/*": "./src/og/*.ts",
+    "./astro/*": "./src/astro/*.ts",
+    "./styles.css": "./src/styles/global.css"
+  },
   "files": [
     "bin/",
     "dist/",
     "src/"
-  ]
+  ],
+  "license": "MIT",
+  "name": "brandtree",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/omaroubari/brand-website.git",
+    "directory": "packages/brandtree"
+  },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "check": "astro check",
+    "prepack": "pnpm run build",
+    "test": "vitest run"
+  },
+  "type": "module",
+  "types": "./dist/index.d.ts",
+  "version": "0.0.1"
 }
