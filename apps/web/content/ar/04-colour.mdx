@@ -8,14 +8,14 @@ description: عائلتا ألوان، ولون إشارة واحد، ونِسَ
 الأسود والأبيض هما الأساس. يحملان الشعار الكتابي، والطباعة، والأسطح، واللحظات عالية
 التباين في الهوية.
 
-<ColorPalette brand={props.brand} ui={props.ui} category="primary" />
+<ColorPalette category="primary" />
 
 ## الألوان الثانوية
 
 البرتقالي/الأحمر يلفت الانتباه. ويوفّر المقياس المحايد البنية الأكثر هدوءاً من حوله؛
 لذلك استخدم لون الإشارة بوعي، ودع الألوان الأساسية تنجز معظم المهمة.
 
-<ColorPalette brand={props.brand} ui={props.ui} category="secondary" />
+<ColorPalette category="secondary" />
 
 ## لوحة الألوان
 
@@ -23,7 +23,7 @@ description: عائلتا ألوان، ولون إشارة واحد، ونِسَ
 ثابتتان؛ والألوان المسماة أعلاه نقاطهما المرجعية. استخدم درجة مرقمة فقط عندما تحتاج
 الواجهة إلى تدرّج محسوب أفتح أو أغمق.
 
-<ColorScale brand={props.brand} ui={props.ui} />
+<ColorScale />
 
 ## التناسب
 
@@ -36,7 +36,6 @@ description: عائلتا ألوان، ولون إشارة واحد، ونِسَ
 <Grid cols={3}>
 
 <Panel
-  brand={props.brand}
   bg="white"
   ratio="4 / 3"
   caption="أبيض — السطح الافتراضي للمستندات والمنتج.">
@@ -44,7 +43,6 @@ description: عائلتا ألوان، ولون إشارة واحد، ونِسَ
 </Panel>
 
 <Panel
-  brand={props.brand}
   bg="black"
   ratio="4 / 3"
   caption="أسود — للحملات والتغليف وكل ما ينبغي أن يحمل رسالة واضحة.">
@@ -52,7 +50,6 @@ description: عائلتا ألوان، ولون إشارة واحد، ونِسَ
 </Panel>
 
 <Panel
-  brand={props.brand}
   bg="orange-500"
   ratio="4 / 3"
   caption="لون مميّز — ومضات قصيرة فقط، لا صفحة كاملة من النص المتدفق.">
@@ -66,11 +63,11 @@ description: عائلتا ألوان، ولون إشارة واحد، ونِسَ
 كل اقتران ألوان مُقاس. وأي قيمة أقل من 4.5:1 لا تحقق المتطلبات للنص الأساسي بالمقاسات
 المعتادة؛ والقيم المشطوبة غير متاحة للاستخدام.
 
-<Callout ui={props.ui} tone="note">
+<Callout tone="note">
 
 النص الكبير — 24 px فأعلى، أو 19 px عريضاً — يحتاج فقط إلى 3:1. وتحتاج الأيقونات
 وحدود حقول الإدخال أيضاً إلى 3:1 مقابل الخلفية الواقعة خلفها.
 
 </Callout>
 
-<ContrastMatrix brand={props.brand} ui={props.ui} />
+<ContrastMatrix />

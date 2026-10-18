@@ -11,7 +11,7 @@ description: عائلة واحدة، ووزنان ينجزان معظم المه
 استخدام عائلة واحدة في كل المواضع قيد مقصود؛ فهو يجعل التسلسل الهرمي نابعاً من الحجم
 والوزن والمساحة، لا من خط ثانٍ.
 
-<TypeSpecimen brand={props.brand} ui={props.ui} font="display" glyph="أبجد" />
+<TypeSpecimen font="display" glyph="أبجد" />
 
 ## الأوزان
 
@@ -19,11 +19,11 @@ description: عائلة واحدة، ووزنان ينجزان معظم المه
 للنص المتدفق، إذ يبدو هادئاً لا نحيفاً. أما الأوزان الوسطية فمخصّصة لأعمال الواجهة —
 التسميات، والأزرار، ورؤوس الجداول.
 
-<FontWeights brand={props.brand} font="display" />
+<FontWeights font="display" />
 
 ## مجموعة المحارف
 
-<Glyphs ui={props.ui} dir={props.dir} font="display" weight={400} />
+<Glyphs font="display" weight={400} />
 
 ## مقياس الأحجام
 
@@ -33,14 +33,14 @@ description: عائلة واحدة، ووزنان ينجزان معظم المه
 
 لكل درجة وظيفة. وإذا احتاج التصميم إلى حجم بين درجتين، فهو يحتاج إلى إحدى الدرجتين.
 
-<Callout ui={props.ui} tone="note" title="على الويب">
+<Callout tone="note" title="على الويب">
 
 تستخدم أحجام العرض والعناوين `clamp()`، لذا تتدرج مع إطار العرض بين حد أدنى وسقف أعلى.
 أما أنماط النص الأساسي والتعليقات فتبقى ثابتة لضمان الوضوح والاتساق عبر الواجهة.
 
 </Callout>
 
-<TypeScale brand={props.brand} ui={props.ui} />
+<TypeScale />
 
 ## قواعد التنضيد
 
@@ -52,9 +52,4 @@ description: عائلة واحدة، ووزنان ينجزان معظم المه
 استخدم صيغة الجملة في جميع المواضع. ويُحجز استخدام الأحرف الكبيرة للتسميات الصغيرة،
 حيث تُوسّع المسافات بينها للحفاظ على وضوحها.
 
-<TypeScale
-  brand={props.brand}
-  ui={props.ui}
-  only={["Display 2", "Title 1", "Body"]}
-  print={false}
-/>
+<TypeScale only={["Display 2", "Title 1", "Body"]} print={false} />

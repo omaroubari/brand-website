@@ -1,35 +1,92 @@
-/**
- * Public component barrel. The consuming app may re-export these components
- * from its MDX composition barrel and replace asset-bound components with
- * app-specific adapters.
- */
+/** Built-ins supplied centrally to MDX. */
+import { registerMdxComponent } from "../core/mdx.ts";
 
-export { default as Block } from "./content/Block.astro";
-export { default as Callout } from "./content/Callout.astro";
-export { default as Figure } from "./content/Figure.astro";
-export { default as Grid } from "./content/Grid.astro";
-export { default as Panel } from "./content/Panel.astro";
-export { default as SpecList } from "./content/SpecList.astro";
-export { default as Statement } from "./content/Statement.astro";
+import Block from "./content/Block.astro";
+import Callout from "./content/Callout.astro";
+import Figure from "./content/Figure.astro";
+import Grid from "./content/Grid.astro";
+import Panel from "./content/Panel.astro";
+import SpecList from "./content/SpecList.astro";
+import Statement from "./content/Statement.astro";
+import ColorPalette from "./brand/ColorPalette.astro";
+import ColorScale from "./brand/ColorScale.astro";
+import ColorSwatch from "./brand/ColorSwatch.astro";
+import ConstructionGrid from "./brand/ConstructionGrid.astro";
+import ContrastMatrix from "./brand/ContrastMatrix.astro";
+import Downloads from "./brand/Downloads.astro";
+import FontWeights from "./brand/FontWeights.astro";
+import Glyphs from "./brand/Glyphs.astro";
+import IconGrid from "./brand/IconGrid.astro";
+import LayoutGrid from "./brand/LayoutGrid.astro";
+import Logo from "./brand/Logo.astro";
+import LogoClearspace from "./brand/LogoClearspace.astro";
+import LogoColorways from "./brand/LogoColorways.astro";
+import LogoMisuse from "./brand/LogoMisuse.astro";
+import LogoScaling from "./brand/LogoScaling.astro";
+import PersonaCard from "./brand/PersonaCard.astro";
+import PhotoGrid from "./brand/PhotoGrid.astro";
+import ToneSliders from "./brand/ToneSliders.astro";
+import TypeScale from "./brand/TypeScale.astro";
+import TypeSpecimen from "./brand/TypeSpecimen.astro";
+import ValueGrid from "./brand/ValueGrid.astro";
 
-export { default as ColorPalette } from "./brand/ColorPalette.astro";
-export { default as ColorScale } from "./brand/ColorScale.astro";
-export { default as ColorSwatch } from "./brand/ColorSwatch.astro";
-export { default as ConstructionGrid } from "./brand/ConstructionGrid.astro";
-export { default as ContrastMatrix } from "./brand/ContrastMatrix.astro";
-export { default as Downloads } from "./brand/Downloads.astro";
-export { default as FontWeights } from "./brand/FontWeights.astro";
-export { default as Glyphs } from "./brand/Glyphs.astro";
-export { default as IconGrid } from "./brand/IconGrid.astro";
-export { default as LayoutGrid } from "./brand/LayoutGrid.astro";
-export { default as Logo } from "./brand/Logo.astro";
-export { default as LogoClearspace } from "./brand/LogoClearspace.astro";
-export { default as LogoColorways } from "./brand/LogoColorways.astro";
-export { default as LogoMisuse } from "./brand/LogoMisuse.astro";
-export { default as LogoScaling } from "./brand/LogoScaling.astro";
-export { default as PersonaCard } from "./brand/PersonaCard.astro";
-export { default as PhotoGrid } from "./brand/PhotoGrid.astro";
-export { default as ToneSliders } from "./brand/ToneSliders.astro";
-export { default as TypeScale } from "./brand/TypeScale.astro";
-export { default as TypeSpecimen } from "./brand/TypeSpecimen.astro";
-export { default as ValueGrid } from "./brand/ValueGrid.astro";
+// Register identity only; every built-in receives brand, ui, and dir.
+registerMdxComponent(Block);
+registerMdxComponent(Callout);
+registerMdxComponent(Figure);
+registerMdxComponent(Grid);
+registerMdxComponent(Panel);
+registerMdxComponent(SpecList);
+registerMdxComponent(Statement);
+registerMdxComponent(ColorPalette);
+registerMdxComponent(ColorScale);
+registerMdxComponent(ColorSwatch);
+registerMdxComponent(ConstructionGrid);
+registerMdxComponent(ContrastMatrix);
+registerMdxComponent(Downloads);
+registerMdxComponent(FontWeights);
+registerMdxComponent(Glyphs);
+registerMdxComponent(IconGrid);
+registerMdxComponent(LayoutGrid);
+registerMdxComponent(Logo);
+registerMdxComponent(LogoClearspace);
+registerMdxComponent(LogoColorways);
+registerMdxComponent(LogoMisuse);
+registerMdxComponent(LogoScaling);
+registerMdxComponent(PersonaCard);
+registerMdxComponent(PhotoGrid);
+registerMdxComponent(ToneSliders);
+registerMdxComponent(TypeScale);
+registerMdxComponent(TypeSpecimen);
+registerMdxComponent(ValueGrid);
+
+export {
+  Block,
+  Callout,
+  Figure,
+  Grid,
+  Panel,
+  SpecList,
+  Statement,
+  ColorPalette,
+  ColorScale,
+  ColorSwatch,
+  ConstructionGrid,
+  ContrastMatrix,
+  Downloads,
+  FontWeights,
+  Glyphs,
+  IconGrid,
+  LayoutGrid,
+  Logo,
+  LogoClearspace,
+  LogoColorways,
+  LogoMisuse,
+  LogoScaling,
+  PersonaCard,
+  PhotoGrid,
+  ToneSliders,
+  TypeScale,
+  TypeSpecimen,
+  ValueGrid,
+};
