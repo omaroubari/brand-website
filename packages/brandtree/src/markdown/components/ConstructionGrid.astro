@@ -1,0 +1,19 @@
+---
+import type { ConstructionGridProps as Props } from "../../components";
+import Logo from "./Logo.astro";
+const {
+  brand,
+  mark = "brandmark",
+  cols = 10,
+  rows = 10,
+  caption,
+} = Astro.props;
+---
+
+<Logo brand={brand} mark={mark} />
+<p>
+  {
+    caption ??
+      `Built on a ${cols} × ${rows} field grid. Every curve and terminal lands on a grid line — reproduce the mark from the supplied artwork, never redraw it.`
+  }
+</p>

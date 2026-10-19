@@ -1,0 +1,19 @@
+---
+import type { LogoColorwaysProps as Props } from "../../components";
+import { colorName, colorCss, resolveColor } from "../../brand/tokens";
+import Table from "./Table.astro";
+import Logo from "./Logo.astro";
+const { brand, mark = "logotype" } = Astro.props;
+const color = (ref: string) =>
+  `${colorName(brand, ref)} (${colorCss(resolveColor(brand, ref).value)})`;
+---
+
+<Logo brand={brand} mark={mark} />
+<Table
+  headers={[mark, "Foreground", "Background"]}
+  rows={brand.logo.colorways.map((way) => [
+    way.label ?? way.id,
+    color(way.fg),
+    color(way.bg),
+  ])}
+/>

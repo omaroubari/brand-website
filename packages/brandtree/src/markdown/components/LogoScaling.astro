@@ -1,0 +1,24 @@
+---
+import type { LogoScalingProps as Props } from "../../components";
+import { defaultLogoSizes } from "../../brand/selections";
+import Logo from "./Logo.astro";
+const { brand, mark = "logotype", sizes = defaultLogoSizes } = Astro.props;
+---
+
+<Logo brand={brand} mark={mark} />
+<p>
+  <strong>{mark}</strong>: {brand.logo.minSize.digital} / {
+    brand.logo.minSize.print
+  }
+</p>
+{
+  sizes && (
+    <ul>
+      {sizes.map((size) => (
+        <li>
+          {size.label} ({size.width})
+        </li>
+      ))}
+    </ul>
+  )
+}

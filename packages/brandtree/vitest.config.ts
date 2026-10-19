@@ -8,6 +8,9 @@ export default defineConfig({
     },
   },
   test: {
+    // Route cases spawn full Astro builds; keep their internal concurrency
+    // modest while Vitest continues to run separate test files in parallel.
+    maxConcurrency: 2,
     globalSetup: [
       fileURLToPath(new URL("./test/global-setup.ts", import.meta.url)),
     ],

@@ -23,6 +23,7 @@ import { catchAllPageTemplate } from "./templates/page.ts";
 import { indexPageTemplate } from "./templates/index.ts";
 import { buildRuntimeData } from "./build-runtime-data.ts";
 import { runtimeDataTypesTemplate } from "./templates/data-types.ts";
+import { markdownEndpointTemplate } from "./templates/markdown.ts";
 import { ogEndpointTemplate } from "./templates/og.ts";
 import { buildOgAssets } from "./build-og-assets.ts";
 
@@ -125,6 +126,10 @@ export const onRequest = defineMiddleware((_context, next) => next());
         }),
       ),
       write(join(srcDir, "pages", "[...slug].astro"), catchAllPageTemplate()),
+      write(
+        join(srcDir, "pages", "[...slug].md.ts"),
+        markdownEndpointTemplate(),
+      ),
       write(
         join(srcDir, "pages", "[...base]", "index.astro"),
         indexPageTemplate(),

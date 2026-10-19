@@ -1,0 +1,15 @@
+---
+import type { LogoClearspaceProps as Props } from "../../components";
+import Logo from "./Logo.astro";
+const { brand, ui, mark = "logotype" } = Astro.props;
+---
+
+<Logo brand={brand} mark={mark} />
+<p>
+  {
+    ui.logo.clearspaceInstruction
+      .replace("{unit}", brand.logo.clearspace.unit)
+      .replace("{mark}", mark)
+  }
+</p>
+<p>{brand.logo.clearspace.ratio} × {mark} height</p>

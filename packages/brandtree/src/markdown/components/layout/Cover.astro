@@ -1,0 +1,65 @@
+---
+import type { BrandtreeBaseComponentProps } from "../../../mdx/runtime";
+import type { Navigation as NavigationData } from "../../../core/types";
+import Navigation from "./Navigation.astro";
+import Downloads from "../Downloads.astro";
+interface Props extends BrandtreeBaseComponentProps {
+  navigation: NavigationData;
+}
+const { brand, ui, navigation } = Astro.props;
+const contact = brand.contact;
+---
+
+<h1>{brand.meta.documentTitle}</h1>
+<p>
+  <strong>{brand.meta.name}</strong>{
+    brand.meta.tagline && ` — ${brand.meta.tagline}`
+  }
+</p>
+<p>{brand.meta.description}</p>
+<p>{ui.brand.version} {brand.meta.version} · {brand.meta.year}</p>
+<h2>{ui.nav.contents}</h2>
+<Navigation items={navigation.sidebar} />
+{
+  (brand.downloads ?? []).length > 0 && (
+    <section>
+      <>
+        <h2>{ui.brand.assets}</h2>
+        <Downloads brand={brand} />
+      </>
+    </section>
+  )
+}
+<h2>{ui.brand.contact}</h2>
+<p>{ui.brand.contactLead}</p>
+<ul>
+  {
+    contact.email && (
+      <li>
+        <a href={`mailto:${contact.email}`}>{contact.email}</a>
+      </li>
+    )
+  }
+  {
+    contact.website && (
+      <li>
+        <a
+          href={
+            contact.website.startsWith("http")
+              ? contact.website
+              : `https://${contact.website}`
+          }>
+          {contact.website}
+        </a>
+      </li>
+    )
+  }
+  {contact.phone && <li>{contact.phone}</li>}
+  {
+    contact.socials?.map((social) => (
+      <li>
+        <a href={social.url}>{social.label}</a>
+      </li>
+    ))
+  }
+</ul>

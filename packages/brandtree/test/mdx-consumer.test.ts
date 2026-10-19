@@ -46,7 +46,7 @@ it("injects built-in props and preserves explicit custom props in generated dev,
   await writeFile(
     join(root, "components/Summary.astro"),
     `---
-import type { BrandtreeBaseComponentProps } from "brandtree/core/mdx";
+import type { BrandtreeBaseComponentProps } from "brandtree/mdx/runtime";
 interface Props extends BrandtreeBaseComponentProps { heading?: string }
 const { brand, ui, dir, heading = "Default summary" } = Astro.props;
 ---
@@ -66,7 +66,7 @@ const keys = Object.keys(Astro.props).join(",");
     join(root, "components/Badge.ts"),
     `
 import { createElement } from "react";
-import type { BrandtreeBaseComponentProps } from "brandtree/core/mdx";
+import type { BrandtreeBaseComponentProps } from "brandtree/mdx/runtime";
 export default function Badge({ui, dir}: Pick<BrandtreeBaseComponentProps, "ui" | "dir">) {
   return createElement("p", {"data-island": dir}, ui.typography.letters);
 }
@@ -81,10 +81,28 @@ import Identity from '../../components/Summary.astro';
 import Unrelated from '../../components/Unrelated.astro';
 import Partial from '../_partial.mdx';
 import Badge from '../../components/Badge.ts';
+import { ColorScale as Shades } from 'brandtree/components';
+import * as Brandtree from 'brandtree/components';
+
+<Block>
+<Fragment slot="copy">
+
+## Block heading
+
+</Fragment>
+<Fragment slot="content"><Statement>Block content survives Markdown export.</Statement></Fragment>
+<Fragment slot="note">Block note survives Markdown export.</Fragment>
+</Block>
 
 <ColorPalette />
 
 <ColorPalette category="primary" />
+
+<Shades only={[props.brand.colors.palette[0].id]} />
+
+<Brandtree.ToneSliders items={[{left: "Formal", right: "Casual", at: 35}]} />
+
+<Callout title="Export note">Keep **nested prose**.</Callout>
 
 <Panel><Identity brand={props.brand} ui={props.ui} dir={props.dir} /><Identity brand={props.brand} ui={props.ui} heading="Our identity" dir="ltr" /><Unrelated /><span data-native="clean" /></Panel>
 
@@ -107,6 +125,11 @@ import Badge from '../../components/Badge.ts';
     join(root, "content/en/collision.mdx"),
     `---\ntitle: Collision\n---\nimport ColorPalette from '../../components/Unrelated.astro';\n\n<ColorPalette />`,
   );
+  await mkdir(join(root, "content/en/nested"));
+  await writeFile(
+    join(root, "content/en/nested/plain.md"),
+    "---\ntitle: Plain Markdown\nsidebar:\n  hidden: true\n---\n## Details\n\nPlain **content**.\n",
+  );
   const project = await scanProject(root, { mode: "build" });
   await generateRuntime(project);
   // One process owns each Astro lifecycle. Captured dev HTML exercises the same
@@ -126,6 +149,9 @@ try {
   const response = await fetch('http://127.0.0.1:' + server.address.port + '/ar/fallback/');
   if (!response.ok) throw new Error('Dev request failed: ' + response.status + await response.text());
   await writeFile(new URL('./dev.html', root), await response.text());
+  const markdown = await fetch('http://127.0.0.1:' + server.address.port + '/ar/fallback.md');
+  if (!markdown.ok || !markdown.headers.get('content-type')?.startsWith('text/markdown')) throw new Error('Markdown dev request failed: ' + markdown.status + await markdown.text());
+  await writeFile(new URL('./dev.md', root), await markdown.text());
 } finally { await server.stop(); }
 await sync({root: root.pathname, logLevel: 'silent'});
 if (await check({root: root.pathname, tsconfig: new URL('./tsconfig.json', root).pathname, minimumFailingSeverity: 'error'})) throw new Error('Consumer check failed');
@@ -144,6 +170,44 @@ await build({root, logLevel: 'silent'});
   }
   const html = async (route: string) =>
     readFile(join(project.context.distDir!, route, "index.html"), "utf8");
+  const markdown = async (route: string) =>
+    readFile(join(project.context.distDir!, route + ".md"), "utf8");
+  const englishMarkdown = await markdown("en/guide");
+  const arabicMarkdown = await markdown("ar/guide");
+  const fallbackMarkdown = await markdown("ar/fallback");
+  const devMarkdown = await readFile(
+    join(project.context.outDir, "dev.md"),
+    "utf8",
+  );
+  for (const output of [
+    englishMarkdown,
+    arabicMarkdown,
+    fallbackMarkdown,
+    devMarkdown,
+  ]) {
+    expect(output).toContain("## Block heading");
+    expect(output).toContain("Block content survives Markdown export.");
+    expect(output).toContain("Block note survives Markdown export.");
+    expect(output).toContain("| ");
+    expect(output).toContain("Formal (0) → Casual (100): **35**");
+    expect(output).toContain("> **Export note**");
+    expect(output).toContain("**nested prose**");
+    expect(output).not.toMatch(/astro-island|<script|<style|<ColorPalette/);
+  }
+  expect(englishMarkdown).toContain("# Injection");
+  expect(arabicMarkdown).toContain(
+    resolveUIStrings("ar", { defaultLocale: "en" }).typography.letters,
+  );
+  expect(await markdown("ar")).toContain("هوية عربية");
+  expect(fallbackMarkdown).toContain("# Fallback");
+  expect(await markdown("en/nested/plain")).toContain("Plain **content**.");
+  expect(await markdown("en/collision")).toContain("Unrelated component");
+  expect(await markdown("en")).toContain(
+    "# " + config.brand.meta.documentTitle,
+  );
+  expect(await markdown("index")).toContain(
+    "# " + config.brand.meta.documentTitle,
+  );
   const english = await html("en/guide");
   const arabic = await html("ar/guide");
   const fallback = await html("ar/fallback");
@@ -166,7 +230,7 @@ await build({root, logLevel: 'silent'});
     );
     expect(page).not.toMatch(/\s(?:brand|ui)="\[object Object\]"/u);
     const palettes = page!.split("data-color-palette");
-    expect(palettes).toHaveLength(3);
+    expect(palettes).toHaveLength(4);
     const swatchCount = (part: string) =>
       (part.match(/data-copy-color=/g) ?? []).length;
     // Both default-all and category-filtered palettes render without author plumbing.

@@ -1,0 +1,19 @@
+---
+import type { AstroComponentFactory } from "astro/runtime/server/index.js";
+import type {
+  BrandtreeBaseComponentProps,
+  MdxRenderers,
+} from "../../../mdx/runtime.ts";
+import * as components from "../../../components";
+interface Props extends BrandtreeBaseComponentProps {
+  Content: AstroComponentFactory;
+  title: string;
+  description?: string;
+  componentRenderers: MdxRenderers;
+}
+const { Content, title, description, ...context } = Astro.props;
+---
+
+<h1>{title}</h1>
+{description && <p>{description}</p>}
+<Content {...context} components={components} />

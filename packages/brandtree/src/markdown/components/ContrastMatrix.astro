@@ -1,0 +1,25 @@
+---
+import type { ContrastMatrixProps as Props } from "../../components";
+import { contrastRatio, contrastGrade, resolveColor } from "../../brand/tokens";
+import Table from "./Table.astro";
+const { brand, ui, only, threshold = 4.5 } = Astro.props;
+const colors = only
+  ? brand.colors.swatches.filter((c) => only.includes(c.id))
+  : brand.colors.swatches;
+const rows = colors.map((fg) => [
+  fg.name,
+  ...colors.map((bg) => {
+    if (fg.color === bg.color) return ui.color.sameColorNoContrast;
+    const ratio = contrastRatio(
+      resolveColor(brand, fg.color).value,
+      resolveColor(brand, bg.color).value,
+    );
+    return `${ratio.toFixed(2)}:1 · ${contrastGrade(ratio)} · ${ratio >= threshold ? "≥" : "<"} ${threshold}:1`;
+  }),
+]);
+---
+
+<Table
+  headers={[`${ui.color.textOn} →`, ...colors.map((c) => c.name)]}
+  rows={rows}
+/>

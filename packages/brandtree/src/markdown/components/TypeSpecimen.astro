@@ -1,0 +1,22 @@
+---
+import type { TypeSpecimenProps as Props } from "../../components";
+const { brand, ui, font = "display", glyph = "Aa", weight = 500 } = Astro.props;
+const family = brand.typography.families.find((family) => family.id === font);
+---
+
+<p>
+  <strong
+    >{font === "display" ? ui.typography.display : ui.typography.text}:</strong
+  >
+  {family?.name ?? brand.typography[font]} · {ui.typography.weight}: {weight}
+</p>
+<p>{glyph}</p>
+{family?.foundry && <p>{family.foundry}</p>}
+{family?.note && <p>{family.note}</p>}
+{
+  family?.url && (
+    <p>
+      <a href={family.url}>{ui.brand.licenceAndDownloads}</a>
+    </p>
+  )
+}

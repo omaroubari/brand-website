@@ -370,3 +370,38 @@ Hidden pages do not participate. Previous/next pagination follows this order.
 The complete template-owned set of interface labels for one supported locale
 in `src/i18n/index.ts`. UI dictionaries translate navigation and controls;
 they do not contain client-authored brand content.
+
+## Brandtree component
+
+A framework-supplied element used to express brand guidance or arrange content
+within guidelines. It is distinct from an author-owned custom component.
+
+## Markdown representation
+
+The document structure and wording that convey a Brandtree component's content
+and guidance in Markdown. It preserves the relevant facts and rules independently
+of their visual presentation, such as a palette's colour values or a logo's
+clearance rule.
+
+## Markdown export
+
+The readable Markdown document for a guidelines page or cover, combining its
+prose with the Markdown representations of its components. It presents the same
+resolved content in a format suitable for use independently of the website.
+
+## Markdown renderer
+
+A component that provides a Markdown representation of a guidelines element.
+The existing visual component can serve this role when it already conveys the
+necessary content and guidance in document form.
+
+## Renderer map
+
+The association of guidelines components with the renderers selected for a page
+rendering. A Markdown export selects Markdown renderers; components without an
+alternative retain their existing renderer.
+
+## Render context
+
+The resolved brand, interface language, content direction and presentation
+choices for one rendering of a guidelines page or cover.

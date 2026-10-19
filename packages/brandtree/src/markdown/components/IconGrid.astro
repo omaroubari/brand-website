@@ -1,0 +1,27 @@
+---
+import type { IconGridProps as Props } from "../../components";
+const { icons: suppliedIcons, only, unit = 24, version = "v1.0" } = Astro.props;
+const all = [...suppliedIcons].sort((a, b) => a.name.localeCompare(b.name));
+const icons = only
+  ? only.map((name) => {
+      const match = all.find((icon) => icon.name === name);
+      if (!match)
+        throw new Error(
+          `[IconGrid] No icon named "${name}" in the supplied icon set.`,
+        );
+      return match;
+    })
+  : all;
+---
+
+<p>{unit} × {unit} · {version}</p>
+<ul>
+  {
+    icons.map((icon) => (
+      <li>
+        {icon.name.charAt(0).toUpperCase() +
+          icon.name.slice(1).replace(/-/g, " ")}
+      </li>
+    ))
+  }
+</ul>

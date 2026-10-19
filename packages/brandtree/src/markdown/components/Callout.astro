@@ -1,0 +1,8 @@
+---
+import type { CalloutProps as Props } from "../../components";
+const { ui, title, tone = "note" } = Astro.props;
+---
+
+<blockquote>
+  <p><strong>{title ?? ui.content[tone]}</strong></p><slot />
+</blockquote>

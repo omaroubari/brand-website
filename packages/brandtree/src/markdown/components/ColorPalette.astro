@@ -1,0 +1,12 @@
+---
+import type { ColorPaletteProps as Props } from "../../components";
+import { selectSwatches } from "../../brand/selections";
+import Swatch from "./ColorSwatch.astro";
+const { brand, ui, only, category, print = true } = Astro.props;
+---
+
+{
+  selectSwatches(brand, only, category).map((color) => (
+    <Swatch brand={brand} ui={ui} color={color} print={print} />
+  ))
+}

@@ -1,0 +1,28 @@
+---
+import type { ColorSwatchProps as Props } from "../../components";
+import {
+  resolveColor,
+  colorCss,
+  colorToHex,
+  colorToRgb,
+} from "../../brand/tokens";
+import Table from "./Table.astro";
+const { brand, ui, color, print = true } = Astro.props;
+const swatch =
+  brand.colors.swatches.find((item) => item.id === color.id) ?? color;
+const value = resolveColor(brand, swatch.color).value;
+const rows = [[value.space.toUpperCase(), colorCss(value)]];
+if (print) {
+  if (value.space !== "hex") rows.push([ui.color.hex, colorToHex(value)]);
+  rows.push([ui.color.rgb, colorToRgb(value).join(" ")]);
+  if (swatch.cmyk) rows.push([ui.color.cmyk, swatch.cmyk.join(" ")]);
+  if (swatch.pantone) rows.push([ui.color.pantone, swatch.pantone]);
+}
+---
+
+<section>
+  <h3>{swatch.name}</h3><p><code>{swatch.color}</code></p><Table
+    headers={[swatch.name, colorCss(value)]}
+    rows={rows}
+  />{swatch.usage && <p>{swatch.usage}</p>}
+</section>

@@ -5,8 +5,8 @@
     "src/cli/**/*.ts",
     "src/astro/prerender-deps.ts",
     "src/astro/dev-content-modules.ts",
-    "src/astro/mdx-props.ts",
-    "src/core/mdx.ts"
+    "src/mdx/index.ts",
+    "src/mdx/runtime.ts"
   ],
   "exclude": [],
   "compilerOptions": {
