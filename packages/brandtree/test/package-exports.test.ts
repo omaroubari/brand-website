@@ -104,9 +104,10 @@ test("public API declarations resolve outside the workspace", () => {
         "ES2022",
         "index.ts",
       ],
-      { cwd: directory, encoding: "utf8", stdio: "inherit" },
+      // This runs a full declaration check, which can exceed 5s on CI runners.
+      { cwd: directory, encoding: "utf8", stdio: "inherit", timeout: 25_000 },
     );
   } finally {
     rmSync(directory, { recursive: true, force: true });
   }
-});
+}, 30_000);

@@ -1,3 +1,4 @@
+import { stripVTControlCharacters } from "node:util";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
 
 vi.mock("../src/core/project-tree.ts", () => ({ scanProject: vi.fn() }));
@@ -32,6 +33,15 @@ beforeEach(() => {
 });
 afterEach(() => vi.restoreAllMocks());
 
+// Assert diagnostic text independently of terminal colour support and writes.
+const stderrText = () =>
+  stripVTControlCharacters(
+    vi
+      .mocked(process.stderr.write)
+      .mock.calls.map(([chunk]) => String(chunk))
+      .join(""),
+  );
+
 it.each([
   { strict: false, severity: "error", aborts: false },
   { strict: true, severity: "error", aborts: true },
@@ -54,21 +64,17 @@ it.each([
       expect(generateRuntime).toHaveBeenCalledWith(project);
       expect(process.exit).not.toHaveBeenCalled();
     }
-    expect(process.stderr.write).toHaveBeenCalledWith(
-      expect.stringContaining("INVALID_META Invalid metadata"),
-    );
+    const stderr = stderrText();
+    expect(stderr).toContain("INVALID_META Invalid metadata");
+    expect(stderr).toContain("at content/page.mdx");
     if (severity === "error") {
-      expect(process.stderr.write).toHaveBeenCalledWith(
-        expect.stringContaining("Dropped 1 content entry from the page graph."),
-      );
+      expect(stderr).toContain("Dropped 1 content entry from the page graph.");
     }
     if (severity === "error") {
-      expect(process.stderr.write).toHaveBeenCalledWith(
-        expect.stringContaining(
-          aborts
-            ? "Preparation aborted: diagnostics contain errors and strict mode is enabled."
-            : "Continuing preparation with errors because strict mode is disabled.",
-        ),
+      expect(stderr).toContain(
+        aborts
+          ? "Preparation aborted: diagnostics contain errors and strict mode is enabled."
+          : "Continuing preparation with errors because strict mode is disabled.",
       );
     }
     expect(process.stdout.write).not.toHaveBeenCalled();
@@ -78,9 +84,7 @@ it.each([
 it("reports thrown BrandtreeError diagnostics to stderr before aborting", async () => {
   vi.mocked(scanProject).mockRejectedValue(new BrandtreeError(diagnostic));
   await expect(prepareProject({ root: "/project" })).rejects.toBe(exitError);
-  expect(process.stderr.write).toHaveBeenCalledWith(
-    expect.stringContaining("INVALID_META Invalid metadata"),
-  );
+  expect(stderrText()).toContain("INVALID_META Invalid metadata");
   expect(process.stdout.write).not.toHaveBeenCalled();
   expect(process.exit).toHaveBeenCalledWith(1);
   expect(generateRuntime).not.toHaveBeenCalled();
