@@ -46,7 +46,7 @@ it("injects built-in props and preserves explicit custom props in generated dev,
   await writeFile(
     join(root, "components/Summary.astro"),
     `---
-import type { BrandtreeBaseComponentProps } from "brandtree/mdx/runtime";
+import type { BrandtreeBaseComponentProps } from "brandtree/components";
 interface Props extends BrandtreeBaseComponentProps { heading?: string }
 const { brand, ui, dir, heading = "Default summary" } = Astro.props;
 ---
@@ -66,7 +66,7 @@ const keys = Object.keys(Astro.props).join(",");
     join(root, "components/Badge.ts"),
     `
 import { createElement } from "react";
-import type { BrandtreeBaseComponentProps } from "brandtree/mdx/runtime";
+import type { BrandtreeBaseComponentProps } from "brandtree/components";
 export default function Badge({ui, dir}: Pick<BrandtreeBaseComponentProps, "ui" | "dir">) {
   return createElement("p", {"data-island": dir}, ui.typography.letters);
 }
@@ -200,7 +200,9 @@ await build({root, logLevel: 'silent'});
   );
   expect(await markdown("ar")).toContain("هوية عربية");
   expect(fallbackMarkdown).toContain("# Fallback");
-  expect(await markdown("en/nested/plain")).toContain("Plain **content**.");
+  const plainMarkdown = await markdown("en/nested/plain");
+  expect(plainMarkdown).toContain("# Plain Markdown");
+  expect(plainMarkdown).toContain("Plain **content**.");
   expect(await markdown("en/collision")).toContain("Unrelated component");
   expect(await markdown("en")).toContain(
     "# " + config.brand.meta.documentTitle,

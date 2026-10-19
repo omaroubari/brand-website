@@ -92,3 +92,4 @@ export {
 };
 
 export type * from "./props.ts";
+export type { BrandtreeBaseComponentProps } from "./base-props.ts";

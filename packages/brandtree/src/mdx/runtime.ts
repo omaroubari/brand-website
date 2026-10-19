@@ -1,12 +1,5 @@
-import type { BrandConfig } from "../brand/schema.ts";
-import type { UIStrings } from "../core/i18n-ui.ts";
+import type { BrandtreeBaseComponentProps } from "../components/base-props.ts";
 
-/** Values resolved by the route, never by an implementation component. */
-export interface BrandtreeBaseComponentProps {
-  brand: BrandConfig;
-  ui: UIStrings;
-  dir: "ltr" | "rtl";
-}
 // Track built-in identities only, never page values or per-component prop lists.
 const builtins = new WeakSet<object>();
 

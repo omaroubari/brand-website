@@ -43,10 +43,10 @@ export const GET: APIRoute<MarkdownProps> = async ({ props, request }) => {
   if (page) {
     const entry = await getEntry((page.collection ?? "docs") as CollectionKey, page.entryId ?? page.source.ref);
     if (!entry) return new Response(null, { status: 404 });
-    const { Content } = await render(entry);
+    const { Content: MdxContent } = await render(entry);
     html = await container.renderToString(Content, {
       request,
-      props: { Content, title: page.title, description: page.description, brand, ui, dir, componentRenderers: createMarkdownRenderers() },
+      props: { Content: MdxContent, title: page.title, description: page.description, brand, ui, dir, componentRenderers: createMarkdownRenderers() },
     });
   } else {
     html = await container.renderToString(Cover, {
