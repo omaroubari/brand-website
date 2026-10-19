@@ -54,7 +54,7 @@
       "default": "./src/index.ts"
     },
     "./brand": "./src/brand/index.ts",
-    "./components": "./src/components/mdx.ts",
+    "./components": "./src/components/index.ts",
     "./components/*": "./src/components/*",
     "./core/*": "./src/core/*.ts",
     "./runtime": "./src/runtime.ts",

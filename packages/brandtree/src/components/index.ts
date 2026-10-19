@@ -8,27 +8,27 @@ import Grid from "./content/Grid.astro";
 import Panel from "./content/Panel.astro";
 import SpecList from "./content/SpecList.astro";
 import Statement from "./content/Statement.astro";
-import ColorPalette from "./brand/ColorPalette.astro";
-import ColorScale from "./brand/ColorScale.astro";
-import ColorSwatch from "./brand/ColorSwatch.astro";
-import ConstructionGrid from "./brand/ConstructionGrid.astro";
-import ContrastMatrix from "./brand/ContrastMatrix.astro";
-import Downloads from "./brand/Downloads.astro";
-import FontWeights from "./brand/FontWeights.astro";
-import Glyphs from "./brand/Glyphs.astro";
-import IconGrid from "./brand/IconGrid.astro";
-import LayoutGrid from "./brand/LayoutGrid.astro";
-import Logo from "./brand/Logo.astro";
-import LogoClearspace from "./brand/LogoClearspace.astro";
-import LogoColorways from "./brand/LogoColorways.astro";
-import LogoMisuse from "./brand/LogoMisuse.astro";
-import LogoScaling from "./brand/LogoScaling.astro";
-import PersonaCard from "./brand/PersonaCard.astro";
-import PhotoGrid from "./brand/PhotoGrid.astro";
-import ToneSliders from "./brand/ToneSliders.astro";
-import TypeScale from "./brand/TypeScale.astro";
-import TypeSpecimen from "./brand/TypeSpecimen.astro";
-import ValueGrid from "./brand/ValueGrid.astro";
+import ColorPalette from "./content/ColorPalette.astro";
+import ColorScale from "./content/ColorScale.astro";
+import ColorSwatch from "./content/ColorSwatch.astro";
+import ConstructionGrid from "./content/ConstructionGrid.astro";
+import ContrastMatrix from "./content/ContrastMatrix.astro";
+import Downloads from "./content/Downloads.astro";
+import FontWeights from "./content/FontWeights.astro";
+import Glyphs from "./content/Glyphs.astro";
+import IconGrid from "./content/IconGrid.astro";
+import LayoutGrid from "./content/LayoutGrid.astro";
+import Logo from "./content/Logo.astro";
+import LogoClearspace from "./content/LogoClearspace.astro";
+import LogoColorways from "./content/LogoColorways.astro";
+import LogoMisuse from "./content/LogoMisuse.astro";
+import LogoScaling from "./content/LogoScaling.astro";
+import PersonaCard from "./content/PersonaCard.astro";
+import PhotoGrid from "./content/PhotoGrid.astro";
+import ToneSliders from "./content/ToneSliders.astro";
+import TypeScale from "./content/TypeScale.astro";
+import TypeSpecimen from "./content/TypeSpecimen.astro";
+import ValueGrid from "./content/ValueGrid.astro";
 
 // Register identity only; every built-in receives brand, ui, and dir.
 registerMdxComponent(Block);
@@ -90,3 +90,5 @@ export {
   TypeSpecimen,
   ValueGrid,
 };
+
+export type * from "./props.ts";
