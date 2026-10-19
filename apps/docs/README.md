@@ -14,13 +14,14 @@ pnpm docs:dev
 The app uses port 4323 so it can run alongside the brand site. Node.js 22.19 or
 newer is required by Blume.
 
-| Command                         | Purpose                                       |
-| ------------------------------- | --------------------------------------------- |
-| `pnpm docs:dev`                 | Start the docs app with hot reload.           |
-| `pnpm docs:build`               | Build the static site into `apps/docs/dist/`. |
-| `pnpm docs:preview`             | Preview the production build.                 |
-| `pnpm --filter docs check`      | Check types and templates.                    |
-| `pnpm --filter docs run doctor` | Diagnose config and content.                  |
+| Command                         | Purpose                                                               |
+| ------------------------------- | --------------------------------------------------------------------- |
+| `pnpm docs:dev`                 | Start the docs app with hot reload.                                   |
+| `pnpm docs:build`               | Build the Cloudflare Worker and static assets into `apps/docs/dist/`. |
+| `pnpm docs:preview`             | Preview the production build.                                         |
+| `pnpm docs:deploy`              | Build the framework and docs, then deploy to Cloudflare Workers.      |
+| `pnpm --filter docs check`      | Check types and templates.                                            |
+| `pnpm --filter docs run doctor` | Diagnose config and content.                                          |
 
 Add pages under `docs/` using Markdown or MDX with `title` and `description`
 frontmatter. The explicit sidebar in `blume.config.ts` places pages in the author workflow;
@@ -30,6 +31,44 @@ in `blume.config.ts`. The root `pnpm check` includes this app automatically.
 `--prefer-offline` reuses pnpm's package cache while still downloading missing
 packages. Four concurrent requests reduce contention on a slow connection;
 the timeout allows ten minutes per request, with up to five retries.
+
+## Cloudflare Workers
+
+The docs use Blume's `cloudflare()` deployment adapter. Author deployment
+settings in `blume.config.ts` and `wrangler.jsonc`, never in `.blume/` or `dist/`.
+The adapter and Wrangler are direct dev dependencies of this workspace;
+`pnpm-workspace.yaml` already allows the `esbuild` and `workerd` install scripts.
+
+The production origin is `https://brandtree.dev`, configured in
+`blume.config.ts` for canonical links and the sitemap. To verify the build locally:
+
+```sh
+pnpm docs:build
+pnpm --filter docs exec wrangler deploy --dry-run
+pnpm --filter docs exec wrangler dev --port 8787
+```
+
+The build writes static assets to `dist/client/`, the Worker and merged config
+to `dist/server/`, and a `.wrangler/deploy/config.json` pointer. Run Wrangler
+from the docs workspace so it follows that pointer. The dry run should report
+`dist/server/wrangler.json` as its configuration. Rebuild after changing the
+author-owned Wrangler config.
+
+For a local smoke check, request `http://localhost:8787/quickstart` normally,
+then with `Accept: text/markdown`; expect HTML and Markdown respectively.
+An unknown page should return 404. Live component previews under `/blume-examples/`
+must also load.
+
+Authenticate once with `pnpm --filter docs exec wrangler login`, then deploy
+from the repository root with `pnpm docs:deploy`.
+The Worker is named `brandtree-docs`, with `brandtree.dev` configured as its
+custom domain in `wrangler.jsonc`. The domain's zone must be active in the
+Cloudflare account used to deploy.
+
+For Cloudflare Workers Builds, use the repository root as the build root,
+`pnpm docs:build` as the build command, and
+`pnpm --filter docs exec wrangler deploy` as the deploy command. Set build
+variable `PNPM_VERSION=11.18.0`, and use Node.js 22.19 or newer.
 
 ## Author guide coverage
 

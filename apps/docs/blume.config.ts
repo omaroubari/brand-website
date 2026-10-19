@@ -1,7 +1,9 @@
 import { defineConfig } from "blume";
+import { cloudflare } from "blume/deploy";
 
 export default defineConfig({
   title: "Brandtree Docs",
+  deployment: cloudflare({ site: "https://brandtree.dev" }),
   logo: { image: "/logo.svg", text: "" },
   description: "Build and maintain brand guidelines with Brandtree.",
   theme: {
