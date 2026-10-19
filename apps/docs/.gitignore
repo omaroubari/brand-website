@@ -3,3 +3,4 @@ node_modules/
 .blume-verify/
 dist/
 .env.local
+.wrangler/

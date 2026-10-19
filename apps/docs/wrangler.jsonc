@@ -1,0 +1,13 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "brandtree-docs",
+  "routes": [{ "pattern": "brandtree.dev", "custom_domain": true }],
+  // Keep within the runtime supported by the workspace's pinned Wrangler.
+  "compatibility_date": "2026-08-02",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "binding": "ASSETS",
+    "html_handling": "drop-trailing-slash",
+    "not_found_handling": "404-page",
+  },
+}

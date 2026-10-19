@@ -10,18 +10,21 @@
     "dev": "blume dev --port 4323",
     "build": "blume build",
     "preview": "blume preview --port 4323",
+    "deploy": "blume build && wrangler deploy",
     "check": "blume check --strict",
     "doctor": "blume doctor"
   },
   "dependencies": {
-    "blume": "^2.2.3",
     "astro": "^7.1.6",
+    "blume": "^2.2.3",
     "brandtree": "workspace:*",
     "react": "^19.2.8",
     "react-dom": "^19.2.8"
   },
   "devDependencies": {
+    "@astrojs/cloudflare": "14.1.7",
     "@types/react": "^19.2.18",
-    "@types/react-dom": "^19.2.4"
+    "@types/react-dom": "^19.2.4",
+    "wrangler": "4.118.0"
   }
 }

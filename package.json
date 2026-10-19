@@ -7,9 +7,6 @@
     "node": ">=22.12.0"
   },
   "scripts": {
-    "docs:dev": "pnpm --filter brandtree build && pnpm --filter docs dev",
-    "docs:build": "pnpm --filter brandtree build && pnpm --filter docs build",
-    "docs:preview": "pnpm --filter docs preview",
     "sandbox:pack": "pnpm --filter brandtree pack --out ./apps/sandbox/brandtree.tgz",
     "dev": "pnpm --filter brandtree build && pnpm --filter web dev",
     "build": "pnpm --filter brandtree build && pnpm --filter web build",
@@ -18,7 +15,6 @@
     "check": "pnpm --filter brandtree build && pnpm -r --filter=!brandtree-sandbox --if-present check",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "deploy": "pnpm --filter brandtree build && pnpm --filter web deploy",
     "changeset": "changeset",
     "version-packages": "changeset version && pnpm install --lockfile-only",
     "release": "pnpm --filter brandtree build && changeset publish"
