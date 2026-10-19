@@ -1,0 +1,30 @@
+---
+import type { LayoutGridProps as Props } from "../../components";
+import Table from "./Table.astro";
+const {
+  label,
+  columns = 12,
+  gutter = "30px",
+  margin = "100px",
+  ratio = "16 / 9",
+  specs = [],
+} = Astro.props;
+---
+
+{
+  label && (
+    <p>
+      <strong>{label}</strong>
+    </p>
+  )
+}
+<Table
+  headers={["Layout", "Value"]}
+  rows={[
+    ["Columns", columns],
+    ["Gutter", gutter],
+    ["Margin", margin],
+    ["Aspect ratio", ratio],
+    ...specs.map((spec) => [spec.term, spec.value]),
+  ]}
+/>

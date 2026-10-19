@@ -338,7 +338,7 @@ receive framework values through ordinary props:
 
 ```astro
 ---
-import type { BrandtreeBaseComponentProps } from "brandtree/core/mdx";
+import type { BrandtreeBaseComponentProps } from "brandtree/components";
 interface Props extends Pick<BrandtreeBaseComponentProps, "brand" | "ui"> {
   heading?: string;
 }

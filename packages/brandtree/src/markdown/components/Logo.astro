@@ -1,0 +1,12 @@
+---
+import type { LogoProps as Props } from "../../components";
+const { brand, mark = "logotype", on = "auto", tint } = Astro.props;
+const artwork = brand.logo[mark];
+---
+
+<figure>
+  <img
+    src={on === "dark" ? artwork.onDark : artwork.onLight}
+    alt={artwork.altText ?? `${brand.meta.name} ${mark}`}
+  />{tint && <figcaption>{tint}</figcaption>}
+</figure>

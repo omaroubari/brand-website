@@ -1,5 +1,5 @@
 /** Built-ins supplied centrally to MDX. */
-import { registerMdxComponent } from "../core/mdx.ts";
+import { registerMdxComponent } from "../mdx/runtime.ts";
 
 import Block from "./content/Block.astro";
 import Callout from "./content/Callout.astro";
@@ -92,3 +92,4 @@ export {
 };
 
 export type * from "./props.ts";
+export type { BrandtreeBaseComponentProps } from "./base-props.ts";

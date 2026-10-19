@@ -28,7 +28,7 @@ export const astroConfigTemplate = ({
   // Sätteri currently ignores recma plugins. Only MDX needs Unified; plain
   // Markdown keeps Astro's default processor.
   const integrations = [
-    `mdx({ processor: unified(), recmaPlugins: [injectBrandtreeBaseProps] })`,
+    `mdx({ processor: unified(), recmaPlugins: [transformBrandtreeMdxCalls] })`,
     `react()`,
   ];
 
@@ -57,7 +57,7 @@ export const astroConfigTemplate = ({
 import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
 import { devContentModules } from 'brandtree/astro/dev-content-modules';
-import { injectBrandtreeBaseProps } from 'brandtree/astro/mdx-props';
+import { transformBrandtreeMdxCalls } from 'brandtree/mdx';
 import { prerenderDeps } from 'brandtree/astro/prerender-deps';
 
 // Resolve framework-owned dependencies from the installed Brandtree package.

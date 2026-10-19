@@ -1,0 +1,43 @@
+---
+import type { TypeScaleProps as Props } from "../../components";
+import { selectTypeStyles } from "../../brand/selections";
+import Table from "./Table.astro";
+const { brand, ui, only, print = true, sample } = Astro.props;
+const headers = [
+  ui.typography.text,
+  ui.typography.size,
+  ui.typography.leading,
+  ui.typography.tracking,
+  ui.typography.weight,
+];
+if (print) headers.push(ui.typography.print);
+const rows = selectTypeStyles(brand, only).map((step) => {
+  const row: (string | number)[] = [
+    step.name,
+    step.size,
+    step.lineHeight,
+    step.tracking,
+    step.weight ?? 400,
+  ];
+  if (print)
+    row.push(
+      step.print
+        ? `${step.print.size} / ${step.print.leading} / ${step.print.tracking}`
+        : "—",
+    );
+  return row;
+});
+---
+
+<Table headers={headers} rows={rows} />
+{
+  selectTypeStyles(brand, only).map((step) => (
+    <section>
+      <p>
+        <strong>{step.name}</strong>
+        {step.role && ` — ${step.role}`}
+      </p>
+      {(step.sample ?? sample) && <p>{step.sample ?? sample}</p>}
+    </section>
+  ))
+}

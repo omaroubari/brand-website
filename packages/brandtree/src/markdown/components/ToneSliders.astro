@@ -1,0 +1,14 @@
+---
+import type { ToneSlidersProps as Props } from "../../components";
+const { items } = Astro.props;
+---
+
+<ul>
+  {
+    items.map((item) => (
+      <li>
+        {item.left} (0) → {item.right} (100): <strong>{item.at}</strong>
+      </li>
+    ))
+  }
+</ul>

@@ -111,7 +111,7 @@ into every built-in as defaults at the authoring boundary:
 Built-in MDX components are supplied centrally. Custom components use explicit
 MDX imports; there is no global custom registration or built-in override API.
 Custom components receive framework values explicitly from the MDX page's
-`props` object. `brandtree/core/mdx` exports the shared `BrandtreeBaseComponentProps` type.
+`props` object. `brandtree/components` exports the shared `BrandtreeBaseComponentProps` type.
 Implementation props stay required; the compiler supplies defaults only for
 built-ins in MDX. Recma operates on resolved JSX-runtime component bindings.
 Built-ins are registered by identity, so aliases work without injecting

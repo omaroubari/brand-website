@@ -19,10 +19,10 @@ function walk(node: Node, visit: (node: Node) => void): void {
 }
 
 /**
- * MDX plugin that supplies page-level `brand`, `ui`, and `dir` props to built-in
- * components while allowing authors to override them.
+ * Route compiled MDX JSX calls through the shared runtime helper for component
+ * resolution and base-prop injection, preserving authored overrides.
  */
-export function injectBrandtreeBaseProps() {
+export function transformBrandtreeMdxCalls() {
   return (tree: Program): void => {
     const names = new Set<string>();
     walk(tree, (node) => {
@@ -34,7 +34,7 @@ export function injectBrandtreeBaseProps() {
       names.add(name);
       return identifier(name);
     };
-    const inject = fresh("_injectMdxProps");
+    const render = fresh("_renderMdxComponent");
     const contentProps = fresh("_contentProps");
     const runtimes = new Set<string>();
     for (const statement of tree.body) {
@@ -81,21 +81,19 @@ export function injectBrandtreeBaseProps() {
         !component ||
         !authorProps ||
         component.type === "SpreadElement" ||
-        authorProps.type === "SpreadElement" ||
-        component.type !== "Identifier"
+        authorProps.type === "SpreadElement"
       ) {
         return;
       }
-      node.arguments[1] = {
-        type: "CallExpression",
-        callee: inject,
-        optional: false,
-        arguments: [
-          component as Expression,
-          authorProps as Expression,
-          contentProps,
-        ],
-      };
+      const runtime = node.callee;
+      node.callee = render;
+      node.arguments = [
+        runtime,
+        component as Expression,
+        authorProps as Expression,
+        contentProps,
+        ...node.arguments.slice(2),
+      ];
     });
     // Capture at the content root: a nested callback named `props` must not
     // shadow the route's values. No page data is stored at module scope.
@@ -113,13 +111,13 @@ export function injectBrandtreeBaseProps() {
       // directory (which may have a different installed Brandtree version).
       source: {
         type: "Literal",
-        value: fileURLToPath(import.meta.resolve("brandtree/core/mdx")),
+        value: fileURLToPath(import.meta.resolve("brandtree/mdx/runtime")),
       },
       specifiers: [
         {
           type: "ImportSpecifier",
-          imported: identifier("injectMdxProps"),
-          local: inject,
+          imported: identifier("renderMdxComponent"),
+          local: render,
         },
       ],
     });

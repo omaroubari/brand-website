@@ -52,6 +52,8 @@ Before the first npm release, use the local development setup below.
   it before rendering, with editor autocomplete and checks for invalid references.
 - **Markdown and MDX authoring.** Organize pages into nested groups, with navigation,
   page contents, and previous/next links derived from your content.
+- **Markdown exports.** Access pages through `.md` endpoints, with built-in brand
+  exhibits represented as readable tables, rules, and links.
 - **Brand exhibits.** Show palettes, colour scales, contrast ratios, type specimens,
   font weights, logo variations, clear space, icons, photography, and layouts.
 - **Light and dark themes.** Theme styles work without JavaScript, including the

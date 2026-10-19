@@ -1,0 +1,14 @@
+---
+import type { SpecListProps as Props } from "../../components";
+const { items } = Astro.props;
+---
+
+<ul>
+  {
+    items.map((item) => (
+      <li>
+        <strong>{item.term}:</strong> {item.value}
+      </li>
+    ))
+  }
+</ul>

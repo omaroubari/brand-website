@@ -1,0 +1,24 @@
+---
+import type { ColorScaleProps as Props } from "../../components";
+import { selectColorFamilies } from "../../brand/selections";
+import { colorCss, shadeSteps } from "../../brand/tokens";
+import Table from "./Table.astro";
+const { brand, ui, only } = Astro.props;
+---
+
+{
+  selectColorFamilies(brand, only).map((family) => (
+    <section>
+      <>
+        <h3>{family.name}</h3>
+        <Table
+          headers={[ui.color.shade, family.name]}
+          rows={shadeSteps.map((step) => [
+            `${family.id}-${step}`,
+            colorCss(family.shades[step]),
+          ])}
+        />
+      </>
+    </section>
+  ))
+}

@@ -1,0 +1,22 @@
+---
+import type { NavNode } from "../../../core/types";
+interface Props {
+  items: NavNode[];
+}
+const { items } = Astro.props;
+---
+
+<ul>
+  {
+    items.map((item) => (
+      <li>
+        {item.route ? (
+          <a href={item.route}>{item.label}</a>
+        ) : (
+          <strong>{item.label}</strong>
+        )}
+        {item.kind === "group" && <Astro.self items={item.children} />}
+      </li>
+    ))
+  }
+</ul>

@@ -1,0 +1,23 @@
+---
+import type { DownloadsProps as Props } from "../../components";
+const { brand, items: configuredItems = brand.downloads ?? [] } = Astro.props;
+const items = configuredItems.map(
+  (item) =>
+    brand.downloads?.find((download) =>
+      item.id ? download.id === item.id : download.href === item.href,
+    ) ?? item,
+);
+---
+
+<ul>
+  {
+    items.map((item) => (
+      <li>
+        <a href={item.href}>{item.label}</a>
+        {[item.format, item.size].filter(Boolean).length > 0 &&
+          ` (${[item.format, item.size].filter(Boolean).join(", ")})`}
+        {item.note && <p>{item.note}</p>}
+      </li>
+    ))
+  }
+</ul>

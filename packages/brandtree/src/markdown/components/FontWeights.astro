@@ -1,0 +1,24 @@
+---
+import type { FontWeightsProps as Props } from "../../components";
+const { brand, font = "display", sample } = Astro.props;
+---
+
+<p>
+  <strong
+    >{
+      brand.typography.families.find((family) => family.id === font)?.name ??
+        brand.typography[font]
+    }</strong
+  >
+</p>
+<ul>
+  {
+    brand.typography.weights.map((weight) => (
+      <li>
+        {weight.name}: <code>{weight.weight}</code>
+        {weight.italic && " (italic)"}
+        {sample && ` — ${sample}`}
+      </li>
+    ))
+  }
+</ul>

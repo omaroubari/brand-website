@@ -4,8 +4,8 @@ import { mkdtemp, mkdir, rm, writeFile } from "node:fs/promises";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { join } from "node:path";
 import type { Program } from "estree";
-import { injectBrandtreeBaseProps } from "../src/astro/mdx-props";
-import { registerMdxComponent, injectMdxProps } from "../src/core/mdx";
+import { transformBrandtreeMdxCalls } from "brandtree/mdx";
+import { registerMdxComponent, injectMdxProps } from "../src/mdx/runtime";
 
 // Compile with the same MDX version owned by the Astro integration.
 const require = createRequire(import.meta.resolve("@astrojs/mdx"));
@@ -46,7 +46,7 @@ async function compileFixture(source: string, inject = true) {
   roots.push(root);
   await writeFile(
     join(root, "custom.mjs"),
-    `import { registerMdxComponent } from ${JSON.stringify(new URL("../src/core/mdx.ts", import.meta.url).href)};
+    `import { registerMdxComponent } from ${JSON.stringify(new URL("../src/mdx/runtime.ts", import.meta.url).href)};
 export default function Builtin() {};
 registerMdxComponent(Builtin);`,
   );
@@ -62,14 +62,17 @@ registerMdxComponent(Builtin);`,
   const compiled = await compile(source, {
     jsxImportSource: "astro",
     recmaPlugins: [
-      ...(inject ? [injectBrandtreeBaseProps] : []),
+      ...(inject ? [transformBrandtreeMdxCalls] : []),
       () => (tree: Program) => {
         for (const node of tree.body) {
           if (node.type !== "ImportDeclaration") continue;
           if (node.source.value === "astro/jsx-runtime")
             node.source.value = runtimeUrl;
-          if (String(node.source.value).endsWith("/src/core/mdx.ts"))
-            node.source.value = new URL("../src/core/mdx.ts", import.meta.url).href;
+          if (String(node.source.value).endsWith("/src/mdx/runtime.ts"))
+            node.source.value = new URL(
+              "../src/mdx/runtime.ts",
+              import.meta.url,
+            ).href;
         }
       },
     ],
@@ -160,4 +163,36 @@ export const catalog = { get Item() { reads++; return function Item() {}; } };
   baseline.default({});
   injected.default({});
   expect(injected.reads).toBe(baseline.reads);
+});
+
+it("selects per-render alternatives through imports, namespace getters and dynamic expressions", async () => {
+  const { module } = await compileFixture(`
+import Summary from './custom.mjs';
+
+export let reads = 0;
+export const catalog = { get Item() { reads++; return Summary; } };
+
+<Summary heading={props.heading} {...{dir: 'rtl'}} />
+
+<catalog.Item />
+`);
+  const original = module.catalog.Item;
+  const replacement = () => {};
+  const reads = module.reads;
+  const output = module.default({
+    brand: { name: "Brand" },
+    heading: "Computed",
+    componentRenderers: new Map([[original, replacement]]),
+  });
+  const children = output.props.children.filter(
+    (child: unknown) => typeof child !== "string",
+  );
+  expect(children[0].component).toBe(replacement);
+  expect(children[0].props.heading).toBe("Computed");
+  expect(children[0].props.dir).toBe("rtl");
+  expect(children[1].component).toBe(replacement);
+  // MDX also reads the getter while checking that the member exists.
+  expect(module.reads - reads).toBe(2);
+  const normal = module.default({});
+  expect(normal.props.children[0].component).toBe(original);
 });
