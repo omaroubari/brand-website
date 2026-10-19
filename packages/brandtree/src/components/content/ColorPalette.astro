@@ -1,4 +1,5 @@
 ---
+import { selectSwatches } from "../../brand/selections";
 import type { BrandConfig, BrandSwatch } from "../../brand/schema";
 import type { UIStrings } from "../../core/i18n-ui";
 import ColorSwatch from "./ColorSwatch.astro";
@@ -24,15 +25,7 @@ const {
   class: className,
 } = Astro.props;
 
-const colors = only
-  ? only.map((id) => {
-      const match = brand.colors.swatches.find((c) => c.id === id);
-      if (!match) throw new Error(`[ColorPalette] Unknown colour id "${id}"`);
-      return match;
-    })
-  : category
-    ? brand.colors.swatches.filter((color) => color.category === category)
-    : brand.colors.swatches;
+const colors = selectSwatches(brand, only, category);
 ---
 
 <div class:list={["palette", "escape", className]} data-color-palette>

@@ -1,4 +1,5 @@
 ---
+import { selectTypeStyles } from "../../brand/selections";
 import type { BrandConfig } from "../../brand/schema";
 import type { UIStrings } from "../../core/i18n-ui";
 
@@ -23,15 +24,7 @@ const {
   class: className,
 } = Astro.props;
 
-const steps = only
-  ? only.map((name) => {
-      const match = brand.typography.scale.find(
-        (s) => s.name === name || s.id === name,
-      );
-      if (!match) throw new Error(`[TypeScale] Unknown type style "${name}"`);
-      return match;
-    })
-  : brand.typography.scale;
+const steps = selectTypeStyles(brand, only);
 ---
 
 <div class:list={["scale", "escape", className]}>

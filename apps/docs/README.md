@@ -48,7 +48,7 @@ the mobile drawer. Keep this behavior when changing sidebar components.
 
 Each public MDX export from `brandtree/components` has its own page there, with
 required props, defaults, and an MDX usage example. Keep the catalog synchronized
-with `packages/brandtree/src/components/mdx.ts` when adding or removing exports.
+with `packages/brandtree/src/components/index.ts` when adding or removing exports.
 
 Verify examples against `packages/brandtree/src/` and the docs' own
 `brandtree.config.ts`; ADRs may describe future APIs.

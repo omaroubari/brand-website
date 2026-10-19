@@ -1,5 +1,6 @@
 ---
 import type { BrandConfig } from "../../brand/schema";
+import { defaultLogoSizes } from "../../brand/selections";
 import Logo from "./Logo.astro";
 
 interface Props {
@@ -16,13 +17,7 @@ interface Props {
 const {
   brand,
   mark = "logotype",
-  sizes = [
-    { width: "18rem", label: "288 px / 49 mm" },
-    { width: "11.25rem", label: "180 px / 30 mm" },
-    { width: "9rem", label: "144 px / 24 mm" },
-    { width: "4.5rem", label: "72 px / 12 mm" },
-    { width: "2.25rem", label: "36 px / 6 mm" },
-  ],
+  sizes = defaultLogoSizes,
   class: className,
 } = Astro.props;
 ---
